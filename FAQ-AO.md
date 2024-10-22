@@ -1,4 +1,4 @@
-# near-api
+# near
 ## FAQ
 QeT : Quartier en Transition
 FAQ permettant de répondre aux questions liées au cahier des charges
