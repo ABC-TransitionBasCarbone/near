@@ -10,15 +10,20 @@ F.A.Q listant l'ensemble des Q & R reçues dans le cadre de la réponse au cahie
 
 **R1** : La contrainte de mars est incontournable. Cependant, on on peut envisager un début d'expérimentation fin mars (plutôt que début mars afin de gagner plusieurs semaines) et migrer certaines fonctionnalités vers la V2 (le suivi de diffusion par exemple) pour avoir un MVP prêt pour conduire une enquête pour la V1. Cette V1 doit à minima permettre d'initier un premier quartier, de recueillir des questionnaires dans une base de donnée structurée et d'identifier les Sphères d'Usages (SU). On peut aussi faire une sélection dans les visualisations de données et en migrer certaines vers la V2.
 
-### Q2 `Backoffice` : Quelles fonctionnalités de backoffice sont attendues en V1 ? (A RELIRE PAR ROMAIN + RQT)
+### Q2 `Backoffice` : Quelles fonctionnalités de backoffice sont attendues en V1 ? (A RELIRE PAR ROMAIN✅ + RQT)
 
 **R2** : Nous souhaitons à minima une gestion des types et accès des utilisateurs et des noms et couleurs des SU.
+RC : 
+Gestion des utilisateurs
+- V1 Mot de passe crypté avec gestion de mdp oublié
+- V2 Gestion des droits avec plusieurs types d'utilisateurs (administrateur national, enquêteur de quartier, enquêté)
 
-### Q3: `Hébergement` : Quels coups d'hébergement "actuels" et futurs doivent-être pris en compte ? (A RELIRE PAR ROMAIN)
+### Q3: `Hébergement` : Quels coups d'hébergement "actuels" et futurs doivent-être pris en compte ? (A RELIRE PAR ROMAIN✅)
 
 **R3** : Il est proposé aux prestataires d'inclure dans leurs réponses commerciales la prise en charge des coups d'hébergement pendant la conception du projet (2 ans) et d'y ajouter une option relative aux coûts d'hébergement futur (à l'issu du projet) chiffrés en eur/an. 
+RC : Le prestataire devra nous proposer une ou plusieurs solution d'hébrgement (avec les coûts associés). Actuellement nous hébergeons nos applications sous Vercel mais nous sommes ouvert à d'autres hébergement. Il nous faudra un accès d'administration à l'outil d'hébergement et la pleine propriété de celui ci.
 
-### Q4 `Conception modulaire` : La modularité souhaitée (conception et fort découplage des différents modules) doit-elle se retrouver uniquement dans le code produit ou cela doit-il aller jusqu’à un développement de micro-applications front indépendantes ? (A RELIRE PAR ROMAIN)
+### Q4 `Conception modulaire` : La modularité souhaitée (conception et fort découplage des différents modules) doit-elle se retrouver uniquement dans le code produit ou cela doit-il aller jusqu’à un développement de micro-applications front indépendantes ? (A RELIRE PAR ROMAIN✅)
 
 **R4** : Nous pouvons nous orienter vers une architecture monolithique par composant mais sans micro-fronts indépendants. Idéalement en se basant sur l'architecture de notre nouvel outil de bilan carbone open source et NGC pour la partie empreinte.
 
@@ -26,7 +31,7 @@ F.A.Q listant l'ensemble des Q & R reçues dans le cadre de la réponse au cahie
 
 **R5** : La fonctionnalité de sélection d'IRIS (par un utilisateur externe, sur une carte notamment) peut être transféré en V2. En V1 nous serons les seuls utilisateurs de la plateforme et nous connaitrons l'IRIS du quartier séléctionné.
 
-### Q6 `Module #1 - Connexion` : Quels accès doivent être créés en V1 car le cas de partage d'identifiants entre plusieurs utilisateurs semble exister ? (A RELIRE PAR ROMAIN + RQT)
+### Q6 `Module #1 - Connexion` : Quels accès doivent être créés en V1 car le cas de partage d'identifiants entre plusieurs utilisateurs semble exister ? (A RELIRE PAR ROMAIN✅ + RQT)
 
 **R6** : Nous souhaitons un identifiant de connexion propre à chaque utilisateur. En V1, seules les équipes RQT/ABC auront besoin d'identifiants.
 
@@ -34,6 +39,8 @@ F.A.Q listant l'ensemble des Q & R reçues dans le cadre de la réponse au cahie
 
 ABC : Je pense qu'il est en effet intéressant d'avoir un compte nominatif (unique pour l'utilisateur) qui a un accès sur un ou plusieurs quartiers/enquêtes.
 QeT : Il s'agit de veiller à ce que les adresses mails récoltées pendant les enquêtes ne soient pas stockée en cache sur le navigateur. Mais c'est peut-être trop précotioneux ?
+
+RC : Les accès nominatifs sont en effet la meilleur solution en matière de sécurité. Nous exigeons que l'outil respecte les normes RGPD réglementaire mais la criticité de l'application ne nécessite pas plus de sécurité que celle ci.
 
 ### Q7 : `Module #1 : Connexion` : Qu'est-il attendu au sujet du stockage en statique sur l'ordinateur ?
 
@@ -87,3 +94,4 @@ _Il est indiqué qu'il peut être modifié « deux variables d’entrée » de l
 ### Q18 : `Open source et solutions propriétaire` : Etes-vous ouverts à l'utilisation de solutions propriétaire payantes ?
 
 **R18** : 
+RC : Le code doit être sous licence libre (idéalement stocké sur GitHub comme nos autres projets). Si le logiciel permet une facile contribution des utilisateurs et une réutilisation de l'outil dans le futur nous n'excluons pas les solutions propriétaires payantes si elles permettent de réduire les coûts globaux du projet.
