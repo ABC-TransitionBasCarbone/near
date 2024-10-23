@@ -1,116 +1,89 @@
-# near
-## FAQ
-QeT : Quartier en Transition
-FAQ permettant de répondre aux questions liées au cahier des charges
+# F.A.Q appel d'offre projet NEAR
 
+F.A.Q listant l'ensemble des Q & R reçues dans le cadre de la réponse au cahier des charges du projet NEAR.
 
-## 1 Q/R
+### Q0  `Réponse à l'appel d'offre` : Doit-on fournir une proposition commercial pour la V1 et la V2 ? Est-on bien sur une offre forfaitaire ?
 
-Q0 : Est ce qu’il est bien question de vous proposer une offre forfaitaire concernant la réalisation de la V1 ?
-R0 : On veut une offre forfaitaire (engagement de résultat)
+**R0** : On veut une offre forfaitaire (engagement de résultat) pour la V1 ? La V2 fera l'objet d'un second cahier des charges car toutes les fonctionnalités ne sont pas encore connues. Toutefois, des éléments de préfiguration de cette V2 sont présents dans ce cdc afin que les développements de la V1 soient pensés et réalisés de manière à ne pas bloquer ces fonctionnalités déjà attendues en V2.
 
-Q1 : Planning
-Le lancement du projet étant prévu au 1er décembre, cela laisse peu de temps pour les phases de conception, de développement et la recette. Si on se fie à cette contrainte, on serait sur 2 semaines de conception, 7 semaines de dév, et 2 semaines de recettes.  
+### Q1 `Planning` : La deadline de mars est-elle un jalon incontournable ou un décalage temporel est-il envisageable ?
 
-Cette contrainte de mars est-elle un jalon incontournable ou un délai + important peut-il être envisagé ?
-R1 QeT : La contrainte de mars est incontournable. Cependant, on on peut envisager de migrer certaines fonctionnalités vers la V2 (le suivi de diffusion par exemple) pour avoir un MVP prêt pour conduire une enquête pour la V1. À mon sens (à valider pendant le point technique) la V1 doit au minimum permettre d'initier un premier quartier, de recueillir des questionnaires dans une base de donnée structurée et d'identifier les Sphères d'Usages. On peut aussi faire une sélection dans les visualisations de données et en migrer certaines vers la V2.
+**R1** : La contrainte de mars est incontournable. Cependant, on on peut envisager un début d'expérimentation fin mars (plutôt que début mars afin de gagner plusieurs semaines) et migrer certaines fonctionnalités vers la V2 (le suivi de diffusion par exemple) pour avoir un MVP prêt pour conduire une enquête pour la V1. Cette V1 doit à minima permettre d'initier un premier quartier, de recueillir des questionnaires dans une base de donnée structurée et d'identifier les Sphères d'Usages (SU). On peut aussi faire une sélection dans les visualisations de données et en migrer certaines vers la V2.
 
+### Q2 `Backoffice` : Quelles fonctionnalités de backoffice sont attendues en V1 ? (A RELIRE PAR ROMAIN + RQT)
 
-Q2 : Conception modulaire
-Il est indiqué qu’une conception modulaire est souhaitée, avec un fort découplage des différents modules.
-Cette modularité doit-elle
+**R2** : Nous souhaitons à minima une gestion des types et accès des utilisateurs et des noms et couleurs des SU.
 
-Se retrouver uniquement dans le code produit, avec par exemple une orientation « composant » de la conception
-Aller jusqu’à un développement de micro-applications front indépendantes (mais exploitant le même back à priori)
-La 2nde alternative va engendrer une plus grande complexité de conception, ce qui nous parait risqué vu les contraintes de planning.
+### Q3: `Hébergement` : Quels coups d'hébergement "actuels" et futurs doivent-être pris en compte ? (A RELIRE PAR ROMAIN)
 
-Une architecture micro-frontend pourrait aussi être envisagée, mais on ferait face aux mêmes conséquences de complexité.
+**R3** : Il est proposé aux prestataires d'inclure dans leurs réponses commerciales la prise en charge des coups d'hébergement pendant la conception du projet (2 ans) et d'y ajouter une option relative aux coûts d'hébergement futur (à l'issu du projet) chiffrés en eur/an. 
 
-R2 : 
-ABC : Je pense que nous pouvons nous orienter vers une architecture monolithique par composant mais sans micro-fronts indépendants. Idéalement en se basant sur l'architecture de notre nouvel outil de bilan carbone open source et NGC pour la partie empreinte
-QeT : Très bien pour nous.
+### Q4 `Conception modulaire` : La modularité souhaitée (conception et fort découplage des différents modules) doit-elle se retrouver uniquement dans le code produit ou cela doit-il aller jusqu’à un développement de micro-applications front indépendantes ? (A RELIRE PAR ROMAIN)
 
+**R4** : Nous pouvons nous orienter vers une architecture monolithique par composant mais sans micro-fronts indépendants. Idéalement en se basant sur l'architecture de notre nouvel outil de bilan carbone open source et NGC pour la partie empreinte.
 
-Q3 : Module #0 – Page d’accueil
-Page 8 : il est indiqué que la V1 inclue la construction de quartier avec sélection d'une ou plusieurs zone IRIS.
-Nous avons aussi compris que la V1 se focalise sur un seul quartier pilote unique, pré paramétré. Dans ces conditions, cette fonctionnalité nous parait déroutante pour les utilisateurs.
-La création de quartier fait elle bien partie de la V1 ? Que doit pouvoir faire l'utilisateur une fois un quartier créé ?
+### Q5 `Module #0 – Page d’accueil` : Le cdc inclue en V1  la construction de quartier en sélectionnant un ou plusieurs IRIS. Toutefois, le cdc stipule aussi que la V1 aura pour but l'expérimentation sur un seul quartier, pré-paramétré. Quid de la fonctionnalité de sélection et de création d'enquête sur un quartier en V1 ? Que doit pouvoir faire l'utilisateur une fois un quartier créé ?
 
-R3 :
-ABC : on peut préciser qu’on sera les premiers utilisateurs de la plateforme mais que oui on veut la fonction de sélection de l’IRIS (on sait juste déjà lequel on va sélectionné)
-QeT : Ok pour nous.
+**R5** : La fonctionnalité de sélection d'IRIS (par un utilisateur externe, sur une carte notamment) peut être transféré en V2. En V1 nous serons les seuls utilisateurs de la plateforme et nous connaitrons l'IRIS du quartier séléctionné.
 
-Q4 : Module #1 : Connexion
-Pour la connexion, il est indiqué qu'en V1, la connexion se fait par ID/mot de passe unique, celui-ci pouvant être partagé entre plusieurs utilisateurs.
-Le partage d'identifiant de connexion est une pratique fortement déconseillée en termes de sécurité. Chaque identifiant de connexion devrait être associé à une personne identifiée.
-Ne serait-il pas plus pertinent de créer des accès nominatifs, rattachés à un même compte au sens fonctionnel ? On pourrait distinguer la notion de compte applicatif, et la notion de compte d'accès (1 compte applicatif dispose de n comptes d'accès). Qu’en pensez-vous ?
-R4 : 
+### Q6 `Module #1 - Connexion` : Quels accès doivent être créés en V1 car le cas de partage d'identifiants entre plusieurs utilisateurs semble exister ? (A RELIRE PAR ROMAIN + RQT)
+
+**R6** : Nous souhaitons un identifiant de connexion propre à chaque utilisateur. En V1, seules les équipes RQT/ABC auront besoin d'identifiants.
+
+**A valider entre nous la proposition de Lukla sur les différents compte**. Ne serait-il pas plus pertinent de créer des accès nominatifs, rattachés à un même compte au sens fonctionnel ? On pourrait distinguer la notion de compte applicatif, et la notion de compte d'accès (1 compte applicatif dispose de n comptes d'accès). Qu’en pensez-vous ?
+
 ABC : Je pense qu'il est en effet intéressant d'avoir un compte nominatif (unique pour l'utilisateur) qui a un accès sur un ou plusieurs quartiers/enquêtes.
 QeT : Il s'agit de veiller à ce que les adresses mails récoltées pendant les enquêtes ne soient pas stockée en cache sur le navigateur. Mais c'est peut-être trop précotioneux ?
 
- 
-Q5 : Module #1 : Connexion
-Page 10, il est indiqué que "Dans la mesure du possible, le fait de quitter le portail ne doit pas permettre le stock automatique de la liste adresses mails des participants (ou autres données sensibles) en statique sur l’ordinateur"
-Je ne comprends pas très bien cette phrase. S’agit-il de ne pas mémoriser l’identifiant de connexion dans l’écran de connexion ? S’agit-il de veiller à ce que des adresses mails ne soient pas stockées dans un cache de navigateur ? Ou autre chose ?
+### Q7 : `Module #1 : Connexion` : Qu'est-il attendu au sujet du stockage en statique sur l'ordinateur ?
 
- R5 :
-ABC : je pense que ce qu’on veut c’est avant tout de ne pas mémoriser les adresses mails des participants dans le cache. Ne pas pouvoir sauvegarder les identifiants de connexion serait intéressant en terme de sécurité de l’enquête mais je pense que ce n’est pas nécessaire (contraignant pour l’utilisateur + je ne visualise pas encore quels risques peuvent se présenter car on n’est pas sur des données sensibles)
-QeT : Oui, il s'agit du premier : les données sensibles des participants ne doivent pas être mémorisées en cache. Pour les ID/MDP laissons la possibilité de sauvgarder. (Avec du recul je vois que c'est peut-être trop précotionneux pour la mise en cache. On peut enlever cette caractéristique si besoin.)
+_Il est indiqué dans le cdc que "dans la mesure du possible, le fait de quitter le portail ne doit pas permettre le stock automatique de la liste adresses mails des participants (ou autres données sensibles) en statique sur l’ordinateur"
 
-Q6 : Module #5 : détection des sphères d’usages
-Page 12 : concernant l'algorithme de détection des SU, il est indiqué que le pilote peut modifier « deux variables d’entrée » de l’algorithme.
-La maquette Miro évoque un nombre d'itérations qu’on peut saisir (« définissez un nombre d'itération ») mais pas de zone de saisie correspondante.
-On voit aussi deux zones nommées "nombre visé de S-U(n)" et "minimum pop par SU (i)" qui semblent être soit des champs de saisies, soit des boutons d'actions.
-Pourriez-vous clarifier quelles sont les 2 variables que le pilote peut modifier svp ?
-
-R6 : 
-QeT : Le pilote peut modifier le nombre visé de S.U., la part minimum (i) et le nombre d'itération. Ce sont des zones de saisie et il manque effectivement un menu-déroulant pour sélectionner un nombre d'itération. Une solution plus simple que nous pouvons mettre en place est d'avoir une liste de scripts .py qui ont déjà des ensembles de paramètres stockés, et d'excécuter l'un d'eux suivant la sélection de l'utilisateur.
-
-Q7 : Module #5 : détection des sphères d’usages
-Est-ce que l'appartenance d'une personne à une des SU identifiées par l'algorithme est un sujet trivial ou bien faut-il forcément faire appel au 2eme algorithme ?
-R7 :
-Il est nécessaire de passer par l'algorithme n°2 pour connaître une Sphère d'Usages. Les Sphères d'Usages permettent notamment de catégoriser les données, toute réponse doit être catégorisée selon sa S.U.
+**R7** : Nous aimerions éviter (si techniquement possible) que les adresses mails des répondants aux enquêtes soient stockées sur le cache du naviguateur utilisé. 
 
 
-Q8 : Module #5 : détection des sphères d’usages
-Techniquement, comment s'interface-t-on avec le programme Python ? S'agit-il d'un programme à exécuter sur le système ou existe-t-il une interface de + haut niveau (API par exemple) ?
-R8: 
-ABC : de ce que j’ai compris c’est un programme à exécuter.
-QeT : On peut vous fournir les scripts Python. Pas d'API à prévoir a priori.
+### Q8 : `Module #5 : Détection des sphères d’usages` : Pouvez-vous clarifier les modifications possibles par le pilote sur l'algo de détection des SU ?
 
-Q9 : Module #6 : découvrir et personnaliser les sphères d’usages
-Page 13 : il est évoqué un nommage aléatoire et des noms prédéfinis.
-Ces noms aléatoires sont-ils sans signification fonctionnelle ou doivent-ils avoir un rapport avec la nature de la SU ?
-S’ils dépendent de la nature de la SU, quelles sont les règles à respecter ?
-R9 :
-ABC : de ce que j’ai compris les noms n’ont pas de règles de définition propres aux spécificités du SU
-QeT : effectivement, pas de règle à date
+_Il est indiqué qu'il peut être modifié « deux variables d’entrée » de l’algorithme sans pour autant retrouver de zone de saisie correspondante dans le Miro.
 
-Q10 : Module #7 : Suivi d’enquête 2
-Page 14. Existe-t-il, comme pour le suivi 1, un mécanisme de fin automatique quand un certain nombre de réponses a été obtenu pour chaque questionnaire ?
-R10 :
-ABC : de ce que j’ai compris il y a bien un seuil de fin en termes de représentativité à avoir
-QeT : oui, dans les 2 cas. Il y a deux seuils différents, un pour l'enquête SU, et un second pour l'enquête MdV+EdV+NGC
+**R8** : Le pilote peut modifier le nombre visé de S.U., la part minimum (i) et le nombre d'itération. Ce sont des zones de saisie et il manque effectivement un menu-déroulant (dans le Miro) pour sélectionner un nombre d'itération. Une solution plus simple que nous pouvons mettre en place est d'avoir une liste de scripts .py qui ont déjà des ensembles de paramètres stockés, et d'excécuter l'un d'eux suivant la sélection de l'utilisateur.
 
-Q11 : Module #9 : Résultats d’enquêtes
-Sur plusieurs écrans du module #9, le miro présente un bouton « Comparer les résultats ».
-Est ce qu'il s'agit bien d'un simple lien vers le module #10 ? Ou s’agit-il de comparaisons + ciblées ?
-R11 :
-ABC : j’aurais dit lien vers le module 10 
-QeT : oui 👍
+### Q9 : `Module #5 : détection des sphères d’usages` : L'appartenance d'une personne à une SU identifiée par l'algorithme passe forcémenrt par l'appel au second algorithme ?
 
-Q12 : Module #13 : Enquête 1 : Sphère d’Usages
-Dans la maquette Miro de l'écran de remerciement, on peut voir deux boutons non documentés dans le cahier des charges "Voir le détail" et "Comparer".
-Pourriez-vous préciser les fonctionnalités accessibles par ces 2 boutons svp ?
-R12 : QeT : Ces boutons sont à considérer pour la V2 uniquement, nous devons les enlever.
+**R9** : Oui, il est nécessaire de passer par l'algorithme n°2 pour connaître une Sphère d'Usages. Les Sphères d'Usages permettent notamment de catégoriser les données, toute réponse doit être catégorisée selon sa S.U.
 
-Q13 : Module #13 : Enquête 2.1 : Empreinte Carbone (CC)
-S'agit-il bien de présenter un questionnaire incluant les questions SU et les questions de l'application NGC ?
-Comment l'intégration de NGC doit-elle se faire :
-Par un simple lien vers l'application
-En redéveloppant un front exploitant le "back" Publicode, mais aux couleurs de NEAR
-Avec un développement totalement intégré dans NEAR, sans reprise du Publicode
+### Q10 : `Module #5 : détection des sphères d’usages` : Quel interfaçage avec l'algo Python est à prévoir ?
 
-R13  : 
-ABC : je dirais ici que c’est fonction du prix car l’option 2 sera moins bien moins cher que l’option 3 (l’option 1 n’est pas pertinente car on veut un NGC adapté). Je propose qu’on parte sur l’option 2 et qu’on garde éventuellement la 3 pour une v2 (voir pour plus tard car c’est avant tout un sujet esthétique produit et non fonctionnalité de la méthode)
-QeT : Oui 👍, raccord
+**R10** : Les scripts Python sont fournis. Ce sont des programmes à éxécuter. Il n'y a pas d'API à prévoir.
+
+### Q11 : `Module #6 : découvrir et personnaliser les sphères d’usages` : Y-a-t'il un lien entre la nature de la SU et le nom qui doit lui être attribué ?
+
+**R11** : Les noms n’ont pas de règles de définition propres aux spécificités des SU. Ce sont des noms prédéfinis attribués aléatoirement.
+
+### Q12 : `Module #7 : Suivi d’enquête 2` : Existe-t-il un mécanisme de fin automatique quand un certain nombre de réponses a été obtenu pour chaque questionnaire (comme pour le suivi 1) ?
+
+**R12** : Oui, il y a bien deux seuils différents, un pour l'enquête SU, et un second pour l'enquête MdV+EdV+NGC
+
+### Q13 : `Module #9 : Résultats d’enquêtes` : Le bouton « Comparer les résultats » de ce module est-il un lien vers le Module #10 ?
+
+**R13** : oui, il s'agit d'un lien vers le Module #10
+
+### Q14 : `Module #13 : Enquête 1 : Sphère d’Usages` : Peut-on préciser les fonctionnalités des deux boutons "Voir le détail" et "Comparer" présents sur l'écran de remerciement car non documentés dans le cahier des charges ? 
+
+**R14** _à détailler par RQT + préciser qu'on garde ça bien en V1_
+
+### Q15 : `Module #13 : Questionnaire carbone` : Quelle intégration de NGC doit-être prévue pour le questionnaire carbone ?
+
+**R15** : L'ABC sera en charge de développer un questionnaire adapté et assurera le back publicodes du questionnaire. Ce back sera en V1 déployé sur un front spécifique. En v2, si possible il sera envisagé une intégration complète dans la plateforme NEAR.
+
+### Q16 : `Design et maquettage` : Qu'est-il attendu en termes de travail de maquettage et design ?
+
+**R16** : Etant donné que la V1 a avant tout pour objectif d'aboutir à une plateforme fonctionnelle pour conduire nous-même la première enquête, peu de choses sont attendus. Seule, une revue simple du layout général, des questionnaires destinés aux sondés (qui devront être réalisables sur smartphone) et des pages de restitution devront être fait. Pour la V2 un travail de maquettage sera réalisé en amont par RQT et un appui pourra être sollicité.
+
+### Q17 : `Gestion d'envoi des mails` : Doit-on prévoir un outil de gestion d’envoi de mails ?
+
+**R17** : Non nécessaire en V1 mais à intégrer en V2.
+
+### Q18 : `Open source et solutions propriétaire` : Etes-vous ouverts à l'utilisation de solutions propriétaire payantes ?
+
+**R18** : 
