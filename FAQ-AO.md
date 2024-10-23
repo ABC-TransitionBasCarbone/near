@@ -12,18 +12,15 @@ F.A.Q listant l'ensemble des Q & R reçues dans le cadre de la réponse au cahie
 
 ### Q2 `Backoffice` : Quelles fonctionnalités de backoffice sont attendues en V1 ? (A RELIRE PAR ROMAIN✅ + RQT)
 
-**R2** : Nous souhaitons à minima une gestion des types et accès des utilisateurs et des noms et couleurs des SU.
-RC : 
-Gestion des utilisateurs
+**R2** : Nous souhaitons à minima une gestion des types et accès des utilisateurs et des noms et couleurs des SU. Gestion des utilisateurs
 - V1 Mot de passe crypté avec gestion de mdp oublié
 - V2 Gestion des droits avec plusieurs types d'utilisateurs (administrateur national, enquêteur de quartier, enquêté)
 
-### Q3: `Hébergement` : Quels coups d'hébergement "actuels" et futurs doivent-être pris en compte ? (A RELIRE PAR ROMAIN✅)
+### Q3: `Hébergement` : Quels coups d'hébergement "actuels" et futurs doivent-être pris en compte ?
 
-**R3** : Il est proposé aux prestataires d'inclure dans leurs réponses commerciales la prise en charge des coups d'hébergement pendant la conception du projet (2 ans) et d'y ajouter une option relative aux coûts d'hébergement futur (à l'issu du projet) chiffrés en eur/an. 
-RC : Le prestataire devra nous proposer une ou plusieurs solution d'hébrgement (avec les coûts associés). Actuellement nous hébergeons nos applications sous Vercel mais nous sommes ouvert à d'autres hébergement. Il nous faudra un accès d'administration à l'outil d'hébergement et la pleine propriété de celui ci.
+**R3** : Il est proposé aux prestataires d'inclure dans leurs réponses commerciales la prise en charge des coups d'hébergement pendant la conception du projet (2 ans) et d'y ajouter une option relative aux coûts d'hébergement futur (à l'issu du projet) chiffrés en eur/an. Le prestataire devra nous proposer une ou plusieurs solution d'hébrgement (avec les coûts associés). Actuellement nous hébergeons nos applications sous Vercel mais nous sommes ouvert à d'autres hébergement. Il nous faudra un accès d'administration à l'outil d'hébergement et la pleine propriété de celui ci.
 
-### Q4 `Conception modulaire` : La modularité souhaitée (conception et fort découplage des différents modules) doit-elle se retrouver uniquement dans le code produit ou cela doit-il aller jusqu’à un développement de micro-applications front indépendantes ? (A RELIRE PAR ROMAIN✅)
+### Q4 `Conception modulaire` : La modularité souhaitée (conception et fort découplage des différents modules) doit-elle se retrouver uniquement dans le code produit ou cela doit-il aller jusqu’à un développement de micro-applications front indépendantes ?
 
 **R4** : Nous pouvons nous orienter vers une architecture monolithique par composant mais sans micro-fronts indépendants. Idéalement en se basant sur l'architecture de notre nouvel outil de bilan carbone open source et NGC pour la partie empreinte.
 
@@ -93,5 +90,4 @@ _Il est indiqué qu'il peut être modifié « deux variables d’entrée » de l
 
 ### Q18 : `Open source et solutions propriétaire` : Etes-vous ouverts à l'utilisation de solutions propriétaire payantes ?
 
-**R18** : 
-RC : Le code doit être sous licence libre (idéalement stocké sur GitHub comme nos autres projets). Si le logiciel permet une facile contribution des utilisateurs et une réutilisation de l'outil dans le futur nous n'excluons pas les solutions propriétaires payantes si elles permettent de réduire les coûts globaux du projet.
+**R18** : Le code doit être sous licence libre (idéalement stocké sur GitHub comme nos autres projets). Si le logiciel permet une facile contribution des utilisateurs et une réutilisation de l'outil dans le futur nous n'excluons pas les solutions propriétaires payantes si elles permettent de réduire les coûts globaux du projet.
