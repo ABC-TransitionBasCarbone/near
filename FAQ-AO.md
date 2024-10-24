@@ -14,7 +14,7 @@ F.A.Q listant l'ensemble des Q & R reçues dans le cadre de la réponse au cahie
 
 **R2** : Nous souhaitons à minima :
 - une gestion des types et accès des utilisateurs ;
-- un dépot pour mettre en ligne et ajourner la liste des noms de Sphères d'Usages et pallettes de couleurs affhérentes (on peut être fait manuellement sur le depository) ;
+- un dépot pour mettre en ligne et ajourner la liste des noms de Sphères d'Usages et pallettes de couleurs affhérentes (un dépot manuel sur le depository peut faire l'affaire) ;
 - la possibilité d'ajouter ou corriger les différentes versions des scripts Python pour (1) la détection et (2) l'identification des Sphères d'Usages.
 
 La gestion des types d'utilisateurs évoluent entre la V1 et la V2 :
