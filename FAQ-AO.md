@@ -16,6 +16,7 @@ F.A.Q listant l'ensemble des Q & R reçues dans le cadre de la réponse au cahie
 - une gestion des types et accès des utilisateurs ;
 - un dépot pour mettre en ligne et ajourner la liste des noms de Sphères d'Usages et pallettes de couleurs affhérentes (on peut être fait manuellement sur le depository) ;
 - la possibilité d'ajouter ou corriger les différentes versions des scripts Python pour (1) la détection et (2) l'identification des Sphères d'Usages.
+
 La gestion des types d'utilisateurs évoluent entre la V1 et la V2 :
 - V1 Mot de passe crypté avec gestion de mdp oublié
 - V2 Gestion des droits avec plusieurs types d'utilisateurs (administrateur national, enquêteur de quartier, enquêté)
