@@ -16,6 +16,7 @@ F.A.Q listant l'ensemble des Q & R reçues dans le cadre de la réponse au cahie
 - une gestion des types et accès des utilisateurs ;
 - un dépot pour mettre en ligne et ajourner la liste des noms de Sphères d'Usages et pallettes de couleurs affhérentes (un dépot manuel sur le depository peut faire l'affaire) ;
 - la possibilité d'ajouter ou corriger les différentes versions des scripts Python pour (1) la détection et (2) l'identification des Sphères d'Usages.
+- le téléchargement et/ou l'accès à la BDD complète à fin d'analyses, y compris en dehors de la plateforme.
 
 La gestion des types d'utilisateurs évoluent entre la V1 et la V2 :
 - V1 Mot de passe crypté avec gestion de mdp oublié
