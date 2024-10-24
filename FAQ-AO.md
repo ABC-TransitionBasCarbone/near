@@ -4,11 +4,11 @@ F.A.Q listant l'ensemble des Q & R reçues dans le cadre de la réponse au cahie
 
 ### Q0  `Réponse à l'appel d'offre` : Doit-on fournir une proposition commercial pour la V1 et la V2 ? Est-on bien sur une offre forfaitaire ?
 
-**R0** : On veut une offre forfaitaire (engagement de résultat) pour la V1 ? La V2 fera l'objet d'un second cahier des charges car toutes les fonctionnalités ne sont pas encore connues. Toutefois, des éléments de préfiguration de cette V2 sont présents dans ce cdc afin que les développements de la V1 soient pensés et réalisés de manière à ne pas bloquer ces fonctionnalités déjà attendues en V2.
+**R0** : On veut une offre forfaitaire (engagement de résultat) pour la V1. La V2 fera l'objet d'un second cahier des charges car toutes les fonctionnalités ne sont pas encore connues. Toutefois, des éléments de préfiguration de cette V2 sont présents dans ce cdc afin que les développements de la V1 soient pensés et réalisés de manière à ne pas bloquer ces fonctionnalités déjà attendues en V2.
 
 ### Q1 `Planning` : La deadline de mars est-elle un jalon incontournable ou un décalage temporel est-il envisageable ?
 
-**R1** : La contrainte de mars est incontournable. Cependant, on on peut envisager un début d'expérimentation fin mars (plutôt que début mars afin de gagner plusieurs semaines) et migrer certaines fonctionnalités vers la V2 (le suivi de diffusion par exemple) pour avoir un MVP prêt pour conduire une enquête pour la V1. Cette V1 doit à minima permettre d'initier un premier quartier, de recueillir des questionnaires dans une base de donnée structurée et d'identifier les Sphères d'Usages (SU). On peut aussi faire une sélection dans les visualisations de données et en migrer certaines vers la V2.
+**R1** : La contrainte de mars est incontournable. Cependant, on peut envisager un début d'expérimentation fin mars (plutôt que début mars afin de gagner plusieurs semaines) et migrer certaines fonctionnalités vers la V2 (le suivi de diffusion par exemple) pour avoir un MVP prêt pour conduire une enquête pour la V1. Cette V1 doit à minima permettre d'initier un premier quartier, de recueillir des questionnaires dans une base de donnée structurée et d'identifier les Sphères d'Usages (SU). On peut aussi faire une sélection dans les visualisations de données et en migrer certaines vers la V2.
 
 ### Q2 `Backoffice` : Quelles fonctionnalités de backoffice sont attendues en V1 ? (A RELIRE PAR ROMAIN✅ + RQT✅)
 
