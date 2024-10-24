@@ -89,8 +89,33 @@ _Il est indiqué qu'il peut être modifié « deux variables d’entrée » de l
 
 ### Q17 : `Gestion d'envoi des mails` : Doit-on prévoir un outil de gestion d’envoi de mails ?
 
-**R17** : Non nécessaire en V1 mais à intégrer en V2.
+**R17** : Non nécessaire en V1 mais potentiellement à intégrer en V2.
 
 ### Q18 : `Open source et solutions propriétaire` : Etes-vous ouverts à l'utilisation de solutions propriétaire payantes ?
 
 **R18** : Le code doit être sous licence libre (idéalement stocké sur GitHub comme nos autres projets). Si le logiciel permet une facile contribution des utilisateurs et une réutilisation de l'outil dans le futur nous n'excluons pas les solutions propriétaires payantes si elles permettent de réduire les coûts globaux du projet.
+
+### Q19 : Les prestataires doivent-il prévoir une proposition commerciale un accompagnement pour la partie UX/UI ?
+
+**R19** Nous sommes très enclins à un accompagnement pour la partie UX/UI. À savoir que (ce qui n’est pas forcément clair dans le cahier des charges) :
+- La V1 vise en particulier pour nous à automatiser et expérimenter la visualisation de données et les fonctionnalités “coeur” (le modèle statistique, l’automatisation de nos algorithmes Python, …). Son UI peut être très “experte”, et être laissée pour amélioration plus tard. L’UX (ou l'enchaînement des modules et des fonctionnalités présentes) peut être susceptible d’évoluer en fonction des retours que nous aurons lors de la première enquête (bien que l'enchaînement général du portail pilote local semble aligné avec nos expérimentations précédentes).
+- La V2 vise en particulier la création d’une version plus “grand public” avec une UI/UX plus accueillante. Nous avons un temps de 3 mois dédiés entre le 1er Décembre et le 28 Février pour le design UX/UI de la V2, avec notamment 2 designers ayant une fine connaissance des enjeux de la plateforme, et la possibilité de tester des maquettes avec les futurs utilisateurs.
+⇒ Aussi, il paraît judicieux de faire un travail commun d’UX/UI, à la fois pour la V1 et V2, en organisant des temps de travail en amont de la période indiquée ci-dessus plus spécifiquement pour résoudre les questions de la V1, et en travaillant ensembles plus en détail pour la V2.
+
+### Q20 : Pour la V1, quelles sont les attentes en terme de responsivité et de devices ?
+
+**R20** : La V1 du portail local doit être responsive pour des tablettes et ordinateurs aux ratios 4:3, 16:9 et 21:9, mais pas sur mobile à ce stade (nous n’avons pas eu le temps à date de penser à l'expérience mobile en détail).
+À l’exception de ces modules et boards qui doivent être accessibles sur Mobile en V1 : 
+- #4 (suivi d’enquête Sphères d’Usages),
+- #7 (suivi d’enquête MdV, EdV, CC)
+- #8 (Diffusion, en particulier le module de création de lien, mais pas le sous-module “suivi de diffusion”, trop complexe sur mobile), qui pourraient être utiles sur mobile.
+- Le portail enquête (les questionnaires vus par les citoyens) qui doivent être accessibles sur mobile, pc et tablette, y compris sur d'anciens appareils.
+
+### Q21 : Concernant la phase 1 : Est-ce que les objectifs (nombre de personnes ayant répondu par âge, genre, CSP) à atteindre seront statiques ou définis par enquête ?
+
+**R21** Ces objectifs sont statiques. Ils sont différents pour l’enquête #1 Sphères d’Usages (en l’état, 95% de taux de confiance, 5% de marge d’erreur) et l’enquête #2 MdV, EdV, CC (encore indéfinie, moins élevé). Les valeurs indiquées ici à titre d’exemple pourront changer dans les prochaines semaines. En V2, ces seuils statiques pourront être modifiés depuis le portail national pour l’ensemble des quartiers à venir (sans rétroaction sur les quartiers passés).
+→ Dans les faits, la taille de l’échantillon évolue de façon logarithmique, sélectionner 1 ou 3 IRIS ne va pas significativement changer la taille de l’échantillon. Si le calcul dynamique de l’échantillon pose une difficulté ou est trop chronophage, on peut aussi utiliser une “banque” de tailles d’échantillons déjà fixés (en revanche les répartitions CSP, genre et âge doivent correspondre aux données des IRIS sélectionnés).
+
+### Q22 : La base de données IRIS du découpage géographique par quartier évolue 1 fois par an. Est-ce que vous souhaitez que ce référentiel soit mis à jour tous les ans ?
+
+**R22** : Oui, celle-ci doit être mise à jour une fois par an. Il semble difficile de trouver une bdd mise à jour régulièrement qui comprenne à la fois les données issues du recensement et le découpage géoformes des IRIS. Si la forme d'un quartier évolue avec le temps, l'utilisateur doit pouvoir comprendre si sa zone recouvre une ancienne zone géographique. En V1, il s'agit seulement de garder une trace des IRIS sélectionnées à date, mais pas de comparaison complexe à prévoir à court terme.
