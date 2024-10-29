@@ -1,6 +1,7 @@
 # F.A.Q appel d'offre projet NEAR
 
 F.A.Q listant l'ensemble des Q & R reçues dans le cadre de la réponse au cahier des charges du projet NEAR.
+Pour l'architecture informatique nous voudrions que l'offre essaie de s'approcher de notre projet actuel (NextJS monlithique FRONT/BACK + Prisma + PostgreSQL) : https://github.com/ABC-TransitionBasCarbone/bilan-carbone (demandez moi si vous souhaitez y accéder)
 
 ### Q0  `Réponse à l'appel d'offre` : Doit-on fournir une proposition commercial pour la V1 et la V2 ? Est-on bien sur une offre forfaitaire ?
 
