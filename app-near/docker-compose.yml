@@ -1,0 +1,11 @@
+version: '3.5'
+services:
+  database:
+    image: postgres:17.2
+    container_name: app-near-postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: app-near
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
