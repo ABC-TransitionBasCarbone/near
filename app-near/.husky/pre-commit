@@ -1,1 +1,2 @@
-cd app-near && npm run lint
+cd app-near
+npm run lint

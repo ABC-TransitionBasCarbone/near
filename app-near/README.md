@@ -28,11 +28,44 @@ You can check out the [create-t3-app GitHub repository](https://github.com/t3-os
 
 Follow our deployment guides for [Vercel](https://create.t3.gg/en/deployment/vercel), [Netlify](https://create.t3.gg/en/deployment/netlify) and [Docker](https://create.t3.gg/en/deployment/docker) for more information.
 
+## How do I init env locally?
 
-## Enable pre-commit hook
-
-We need to have a custome hook path to run husky
-
+Use correct node version:
 ```
-git config core.hooksPath ./app-near/.husky
+nvm use
+```
+
+Install dependencies:
+```
+npm install
+```
+
+Configure husky pre commit:
+```
+npm run prepare
+```
+
+Run local postgresql:
+```
+docker-compose up -d
+```
+
+Create empty env file:
+```
+cp .env.example .env
+```
+
+Customize it in particular generate AUTH_SECRET with:
+```
+openssl rand -base64 32
+```
+
+Migrate database:
+```
+npm run db:push
+```
+
+Run app locally:
+```
+npm run dev
 ```

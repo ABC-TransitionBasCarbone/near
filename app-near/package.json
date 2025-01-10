@@ -20,7 +20,7 @@
     "preview": "next build && next start",
     "start": "next start",
     "typecheck": "tsc --noEmit",
-    "prepare": "husky"
+    "prepare": "cd .. && husky app-near/.husky"
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.7.2",
