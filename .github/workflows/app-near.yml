@@ -1,0 +1,51 @@
+name: Next app tests
+
+on:
+  pull_request:
+    branches: [main]
+
+defaults:
+  run:
+    working-directory: ./app-near
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: "22"
+
+      - uses: actions/cache@v3
+        with:
+          # See here for caching with `yarn` https://github.com/actions/cache/blob/main/examples.md#node---yarn or you can leverage caching with actions/setup-node https://github.com/actions/setup-node
+          path: |
+            ~/.npm
+            ${{ github.workspace }}/.next/cache
+          # Generate a new cache whenever packages or source files change.
+          key: ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json') }}-${{ hashFiles('**.[jt]s', '**.[jt]sx') }}
+          # If source files changed but packages didn't, rebuild from a prior cache.
+          restore-keys: |
+            ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json') }}-
+
+      - name: Install
+        run: npm ci
+      
+      - name: Test
+        run: npm run test
+
+      - name: Build
+        run: npm run build
+        env:
+          AUTH_SECRET: ""
+          DATABASE_URL: ""
+
+      # - name: Accessibility test
+      #   run: |
+      #     npm run dev & npx -y wait-on http://localhost:3000
+      #     npm install -g pa11y
+      #     pa11y http://localhost:3000
