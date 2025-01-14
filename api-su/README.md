@@ -21,9 +21,16 @@ Penser à configurer l'interpréteur python de votre IDE.
 * S'assurer que l'environnement virtuel est chargé ou exécuter `pipenv shell`
 * Lancer l'application : `flask run`
 * Lancer en mode debug : ajouter `--debug`
+* Lancer les tests : `pytest tests/`
 
 ## Déploiement en production
 
 Pour [déployer en production](https://flask.palletsprojects.com/en/stable/deploying/), on utilise [Gunicorn](https://flask.palletsprojects.com/en/stable/deploying/gunicorn/).
 
 La commande de lancement se trouve dans le fichier `Procfile`.
+
+## Génération d'une clé API
+
+Cette API ne doit être appelé que par l'app Near. Elle est donc sécurisée par une clé (`API_SU_KEY`) partagée par les 2 applications.
+
+Pour générer une clé, vous pouvez utiliser la commande suivante : `python -c 'import secrets; print(secrets.token_hex())'`
