@@ -6,6 +6,7 @@ name = "pypi"
 [packages]
 flask = "~=3.1.0"
 python-dotenv = "~=1.0.1"
+gunicorn = "~=23.0.0"
 
 [dev-packages]
 pre-commit = "*"
