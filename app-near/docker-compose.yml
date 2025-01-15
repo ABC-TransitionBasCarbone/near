@@ -24,3 +24,6 @@ services:
       - /app/.next
     depends_on:
       - database
+
+volumes:
+  app-near-postgresql-data:

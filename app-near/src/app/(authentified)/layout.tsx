@@ -1,13 +1,11 @@
-import { ReactNode } from 'react';
-import LayoutAuthentified from '../_components/layouts/LayoutAuthentified';
+import { type ReactNode } from "react";
+import LayoutAuthentified from "../_components/layouts/LayoutAuthentified";
 
 interface LayoutProps {
-  children: ReactNode
+  children: ReactNode;
 }
 const BackOfficeLayoutWithNav: React.FC<LayoutProps> = ({ children }) => (
-  <LayoutAuthentified>
-    {children}
-  </LayoutAuthentified>
+  <LayoutAuthentified>{children}</LayoutAuthentified>
 );
 
 export default BackOfficeLayoutWithNav;

@@ -1,5 +1,5 @@
-import 'next-auth';
+import "next-auth";
 
 export interface NextAuthUser {
-  email: string,
+  email: string;
 }

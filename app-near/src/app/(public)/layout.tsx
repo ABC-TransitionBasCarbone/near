@@ -1,13 +1,11 @@
-import { ReactNode } from 'react';
-import LayoutPublic from '../_components/layouts/LayoutPublic';
+import { type ReactNode } from "react";
+import LayoutPublic from "../_components/layouts/LayoutPublic";
 
 interface PublicLayoutProps {
-  children: ReactNode
+  children: ReactNode;
 }
 const PublicLayout: React.FC<PublicLayoutProps> = ({ children }) => (
-  <LayoutPublic>
-    {children}
-  </LayoutPublic>
+  <LayoutPublic>{children}</LayoutPublic>
 );
 
 export default PublicLayout;

@@ -1,9 +1,9 @@
-import { Metadata } from 'next';
-import { Suspense } from 'react';
-import SignInForm from '~/app/_components/authentification/SignInForm';
+import { type Metadata } from "next";
+import { Suspense } from "react";
+import SignInForm from "~/app/_components/authentification/SignInForm";
 
 export const metadata: Metadata = {
-  title: 'Connexion',
+  title: "Connexion",
   description: "Connectez vous à NEAR",
 };
 

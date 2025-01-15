@@ -1,9 +1,7 @@
-import { PrismaAdapter } from "@auth/prisma-adapter";
 import { type DefaultSession, type NextAuthConfig } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 
-import { db } from "~/server/db";
-import { NextAuthUser } from "~/types/NextAuth";
+import { type NextAuthUser } from "~/types/NextAuth";
 import { login } from "../users/connection";
 
 /**
@@ -18,9 +16,9 @@ declare module "next-auth" {
   }
 }
 
-declare module 'next/server' {
+declare module "next/server" {
   interface NextRequest {
-    user: NextAuthUser,
+    user: NextAuthUser;
   }
 }
 
@@ -31,26 +29,29 @@ declare module 'next/server' {
  */
 export const authConfig = {
   pages: {
-    signIn: '/connexion',
-    error: '/connexion',
+    signIn: "/connexion",
+    error: "/connexion",
   },
   providers: [
     CredentialsProvider({
       // The name to display on the sign in form (e.g. "Sign in with...")
       name: "Credentials",
       credentials: {
-        email: { label: 'email', type: 'email' },
-        password: { label: 'Password', type: 'password' },
+        email: { label: "email", type: "email" },
+        password: { label: "Password", type: "password" },
       },
-      async authorize(credentials, req) {
+      async authorize(credentials) {
         if (!credentials) {
-          throw new Error('No credentials provided');
+          throw new Error("No credentials provided");
         }
 
-        const connexion = await login(credentials.email as string, credentials.password as string);
+        const connexion = await login(
+          credentials.email as string,
+          credentials.password as string,
+        );
 
         if (connexion.success) {
-          return connexion.user as NextAuthUser;
+          return connexion.user!;
         }
 
         throw new Error(connexion.message);
@@ -86,7 +87,7 @@ export const authConfig = {
             ...session.user,
             id: token.id as string,
           },
-        }
+        };
       }
       return session;
     },

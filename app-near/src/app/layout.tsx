@@ -9,9 +9,9 @@ import { SessionProvider } from "next-auth/react";
 
 export const metadata: Metadata = {
   title: {
-    absolute: 'Accueil | NEAR',
-    template: '%s | NEAR',
-    default: 'NEAR',
+    absolute: "Accueil | NEAR",
+    template: "%s | NEAR",
+    default: "NEAR",
   },
   description: "NEAR",
   icons: [{ rel: "icon", url: "/favicon.ico" }], // to change latter
@@ -25,9 +25,7 @@ export default function RootLayout({
       <body>
         <TRPCReactProvider>
           <HydrateClient>
-            <SessionProvider>
-              {children}
-            </SessionProvider>
+            <SessionProvider>{children}</SessionProvider>
           </HydrateClient>
         </TRPCReactProvider>
       </body>

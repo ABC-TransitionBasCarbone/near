@@ -1,20 +1,25 @@
-'use client';
+"use client";
 
-import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
-import { signIn, useSession } from 'next-auth/react';
-import { redirect, useSearchParams } from 'next/navigation';
-import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
-import { useEffect, useState } from 'react';
-import FormInput from '~/ui/FormInput';
-import { UserLoginForm } from '~/types/User';
-import Button from '~/ui/Button';
-import { ButtonStyle } from '~/types/enums/button';
-import Link from 'next/link';
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import { signIn, useSession } from "next-auth/react";
+import { redirect, useSearchParams } from "next/navigation";
+import { FormProvider, type SubmitHandler, useForm } from "react-hook-form";
+import { useEffect, useState } from "react";
+import FormInput from "~/ui/FormInput";
+import { type UserLoginForm } from "~/types/User";
+import Button from "~/ui/Button";
+import { ButtonStyle } from "~/types/enums/button";
+import Link from "next/link";
 
 const CompanyFormRegistration = z.object({
-  email: z.string().min(1, { message: 'Veuillez renseigner votre email' }).email({ message: "format d'email invalide" }),
-  password: z.string().min(1, { message: 'Veuillez renseigner un mot de passe' }),
+  email: z
+    .string()
+    .min(1, { message: "Veuillez renseigner votre email" })
+    .email({ message: "format d'email invalide" }),
+  password: z
+    .string()
+    .min(1, { message: "Veuillez renseigner un mot de passe" }),
 });
 
 export default function SignInForm(): JSX.Element {
@@ -22,12 +27,11 @@ export default function SignInForm(): JSX.Element {
   const [loginError, setLoginError] = useState<string | null>(null);
 
   const searchParams = useSearchParams();
-  const error = searchParams.get('error');
-  const register = searchParams.get('register');
+  const error = searchParams.get("error");
 
   const methods = useForm<UserLoginForm>({
     resolver: zodResolver(CompanyFormRegistration),
-    mode: 'all',
+    mode: "all",
   });
 
   const {
@@ -35,8 +39,11 @@ export default function SignInForm(): JSX.Element {
     formState: { errors, isValid },
   } = methods;
 
-  const onSubmit: SubmitHandler<UserLoginForm> = async ({ email, password }) => {
-    await signIn('credentials', {
+  const onSubmit: SubmitHandler<UserLoginForm> = async ({
+    email,
+    password,
+  }) => {
+    await signIn("credentials", {
       email,
       password,
       redirect: true,
@@ -47,22 +54,22 @@ export default function SignInForm(): JSX.Element {
     setLoginError(error);
   }, [errors, error]);
 
-  if(session?.user.email) {
-    redirect('/back-office');
+  if (session?.user.email) {
+    redirect("/back-office");
   }
 
   return (
-    <div className="p-2 container mx-auto w-full">
+    <div className="container mx-auto w-full p-2">
       <h1 className="mt-6">Bienvenue !</h1>
       <FormProvider {...methods}>
         <form onSubmit={handleSubmit(onSubmit)} noValidate>
           <div className="py-10">
             {loginError ? (
-              <h3 className="text-center font-semibold rounded-md py-1 my-2 text-red">
+              <h3 className="text-red my-2 rounded-md py-1 text-center font-semibold">
                 {loginError}
               </h3>
             ) : (
-              ''
+              ""
             )}
 
             <FormInput
@@ -83,7 +90,7 @@ export default function SignInForm(): JSX.Element {
               icon="/icons/lock.svg"
               tabIndex={2}
             />
-            
+
             <div className="mt-6">
               <Button
                 color="blue"
@@ -97,9 +104,11 @@ export default function SignInForm(): JSX.Element {
                 Se connecter
               </Button>
             </div>
-            <div className='mt-6 text-center'>
-              <p>Besoin d&apos;identifiant ? <Link href='mailto:contact@mail.com'>Contactez-nous</Link></p>
-              
+            <div className="mt-6 text-center">
+              <p>
+                Besoin d&apos;identifiant ?{" "}
+                <Link href="mailto:contact@mail.com">Contactez-nous</Link>
+              </p>
             </div>
           </div>
         </form>

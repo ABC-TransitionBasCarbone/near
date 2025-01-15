@@ -1,7 +1,7 @@
-import { ReactNode } from 'react';
+import { type ReactNode } from "react";
 
 interface LayoutPublicProps {
-  children: ReactNode,
+  children: ReactNode;
 }
 
 const LayoutPublic: React.FC<LayoutPublicProps> = async ({ children }) => {
@@ -9,9 +9,7 @@ const LayoutPublic: React.FC<LayoutPublicProps> = async ({ children }) => {
     <>
       <header>Some header</header>
       <nav>Public Navigation</nav>
-      <main>
-        {children}
-      </main>
+      <main>{children}</main>
       <footer>Footer</footer>
     </>
   );

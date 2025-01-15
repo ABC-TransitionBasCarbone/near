@@ -1,9 +1,9 @@
 export enum ButtonStyle {
-  FILLED = 'filled',
-  LIGHT = 'light'
+  FILLED = "filled",
+  LIGHT = "light",
 }
 
 export enum ButtonIconPosition {
-  START = 'start',
-  END = 'end'
+  START = "start",
+  END = "end",
 }
