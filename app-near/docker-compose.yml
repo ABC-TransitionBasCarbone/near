@@ -9,3 +9,18 @@ services:
       POSTGRES_DB: app-near
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: password
+    volumes:
+      - app-near-postgresql-data:/var/lib/postgresql
+
+  app-near-web:
+    image: node:22-alpine
+    command: sh -c "echo 'starting app-near...'; npm ci; npx prisma db push; npm run dev"
+    ports:
+      - "3000:3000"
+    working_dir: /app
+    volumes:
+      - .:/app
+      - /app/node_modules
+      - /app/.next
+    depends_on:
+      - database
