@@ -14,7 +14,7 @@ export const metadata: Metadata = {
     default: "NEAR",
   },
   description: "NEAR",
-  icons: [{ rel: "icon", url: "/favicon.ico" }], // to change latter
+  icons: [{ rel: "icon", url: "/favicon.ico" }], // TODO: to change latter
 };
 
 export default function RootLayout({
