@@ -11,6 +11,7 @@ import { type UserLoginForm } from "~/types/User";
 import Button from "~/ui/Button";
 import { ButtonStyle } from "~/types/enums/button";
 import Link from "next/link";
+import { LoginError } from "~/types/enums/login";
 
 const CompanyFormRegistration = z.object({
   email: z
@@ -22,12 +23,16 @@ const CompanyFormRegistration = z.object({
     .min(1, { message: "Veuillez renseigner un mot de passe" }),
 });
 
+const displayError: Record<LoginError, string> = {
+  ['CredentialsSignin']: 'Accès non autorisé',
+}
+
 export default function SignInForm(): JSX.Element {
   const { data: session } = useSession();
-  const [loginError, setLoginError] = useState<string | null>(null);
+  const [loginError, setLoginError] = useState<LoginError | null>(null);
 
   const searchParams = useSearchParams();
-  const error = searchParams.get("error");
+  const error = searchParams.get("error") as LoginError;
 
   const methods = useForm<UserLoginForm>({
     resolver: zodResolver(CompanyFormRegistration),
@@ -55,7 +60,7 @@ export default function SignInForm(): JSX.Element {
   }, [errors, error]);
 
   if (session?.user.email) {
-    redirect("/back-office");
+    redirect("/");
   }
 
   return (
@@ -65,8 +70,8 @@ export default function SignInForm(): JSX.Element {
         <form onSubmit={handleSubmit(onSubmit)} noValidate>
           <div className="py-10">
             {loginError ? (
-              <h3 className="text-red my-2 rounded-md py-1 text-center font-semibold">
-                {loginError}
+              <h3 className="text-error my-2 rounded-md py-1 text-center font-semibold">
+                {displayError[loginError] || "Nous ne réussissons pas à vous connecter veuillez réessayer plus tard"}
               </h3>
             ) : (
               ""

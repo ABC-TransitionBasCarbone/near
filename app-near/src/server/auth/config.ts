@@ -36,13 +36,9 @@ export const authConfig = {
     CredentialsProvider({
       // The name to display on the sign in form (e.g. "Sign in with...")
       name: "Credentials",
-      credentials: {
-        email: { label: "email", type: "email" },
-        password: { label: "Password", type: "password" },
-      },
       async authorize(credentials) {
         if (!credentials) {
-          throw new Error("No credentials provided");
+          throw null;
         }
 
         const connexion = await login(
@@ -50,18 +46,18 @@ export const authConfig = {
           credentials.password as string,
         );
 
-        if (connexion.success) {
-          return connexion.user!;
+        if (!connexion.success) {
+          return null;
         }
 
-        throw new Error(connexion.message);
+        return connexion.user!;
       },
     }),
   ],
   callbacks: {
     async redirect({ url, baseUrl }) {
       if (url === `${baseUrl}/connexion`) {
-        return `${baseUrl}/back-office`;
+        return `${baseUrl}`;
       }
       return url.startsWith(baseUrl) ? url : baseUrl;
     },

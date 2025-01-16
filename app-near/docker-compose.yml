@@ -20,8 +20,6 @@ services:
     working_dir: /app
     volumes:
       - .:/app
-      - /app/node_modules
-      - /app/.next
     depends_on:
       - database
 
