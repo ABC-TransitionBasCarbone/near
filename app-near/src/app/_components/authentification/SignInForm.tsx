@@ -10,7 +10,6 @@ import FormInput from "~/app/_components/_ui/FormInput";
 import { type UserLoginForm } from "~/types/User";
 import Button from "~/app/_components/_ui/Button";
 import { ButtonStyle } from "~/types/enums/button";
-import Link from "next/link";
 import { type LoginError } from "~/types/enums/login";
 
 const CompanyFormRegistration = z.object({
@@ -109,12 +108,6 @@ export default function SignInForm(): JSX.Element {
               >
                 Se connecter
               </Button>
-            </div>
-            <div className="mt-6 text-center">
-              <p>
-                Besoin d&apos;identifiant ?{" "}
-                <Link href="mailto:contact@mail.com">Contactez-nous</Link>
-              </p>
             </div>
           </div>
         </form>
