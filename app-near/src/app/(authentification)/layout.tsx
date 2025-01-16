@@ -6,7 +6,7 @@ interface AuthentificationLayoutProps {
 const AuthentificationLayout: React.FC<AuthentificationLayoutProps> = ({
   children,
 }) => (
-  <div className="flex min-h-screen">
+  <main role="main" className="flex min-h-screen">
     <div className="flex flex-1 flex-col items-center justify-center p-3">
       <div className="flex w-full max-w-[450px] flex-col">{children}</div>
     </div>
@@ -25,7 +25,7 @@ const AuthentificationLayout: React.FC<AuthentificationLayoutProps> = ({
         <img src="/logos/ue.webp" width={232} height={66} alt="" />
       </div>
     </div>
-  </div>
+  </main>
 );
 
 export default AuthentificationLayout;

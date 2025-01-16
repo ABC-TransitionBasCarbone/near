@@ -9,7 +9,7 @@ const LayoutPublic: React.FC<LayoutPublicProps> = async ({ children }) => {
     <>
       <header>Some header</header>
       <nav>Public Navigation</nav>
-      <main>{children}</main>
+      <main role="main">{children}</main>
       <footer>Footer</footer>
     </>
   );

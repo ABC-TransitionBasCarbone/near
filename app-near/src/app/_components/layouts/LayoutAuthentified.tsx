@@ -19,7 +19,7 @@ const LayoutAuthentified: React.FC<LayoutAuthentifiedProps> = async ({
     <>
       <header>Some header</header>
       <nav>Authentified Navigation</nav>
-      <main>{children}</main>
+      <main role="main">{children}</main>
       <footer>Footer</footer>
     </>
   );
