@@ -110,12 +110,6 @@ export default function SignInForm(): JSX.Element {
                 Se connecter
               </Button>
             </div>
-            <div className="mt-6 text-center">
-              <p>
-                Besoin d&apos;identifiant ?{" "}
-                <Link href="mailto:contact@mail.com">Contactez-nous</Link>
-              </p>
-            </div>
           </div>
         </form>
       </FormProvider>
