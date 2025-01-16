@@ -37,6 +37,7 @@ const config = {
         },
       },
     ],
+    "@next/next/no-img-element": "off",
   },
 };
 module.exports = config;
