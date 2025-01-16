@@ -10,7 +10,6 @@ import FormInput from "~/app/_components/_ui/FormInput";
 import { type UserLoginForm } from "~/types/User";
 import Button from "~/app/_components/_ui/Button";
 import { ButtonStyle } from "~/types/enums/button";
-import Link from "next/link";
 import { type LoginError } from "~/types/enums/login";
 
 const CompanyFormRegistration = z.object({
