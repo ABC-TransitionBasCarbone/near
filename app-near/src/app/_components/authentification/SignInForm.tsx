@@ -11,7 +11,7 @@ import { type UserLoginForm } from "~/types/User";
 import Button from "~/ui/Button";
 import { ButtonStyle } from "~/types/enums/button";
 import Link from "next/link";
-import { LoginError } from "~/types/enums/login";
+import { type LoginError } from "~/types/enums/login";
 
 const CompanyFormRegistration = z.object({
   email: z
@@ -24,8 +24,8 @@ const CompanyFormRegistration = z.object({
 });
 
 const displayError: Record<LoginError, string> = {
-  ['CredentialsSignin']: 'Accès non autorisé',
-}
+  ["CredentialsSignin"]: "Accès non autorisé",
+};
 
 export default function SignInForm(): JSX.Element {
   const { data: session } = useSession();
@@ -70,8 +70,9 @@ export default function SignInForm(): JSX.Element {
         <form onSubmit={handleSubmit(onSubmit)} noValidate>
           <div className="py-10">
             {loginError ? (
-              <h3 className="text-error my-2 rounded-md py-1 text-center font-semibold">
-                {displayError[loginError] || "Nous ne réussissons pas à vous connecter veuillez réessayer plus tard"}
+              <h3 className="my-2 rounded-md py-1 text-center font-semibold text-error">
+                {displayError[loginError] ||
+                  "Nous ne réussissons pas à vous connecter veuillez réessayer plus tard"}
               </h3>
             ) : (
               ""

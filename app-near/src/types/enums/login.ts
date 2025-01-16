@@ -1,3 +1,3 @@
 export enum LoginError {
-  CredentialsSignin = 'CredentialsSignin',
+  CredentialsSignin = "CredentialsSignin",
 }

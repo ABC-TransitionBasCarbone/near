@@ -38,7 +38,7 @@ export const authConfig = {
       name: "Credentials",
       async authorize(credentials) {
         if (!credentials) {
-          throw null;
+          return null;
         }
 
         const connexion = await login(
