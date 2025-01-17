@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@
+      - uses: actions/checkout@v2
 
       - name: Install pipenv
         run: pipx install pipenv
