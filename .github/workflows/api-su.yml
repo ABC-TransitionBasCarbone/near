@@ -1,0 +1,36 @@
+name: Flask api tests
+
+on:
+  pull_request:
+    branches: [develop]
+    paths:
+      - 'api-su/**'
+
+defaults:
+  run:
+    working-directory: ./api-su
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@
+
+      - name: Install pipenv
+        run: pipx install pipenv
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: "pipenv"
+
+      - name: Install dependencies
+        run: pipenv install --dev
+
+      - name: Create .env file
+        run: cp .env.example .env
+      
+      - name: Run tests
+        run: pipenv run pytest
