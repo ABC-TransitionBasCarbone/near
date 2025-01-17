@@ -26,16 +26,11 @@ jobs:
           python-version: "3.13"
           cache: "pipenv"
 
-      - name: Install dependencies
-        run: pipenv install --dev
-
       - name: Create .env file
         run: cp .env.example .env
-      
-      - name: Debug PATH
-        run: |
-          echo $PATH
-          pipenv run pytest --version
+
+      - name: Install dependencies
+        run: pipenv install --dev
       
       - name: Run tests
         run: pipenv run test
