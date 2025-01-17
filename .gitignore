@@ -131,3 +131,7 @@ dist
 
 
 algo-spheres-usage-2023/*
+# Python
+.venv/
+.ruff_cache/
+

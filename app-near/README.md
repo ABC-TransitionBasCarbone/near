@@ -28,45 +28,53 @@ You can check out the [create-t3-app GitHub repository](https://github.com/t3-os
 
 Follow our deployment guides for [Vercel](https://create.t3.gg/en/deployment/vercel), [Netlify](https://create.t3.gg/en/deployment/netlify) and [Docker](https://create.t3.gg/en/deployment/docker) for more information.
 
-## How do I init env locally?
+## How do I init env locally?
 
 Use correct node version:
-```
+
+```sh
 nvm use
 ```
 
 Install dependencies:
-```
+
+```sh
 npm install
 ```
 
 Configure husky pre commit:
-```
+
+```sh
 npm run prepare
 ```
 
 Run local postgresql:
-```
+
+```sh
 docker-compose up -d
 ```
 
 Create empty env file:
-```
+
+```sh
 cp .env.example .env
 ```
 
 Customize it in particular generate AUTH_SECRET with:
-```
+
+```sh
 openssl rand -base64 32
 ```
 
 Migrate database:
-```
+
+```sh
 npm run db:push
 ```
 
 Run app locally:
-```
+
+```sh
 npm run dev
 ```
 
