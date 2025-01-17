@@ -71,9 +71,36 @@ npm run dev
 ```
 
 
-# How do load insee data into Postgresql database
+# How to load insee iris population data and init a survey ? 
 
+## 1 Download insee population data file
+
+For 2021
+```
+curl -L -O https://www.insee.fr/fr/statistiques/fichier/8268806/base-ic-evol-struct-pop-2021_csv.zip && unzip base-ic-evol-struct-pop-2021_csv.zip && mv base-ic-evol-struct-pop-2021.CSV ./scripts/base-ic-evol-struct-pop-2021.csv
+```
+
+## 2 Load insee data and init survey
+
+Work only if you followed step 1
 
 ```
-npx tsx scripts/load_quartier_data.ts
+npm run load:all
+```
+
+It's also possible to break it into 2 steps : 
+
+## 2.1 Load insee data into a Postgresql database
+
+```
+npm run load:insee -- "$(pwd)/scripts/base-ic-evol-struct-pop-2021.csv" postgresql://postgres:password@localhost:5432/app-near
+```
+
+It also work without parameters on local if you follow step 1
+
+## 2.2 Init a surveys into db and create postgresql stats view
+
+It will use .env environment variables
+```
+npm run load-surveys
 ```
