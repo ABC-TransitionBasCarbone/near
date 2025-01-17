@@ -6,8 +6,7 @@ import { PrismaClient, type Survey } from "@prisma/client";
 const prisma = new PrismaClient();
 
 const createQuartiersView = async (survey_id: number) => {
-  try {
-    const viewQuery = `
+  const quartiersView = `
       CREATE OR REPLACE VIEW quartiers AS
       WITH iris_14_arr AS (
         SELECT * 
@@ -62,68 +61,28 @@ const createQuartiersView = async (survey_id: number) => {
       FROM iris_14_arr;
     `;
 
-    // Execute the raw query
-    await prisma.$executeRawUnsafe(viewQuery);
-    console.log("View 'quartier' created or updated successfully!");
-  } catch (error) {
-    console.error("Error creating view:", error);
-  } finally {
-    await prisma.$disconnect();
-  }
+  // Execute the raw query
+  await prisma.$executeRawUnsafe(quartiersView);
+  console.log("View 'quartiers' upserted successfully!");
 };
 
 const createSurvey = async (): Promise<Survey> => {
-  return prisma.survey.create({
-    data: {
+  return prisma.survey.upsert({
+    where: {
+      name: "14e_arr", // Ensure that `name` is unique or a unique constraint is applied
+    },
+    update: {},
+    create: {
       name: "14e_arr",
     },
   });
 };
 
-console.log("created survey : " + JSON.stringify(createSurvey));
-
+// Création ou mise à jour des enquêtes
 const survey: Survey = await createSurvey();
+console.log("Upserted survey with id: " + JSON.stringify(survey));
 
-// Création ou mise à jour de la vue quartier avec les IRIS
+// Création ou mise à jour de la vue quartier avec les IRIS et ajout d'un lien avec l'enquête
 await createQuartiersView(survey.id as number);
 
-// // Read and parse the CSV file
-// fs.createReadStream(inseeDistrictsDataFilePath)
-//   .pipe(csv({ separator: ";" }))
-//   .on("data", (row: InseeIris2021ColumnDefinition) => {
-//     // Transform row data as needed to match the Prisma model structure
-//     //   const transformedRow: TransformedRow = {
-//     //     // Assuming your Prisma model has fields: id, name, and email
-//     //     id: parseInt(row.id, 10),
-//     //     name: row.name,
-//     //     email: row.email,
-//     //   };
-//     if (!IRIS_14E_ARR.includes(row.IRIS)) {
-//       return;
-//     }
-
-//     // create_survey_14e_arr.district_total_population =
-//     //   create_survey_14e_arr.district_total_population.add(
-//     //     new Decimal(row.C21_POP15P),
-//     //   )e.log(`CSV file successfully processed.`);
-
-//     console.log(JSON.stringify(create_survey_14e_arr));
-
-//     // try {
-//     //   // Insert records into the database using Prisma
-//     //   for (const record of records) {
-//     //     await prisma.survey.create({
-//     //       data: record,
-//     //     });
-//     //   }
-
-//     //   console.log("Data successfully loaded into the database.");
-//     // } catch (error) {
-//     //   console.error("Error loading data:", error);
-//     // } finally {
-//     //   await prisma.$disconnect();
-//     // }
-//   })
-//   .on("error", (error: Error) => {
-//     console.error("Error reading the CSV file:", error);
-//   });
+await prisma.$disconnect();

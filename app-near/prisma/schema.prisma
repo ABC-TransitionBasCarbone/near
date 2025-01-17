@@ -75,7 +75,7 @@ enum SurveyPhase {
 
 model Survey {
     id        Int      @id @default(autoincrement())
-    name      String
+    name      String   @unique
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
     phase     SurveyPhase @default(ONE_INFORMATION_QUARTIER)
@@ -160,6 +160,7 @@ model InseeIris2021 {
   p21_pop_imm        Float?
   p21_pmen           Float?
   p21_phormen        Float?
+  @@map("insee_iris_2021")
   @@ignore
 }
 
