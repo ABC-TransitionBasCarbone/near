@@ -43,9 +43,6 @@ jobs:
 
       - name: Build
         run: npm run build
-        env:
-          AUTH_SECRET: ""
-          DATABASE_URL: ""
 
       # - name: Accessibility test
       #   run: |
