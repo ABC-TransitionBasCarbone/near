@@ -69,3 +69,11 @@ Run app locally:
 ```
 npm run dev
 ```
+
+
+# How do load insee data into Postgresql database
+
+
+```
+npx tsx scripts/load_quartier_data.ts
+```
