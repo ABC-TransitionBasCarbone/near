@@ -133,9 +133,9 @@ dist
 # Python
 .venv/
 .ruff_cache/
+.pytest_cache/
 
 # Fichiers INSEE
 *.csv
 *.CSV
 *.zip
-

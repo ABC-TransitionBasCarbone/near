@@ -21,7 +21,9 @@ Penser à configurer l'interpréteur python de votre IDE.
 * S'assurer que l'environnement virtuel est chargé ou exécuter `pipenv shell`
 * Lancer l'application : `flask run`
 * Lancer en mode debug : ajouter `--debug`
-* Lancer les tests : `pytest tests/`
+* Lancer les tests : `pipenv run test`
+* Lancer le lint du code : `pipenv run lint`
+* Formatter le code : `pipenv run format`
 
 ## Déploiement en production
 
