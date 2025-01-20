@@ -99,7 +99,7 @@ Il est possible de le faire en 2 étapes
 npm run load:insee -- "$(pwd)/scripts/base-ic-evol-struct-pop-2021.csv" postgresql://postgres:password@localhost:5432/app-near
 ```
 
-Cela marche dans paramètre si la commande de l'étape 1 a été faite
+Cela marche sans paramètre si la commande de l'étape 1 a été faite
 
 ## 2.2. Initialise une enquête en base et calcul les données statistiques nécéssaires à l'enquête
 
