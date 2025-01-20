@@ -75,37 +75,39 @@ Exécuter l'application en local:
 npm run dev
 ```
 
-# Comment charger la base de données INSEE des IRIS pour l'année 2021 ?
+##  Comment charger la base de données INSEE des IRIS pour l'année 2021 ?
 
-## 1 Télécharger le fichier et l'extraire dans ./scripts
+### 1. Télécharger le fichier et l'extraire dans ./scripts
 
-For 2021 data
-```
+Pour les données de l'INSEE 2021
+
+```bash
 curl -L -O https://www.insee.fr/fr/statistiques/fichier/8268806/base-ic-evol-struct-pop-2021_csv.zip && unzip base-ic-evol-struct-pop-2021_csv.zip && mv base-ic-evol-struct-pop-2021.CSV ./scripts/base-ic-evol-struct-pop-2021.csv && rm unzip base-ic-evol-struct-pop-2021_csv.zip
 ```
 
-## 2 Charge la BDD INSEE et initialise une enquête pour le 16eme arrondissement 
+## 2. Charger la BDD INSEE et initialise une enquête pour le 16eme arrondissement
 
-```
+```bash
 npm run load:all
 ```
 
 Il est possible de le faire en 2 étapes
 
-## 2.1 Charger les données INSEE dans une base de données local 
+## 2.1. Charger les données INSEE dans une base de données local
 
-```
+```bash
 npm run load:insee -- "$(pwd)/scripts/base-ic-evol-struct-pop-2021.csv" postgresql://postgres:password@localhost:5432/app-near
 ```
 
 Cela marche dans paramètre si la commande de l'étape 1 a été faite
 
-## 2.2 Initialise une enquête en base et calcul les données statistiques nécéssaires à l'enquête
+## 2.2. Initialise une enquête en base et calcul les données statistiques nécéssaires à l'enquête
 
-(Le script utilise les variables du .env)
-```
+Le script utilise les variables du fichier `.env`
+
+```bash
 npm run load-surveys
 ```
 
-Pour plus de détails sur comment ajouter un nouveau millésime de l'INSEE 
+Pour plus de détails sur comment ajouter un nouveau millésime de l'INSEE
 ou comment ajouter une enquête voir [Ici](./scritps/README.md)
