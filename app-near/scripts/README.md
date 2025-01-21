@@ -15,7 +15,7 @@ Disponible sur <https://www.insee.fr/fr/statistiques/8268806#consulter>
 npm run prisma migrate
 ```
 
-### 2. Charger les données dans Postgres
+### 3. Charger les données dans Postgres
 
 Passer en paramètre du script `load_insee_data.sh` le csv de données afin de charger les données. Par exemple :
 
@@ -25,7 +25,7 @@ npm run load:insee -- "$(pwd)/scripts/base-ic-evol-struct-pop-2022.csv" postgres
 
 ## Ajouter une nouvelle enquête pour un nouveau quartier
 
-###  1. Modifier le script `./scripts/load_survey_insee_stats.ts`
+Modifier le script `./scripts/load_survey_insee_stats.ts` :
 
 - Créer une nouvelle vue SQL similaire avec les IRIS correspondant au quartier en le liant à la BDD INSEE souhaitée
 - Ajouter une nouvelle enquête dans la fonction `prisma.survey.upsert` en lui donnant un nom
