@@ -65,7 +65,7 @@ openssl rand -base64 32
 Migrer la base de données :
 
 ```sh
-npm run db:push
+npm run db:migrate
 ```
 
 Exécuter l'application en local :
@@ -81,7 +81,7 @@ npm run dev
 Pour les données de l'INSEE 2021
 
 ```bash
-curl -L -O https://www.insee.fr/fr/statistiques/fichier/8268806/base-ic-evol-struct-pop-2021_csv.zip && unzip base-ic-evol-struct-pop-2021_csv.zip && mv base-ic-evol-struct-pop-2021.CSV ./scripts/base-ic-evol-struct-pop-2021.csv && rm unzip base-ic-evol-struct-pop-2021_csv.zip
+curl -L -O https://www.insee.fr/fr/statistiques/fichier/8268806/base-ic-evol-struct-pop-2021_csv.zip && unzip base-ic-evol-struct-pop-2021_csv.zip && mv base-ic-evol-struct-pop-2021.CSV ./scripts/base-ic-evol-struct-pop-2021.csv && rm base-ic-evol-struct-pop-2021_csv.zip
 ```
 
 ## 2. Charger la BDD INSEE et initialiser une enquête pour le 14eme arrondissement de Paris
