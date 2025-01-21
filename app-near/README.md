@@ -24,52 +24,51 @@ To learn more about the [T3 Stack](https://create.t3.gg/), take a look at the fo
 
 You can check out the [create-t3-app GitHub repository](https://github.com/t3-oss/create-t3-app) — your feedback and contributions are welcome!
 
+## Comment installer le dépot localement ?
 
-## Comment installer le dépot locallement ?
-
-Utilisation de la bonne version de node avec nvm:
+Utiliser la bonne version de node avec nvm :
 
 ```sh
 nvm use
 ```
 
-Instlalation des dépendances:
+Installer des dépendances :
 
 ```sh
 npm install
 ```
 
-Configuration d'husky pour le pre commit:
+Configurer le pre commit hook :
 
 ```sh
 npm run prepare
 ```
 
-Lancer la BDD postgresql:
+Lancer la base de données PostgreSQL :
 
 ```sh
 docker-compose up -d
 ```
 
-Créer un .env:
+Créer un fichier .env :
 
 ```sh
 cp .env.example .env
 ```
 
-Générer une valeur pour AUTH_SECRET:
+Générer une valeur pour AUTH_SECRET :
 
 ```sh
 openssl rand -base64 32
 ```
 
-Migrer la BDD:
+Migrer la base de données :
 
 ```sh
 npm run db:push
 ```
 
-Exécuter l'application en local:
+Exécuter l'application en local :
 
 ```sh
 npm run dev
@@ -85,23 +84,23 @@ Pour les données de l'INSEE 2021
 curl -L -O https://www.insee.fr/fr/statistiques/fichier/8268806/base-ic-evol-struct-pop-2021_csv.zip && unzip base-ic-evol-struct-pop-2021_csv.zip && mv base-ic-evol-struct-pop-2021.CSV ./scripts/base-ic-evol-struct-pop-2021.csv && rm unzip base-ic-evol-struct-pop-2021_csv.zip
 ```
 
-## 2. Charger la BDD INSEE et initialise une enquête pour le 16eme arrondissement
+## 2. Charger la BDD INSEE et initialiser une enquête pour le 14eme arrondissement de Paris
 
 ```bash
 npm run load:all
 ```
 
-Il est possible de le faire en 2 étapes
+Il est aussi possible de le faire en 2 étapes :
 
-## 2.1. Charger les données INSEE dans une base de données local
+### 2.1. Charger les données INSEE dans une base de données locale
 
 ```bash
 npm run load:insee -- "$(pwd)/scripts/base-ic-evol-struct-pop-2021.csv" postgresql://postgres:password@localhost:5432/app-near
 ```
 
-Cela marche sans paramètre si la commande de l'étape 1 a été faite
+Cela fonctionne sans paramètre si la commande de l'étape 1 a été faite
 
-## 2.2. Initialise une enquête en base et calcul les données statistiques nécéssaires à l'enquête
+### 2.2. Initialiser une enquête en base et calculer les données statistiques nécessaires à l'enquête
 
 Le script utilise les variables du fichier `.env`
 
@@ -109,5 +108,9 @@ Le script utilise les variables du fichier `.env`
 npm run load-surveys
 ```
 
-Pour plus de détails sur comment ajouter un nouveau millésime de l'INSEE
-ou comment ajouter une enquête voir [Ici](./scritps/README.md)
+Pour plus de détail sur :
+
+- l'ajout d'un nouveau millésime de l'INSEE
+- ou comment ajouter une enquête
+
+voir le [README du dossier scripts](./scritps/README.md)
