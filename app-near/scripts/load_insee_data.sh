@@ -15,4 +15,5 @@ if [ $? -eq 0 ]; then
     echo "Data successfully copied into the database."
 else
     echo "An error occurred while copying data into the database."
+    exit 1
 fi
