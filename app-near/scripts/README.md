@@ -2,6 +2,10 @@
 
 ## Ajouter un nouveau millésime des recensements de l'INSEE
 
+### Prérequis
+
+Installer postgresql-client pour pouvoir utiliser psql.
+
 ###  1. Télécharger le fichier INSEE
 
 Disponible sur <https://www.insee.fr/fr/statistiques/8268806#consulter>
