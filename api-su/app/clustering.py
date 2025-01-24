@@ -5,7 +5,7 @@ Created on Wed Apr 26 13:42:21 2023
 @author: mattd
 """
 
-from math import sqrt, isnan
+from math import sqrt
 import pandas  # type: ignore
 import csv
 import numpy as np  # type: ignore
@@ -267,13 +267,13 @@ def eucl(v1, v2):
 
 
 # la fonction flechage permet de trouver la SU la plus proche en fonction des reponses au questionnaire
-def flechage(clust, l):
-    d = eucl(clust[0][0], l)
+def flechage(clust, response):
+    d = eucl(clust[0][0], response)
     closest = 0
     for i in range(1, len(clust)):
-        if len(clust[i][0]) == len(l):
-            if eucl(clust[i][0], l) < d:
-                d = eucl(clust[i][0], l)
+        if len(clust[i][0]) == len(response):
+            if eucl(clust[i][0], response) < d:
+                d = eucl(clust[i][0], response)
                 closest = i
     return closest
 
@@ -320,7 +320,7 @@ def getheight(clust):
 
 # profondeur
 def getdepth(clust):
-    if clust.left == None and clust.right == None:
+    if clust.left is None and clust.right is None:
         return 0
     return 1 + max(getdepth(i) for i in clust.fils)
 

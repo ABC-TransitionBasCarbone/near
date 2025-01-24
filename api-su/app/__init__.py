@@ -13,6 +13,7 @@ app.config["API_SU_KEY"] = os.getenv("API_SU_KEY")
 
 CORS(app, resources={r"/*": {"origins": app.config["NEAR_APP_URL"]}})
 
+
 @app.before_request
 def check_api_key():
     api_key = request.headers.get("X-API-KEY")
@@ -29,7 +30,9 @@ class UserDataRequestSchema(Schema):
     home = fields.Int(required=True)
     digital = fields.Int(required=True)
 
+
 compute_su_request_schema = UserDataRequestSchema(many=True)
+
 
 @app.route("/api-su/compute", methods=["POST"])
 def compute_su():
@@ -38,4 +41,4 @@ def compute_su():
         print(f"Compute SU for {len(data)} users")
         return {"msg": "Not implemented yet"}
     except ValidationError as err:
-        return jsonify({"error": err.messages}), 400 # Bad request
+        return jsonify({"error": err.messages}), 400  # Bad request
