@@ -134,6 +134,7 @@ dist
 .venv/
 .ruff_cache/
 .pytest_cache/
+__pycache__/
 
 # Fichiers INSEE
 *.csv
