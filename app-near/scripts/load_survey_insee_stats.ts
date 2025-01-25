@@ -78,11 +78,11 @@ const createSurvey = async (): Promise<Survey> => {
   });
 };
 
-// Création ou mise à jour des enquêtes
+// Upsert surveys
 const survey: Survey = await createSurvey();
 console.log("Upserted survey with id: " + JSON.stringify(survey));
 
-// Création ou mise à jour de la vue quartier avec les IRIS et ajout d'un lien avec l'enquête
-await createQuartiersView(survey.id as number);
+// Upsert SQL view for survey with their predefined IRIS
+await createQuartiersView(survey.id);
 
 await prisma.$disconnect();

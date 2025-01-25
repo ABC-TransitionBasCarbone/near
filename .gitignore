@@ -130,8 +130,11 @@ dist
 .pnp.*
 
 
-algo-spheres-usage-2023/*
 # Python
 .venv/
 .ruff_cache/
+
+# Fichiers INSEE
+*.csv
+*.zip
 

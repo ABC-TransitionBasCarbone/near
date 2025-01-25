@@ -3,7 +3,7 @@
 if [ $# -ne 2 ]; then
     echo "Usage: $0 <CSV_FILE_PATH> <DATABASE_URL>"
     echo "Example: $0 ./insee_iris_2021.csv postgresql://username:password@host:port/app-near"
-    echo "Trying loading default on local database..."
+    echo "Trying loading ./scripts/base-ic-evol-struct-pop-2021.csv file on localhost:5432/app-near..."
 fi
 
 CSV_FILE=${1:-"./scripts/base-ic-evol-struct-pop-2021.csv"}
