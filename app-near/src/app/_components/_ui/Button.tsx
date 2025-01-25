@@ -72,7 +72,7 @@ const Button = ({
     <button
       // eslint-disable-next-line react/button-has-type
       type={buttonType}
-      className={`flex gap-3 ${border ? "border" : ""} ${colorVariants[style][color]} ${rounded && "rounded-md"} items-center justify-center px-5 py-2 font-sans font-bold disabled:opacity-40 ${customStyle} ${iconPosition === ButtonIconPosition.END && "flex-row-reverse"} ${extend && "w-full"} ${responsive ? "gap-1 p-2 text-xs sm:gap-2 sm:p-2 sm:text-xs md:gap-2 md:p-2 md:text-base lg:gap-3 lg:p-3 lg:text-base" : "gap-3 p-3"} ${iconRight ? "flex-row-reverse justify-between" : ""} `}
+      className={`flex gap-3 ${border ? "border" : ""} ${colorVariants[style][color]} ${rounded && "rounded-md"} items-center justify-center rounded-md px-5 py-2 font-sans font-bold disabled:opacity-40 ${customStyle} ${iconPosition === ButtonIconPosition.END && "flex-row-reverse"} ${extend && "w-full"} ${responsive ? "gap-1 p-2 text-xs sm:gap-2 sm:p-2 sm:text-xs md:gap-2 md:p-2 md:text-base lg:gap-3 lg:p-3 lg:text-base" : "gap-3 p-3"} ${iconRight ? "flex-row-reverse justify-between" : ""} `}
       onClick={onClick}
       disabled={disabled}
       aria-label={ariaLabel}
