@@ -88,7 +88,7 @@ model Survey {
     name      String   @unique
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
-    phase     SurveyPhase @default(ONE_INFORMATION_QUARTIER)
+    phase     SurveyPhase @default(STEP_1_INFORMATION_QUARTIER)
     quartier Quartier?
     @@map("surveys")
 }
