@@ -76,7 +76,7 @@ model VerificationToken {
 }
 
 enum SurveyPhase {
-    STEP_1_INFORMATION_QUARTIER
+    STEP_1_NEIGHBORHOOD_INFORMATION 
     STEP_2_SU_SURVERY
     STEP_3_SU_EXPLORATION
     STEP_4_ADDITIONAL_SURVEY
@@ -88,7 +88,7 @@ model Survey {
     name      String   @unique
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
-    phase     SurveyPhase @default(STEP_1_INFORMATION_QUARTIER)
+    phase     SurveyPhase @default(STEP_1_NEIGHBORHOOD_INFORMATION )
     quartier Quartier?
     @@map("surveys")
 }
