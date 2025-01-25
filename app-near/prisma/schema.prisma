@@ -3,6 +3,8 @@
 
 generator client {
     provider = "prisma-client-js"
+    previewFeatures = ["views"]
+    binaryTargets = ["native", "debian-openssl-3.0.x"]
 }
 
 datasource db {
@@ -71,4 +73,126 @@ model VerificationToken {
     expires    DateTime
 
     @@unique([identifier, token])
+}
+
+enum SurveyPhase {
+    STEP_1_NEIGHBORHOOD_INFORMATION 
+    STEP_2_SU_SURVERY
+    STEP_3_SU_EXPLORATION
+    STEP_4_ADDITIONAL_SURVEY
+    STEP_5_RESULTS
+}
+
+model Survey {
+    id        Int      @id @default(autoincrement())
+    name      String   @unique
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    phase     SurveyPhase @default(STEP_1_NEIGHBORHOOD_INFORMATION )
+    quartier Quartier?
+    @@map("surveys")
+}
+
+model InseeIris2021 {
+  iris               String     @db.VarChar(255)
+  com                String     @db.VarChar(255)
+  typ_iris           String     @db.VarChar(255)
+  lab_iris           String     @db.VarChar(255)
+  p21_pop            Float?
+  p21_pop0002        Float?
+  p21_pop0305        Float?
+  p21_pop0610        Float?
+  p21_pop1117        Float?
+  p21_pop1824        Float?
+  p21_pop2539        Float?
+  p21_pop4054        Float?
+  p21_pop5564        Float?
+  p21_pop6579        Float?
+  p21_pop80p         Float?
+  p21_pop0014        Float?
+  p21_pop1529        Float?
+  p21_pop3044        Float?
+  p21_pop4559        Float?
+  p21_pop6074        Float?
+  p21_pop75p         Float?
+  p21_pop0019        Float?
+  p21_pop2064        Float?
+  p21_pop65p         Float?
+  p21_poph           Float?
+  p21_h0014          Float?
+  p21_h1529          Float?
+  p21_h3044          Float?
+  p21_h4559          Float?
+  p21_h6074          Float?
+  p21_h75p           Float?
+  p21_h0019          Float?
+  p21_h2064          Float?
+  p21_h65p           Float?
+  p21_popf           Float?
+  p21_f0014          Float?
+  p21_f1529          Float?
+  p21_f3044          Float?
+  p21_f4559          Float?
+  p21_f6074          Float?
+  p21_f75p           Float?
+  p21_f0019          Float?
+  p21_f2064          Float?
+  p21_f65p           Float?
+  c21_pop15p         Float?
+  c21_pop15p_cs1     Float?
+  c21_pop15p_cs2     Float?
+  c21_pop15p_cs3     Float?
+  c21_pop15p_cs4     Float?
+  c21_pop15p_cs5     Float?
+  c21_pop15p_cs6     Float?
+  c21_pop15p_cs7     Float?
+  c21_pop15p_cs8     Float?
+  c21_h15p           Float?
+  c21_h15p_cs1       Float?
+  c21_h15p_cs2       Float?
+  c21_h15p_cs3       Float?
+  c21_h15p_cs4       Float?
+  c21_h15p_cs5       Float?
+  c21_h15p_cs6       Float?
+  c21_h15p_cs7       Float?
+  c21_h15p_cs8       Float?
+  c21_f15p           Float?
+  c21_f15p_cs1       Float?
+  c21_f15p_cs2       Float?
+  c21_f15p_cs3       Float?
+  c21_f15p_cs4       Float?
+  c21_f15p_cs5       Float?
+  c21_f15p_cs6       Float?
+  c21_f15p_cs7       Float?
+  c21_f15p_cs8       Float?
+  p21_pop_fr         Float?
+  p21_pop_etr        Float?
+  p21_pop_imm        Float?
+  p21_pmen           Float?
+  p21_phormen        Float?
+  @@map("insee_iris_2021")
+  @@ignore
+}
+
+view Quartier {
+  iris_14_arr            String[]
+  population_total       Int
+  p21_pop1529_sum        Int
+  p21_pop3044_sum        Int
+  p21_pop4559_sum        Int
+  p21_pop6074_sum        Int
+  p21_pop75p_sum         Int
+  c21_pop15p_cs1_sum     Int
+  c21_pop15p_cs2_sum     Int
+  c21_pop15p_cs3_sum     Int
+  c21_pop15p_cs4_sum     Int
+  c21_pop15p_cs5_sum     Int
+  c21_pop15p_cs6_sum     Int
+  c21_pop15p_cs7_sum     Int
+  c21_pop15p_cs8_sum     Int
+  population_femme_total Int
+  population_homme_total Int
+  surveyId         Int  @unique                // Foreign key unique field to survey
+  survey           Survey @relation(fields: [surveyId], references: [id])
+  @@map("quartiers")
 }

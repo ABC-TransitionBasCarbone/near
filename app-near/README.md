@@ -24,56 +24,93 @@ To learn more about the [T3 Stack](https://create.t3.gg/), take a look at the fo
 
 You can check out the [create-t3-app GitHub repository](https://github.com/t3-oss/create-t3-app) — your feedback and contributions are welcome!
 
-## How do I deploy this?
+## Comment installer le dépot localement ?
 
-Follow our deployment guides for [Vercel](https://create.t3.gg/en/deployment/vercel), [Netlify](https://create.t3.gg/en/deployment/netlify) and [Docker](https://create.t3.gg/en/deployment/docker) for more information.
-
-## How do I init env locally?
-
-Use correct node version:
+Utiliser la bonne version de node avec nvm :
 
 ```sh
 nvm use
 ```
 
-Install dependencies:
+Installer des dépendances :
 
 ```sh
 npm install
 ```
 
-Configure husky pre commit:
+Configurer le pre commit hook :
 
 ```sh
 npm run prepare
 ```
 
-Run local postgresql:
+Lancer la base de données PostgreSQL :
 
 ```sh
 docker-compose up -d
 ```
 
-Create empty env file:
+Créer un fichier .env :
 
 ```sh
 cp .env.example .env
 ```
 
-Customize it in particular generate AUTH_SECRET with:
+Générer une valeur pour AUTH_SECRET :
 
 ```sh
 openssl rand -base64 32
 ```
 
-Migrate database:
+Migrer la base de données :
 
 ```sh
-npm run db:push
+npm run db:migrate
 ```
 
-Run app locally:
+Exécuter l'application en local :
 
 ```sh
 npm run dev
 ```
+
+##  Comment charger la base de données INSEE des IRIS pour l'année 2021 ?
+
+### 1. Télécharger le fichier et l'extraire dans ./scripts
+
+Pour les données de l'INSEE 2021
+
+```bash
+curl -L -O https://www.insee.fr/fr/statistiques/fichier/8268806/base-ic-evol-struct-pop-2021_csv.zip && unzip base-ic-evol-struct-pop-2021_csv.zip && mv base-ic-evol-struct-pop-2021.CSV ./scripts/base-ic-evol-struct-pop-2021.csv && rm base-ic-evol-struct-pop-2021_csv.zip
+```
+
+## 2. Charger la BDD INSEE et initialiser une enquête pour le 14eme arrondissement de Paris
+
+```bash
+npm run load:all
+```
+
+Il est aussi possible de le faire en 2 étapes :
+
+### 2.1. Charger les données INSEE dans une base de données locale
+
+```bash
+npm run load:insee -- "$(pwd)/scripts/base-ic-evol-struct-pop-2021.csv" postgresql://postgres:password@localhost:5432/app-near
+```
+
+Cela fonctionne sans paramètre si la commande de l'étape 1 a été faite
+
+### 2.2. Initialiser une enquête en base et calculer les données statistiques nécessaires à l'enquête
+
+Le script utilise les variables du fichier `.env`
+
+```bash
+npm run load-surveys
+```
+
+Pour plus de détail sur :
+
+- l'ajout d'un nouveau millésime de l'INSEE
+- ou comment ajouter une enquête
+
+voir le [README du dossier scripts](./scritps/README.md)
