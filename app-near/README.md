@@ -105,7 +105,7 @@ Cela fonctionne sans paramètre si la commande de l'étape 1 a été faite
 Le script utilise les variables du fichier `.env`
 
 ```bash
-npm run load-surveys
+npm run load:surveys
 ```
 
 Pour plus de détail sur :
