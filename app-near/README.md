@@ -86,26 +86,25 @@ curl -L -O https://www.insee.fr/fr/statistiques/fichier/8268806/base-ic-evol-str
 
 ## 2. Charger la BDD INSEE et initialiser une enquête pour le 14eme arrondissement de Paris
 
+### En environnement local
 ```bash
 npm run load:all
 ```
 
-Il est aussi possible de le faire en 2 étapes :
+### En environnement de production (ou dockerisé) :
 
-### 2.1. Charger les données INSEE dans une base de données locale
+#### 2.1. Charger les données INSEE dans une base de données locale
 
 ```bash
 npm run load:insee -- "$(pwd)/scripts/base-ic-evol-struct-pop-2021.csv" postgresql://postgres:password@localhost:5432/app-near
 ```
 
-Cela fonctionne sans paramètre si la commande de l'étape 1 a été faite
-
-### 2.2. Initialiser une enquête en base et calculer les données statistiques nécessaires à l'enquête
+#### 2.2. Initialiser une enquête en base et calculer les données statistiques nécessaires à l'enquête
 
 Le script utilise les variables du fichier `.env`
 
 ```bash
-npm run load-surveys
+npm run load:surveys
 ```
 
 Pour plus de détail sur :
