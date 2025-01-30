@@ -13,6 +13,7 @@ const config = {
   ],
   rules: {
     "prettier/prettier": "error",
+    "prefer-template": "error",
     "@typescript-eslint/array-type": "off",
     "@typescript-eslint/consistent-type-definitions": "off",
     "@typescript-eslint/consistent-type-imports": [
