@@ -5,14 +5,18 @@ import {
   MetabaseIFrameNumber,
   MetabaseIframeType,
 } from "~/types/enums/metabase";
-import MetabaseIframe from "../_ui/MetabaseIframe";
+import MetabaseIframe from "../../_ui/MetabaseIframe";
 import { ButtonStyle } from "~/types/enums/button";
-import LinkAsButton from "../_ui/LinkAsButton";
-import SurveyLayout from "./SurveyLayout";
+import LinkAsButton from "../../_ui/LinkAsButton";
+import SurveyLayout from "../SurveyLayout";
 import { api } from "~/trpc/react";
+import Button from "../../_ui/Button";
+import { useSurveyStateContext } from "../../_context/surveyStateContext";
+import { surveyConfig } from "../surveyPage.config";
 
 const NeighborhoodInformations: React.FC = () => {
   const { data: session } = useSession();
+  const { step, updateStep } = useSurveyStateContext();
 
   const { data: neighborhood } = api.neighborhoods.getOne.useQuery(
     session?.user?.surveyId ?? 0,
@@ -46,13 +50,14 @@ const NeighborhoodInformations: React.FC = () => {
           <LinkAsButton icon="/icons/question.svg" rounded>
             Besoin d&apos;aide
           </LinkAsButton>
-          <LinkAsButton
+          <Button
             icon="/icons/flash.svg"
             rounded
             style={ButtonStyle.FILLED}
+            onClick={() => step && updateStep(surveyConfig[step].nextStep)}
           >
             Démarrer l&apos;enquête
-          </LinkAsButton>
+          </Button>
         </>
       }
     >
