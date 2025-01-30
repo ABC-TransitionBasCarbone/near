@@ -12,7 +12,7 @@ import SurveyLayout from "../SurveyLayout";
 import { api } from "~/trpc/react";
 import Button from "../../_ui/Button";
 import { useSurveyStateContext } from "../../_context/surveyStateContext";
-import { surveyConfig } from "../surveyPage.config";
+import { surveyConfig } from "./config";
 
 const NeighborhoodInformations: React.FC = () => {
   const { data: session } = useSession();

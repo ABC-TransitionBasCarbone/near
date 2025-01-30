@@ -1,7 +1,7 @@
 "use client";
 
-import { surveyConfig } from "./surveyPage.config";
 import { useSurveyStateContext } from "../_context/surveyStateContext";
+import { surveyConfig } from "./steps/config";
 
 const SurveyPage: React.FC = () => {
   const { step } = useSurveyStateContext();

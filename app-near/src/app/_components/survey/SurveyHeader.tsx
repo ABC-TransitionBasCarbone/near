@@ -2,11 +2,11 @@
 
 import { type SurveyStep } from "~/types/enums/surveyStep";
 import ProgressBar from "../progress-bar/Progressbar";
-import { surveyConfig, surveySteps } from "./surveyPage.config";
 import { api } from "~/trpc/react";
 import { useSession } from "next-auth/react";
 import { useEffect } from "react";
 import { useSurveyStateContext } from "../_context/surveyStateContext";
+import { surveyConfig, surveySteps } from "./steps/config";
 
 const SurveyHeader = () => {
   const { data: session } = useSession();
