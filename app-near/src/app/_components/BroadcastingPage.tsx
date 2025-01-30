@@ -18,11 +18,17 @@ const BroadcastingPage: React.FC<BroadcastingPageProps> = (
   return (
     <>
       <div className="m-auto max-w-5xl space-y-10">
-        <BroadcastingButton broadcastType={"street_survey"} surveyType={"su"} />
+        <BroadcastingButton
+          broadcastType={"street_survey"}
+          surveyType={props.surveyType}
+        />
 
         <hr className="max-w-sm text-grayLight" />
 
-        <BroadcastingButton broadcastType={"mail_campaign"} surveyType={"su"} />
+        <BroadcastingButton
+          broadcastType={"mail_campaign"}
+          surveyType={props.surveyType}
+        />
 
         <hr className="max-w-sm text-grayLight" />
 
@@ -33,7 +39,10 @@ const BroadcastingPage: React.FC<BroadcastingPageProps> = (
 
         <hr className="max-w-sm text-grayLight" />
 
-        <BroadcastingButton broadcastType={"qr_code"} surveyType={"su"} />
+        <BroadcastingButton
+          broadcastType={"qr_code"}
+          surveyType={props.surveyType}
+        />
       </div>
     </>
   );

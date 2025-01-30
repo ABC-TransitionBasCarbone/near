@@ -18,23 +18,27 @@ const BroadcastingButton: React.FC<BroadcastingButtonProps> = (
       description:
         "Générer un lien unique à intégrer dans vos emails ou vos messages",
       button: "Générer un lien email",
+      icon: "/icons/mail.svg",
     },
     social_network: {
       title: "Enquête par les réseaux sociaux",
       description:
         "Générer un lien unique à intégrer dans vos posts & stories (Facebook, Instagra...)",
       button: "Générer un lien réseaux sociaux",
+      icon: "/icons/facebook.svg",
     },
     street_survey: {
       title: "Enquête sur le terrain",
       description: "Générer un lien unique pour chaque session dans la rue",
       button: "Générer un lien enquêteur",
+      icon: "/icons/user.svg",
     },
     qr_code: {
       title: "Enquête via QR code",
       description:
         "Générer un lien unique à intégrer dans vos affiches, flyers",
       button: "Générer un QR code",
+      icon: "/icons/qr.svg",
     },
   };
 
@@ -60,7 +64,7 @@ const BroadcastingButton: React.FC<BroadcastingButtonProps> = (
       <div className="group relative">
         <Button
           onClick={() => generateTypeformUniqueLink(props.broadcastType)}
-          icon="/icons/user.svg"
+          icon={broadcastWordings[props.broadcastType].icon}
         >
           {broadcastWordings[props.broadcastType].button}
         </Button>
