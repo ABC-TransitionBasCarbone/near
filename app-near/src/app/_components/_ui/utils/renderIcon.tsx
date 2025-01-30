@@ -2,7 +2,7 @@ import { type ReactNode } from "react";
 
 export const renderIcon = (
   icon: string | ReactNode,
-  iconSize = "auto",
+  iconSize: number | string = "auto",
   alt = "icon",
 ): ReactNode => {
   if (!icon) {
