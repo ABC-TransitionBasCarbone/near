@@ -8,7 +8,6 @@ export interface Step {
 
 export interface StepParams<StepType> {
   title: string;
-  maxWidth: string;
   component: ReactNode;
   nextStep: StepType;
   previouxStep: StepType;
