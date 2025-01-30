@@ -54,7 +54,7 @@ const BroadcastingButton: React.FC<BroadcastingButtonProps> = (
   const [copied, setCopied] = useState(false);
 
   return (
-    <div className="wrap-wrap flex justify-between">
+    <div className="wrap-wrap flex flex-col justify-between space-y-4 sm:flex-row sm:space-y-0">
       <div>
         <p className="font-bold">
           {broadcastWordings[props.broadcastType].title}
