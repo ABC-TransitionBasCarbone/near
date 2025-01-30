@@ -116,6 +116,7 @@ model InseeIris2021 {
 }
 
 view Quartier {
+  iris_selectors         String[]
   population_total       Int
   p21_pop1529_sum        Int
   p21_pop3044_sum        Int
