@@ -1,5 +1,5 @@
-import NeighboroodInformations from "~/app/_components/survey/NeighboroodInformations";
+import NeighborhoodInformations from "~/app/_components/survey/NeighborhoodInformations";
 
 export default async function Home() {
-  return <NeighboroodInformations />;
+  return <NeighborhoodInformations />;
 }

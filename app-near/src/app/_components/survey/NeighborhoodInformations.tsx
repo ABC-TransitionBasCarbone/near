@@ -11,10 +11,10 @@ import LinkAsButton from "../_ui/LinkAsButton";
 import SurveyLayout from "./SurveyLayout";
 import { api } from "~/trpc/react";
 
-const NeighboroodInformations: React.FC = () => {
+const NeighborhoodInformations: React.FC = () => {
   const { data: session } = useSession();
 
-  const { data: neighborood } = api.neighboroods.getOne.useQuery(
+  const { data: neighborhood } = api.neighborhoods.getOne.useQuery(
     session?.user?.surveyId ?? 0,
     {
       enabled: !!session?.user?.surveyId,
@@ -31,7 +31,7 @@ const NeighboroodInformations: React.FC = () => {
         <>
           <h1 className="text-3xl text-black">
             Informations sur le quartier :{" "}
-            {neighborood?.population_total ?? "0"} personnes de plus de 15 ans.
+            {neighborhood?.population_total ?? "0"} personnes de plus de 15 ans.
           </h1>
           <p>
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
@@ -65,4 +65,4 @@ const NeighboroodInformations: React.FC = () => {
   );
 };
 
-export default NeighboroodInformations;
+export default NeighborhoodInformations;
