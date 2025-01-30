@@ -1,5 +1,6 @@
 import { env } from "~/env";
 import { type NextAuthUser } from "~/types/NextAuth";
+import { db } from "../db";
 
 const getUserNameAndPassword = (input: string) => {
   const parts = input.split(":");
@@ -26,11 +27,18 @@ export const login = async (
     return { message: "Accès non autorisé", success: false };
   }
 
+  const userSurvey = await db.survey.findFirst();
+
+  if (!userSurvey) {
+    return { message: "Accès non autorisé", success: false };
+  }
+
   return {
     message: "Accès validé",
     success: true,
     user: {
       email,
+      surveyId: userSurvey.id,
     },
   };
 };
