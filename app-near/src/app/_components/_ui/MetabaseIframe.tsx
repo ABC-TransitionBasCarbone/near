@@ -9,15 +9,15 @@ interface MetabaseIframeProps {
   iframeType: MetabaseIframeType;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   params?: Record<string, any>;
-  width?: number;
-  height?: number;
+  width?: string;
+  height?: string;
 }
 const MetabaseIframe: React.FC<MetabaseIframeProps> = ({
   iframeNumber,
   iframeType,
   params,
-  width = 800,
-  height = 800,
+  width = "100%",
+  height = "800px",
 }) => {
   const [metabseIframeUrl] = api.metabase.getIframeUrl.useSuspenseQuery({
     iframeNumber,
@@ -29,14 +29,7 @@ const MetabaseIframe: React.FC<MetabaseIframeProps> = ({
     return "Loading...";
   }
 
-  return (
-    <iframe
-      src={metabseIframeUrl}
-      width={width}
-      height={height}
-      allowTransparency
-    />
-  );
+  return <iframe src={metabseIframeUrl} width={width} height={height} />;
 };
 
 export default MetabaseIframe;

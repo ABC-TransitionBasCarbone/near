@@ -1,5 +1,5 @@
-import LandingPage from "~/app/_components/LandingPage";
+import NeighboroodInformations from "~/app/_components/survey/NeighboroodInformations";
 
 export default async function Home() {
-  return <LandingPage />;
+  return <NeighboroodInformations />;
 }

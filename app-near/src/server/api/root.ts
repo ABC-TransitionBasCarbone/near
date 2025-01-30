@@ -1,5 +1,6 @@
 import { createCallerFactory, createTRPCRouter } from "~/server/api/trpc";
 import { metabaseRouter } from "./routers/metabase";
+import { neighboroodsRouter } from "./routers/neighborhoods";
 
 /**
  * This is the primary router for your server.
@@ -8,6 +9,7 @@ import { metabaseRouter } from "./routers/metabase";
  */
 export const appRouter = createTRPCRouter({
   metabase: metabaseRouter,
+  neighboroods: neighboroodsRouter,
 });
 
 // export type definition of API

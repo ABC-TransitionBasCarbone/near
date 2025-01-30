@@ -4,5 +4,5 @@ export enum MetabaseIframeType {
 }
 
 export enum MetabaseIFrameNumber {
-  POPULATION_STATISTICS = 2,
+  POPULATION_STATISTICS = 3,
 }
