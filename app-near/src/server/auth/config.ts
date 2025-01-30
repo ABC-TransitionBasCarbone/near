@@ -70,6 +70,7 @@ export const authConfig = {
           ...token,
           userId: user.id,
           email: currentUser.email,
+          surveyId: currentUser.surveyId,
         };
       }
       return token;
@@ -80,7 +81,7 @@ export const authConfig = {
           ...session,
           user: {
             ...session.user,
-            id: token.id as string,
+            ...token,
           },
         };
       }

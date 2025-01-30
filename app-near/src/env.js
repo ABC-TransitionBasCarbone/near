@@ -11,11 +11,14 @@ export const env = createEnv({
       process.env.NODE_ENV === "production"
         ? z.string()
         : z.string().optional(),
+    AUTH_URL: z.string().url(),
     DATABASE_URL: z.string().url(),
     NODE_ENV: z
       .enum(["development", "test", "production"])
       .default("development"),
     SUPER_ADMIN: z.string().regex(/^[a-zA-Z0-9@.]+:[a-zA-Z0-9*^.$-@#]+$/),
+    METABASE_SECRET_KEY: z.string(),
+    METABASE_SITE_URL: z.string().url(),
   },
 
   /**
@@ -34,10 +37,13 @@ export const env = createEnv({
    */
   runtimeEnv: {
     AUTH_SECRET: process.env.AUTH_SECRET,
+    AUTH_URL: process.env.AUTH_URL,
     DATABASE_URL: process.env.DATABASE_URL,
     NODE_ENV: process.env.NODE_ENV,
     SUPER_ADMIN: process.env.SUPER_ADMIN,
     NEXT_PUBLIC_TYPEFORM_SU_LINK: process.env.NEXT_PUBLIC_TYPEFORM_SU_LINK,
+    METABASE_SECRET_KEY: process.env.METABASE_SECRET_KEY,
+    METABASE_SITE_URL: process.env.METABASE_SITE_URL,
   },
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially

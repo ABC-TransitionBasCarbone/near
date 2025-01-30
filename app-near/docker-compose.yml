@@ -14,7 +14,9 @@ services:
 
   app-near-web:
     image: node:22-alpine
-    command: sh -c "echo 'starting app-near...'; npm ci; npx prisma db push; npm run dev"
+    command: sh -c "echo 'starting app-near...'; npm i; npx prisma db push; npm run dev"
+    environment:
+      DATABASE_URL: postgresql://postgres:password@database/app-near
     ports:
       - "3000:3000"
     working_dir: /app

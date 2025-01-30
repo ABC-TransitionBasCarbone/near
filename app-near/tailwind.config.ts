@@ -11,6 +11,7 @@ export const colors = {
   blueLight: '#29ACD6',
   white: '#FFFFFF',
   grayLight: '#BFBFBF',
+  grayExtraLight: '#F6F6F6',
 };
 
 export default {
