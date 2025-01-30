@@ -31,7 +31,7 @@ const SurveyHeader = () => {
   return (
     <div className="mx-12 my-8 flex flex-wrap items-center justify-center gap-4">
       <img src="/logos/logo_near.svg" alt="" />
-      <nav>
+      <nav className="flex-grow">
         <ProgressBar
           isActive={surveyConfig[survey.phase as SurveyStep].isActive}
           step={step}

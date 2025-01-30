@@ -7,7 +7,6 @@ export interface Step {
 }
 
 export interface StepParams<StepType> {
-  title: string;
   component: ReactNode;
   nextStep: StepType;
   previouxStep: StepType;
