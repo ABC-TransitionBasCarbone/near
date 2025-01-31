@@ -2,6 +2,7 @@ import { type Session } from "next-auth";
 import { redirect } from "next/navigation";
 import { type ReactNode } from "react";
 import { auth } from "~/server/auth";
+import SurveyHeader from "../survey/SurveyHeader";
 
 interface LayoutAuthentifiedProps {
   children: ReactNode;
@@ -18,8 +19,9 @@ const LayoutAuthentified: React.FC<LayoutAuthentifiedProps> = async ({
 
   return (
     <>
-      <header>Some header</header>
-      <nav>Authentified Navigation</nav>
+      <header>
+        <SurveyHeader />
+      </header>
       <main role="main">{children}</main>
       <footer>Footer</footer>
     </>
