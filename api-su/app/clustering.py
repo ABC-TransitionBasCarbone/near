@@ -1,7 +1,7 @@
 from enum import IntEnum
 from math import sqrt
 import numpy as np
-import constants
+from . import constants
 
 
 class DataIndex(IntEnum):
