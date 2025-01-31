@@ -1,3 +1,4 @@
+import { type Session } from "next-auth";
 import { redirect } from "next/navigation";
 import { type ReactNode } from "react";
 import { auth } from "~/server/auth";
@@ -9,10 +10,10 @@ interface LayoutAuthentifiedProps {
 const LayoutAuthentified: React.FC<LayoutAuthentifiedProps> = async ({
   children,
 }) => {
-  const session = await auth();
+  const session: Session | null = await auth();
 
   if (!session?.user) {
-    redirect("/connexion");
+    redirect(`${process.env.AUTH_URL}/connexion`);
   }
 
   return (
