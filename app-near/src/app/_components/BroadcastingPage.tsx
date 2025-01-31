@@ -17,7 +17,7 @@ const BroadcastingPage: React.FC<BroadcastingPageProps> = (
 ) => {
   return (
     <>
-      <div className="m-auto mt-16 max-w-5xl space-y-10">
+      <div className="m-auto mt-16 max-w-5xl space-y-10 px-8">
         <BroadcastingButton
           broadcastType={"street_survey"}
           surveyType={props.surveyType}
