@@ -36,3 +36,9 @@ La commande de lancement se trouve dans le fichier `Procfile`.
 Cette API ne doit être appelé que par l'app Near. Elle est donc sécurisée par une clé (`API_SU_KEY`) partagée par les 2 applications.
 
 Pour générer une clé, vous pouvez utiliser la commande suivante : `python -c 'import secrets; print(secrets.token_hex())'`
+
+## Modification des paramètres de l'algorithme des SU
+
+Les paramètres de l'algorithme des SU se trouvent dans le fichier [constants.py](app/constants.py).
+
+Editer le fichier via github et renseigner un commit message adapté.

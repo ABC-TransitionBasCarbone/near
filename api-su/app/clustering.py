@@ -1,26 +1,7 @@
 from enum import IntEnum
 from math import sqrt
 import numpy as np
-
-cluster_min_size = 0.11
-cluster_max_size = 0.4
-cluster_nb_min = 3
-
-ratio_food = [200, 1000, 2000]
-ratio_mobility = [0, 300, 2300]
-ratio_digital = [90, 180, 360]
-ratio_purchase = [400, 800, 1600]
-ratio_plane = [0, 800, 2000]
-ratio_home = [200, 1100, 1600]
-
-ratio = [
-    ratio_food,
-    ratio_mobility,
-    ratio_digital,
-    ratio_purchase,
-    ratio_plane,
-    ratio_home,
-]
+import constants
 
 
 class DataIndex(IntEnum):
@@ -38,12 +19,18 @@ def convert_to_vector_co2eq(user_data):
     # value 1 matches element with index 0 of ratio array
     # value 2 matches element with index 1 of ratio array
     # etc.
-    result[DataIndex.FOOD.value] = ratio_food[user_data.get("food") - 1]
-    result[DataIndex.MOBILITY.value] = ratio_mobility[user_data.get("mobility") - 1]
-    result[DataIndex.DIGITAL.value] = ratio_digital[user_data.get("digital") - 1]
-    result[DataIndex.PURCHASE.value] = ratio_purchase[user_data.get("purchase") - 1]
-    result[DataIndex.PLANE.value] = ratio_plane[user_data.get("plane") - 1]
-    result[DataIndex.HOME.value] = ratio_home[user_data.get("home") - 1]
+    result[DataIndex.FOOD.value] = constants.RATIO_FOOD[user_data.get("food") - 1]
+    result[DataIndex.MOBILITY.value] = constants.RATIO_MOBILITY[
+        user_data.get("mobility") - 1
+    ]
+    result[DataIndex.DIGITAL.value] = constants.RATIO_DIGITAL[
+        user_data.get("digital") - 1
+    ]
+    result[DataIndex.PURCHASE.value] = constants.RATIO_PURCHASE[
+        user_data.get("purchase") - 1
+    ]
+    result[DataIndex.PLANE.value] = constants.RATIO_PLANE[user_data.get("plane") - 1]
+    result[DataIndex.HOME.value] = constants.RATIO_HOME[user_data.get("home") - 1]
     return result
 
 
@@ -209,7 +196,10 @@ def format_computed_su(cluster, sample_size):
 def run(users_data):
     data_co2eq = convert_all_to_vector_co2eq(users_data)
     clusters, sample_size = h_clustering(
-        data_co2eq, cluster_min_size, cluster_max_size, cluster_nb_min
+        data_co2eq,
+        constants.CLUSTER_MIN_SIZE,
+        constants.CLUSTER_MAX_SIZE,
+        constants.CLUSTER_NB_MIN,
     )
     return {
         "computed_sus": [
