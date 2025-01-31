@@ -30,6 +30,7 @@ export const login = async (
   const userSurvey = await db.survey.findFirst();
 
   if (!userSurvey) {
+    console.debug(`Aucune enquête trouvée pour ${email}, accès non autorisé.`);
     return { message: "Accès non autorisé", success: false };
   }
 
