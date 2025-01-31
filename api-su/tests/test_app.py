@@ -1,5 +1,6 @@
 import pytest
 from app import app
+from app import constants
 
 
 @pytest.fixture
@@ -92,6 +93,6 @@ def test_200_compute_su(client):
     # print("Response:", response.get_data(as_text=True))
     assert response.status_code == 200
     assert (
-        len(response.json.get("computed_sus")) >= 3
-    )  # TODO use cluster_nb_min variable
+        len(response.json.get("computed_sus")) >= constants.CLUSTER_NB_MIN
+    )
     assert len(response.json.get("user_attributed_su")) == len(valid_data)
