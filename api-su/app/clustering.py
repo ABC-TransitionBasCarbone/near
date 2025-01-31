@@ -61,14 +61,14 @@ def get_closest_cluster(clusters, data_co2eq):
     return closest_cluster_index, min_distance
 
 
-def merge_pairs(list):
+def merge_pairs(input_list):
     """
     Merge closest pairs into bigger cluster
     Example: merge_pairs([[1, 2], [2, 3], [4, 5], [3, 4]]) -> [[1, 2, 3, 4, 5]]
     """
     merged = []
 
-    for sublist in list:
+    for sublist in input_list:
         sublist_set = set(sublist)
         merged_with_existing = False
 
@@ -86,30 +86,22 @@ def merge_pairs(list):
 
 class Cluster:
     def __init__(self, vector, children=[], distance=0.0, index=None, weight=1):
-        self.children = children
-        self.vector = vector
         self.index = index
+        self.vector = vector
         self.distance = distance
         self.weight = weight
+        self.children = children
+
+    def __repr__(self):
+        return (
+            f"Cluster(index={self.index}, vector={self.vector}, distance={self.distance}, "
+            f"weight={self.weight},  "
+            f"children_count={len(self.children)})"
+        )
 
 
 def initialize_clusters(data):
-    return [Cluster(vector=data[i], index=i) for i in range(len(data))]
-
-
-def compute_initial_distances(clusters, distance_func):
-    distances = {}
-    nb_clusters = len(clusters)
-    for i in range(nb_clusters):
-        for j in range(i + 1, nb_clusters):
-            if np.any(np.isnan(clusters[j].vector)):
-                raise ValueError(
-                    f"NaN detected in cluster vector: {clusters[j].vector}"
-                )
-            distances[(clusters[i].index, clusters[j].index)] = distance_func(
-                clusters[i].vector, clusters[j].vector
-            )
-    return distances
+    return [Cluster(vector=data[i].tolist(), index=i) for i in range(len(data))]
 
 
 def merge_clusters(clusters, pairs, lowest_distance, current_cluster_id):
@@ -126,7 +118,7 @@ def merge_clusters(clusters, pairs, lowest_distance, current_cluster_id):
             raise ValueError(f"NaN detected in merged vector: {merged_vector}")
 
         new_cluster = Cluster(
-            vector=list(merged_vector),
+            vector=merged_vector.tolist(),
             children=children,
             distance=lowest_distance,
             index=current_cluster_id,
@@ -145,7 +137,6 @@ def merge_clusters(clusters, pairs, lowest_distance, current_cluster_id):
 
 def h_clustering(data, floor, top, min_count, distance=distance_euclidean):
     clusters = initialize_clusters(data)
-    distances = compute_initial_distances(clusters, distance)
 
     sample_size = len(clusters)
     lowest_weight = 1 / sample_size
@@ -153,15 +144,17 @@ def h_clustering(data, floor, top, min_count, distance=distance_euclidean):
 
     current_cluster_id = -1
     while len(clusters) > min_count and lowest_weight < floor and highest_weight < top:
-        closest_pairs = []
-        lowest_distance = float("inf")
-
-        for (index1, index2), dist in distances.items():
-            if dist < lowest_distance:
-                lowest_distance = dist
-                closest_pairs = [[index1, index2]]
-            elif dist == lowest_distance:
-                closest_pairs.append([index1, index2])
+        closest_pairs = [[0, 1]]
+        lowest_distance = distance(clusters[0].vector, clusters[1].vector)
+        
+        for i in range(len(clusters)):
+            for j in range(i + 1, len(clusters)):
+                d = distance(clusters[i].vector, clusters[j].vector)
+                if d < lowest_distance:
+                    lowest_distance = d
+                    closest_pairs = [[i, j]]
+                if d == lowest_distance:
+                    closest_pairs.append([i, j])
 
         merged_pairs = merge_pairs(closest_pairs)
         current_cluster_id = merge_clusters(
@@ -187,9 +180,8 @@ def get_user_attributed_su(user_data, clusters):
 def format_computed_su(cluster, sample_size):
     return {
         "su": cluster.index,
-        "pop_percentage": cluster.weight / sample_size,
-        # we need to convert numpy arrays to python list for it to be JSON serializable
-        "barycenter": cluster.vector.tolist(),
+        "pop_percentage": round((cluster.weight / sample_size) * 100, 2),
+        "barycenter": cluster.vector,
     }
 
 
