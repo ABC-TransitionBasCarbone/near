@@ -32,10 +32,13 @@ const NeighborhoodInformations: React.FC = () => {
   return (
     <SurveyLayout
       banner={
-        <>
+        <div className="flex flex-col gap-5">
           <h1 className="text-3xl text-black">
             Informations sur le quartier :{" "}
-            {neighborhood?.population_total ?? "0"} personnes de plus de 15 ans.
+            {new Intl.NumberFormat("fr-FR").format(
+              Number(neighborhood?.population_total ?? "0"),
+            )}
+            personnes de plus de 15 ans.
           </h1>
           <p>
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
@@ -43,7 +46,7 @@ const NeighborhoodInformations: React.FC = () => {
             eleifend libero quis cursus hendrerit. Praesent at ullamcorper
             ipsum.
           </p>
-        </>
+        </div>
       }
       actions={
         <>
