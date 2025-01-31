@@ -10,5 +10,10 @@
     "typescriptreact"
   ],
   "editor.defaultFormatter": "dbaeumer.vscode-eslint",
-  "editor.formatOnPaste": true
+  "editor.formatOnPaste": true,
+  "python.testing.pytestArgs": [
+    "api-su"
+  ],
+  "python.testing.unittestEnabled": false,
+  "python.testing.pytestEnabled": true
 }

@@ -2,6 +2,7 @@ import os
 from flask import Flask, request, abort, jsonify
 from flask_cors import CORS
 from marshmallow import Schema, fields, ValidationError
+from . import clustering
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -37,8 +38,9 @@ compute_su_request_schema = UserDataRequestSchema(many=True)
 @app.route("/api-su/compute", methods=["POST"])
 def compute_su():
     try:
-        data = compute_su_request_schema.load(request.json)
-        print(f"Compute SU for {len(data)} users")
-        return {"msg": "Not implemented yet"}
+        users_data = compute_su_request_schema.load(request.json)
+        print(f"Compute SU for {len(users_data)} users")
+        result = clustering.run(users_data)
+        return jsonify(result)
     except ValidationError as err:
         return jsonify({"error": err.messages}), 400  # Bad request
