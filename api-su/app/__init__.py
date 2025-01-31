@@ -36,7 +36,7 @@ compute_su_request_schema = UserDataRequestSchema(many=True)
 
 
 @app.route("/api-su/compute", methods=["POST"])
-def compute_su():
+def compute_sus():
     try:
         users_data = compute_su_request_schema.load(request.json)
         print(f"Compute SU for {len(users_data)} users")

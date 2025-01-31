@@ -1,6 +1,10 @@
 import pytest
+import os
+import pandas
+import numpy as np
 from app import app
 from app import constants
+import test_file_data
 
 
 @pytest.fixture
@@ -57,7 +61,7 @@ def test_400_invalid_format(client):
     assert "digital" in response.json["error"]["0"]
 
 
-def test_200_compute_su(client):
+def test_200_compute_sus(client):
     valid_data = [
         {
             "user_id": 100,
@@ -90,9 +94,30 @@ def test_200_compute_su(client):
     response = client.post(
         "/api-su/compute", headers={"X-API-KEY": "1234"}, json=valid_data
     )
+    assert response.status_code == 200
+    assert len(response.json.get("computed_sus")) >= constants.CLUSTER_NB_MIN
+    assert len(response.json.get("user_attributed_su")) == len(valid_data)
+
+
+def test_200_compute_sus_from_file(client):
+    input_data, expected_sus = extract_from_file()
+    response = client.post(
+        "/api-su/compute", headers={"X-API-KEY": "1234"}, json=input_data
+    )
     # print("Response:", response.get_data(as_text=True))
     assert response.status_code == 200
-    assert (
-        len(response.json.get("computed_sus")) >= constants.CLUSTER_NB_MIN
-    )
-    assert len(response.json.get("user_attributed_su")) == len(valid_data)
+    sus = response.json.get("computed_sus")
+    assert len(sus) == len(expected_sus)
+    assert sorted(sus, key=lambda x: x["su"]) == sorted(expected_sus, key=lambda x: x["su"])
+    assert sorted(sus, key=lambda x: x["pop_percentage"]) == sorted(expected_sus, key=lambda x: x["pop_percentage"])
+
+
+def extract_from_file():
+    file_path = os.path.join(os.path.dirname(__file__), test_file_data.FILENAME)
+    df = pandas.read_csv(file_path, sep="\t")
+    df.columns = ["user_id", "food", "mobility", "digital", "purchase", "plane", "home"]
+    df = df.loc[df["user_id"].isin(test_file_data.L10)]
+    for col, mapping in test_file_data.MAPPINGS.items():
+        df[col] = df[col].apply(lambda x: mapping.index(x) + 1 if x in mapping else np.nan)
+
+    return df.to_dict(orient="records"), test_file_data.EXPECTED_SUS
