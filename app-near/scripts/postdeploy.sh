@@ -12,10 +12,6 @@ rm base-ic-evol-struct-pop-2021_csv.zip
 
 npm run load:insee -- "./scripts/base-ic-evol-struct-pop-2021.csv" ${SCALINGO_POSTGRESQL_URL}
 
-echo "Installing tsx..."
-
-npm install tsx
-
 npm run load:surveys
 
 exit 0
