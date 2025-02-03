@@ -117,7 +117,7 @@ model InseeIris2021 {
 
 view Quartier {
   iris_selectors         String[]
-  population_total       Int
+  population_sum         Int
   p21_pop1529_sum        Int
   p21_pop3044_sum        Int
   p21_pop4559_sum        Int
@@ -131,8 +131,8 @@ view Quartier {
   c21_pop15p_cs6_sum     Int
   c21_pop15p_cs7_sum     Int
   c21_pop15p_cs8_sum     Int
-  population_femme_total Int
-  population_homme_total Int
+  population_femme_sum Int
+  population_homme_sum Int
   surveyId         Int  @unique @map("survey_id")           // Foreign key unique field to survey
   survey           Survey @relation(fields: [surveyId], references: [id])
   @@map("quartiers")
