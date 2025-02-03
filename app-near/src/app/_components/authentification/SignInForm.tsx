@@ -102,7 +102,6 @@ export default function SignInForm(): JSX.Element {
                 buttonType="submit"
                 style={ButtonStyle.FILLED}
                 disabled={!isValid}
-                extend
                 tabIndex={3}
                 icon="/icons/arrow-right.svg"
               >
