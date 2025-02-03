@@ -10,9 +10,9 @@ mv base-ic-evol-struct-pop-2021.CSV ./scripts/base-ic-evol-struct-pop-2021.csv
 
 rm base-ic-evol-struct-pop-2021_csv.zip
 
-npm run load:insee -- "./base-ic-evol-struct-pop-2021.csv" ${SCALINGO_POSTGRESQL_URL}
-
 npm i tsx
+
+npm run load:insee -- "./scripts/base-ic-evol-struct-pop-2021.csv" ${SCALINGO_POSTGRESQL_URL}
 
 npm run load:surveys
 
