@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { type ReactNode } from "react";
 import { auth } from "~/server/auth";
 import SurveyHeader from "../survey/SurveyHeader";
+import SurveyFooter from "../survey/SurveyFooter";
 
 interface LayoutAuthentifiedProps {
   children: ReactNode;
@@ -23,7 +24,9 @@ const LayoutAuthentified: React.FC<LayoutAuthentifiedProps> = async ({
         <SurveyHeader />
       </header>
       <main role="main">{children}</main>
-      <footer>Footer</footer>
+      <footer>
+        <SurveyFooter />
+      </footer>
     </>
   );
 };

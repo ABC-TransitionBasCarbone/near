@@ -96,7 +96,7 @@ export default function SignInForm(): JSX.Element {
               tabIndex={2}
             />
 
-            <div className="mt-6">
+            <div className="mt-6 flex flex-col">
               <Button
                 color="blue"
                 buttonType="submit"
