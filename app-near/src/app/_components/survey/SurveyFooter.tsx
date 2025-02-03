@@ -1,6 +1,6 @@
 const SurveyFooter: React.FC = () => {
   return (
-    <div className="my-8 flex flex-col gap-8">
+    <div className="mb-8 flex flex-col gap-8">
       <div className="flex flex-wrap justify-center gap-8 bg-grayExtraLight px-12 py-4 md:justify-between">
         <div className="my-auto flex flex-wrap justify-center gap-8">
           <img className="h-[61px]" src="/logos/abc.webp" alt="" />
