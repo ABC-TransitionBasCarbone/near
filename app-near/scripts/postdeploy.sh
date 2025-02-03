@@ -16,7 +16,7 @@ if [[ $ROW_COUNT -eq 0 ]]; then
 
     npm run load:insee -- "./scripts/base-ic-evol-struct-pop-2021.csv" ${SCALINGO_POSTGRESQL_URL}
 else 
-   echo "Les données INSEE 2021 sont déjà chargée"
+   echo "Les données INSEE 2021 sont déjà chargées"
 fi
 
 
