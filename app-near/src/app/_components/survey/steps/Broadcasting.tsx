@@ -28,7 +28,6 @@ const Broadcasting: React.FC = () => {
             </Link>
           </div>
 
-          {/* <LinkAsButton customStyle="px-0" border={false}></LinkAsButton> */}
           <h1 className="my-4 text-3xl text-black">
             Diffusion du questionnaire Sphère d&apos;usage
           </h1>

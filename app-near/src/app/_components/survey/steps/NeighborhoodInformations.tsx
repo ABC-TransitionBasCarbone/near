@@ -36,7 +36,7 @@ const NeighborhoodInformations: React.FC = () => {
           <h1 className="text-3xl text-black">
             Informations sur le quartier :{" "}
             {new Intl.NumberFormat("fr-FR").format(
-              Number(neighborhood?.population_sum ?? "0"),
+              Number(neighborhood?.population_total ?? "0"),
             )}
             personnes de plus de 15 ans.
           </h1>
