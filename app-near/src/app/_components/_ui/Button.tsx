@@ -5,7 +5,7 @@ import { ButtonStyle } from "~/types/enums/button";
 
 export type ButtonType = JSX.IntrinsicElements["button"]["type"];
 
-interface ButtonProps {
+type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
   buttonType?: ButtonType;
   icon?: string | ReactNode;
   children?: ReactNode | string;
@@ -13,16 +13,13 @@ interface ButtonProps {
   textColor?: keyof typeof colors;
   onClick?: () => void;
   style?: ButtonStyle;
-  disabled?: boolean;
   rounded?: boolean;
-  ariaLabel?: string;
-  extend?: boolean;
   border?: boolean;
   tabIndex?: number;
   customStyle?: string;
   responsive?: boolean;
   iconRight?: boolean;
-}
+};
 const Button = ({
   buttonType = "button",
   icon = undefined,
@@ -31,13 +28,12 @@ const Button = ({
   textColor = undefined,
   onClick = undefined,
   style = ButtonStyle.LIGHT,
-  disabled = false,
   rounded = false,
-  ariaLabel = "",
   border = true,
   tabIndex = 0,
   customStyle = "",
   iconRight = false,
+  ...props
 }: ButtonProps): JSX.Element => {
   const colorVariants: Record<
     ButtonStyle,
@@ -78,11 +74,12 @@ const Button = ({
     <button
       // eslint-disable-next-line react/button-has-type
       type={buttonType}
+      // @ts-expect-error: fixme
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       className={`flex ${border ? "border" : ""} justify-center gap-3 ${iconRight ? "flex-row-reverse" : ""} ${colorVariants[style][color]} items-center px-5 py-2 font-sans font-bold ${customStyle} ${textColor ? textColorVariant[textColor] : ""} ${rounded ? "rounded-md" : ""} disabled:opacity-40`}
       onClick={onClick}
-      disabled={disabled}
-      aria-label={ariaLabel}
       tabIndex={tabIndex}
+      {...props}
     >
       {renderIcon(icon)}
       {children}

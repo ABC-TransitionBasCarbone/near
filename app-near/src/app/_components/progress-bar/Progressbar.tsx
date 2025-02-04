@@ -37,7 +37,7 @@ const ProgressBar = <T extends string>({
   };
 
   return (
-    <div className="mx-auto max-w-[950px]">
+    <div className="mx-auto max-w-6xl">
       <ul className="flex flex-wrap gap-3">
         {Object.entries<Step>(steps).map(([stepItem, stepData]) => (
           <li

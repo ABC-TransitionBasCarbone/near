@@ -18,6 +18,20 @@
             "skipFiles": ["<node_internals>/**"],
             "sourceMaps": true,
             // "program": "${workspaceFolder}/script/load_insee_data.ts",
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "runtimeVersion": "22.12.0",
+            "name": "App",
+            "runtimeExecutable": "npm",
+            "runtimeArgs": [
+              "run",
+              "dev"
+            ],
+            "cwd": "${workspaceFolder}",
+            "skipFiles": ["<node_internals>/**"],
+            "sourceMaps": true,
         }
     ]
 }
