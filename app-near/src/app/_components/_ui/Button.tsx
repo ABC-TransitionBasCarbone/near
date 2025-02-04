@@ -1,45 +1,39 @@
 import { type ReactNode } from "react";
 import { type colors } from "tailwind.config";
 import { renderIcon } from "./utils/renderIcon";
-import { ButtonIconPosition, ButtonStyle } from "~/types/enums/button";
+import { ButtonStyle } from "~/types/enums/button";
 
 export type ButtonType = JSX.IntrinsicElements["button"]["type"];
 
-interface ButtonProps {
+type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
   buttonType?: ButtonType;
   icon?: string | ReactNode;
-  iconPosition?: ButtonIconPosition;
   children?: ReactNode | string;
   color?: keyof typeof colors | "gradient";
+  textColor?: keyof typeof colors;
   onClick?: () => void;
   style?: ButtonStyle;
-  disabled?: boolean;
   rounded?: boolean;
-  ariaLabel?: string;
-  extend?: boolean;
   border?: boolean;
   tabIndex?: number;
   customStyle?: string;
   responsive?: boolean;
   iconRight?: boolean;
-}
+};
 const Button = ({
   buttonType = "button",
   icon = undefined,
-  iconPosition = ButtonIconPosition.START,
   children,
   color = "blue",
+  textColor = undefined,
   onClick = undefined,
   style = ButtonStyle.LIGHT,
-  disabled = false,
   rounded = false,
-  ariaLabel = "",
-  extend = false,
   border = true,
   tabIndex = 0,
-  responsive = false,
   customStyle = "",
   iconRight = false,
+  ...props
 }: ButtonProps): JSX.Element => {
   const colorVariants: Record<
     ButtonStyle,
@@ -68,15 +62,24 @@ const Button = ({
     },
   };
 
+  const textColorVariant: Partial<Record<keyof typeof colors, string>> = {
+    blue: "text-blue",
+    blueLight: "text-blueLight",
+    black: "text-black",
+    grayLight: "text-grayLight",
+    white: "text-white",
+  };
+
   return (
     <button
       // eslint-disable-next-line react/button-has-type
       type={buttonType}
-      className={`flex gap-3 ${border ? "border" : ""} ${colorVariants[style][color]} ${rounded && "rounded-md"} items-center justify-center px-5 py-2 font-sans font-bold disabled:opacity-40 ${customStyle} ${iconPosition === ButtonIconPosition.END && "flex-row-reverse"} ${extend && "w-full"} ${responsive ? "gap-1 p-2 text-xs sm:gap-2 sm:p-2 sm:text-xs md:gap-2 md:p-2 md:text-base lg:gap-3 lg:p-3 lg:text-base" : "gap-3 p-3"} ${iconRight ? "flex-row-reverse justify-between" : ""} `}
+      // @ts-expect-error: fixme
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      className={`flex ${border ? "border" : ""} justify-center gap-3 ${iconRight ? "flex-row-reverse" : ""} ${colorVariants[style][color]} items-center px-5 py-2 font-sans font-bold ${customStyle} ${textColor ? textColorVariant[textColor] : ""} ${rounded ? "rounded-md" : ""} disabled:opacity-40`}
       onClick={onClick}
-      disabled={disabled}
-      aria-label={ariaLabel}
       tabIndex={tabIndex}
+      {...props}
     >
       {renderIcon(icon)}
       {children}

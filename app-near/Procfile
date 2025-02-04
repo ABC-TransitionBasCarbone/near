@@ -1,1 +1,1 @@
-postdeploy: npm run prisma migrate deploy
+postdeploy: bash ./scripts/postdeploy.sh

@@ -42,7 +42,7 @@ const createQuartiersView = async (survey_id: number) => {
         '751145617', '751145618', '751145619', '751145620', '751145621',
         '751145622', '751145623', '751145624', '751145625'
       ] AS iris_selectors,
-      SUM(C21_POP15P) AS population_total,
+      SUM(C21_POP15P) AS population_sum,
       SUM(P21_POP1529) AS P21_POP1529_sum,
       SUM(P21_POP3044) AS P21_POP3044_sum,
       SUM(P21_POP4559) AS P21_POP4559_sum,
@@ -56,8 +56,11 @@ const createQuartiersView = async (survey_id: number) => {
       SUM(C21_POP15P_CS6) AS C21_POP15P_CS6_sum,
       SUM(C21_POP15P_CS7) AS C21_POP15P_CS7_sum,
       SUM(C21_POP15P_CS8) AS C21_POP15P_CS8_sum,
-      SUM(P21_POPF) AS population_femme_total,
-      SUM(P21_POPH) AS population_homme_total
+      SUM(P21_POPF) AS population_femme_sum,
+      SUM(P21_POPH) AS population_homme_sum,
+      (1.96^2 * 0.5 * (1 - 0.5)) / (0.07^2 + (1.96^2*0.25) / sum(C21_POP15P) )  AS population_sum_threshold_7p,
+      (1.96^2 * 0.5 * (1 - 0.5)) / (0.05^2 + (1.96^2*0.25) / sum(C21_POP15P) )  AS population_sum_threshold_5p,
+      (1.96^2 * 0.5 * (1 - 0.5)) / (0.03^2 + (1.96^2*0.25) / sum(C21_POP15P) )  AS population_sum_threshold_3p
       FROM iris_14_arr;
     `;
 

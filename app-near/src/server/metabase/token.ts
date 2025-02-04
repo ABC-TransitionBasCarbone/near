@@ -1,7 +1,7 @@
 import { env } from "~/env";
 import { type MetabaseIframeType } from "~/types/enums/metabase";
 import jwt from "jsonwebtoken";
-
+/* eslint-disable */
 export const getMetabaseIFrameUrl = (
   iframeNumber: number,
   iframeType: MetabaseIframeType,

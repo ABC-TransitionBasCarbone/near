@@ -1,6 +1,7 @@
 import { SurveyStep } from "~/types/enums/surveyStep";
 import { type Step, type StepParams } from "~/types/Step";
 import NeighborhoodInformations from "./NeighborhoodInformations";
+import Broadcasting from "./Broadcasting";
 
 export const surveySteps: Record<SurveyStep, Step> = {
   [SurveyStep.STEP_1]: { label: "Informations sur le quartier", number: 1 },
@@ -19,7 +20,7 @@ export const surveyConfig: Record<SurveyStep, StepParams<SurveyStep>> = {
     isActive: [],
   },
   [SurveyStep.STEP_2]: {
-    component: <>Step 2</>,
+    component: <Broadcasting />,
     previouxStep: SurveyStep.STEP_1,
     nextStep: SurveyStep.STEP_3,
     buttonType: "button",

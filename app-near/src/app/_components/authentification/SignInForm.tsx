@@ -96,13 +96,12 @@ export default function SignInForm(): JSX.Element {
               tabIndex={2}
             />
 
-            <div className="mt-6">
+            <div className="mt-6 flex flex-col">
               <Button
                 color="blue"
                 buttonType="submit"
                 style={ButtonStyle.FILLED}
                 disabled={!isValid}
-                extend
                 tabIndex={3}
                 icon="/icons/arrow-right.svg"
               >
