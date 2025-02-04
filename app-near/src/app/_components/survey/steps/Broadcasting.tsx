@@ -8,6 +8,8 @@ import LinkAsButton from "../../_ui/LinkAsButton";
 import BroadcastingPage from "../../BroadcastingPage";
 import SurveyLayout from "../SurveyLayout";
 import { surveyConfig } from "./config";
+import { env } from "../../../../env";
+import { renderIcon } from "../../_ui/utils/renderIcon";
 
 const Broadcasting: React.FC = () => {
   const { step, updateStep } = useSurveyStateContext();
@@ -41,6 +43,14 @@ const Broadcasting: React.FC = () => {
         <>
           <LinkAsButton icon="/icons/question.svg" rounded>
             Besoin d&apos;aide
+          </LinkAsButton>
+          <LinkAsButton
+            href={`${env.NEXT_PUBLIC_TYPEFORM_SU_STATS}`}
+            icon="/icons/megaphone.svg"
+            openNewTab
+            rounded
+          >
+            Suivre la diffusion {renderIcon("/icons/external-link.svg")}
           </LinkAsButton>
           <Button
             icon="/icons/flash.svg"
