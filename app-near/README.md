@@ -87,11 +87,12 @@ curl -L -O https://www.insee.fr/fr/statistiques/fichier/8268806/base-ic-evol-str
 ## 2. Charger la BDD INSEE et initialiser une enquête pour le 14eme arrondissement de Paris
 
 ### En environnement local
+
 ```bash
 npm run load:all
 ```
 
-### En environnement de production (ou dockerisé) :
+### En environnement de production (ou dockerisé)
 
 #### 2.1. Charger les données INSEE dans une base de données locale
 

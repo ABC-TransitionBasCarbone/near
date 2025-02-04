@@ -35,7 +35,7 @@ model Survey {
 }
 
 model InseeIris2021 {
-  iris               String     @db.VarChar(255)
+  iris               String     @db.VarChar(255) @unique
   com                String     @db.VarChar(255)
   typ_iris           String     @db.VarChar(255)
   lab_iris           String     @db.VarChar(255)
@@ -112,7 +112,6 @@ model InseeIris2021 {
   p21_pmen           Float?
   p21_phormen        Float?
   @@map("insee_iris_2021")
-  @@ignore
 }
 
 view Quartier {
