@@ -19,6 +19,7 @@ export const env = createEnv({
     SUPER_ADMIN: z.string().regex(/^[a-zA-Z0-9@.]+:[a-zA-Z0-9*^.$-@#]+$/),
     METABASE_SECRET_KEY: z.string(),
     METABASE_SITE_URL: z.string().url(),
+    TYPEFORM_SECRET: z.string(),
   },
 
   /**
@@ -42,6 +43,7 @@ export const env = createEnv({
     SUPER_ADMIN: process.env.SUPER_ADMIN,
     METABASE_SECRET_KEY: process.env.METABASE_SECRET_KEY,
     METABASE_SITE_URL: process.env.METABASE_SITE_URL,
+    TYPEFORM_SECRET: process.env.TYPEFORM_SECRET,
   },
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially

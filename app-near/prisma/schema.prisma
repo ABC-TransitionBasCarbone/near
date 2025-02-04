@@ -30,8 +30,97 @@ model Survey {
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
     phase     SurveyPhase @default(STEP_1_NEIGHBORHOOD_INFORMATION)
-    quartier Quartier?
+    quartier  Quartier?
+
     @@map("surveys")
+    suAnswer SuAnswer[]
+}
+
+enum AgeCategory {
+  UNDER_15
+  FROM_15_TO_29
+  FROM_30_TO_44
+  FROM_45_TO_59
+  FROM_60_TO_74
+  ABOVE_75
+}
+
+enum Gender {
+  MAN
+  WOMAN
+}
+
+enum ProfessionalCategory {
+  CS1
+  CS2
+  CS3
+  CS4
+  CS5
+  CS6
+  CS7
+  CS8_unemployed
+  CS8_student
+  CS8_other
+}
+
+enum EasyHealthAccess {
+  EASY
+  MODERATE
+  HARD
+}
+
+enum MeatFrequency {
+  MINOR
+  REGULAR
+  MAJOR
+}
+
+enum TransportationMode {
+  CAR
+  PUBLIC
+  LIGHT
+}
+
+enum DigitalIntensity {
+  LIGHT
+  REGULAR
+  INTENSE
+}
+
+enum PurchasingStrategy {
+  NEW
+  MIXED
+  SECOND_HAND
+}
+
+enum AirTravelFrequency {
+  ZERO
+  FROM_1_TO_3
+  ABOVE_3
+}
+
+enum HeatSource {
+  ELECTRICITY
+  GAZ
+  OIL
+	@@map("EatSource")
+}
+model SuAnswer {
+  id                      Int     @id @default(autoincrement())
+  isNeighborhoodResident  Boolean
+  ageCategory             AgeCategory
+  gender                  Gender
+  professionalCategory    ProfessionalCategory
+  easyHealthAccess        EasyHealthAccess
+  meatFrequency           MeatFrequency
+  transportationMode      TransportationMode
+  digitalIntensity        DigitalIntensity
+  purchasingStrategy      PurchasingStrategy
+  airTravelFrequency      AirTravelFrequency
+  heatSource              HeatSource
+  email                   String
+  surveyId                Int
+  survey                  Survey  @relation(fields: [surveyId], references: [id])
 }
 
 model InseeIris2021 {
