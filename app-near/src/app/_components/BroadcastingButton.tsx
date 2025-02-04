@@ -2,7 +2,10 @@
 import { useState } from "react";
 import Button from "./_ui/Button";
 import { env } from "../../env";
-import { type SurveyType, type BroadcastType } from "./BroadcastingPage";
+import {
+  type SurveyType,
+  type BroadcastType,
+} from "../../types/enums/broadcasting";
 
 interface BroadcastingButtonProps {
   surveyType: SurveyType;

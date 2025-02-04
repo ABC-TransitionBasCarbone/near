@@ -74,7 +74,6 @@ const Button = ({
     <button
       // eslint-disable-next-line react/button-has-type
       type={buttonType}
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       // @ts-expect-error: fixme
       // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       className={`flex ${border ? "border" : ""} justify-center gap-3 ${iconRight ? "flex-row-reverse" : ""} ${colorVariants[style][color]} items-center px-5 py-2 font-sans font-bold ${customStyle} ${textColor ? textColorVariant[textColor] : ""} ${rounded ? "rounded-md" : ""} disabled:opacity-40`}

@@ -1,16 +1,9 @@
+import { type SurveyType } from "../../types/enums/broadcasting";
 import BroadcastingButton from "./BroadcastingButton";
 
 interface BroadcastingPageProps {
   surveyType: SurveyType;
 }
-
-export type SurveyType = "su" | "ngc" | "mdv" | "mdd";
-
-export type BroadcastType =
-  | "mail_campaign"
-  | "social_network"
-  | "street_survey"
-  | "qr_code";
 
 const BroadcastingPage: React.FC<BroadcastingPageProps> = (
   props: BroadcastingPageProps,
