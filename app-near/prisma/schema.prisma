@@ -131,8 +131,8 @@ view Quartier {
   c21_pop15p_cs6_sum     Int
   c21_pop15p_cs7_sum     Int
   c21_pop15p_cs8_sum     Int
-  population_femme_sum Int
-  population_homme_sum Int
+  population_femme_sum   Int
+  population_homme_sum   Int
   surveyId         Int  @unique @map("survey_id")           // Foreign key unique field to survey
   survey           Survey @relation(fields: [surveyId], references: [id])
   @@map("quartiers")
