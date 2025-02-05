@@ -24,8 +24,8 @@ const Broadcasting: React.FC<BroadcastingProps> = ({
   return (
     <SurveyLayout
       banner={
-        <>
-          <div className="my-4">
+        <div className="m-auto max-w-5xl">
+          <div className="my-4 flex">
             <Link
               className="items-center gap-3 py-2 font-sans font-bold text-blue no-underline hover:ring-0"
               onClick={() => setToggleBroadcastingPage(false)}
@@ -42,7 +42,7 @@ const Broadcasting: React.FC<BroadcastingProps> = ({
             Choississez un ou plusieurs modes de diffusion pour votre
             questionnaire.
           </p>
-        </>
+        </div>
       }
       actions={
         <>

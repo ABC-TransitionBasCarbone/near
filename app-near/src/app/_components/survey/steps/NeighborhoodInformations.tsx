@@ -32,7 +32,7 @@ const NeighborhoodInformations: React.FC = () => {
   return (
     <SurveyLayout
       banner={
-        <div className="flex flex-col gap-5">
+        <div className="m-auto flex max-w-5xl flex-col gap-5">
           <h1 className="text-3xl text-black">
             Informations sur le quartier :{" "}
             {new Intl.NumberFormat("fr-FR").format(
