@@ -29,27 +29,27 @@ CREATE TYPE "AirTravelFrequency" AS ENUM ('ZERO', 'FROM_1_TO_3', 'ABOVE_3');
 CREATE TYPE "EatSource" AS ENUM ('ELECTRICITY', 'GAZ', 'OIL');
 
 -- CreateTable
-CREATE TABLE "SuAnswer" (
+CREATE TABLE "su_answer" (
     "id" SERIAL NOT NULL,
-    "isNeighborhoodResident" BOOLEAN NOT NULL,
-    "ageCategory" "AgeCategory" NOT NULL,
+    "is_neighborhood_resident" BOOLEAN NOT NULL,
+    "age_category" "AgeCategory" NOT NULL,
     "gender" "Gender" NOT NULL,
-    "professionalCategory" "ProfessionalCategory" NOT NULL,
-    "easyHealthAccess" "EasyHealthAccess" NOT NULL,
-    "meatFrequency" "MeatFrequency" NOT NULL,
-    "transportationMode" "TransportationMode" NOT NULL,
-    "digitalIntensity" "DigitalIntensity" NOT NULL,
-    "purchasingStrategy" "PurchasingStrategy" NOT NULL,
-    "airTravelFrequency" "AirTravelFrequency" NOT NULL,
-    "heatSource" "EatSource" NOT NULL,
+    "professional_category" "ProfessionalCategory" NOT NULL,
+    "easy_healt_access" "EasyHealthAccess" NOT NULL,
+    "meat_frequency" "MeatFrequency" NOT NULL,
+    "transportation_mode" "TransportationMode" NOT NULL,
+    "digital_intensity" "DigitalIntensity" NOT NULL,
+    "purchasing_strategy" "PurchasingStrategy" NOT NULL,
+    "air_travel_frequency" "AirTravelFrequency" NOT NULL,
+    "heat_source" "EatSource" NOT NULL,
     "email" TEXT,
     "surveyId" INTEGER NOT NULL,
 
-    CONSTRAINT "SuAnswer_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "su_answer_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateIndex
-CREATE UNIQUE INDEX "SuAnswer_email_key" ON "SuAnswer"("email");
+CREATE UNIQUE INDEX "su_answer_email_key" ON "su_answer"("email");
 
 -- AddForeignKey
-ALTER TABLE "SuAnswer" ADD CONSTRAINT "SuAnswer_surveyId_fkey" FOREIGN KEY ("surveyId") REFERENCES "surveys"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "su_answer" ADD CONSTRAINT "su_answer_surveyId_fkey" FOREIGN KEY ("surveyId") REFERENCES "surveys"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

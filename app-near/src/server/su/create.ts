@@ -1,8 +1,8 @@
-export const createSu = async (answer: Record<string, string | boolean>) => {
-  // await prisma.response.create({
-  //   data: {
-  //     formId: body.form_response.form_id,
-  //     answers: JSON.stringify(answers),
-  //   },
-  // });
+import { type SuAnswer } from "@prisma/client";
+import { db } from "../db";
+
+export const createSu = async (answer: SuAnswer) => {
+  return db.suAnswer.create({
+    data: answer,
+  });
 };

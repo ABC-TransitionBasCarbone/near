@@ -107,20 +107,21 @@ enum HeatSource {
 }
 model SuAnswer {
   id                      Int                   @id @default(autoincrement())
-  isNeighborhoodResident  Boolean
-  ageCategory             AgeCategory
-  gender                  Gender
-  professionalCategory    ProfessionalCategory
-  easyHealthAccess        EasyHealthAccess
-  meatFrequency           MeatFrequency
-  transportationMode      TransportationMode
-  digitalIntensity        DigitalIntensity
-  purchasingStrategy      PurchasingStrategy
-  airTravelFrequency      AirTravelFrequency
-  heatSource              HeatSource
+  isNeighborhoodResident  Boolean               @map("is_neighborhood_resident")        
+  ageCategory             AgeCategory           @map("age_category")
+  gender                  Gender                
+  professionalCategory    ProfessionalCategory  @map("professional_category")
+  easyHealthAccess        EasyHealthAccess      @map("easy_healt_access")
+  meatFrequency           MeatFrequency         @map("meat_frequency")
+  transportationMode      TransportationMode    @map("transportation_mode")
+  digitalIntensity        DigitalIntensity      @map("digital_intensity")
+  purchasingStrategy      PurchasingStrategy    @map("purchasing_strategy")
+  airTravelFrequency      AirTravelFrequency    @map("air_travel_frequency")
+  heatSource              HeatSource            @map("heat_source")
   email                   String?               @unique
   surveyId                Int
   survey                  Survey                @relation(fields: [surveyId], references: [id])
+  @@map("su_answer")
 }
 
 model InseeIris2021 {
