@@ -46,7 +46,7 @@ const ProgressBar = <T extends string>({
           >
             <button
               type="button"
-              className={`${isCurrentStep(stepItem as T) ? "bg-blue" : "bg-transparent"} flex w-full cursor-pointer items-center gap-2 rounded-lg border-none px-3 py-1 text-left outline-none hover:ring-0 hover:ring-offset-0 focus:outline-none focus:ring-0 focus:ring-offset-0`}
+              className={`${isCurrentStep(stepItem as T) ? "bg-blue" : "bg-transparent"} flex w-fit cursor-pointer items-center gap-2 rounded-lg border-none px-3 py-1 text-left outline-none hover:ring-0 hover:ring-offset-0 focus:outline-none focus:ring-0 focus:ring-offset-0`}
               onClick={() => handleStepClick(stepItem as T)}
               disabled={!isActiveStep(stepItem as T)}
             >
@@ -56,7 +56,7 @@ const ProgressBar = <T extends string>({
                 <div className="font-bold">{stepData.number}</div>
               </div>
               <div
-                className={`grow ${isActiveStep(stepItem as T) ? "text-blue" : "text-grayLight"} ${isCurrentStep(stepItem as T) ? "text-white" : ""}`}
+                className={`${isCurrentStep(stepItem as T) ? "flex text-white" : "hidden sm:block sm:grow"} ${isActiveStep(stepItem as T) ? "text-blue" : "text-grayLight"}`}
               >
                 {stepData.label}
               </div>
