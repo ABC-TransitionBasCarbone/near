@@ -2,16 +2,23 @@
 
 import Link from "next/link";
 import { ButtonStyle } from "~/types/enums/button";
-import { useSurveyStateContext } from "../../_context/surveyStateContext";
-import Button from "../../_ui/Button";
-import LinkAsButton from "../../_ui/LinkAsButton";
-import BroadcastingPage from "../../BroadcastingPage";
-import SurveyLayout from "../SurveyLayout";
-import { surveyConfig } from "./config";
-import { env } from "../../../../env";
-import { renderIcon } from "../../_ui/utils/renderIcon";
+import { useSurveyStateContext } from "../../../_context/surveyStateContext";
+import Button from "../../../_ui/Button";
+import LinkAsButton from "../../../_ui/LinkAsButton";
+import BroadcastingPage from "../../../BroadcastingPage";
+import SurveyLayout from "../../SurveyLayout";
+import { surveyConfig } from "../config";
+import { env } from "../../../../../env";
+import { renderIcon } from "../../../_ui/utils/renderIcon";
+import { type Dispatch, type SetStateAction } from "react";
 
-const Broadcasting: React.FC = () => {
+interface BroadcastingProps {
+  setToggleBroadcastingPage: Dispatch<SetStateAction<boolean>>;
+}
+
+const Broadcasting: React.FC<BroadcastingProps> = ({
+  setToggleBroadcastingPage,
+}) => {
   const { step, updateStep } = useSurveyStateContext();
 
   return (
@@ -21,10 +28,8 @@ const Broadcasting: React.FC = () => {
           <div className="my-4">
             <Link
               className="items-center gap-3 py-2 font-sans font-bold text-blue no-underline hover:ring-0"
-              onClick={() =>
-                step && updateStep(surveyConfig[step].previouxStep)
-              }
-              href="/"
+              onClick={() => setToggleBroadcastingPage(false)}
+              href=""
             >
               &lt; Retour
             </Link>
