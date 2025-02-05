@@ -106,7 +106,7 @@ enum HeatSource {
 	@@map("EatSource")
 }
 model SuAnswer {
-  id                      Int     @id @default(autoincrement())
+  id                      Int                   @id @default(autoincrement())
   isNeighborhoodResident  Boolean
   ageCategory             AgeCategory
   gender                  Gender
@@ -118,9 +118,9 @@ model SuAnswer {
   purchasingStrategy      PurchasingStrategy
   airTravelFrequency      AirTravelFrequency
   heatSource              HeatSource
-  email                   String
+  email                   String?               @unique
   surveyId                Int
-  survey                  Survey  @relation(fields: [surveyId], references: [id])
+  survey                  Survey                @relation(fields: [surveyId], references: [id])
 }
 
 model InseeIris2021 {
