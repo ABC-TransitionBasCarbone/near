@@ -104,8 +104,8 @@ const createQuartiersView = async (survey_id: number) => {
     sum(c21_pop15p_cs6) AS c21_pop15p_cs6_sum,
     sum(c21_pop15p_cs7) AS c21_pop15p_cs7_sum,
     sum(c21_pop15p_cs8) AS c21_pop15p_cs8_sum,
-    sum(p21_popf) AS population_femme_sum,
-    sum(p21_poph) AS population_homme_sum,
+    SUM(C21_F15P) AS population_femme_sum,
+    SUM(C21_H15P) AS population_homme_sum,
     (1.96^2 * 0.5 * (1 - 0.5)) / (0.03^2 + (1.96^2*0.25) / sum(C21_POP15P) )  AS population_sum_threshold_3p,
     (1.96^2 * 0.5 * (1 - 0.5)) / (0.04^2 + (1.96^2*0.25) / sum(C21_POP15P) )  AS population_sum_threshold_4p,
     (1.96^2 * 0.5 * (1 - 0.5)) / (0.05^2 + (1.96^2*0.25) / sum(C21_POP15P) )  AS population_sum_threshold_5p
