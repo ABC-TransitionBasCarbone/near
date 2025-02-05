@@ -15,6 +15,7 @@ import { renderIcon } from "../../../_ui/utils/renderIcon";
 import SurveyLayout from "../../SurveyLayout";
 import { surveyConfig } from "../config";
 import { type Dispatch, type SetStateAction } from "react";
+import SampleRadios from "./SampleRadios";
 
 interface SurveyInProgressProps {
   setToggleBroadcastingPage: Dispatch<SetStateAction<boolean>>;
@@ -106,7 +107,9 @@ const SurveyInProgress: React.FC<SurveyInProgressProps> = ({
         </>
       }
     >
-      <div></div>
+      <div>
+        <SampleRadios></SampleRadios>
+      </div>
     </SurveyLayout>
   );
 };
