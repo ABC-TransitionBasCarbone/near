@@ -48,7 +48,9 @@ jobs:
         run: npm ci
 
       - name: Create .env file
-        run: cp .env.example .env
+        run: | 
+          cp .env.example .env
+          echo "DATABASE_URL='postgresql://postgres:password@postgres:5432/app-near'" >> .env
 
       - name: Generate Prisma database
         run: npx prisma db push
