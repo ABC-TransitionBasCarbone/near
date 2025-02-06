@@ -58,6 +58,11 @@ export const TypeformWebhookSchema = z.object({
   form_response: z.object({
     form_id: z.nativeEnum(FormId),
     answers: z.array(AnswerSchema),
+    hidden: z
+      .object({
+        neighborhood: z.string().optional(),
+      })
+      .optional(),
     definition: z.object({
       fields: z.array(
         z.object({

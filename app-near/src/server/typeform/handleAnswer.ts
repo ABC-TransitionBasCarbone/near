@@ -48,7 +48,15 @@ export const handleAnswer = async (req: NextRequest): Promise<NextResponse> => {
     const parsedAnswer = typeformSchemaMapper[formId].parse(answers);
 
     if (formId === FormId.SU) {
-      await createSu(parsedAnswer as SuAnswer);
+      const surveyName = parsedBody.form_response.hidden?.neighborhood;
+      if (!surveyName) {
+        console.error("[whebhook typeform]", formId, "Survey name not found");
+        return NextResponse.json(
+          { error: "Survey name not found" },
+          { status: 400 },
+        );
+      }
+      await createSu(parsedAnswer as SuAnswer, surveyName);
     }
 
     return NextResponse.json({ message: "created" }, { status: 201 });
