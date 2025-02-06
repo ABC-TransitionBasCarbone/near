@@ -57,7 +57,7 @@ export const handleAnswer = async (req: NextRequest): Promise<NextResponse> => {
         );
       }
       const broadcastChannel =
-        parsedBody.form_response.hidden?.broadcastChannel;
+        parsedBody.form_response.hidden?.broadcast_channel;
 
       await createSu(
         { ...parsedAnswer, broadcastChannel } as SuAnswer,

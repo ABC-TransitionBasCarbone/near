@@ -62,7 +62,7 @@ export const TypeformWebhookSchema = z.object({
     hidden: z
       .object({
         neighborhood: z.string().optional(),
-        broadcastChannel: z.nativeEnum(BroadcastChannel).optional(),
+        broadcast_channel: z.nativeEnum(BroadcastChannel).optional(),
       })
       .optional(),
     definition: z.object({

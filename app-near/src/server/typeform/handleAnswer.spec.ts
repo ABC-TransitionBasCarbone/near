@@ -3,6 +3,7 @@ import { handleAnswer } from "./handleAnswer";
 import { signPayload } from "./signature";
 import { db } from "../db";
 import { BroadcastChannel } from "@prisma/client";
+import { type TypeformWebhookPayload } from "~/types/typeform";
 
 describe("handleAnswer", () => {
   const neighborhoodName = "neighborhood_test";
@@ -42,8 +43,10 @@ describe("handleAnswer", () => {
 
   it("should return 400 when transformed data is invalid", async () => {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    const payload = JSON.parse(JSON.stringify(valideSuSurveyPayload));
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
+    const payload = JSON.parse(
+      JSON.stringify(valideSuSurveyPayload),
+    ) as TypeformWebhookPayload;
+
     payload.form_response.answers.splice(2, 2);
     const signature = signPayload(JSON.stringify(payload));
 
@@ -68,11 +71,13 @@ describe("handleAnswer", () => {
 
   it("should return 201", async () => {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    const payload = JSON.parse(JSON.stringify(valideSuSurveyPayload));
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
+    const payload = JSON.parse(
+      JSON.stringify(valideSuSurveyPayload),
+    ) as TypeformWebhookPayload;
+
     payload.form_response.hidden = {
       neighborhood: neighborhoodName,
-      broadcastChannel: BroadcastChannel.mail_campaign,
+      broadcast_channel: BroadcastChannel.mail_campaign,
     };
     const signature = signPayload(JSON.stringify(payload));
     const response = await handleAnswer(
