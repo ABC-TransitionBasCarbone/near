@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { FormId } from "./enums/formId";
+import { BroadcastChannel } from "@prisma/client";
 
 export const AnswerSchema = z.discriminatedUnion("type", [
   z.object({
@@ -61,6 +62,7 @@ export const TypeformWebhookSchema = z.object({
     hidden: z
       .object({
         neighborhood: z.string().optional(),
+        broadcastChannel: z.nativeEnum(BroadcastChannel).optional(),
       })
       .optional(),
     definition: z.object({

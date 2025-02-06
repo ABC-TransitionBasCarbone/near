@@ -56,7 +56,13 @@ export const handleAnswer = async (req: NextRequest): Promise<NextResponse> => {
           { status: 400 },
         );
       }
-      await createSu(parsedAnswer as SuAnswer, surveyName);
+      const broadcastChannel =
+        parsedBody.form_response.hidden?.broadcastChannel;
+
+      await createSu(
+        { ...parsedAnswer, broadcastChannel } as SuAnswer,
+        surveyName,
+      );
     }
 
     return NextResponse.json({ message: "created" }, { status: 201 });

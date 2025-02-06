@@ -25,10 +25,10 @@ enum SurveyPhase {
 }
 
 model Survey {
-    id        Int      @id @default(autoincrement())
-    name      String   @unique
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+    id        Int         @id @default(autoincrement())
+    name      String      @unique
+    createdAt DateTime    @default(now())
+    updatedAt DateTime    @updatedAt
     phase     SurveyPhase @default(STEP_1_NEIGHBORHOOD_INFORMATION)
     quartier  Quartier?
 
@@ -105,22 +105,33 @@ enum HeatSource {
   OIL
 }
 
+enum BroadcastChannel {
+  mail_campaign
+  social_network
+  qr_code
+  street_survey
+	@@map("BroadcastChanel")
+}
+
 model SuAnswer {
-  id                      Int                   @id @default(autoincrement())
-  isNeighborhoodResident  Boolean               @map("is_neighborhood_resident")        
-  ageCategory             AgeCategory           @map("age_category")
-  gender                  Gender                
-  professionalCategory    ProfessionalCategory  @map("professional_category")
-  easyHealthAccess        EasyHealthAccess      @map("easy_healt_access")
-  meatFrequency           MeatFrequency         @map("meat_frequency")
-  transportationMode      TransportationMode    @map("transportation_mode")
-  digitalIntensity        DigitalIntensity      @map("digital_intensity")
-  purchasingStrategy      PurchasingStrategy    @map("purchasing_strategy")
-  airTravelFrequency      AirTravelFrequency    @map("air_travel_frequency")
-  heatSource              HeatSource            @map("heat_source")
-  email                   String?               @unique
-  surveyId                Int
-  survey                  Survey                @relation(fields: [surveyId], references: [id])
+  id                          Int                   @id @default(autoincrement())
+  isNeighborhoodResident      Boolean               @map("is_neighborhood_resident")        
+  ageCategory                 AgeCategory           @map("age_category")
+  gender                      Gender                
+  professionalCategory        ProfessionalCategory  @map("professional_category")
+  easyHealthAccess            EasyHealthAccess      @map("easy_healt_access")
+  meatFrequency               MeatFrequency         @map("meat_frequency")
+  transportationMode          TransportationMode    @map("transportation_mode")
+  digitalIntensity            DigitalIntensity      @map("digital_intensity")
+  purchasingStrategy          PurchasingStrategy    @map("purchasing_strategy")
+  airTravelFrequency          AirTravelFrequency    @map("air_travel_frequency")
+  heatSource                  HeatSource            @map("heat_source")
+  email                       String?               @unique
+  broadcastChannel            BroadcastChannel      @map("broadcast_channel")
+  userSu                      String?               @map("user_su")
+  userDistanceToSuBarycentre  Float?                @map("user_distance_to_su_barycentre")
+  surveyId                    Int
+  survey                      Survey                @relation(fields: [surveyId], references: [id])
   @@map("su_answer")
 }
 

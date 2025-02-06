@@ -2,6 +2,7 @@ import { valideSuSurveyPayload } from "../test-utils/suSurvey";
 import { handleAnswer } from "./handleAnswer";
 import { signPayload } from "./signature";
 import { db } from "../db";
+import { BroadcastChannel } from "@prisma/client";
 
 describe("handleAnswer", () => {
   const neighborhoodName = "neighborhood_test";
@@ -69,7 +70,10 @@ describe("handleAnswer", () => {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const payload = JSON.parse(JSON.stringify(valideSuSurveyPayload));
     // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
-    payload.form_response.hidden = { neighborhood: neighborhoodName };
+    payload.form_response.hidden = {
+      neighborhood: neighborhoodName,
+      broadcastChannel: BroadcastChannel.mail_campaign,
+    };
     const signature = signPayload(JSON.stringify(payload));
     const response = await handleAnswer(
       // @ts-expect-error allow partial for test

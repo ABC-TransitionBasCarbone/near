@@ -28,6 +28,9 @@ CREATE TYPE "AirTravelFrequency" AS ENUM ('ZERO', 'FROM_1_TO_3', 'ABOVE_3');
 -- CreateEnum
 CREATE TYPE "HeatSource" AS ENUM ('ELECTRICITY', 'GAZ', 'OIL');
 
+-- CreateEnum
+CREATE TYPE "BroadcastChanel" AS ENUM ('mail_campaign', 'social_network', 'qr_code', 'street_survey');
+
 -- CreateTable
 CREATE TABLE "su_answer" (
     "id" SERIAL NOT NULL,
@@ -43,6 +46,9 @@ CREATE TABLE "su_answer" (
     "air_travel_frequency" "AirTravelFrequency" NOT NULL,
     "heat_source" "HeatSource" NOT NULL,
     "email" TEXT,
+    "broadcast_channel" "BroadcastChanel" NOT NULL,
+    "user_su" TEXT,
+    "user_distance_to_su_barycentre" DOUBLE PRECISION,
     "surveyId" INTEGER NOT NULL,
 
     CONSTRAINT "su_answer_pkey" PRIMARY KEY ("id")
