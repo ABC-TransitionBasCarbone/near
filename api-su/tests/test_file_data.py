@@ -183,6 +183,16 @@ MAPPINGS = {
     "home": ["électricité, réseau de chaleur,", "Gaz", "Fioul"],
 }
 
+# Expected sus when using the following constants:
+# CLUSTER_MIN_SIZE = 0.11
+# CLUSTER_MAX_SIZE = 0.4
+# CLUSTER_NB_MIN = 3
+# RATIO_FOOD = [200, 1000, 2000]
+# RATIO_MOBILITY = [0, 300, 2300]
+# RATIO_DIGITAL = [90, 180, 360]
+# RATIO_PURCHASE = [400, 800, 1600]
+# RATIO_PLANE = [0, 800, 2000]
+# RATIO_HOME = [200, 1100, 1600]
 EXPECTED_SUS = [
     {
         "su": 52,
