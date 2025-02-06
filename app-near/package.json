@@ -17,7 +17,7 @@
     "load:insee": "/bin/sh ./scripts/load_insee_data.sh",
     "load:surveys": "tsx ./scripts/load_survey_insee_stats.ts",
     "load:all": "npm run load:insee && npm run load:surveys",
-    "dev": "next dev --turbo",
+    "dev": "next dev",
     "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,mdx}\" --cache",
     "format:write": "prettier --write \"**/*.{ts,tsx,js,jsx,mdx}\" --cache",
     "postinstall": "prisma generate",
@@ -52,9 +52,6 @@
     "zod": "^3.23.3"
   },
   "devDependencies": {
-    "@babel/core": "^7.26.7",
-    "@babel/preset-env": "^7.26.7",
-    "@babel/preset-typescript": "^7.26.0",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.2.0",
     "@types/eslint": "^8.56.10",
@@ -65,7 +62,6 @@
     "@types/react-dom": "^18.3.0",
     "@typescript-eslint/eslint-plugin": "^8.1.0",
     "@typescript-eslint/parser": "^8.1.0",
-    "babel-jest": "^29.7.0",
     "eslint": "^8.57.0",
     "eslint-config-next": "^15.0.1",
     "eslint-config-prettier": "^9.1.0",

@@ -6,6 +6,10 @@ import { db } from "../db";
 describe("handleAnswer", () => {
   beforeEach(async () => {
     await db.suAnswer.deleteMany();
+    await db.survey.deleteMany();
+    await db.survey.create({
+      data: { name: "survey-test" },
+    });
   });
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const buildRequest = (payload: any, signature: string) => ({

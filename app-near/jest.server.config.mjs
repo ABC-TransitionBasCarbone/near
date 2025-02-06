@@ -11,7 +11,6 @@ const customJestServerConfig = {
   extensionsToTreatAsEsm: ['.ts'],
   transform: {
     "^.+\\.(ts|tsx)$": ["ts-jest", { useESM: true }], // Transpile TypeScript with ts-jest
-    "^.+\\.js$": "babel-jest", // transform js file in jest digest file
   },
   transformIgnorePatterns: [
     '/node_modules/',
