@@ -17,7 +17,7 @@
     "load:insee": "/bin/sh ./scripts/load_insee_data.sh",
     "load:surveys": "tsx ./scripts/load_survey_insee_stats.ts",
     "load:all": "npm run load:insee && npm run load:surveys",
-    "dev": "next dev",
+    "dev": "next dev --turbo",
     "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,mdx}\" --cache",
     "format:write": "prettier --write \"**/*.{ts,tsx,js,jsx,mdx}\" --cache",
     "postinstall": "prisma generate",

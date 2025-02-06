@@ -1,6 +1,6 @@
 import { type NextRequest, NextResponse } from "next/server";
 import { verifySignature } from "./signature";
-import { SurveyId } from "~/types/enums/surveyId";
+import { FormId } from "~/types/enums/formId";
 import { getReferencesMapping } from "../surveys/references";
 import { convertFormToAnswer } from "./convert";
 import { TypeformWebhookSchema } from "~/types/typeform";
@@ -10,7 +10,7 @@ import { type SuAnswer } from "@prisma/client";
 import { z } from "zod";
 
 export const handleAnswer = async (req: NextRequest): Promise<NextResponse> => {
-  let formId: SurveyId | undefined = undefined;
+  let formId: FormId | undefined = undefined;
   try {
     const body = await req.text();
     const parsedBody = TypeformWebhookSchema.parse(JSON.parse(body));
@@ -47,7 +47,7 @@ export const handleAnswer = async (req: NextRequest): Promise<NextResponse> => {
 
     const parsedAnswer = typeformSchemaMapper[formId].parse(answers);
 
-    if (formId === SurveyId.SU) {
+    if (formId === FormId.SU) {
       await createSu(parsedAnswer as SuAnswer);
     }
 

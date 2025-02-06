@@ -10,7 +10,7 @@ import {
   PurchasingStrategy,
   TransportationMode,
 } from "@prisma/client";
-import { SurveyId } from "~/types/enums/surveyId";
+import { FormId } from "~/types/enums/formId";
 
 export const surveySUReferencesMapping: Record<string, string | boolean> = {
   // isNeighborhoodResident
@@ -68,10 +68,10 @@ export const surveySUReferencesMapping: Record<string, string | boolean> = {
 };
 
 export const getReferencesMapping = (
-  formId: SurveyId,
+  formId: FormId,
 ): Record<string, string | boolean> | undefined => {
   let referencesMapping: Record<string, string | boolean> | undefined;
-  if (formId === SurveyId.SU) {
+  if (formId === FormId.SU) {
     referencesMapping = surveySUReferencesMapping;
   }
 

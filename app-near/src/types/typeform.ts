@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { SurveyId } from "./enums/surveyId";
+import { FormId } from "./enums/formId";
 
 export const AnswerSchema = z.discriminatedUnion("type", [
   z.object({
@@ -56,7 +56,7 @@ export const TypeformWebhookSchema = z.object({
   event_id: z.string(),
   event_type: z.literal("form_response"),
   form_response: z.object({
-    form_id: z.nativeEnum(SurveyId),
+    form_id: z.nativeEnum(FormId),
     answers: z.array(AnswerSchema),
     definition: z.object({
       fields: z.array(
