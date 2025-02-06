@@ -103,8 +103,8 @@ enum HeatSource {
   ELECTRICITY
   GAZ
   OIL
-	@@map("EatSource")
 }
+
 model SuAnswer {
   id                      Int                   @id @default(autoincrement())
   isNeighborhoodResident  Boolean               @map("is_neighborhood_resident")        

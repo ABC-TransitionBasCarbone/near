@@ -23,7 +23,7 @@ export const handleAnswer = async (req: NextRequest): Promise<NextResponse> => {
 
     if (!isSecure) {
       return NextResponse.json(
-        { error: "not authorized", details: formId },
+        { error: "Not authorized", details: formId },
         { status: 401 },
       );
     }
@@ -31,8 +31,13 @@ export const handleAnswer = async (req: NextRequest): Promise<NextResponse> => {
     const referencesMapping = getReferencesMapping(formId);
 
     if (!referencesMapping) {
+      console.error(
+        "[whebhook typeform]",
+        formId,
+        "ERROR: References mapping not found",
+      );
       return NextResponse.json(
-        { error: "references not found", detail: formId },
+        { error: "References mapping not found" },
         { status: 401 },
       );
     }
@@ -46,7 +51,7 @@ export const handleAnswer = async (req: NextRequest): Promise<NextResponse> => {
       await createSu(parsedAnswer as SuAnswer);
     }
 
-    return NextResponse.json({ success: true }, { status: 200 });
+    return NextResponse.json({ message: "created" }, { status: 201 });
   } catch (error) {
     if (error instanceof z.ZodError) {
       console.error("[whebhook typeform]", formId, "ZOD ERROR :", error.errors);

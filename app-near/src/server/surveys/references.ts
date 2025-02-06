@@ -61,7 +61,7 @@ export const surveySUReferencesMapping: Record<string, string | boolean> = {
   ["22c056f4-21e7-4e63-8fb6-60b1f5569f8b"]: AirTravelFrequency.ZERO,
   ["e9c48d61-16c8-41a4-a53e-e8d838c539be"]: AirTravelFrequency.FROM_1_TO_3,
   ["04385aba-ae3e-4bda-b32b-1f0c03bec5b8"]: AirTravelFrequency.ABOVE_3,
-  // eatSource
+  // heatSource
   ["6a3d2558-6612-4cf1-90a6-e5e1bf3bbca8"]: HeatSource.ELECTRICITY,
   ["60220a76-eacb-435d-beb9-30c6e139827c"]: HeatSource.GAZ,
   ["8d91547d-f2aa-4987-9d0b-cb3ce17527c5"]: HeatSource.OIL,

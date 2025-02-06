@@ -26,7 +26,7 @@ CREATE TYPE "PurchasingStrategy" AS ENUM ('NEW', 'MIXED', 'SECOND_HAND');
 CREATE TYPE "AirTravelFrequency" AS ENUM ('ZERO', 'FROM_1_TO_3', 'ABOVE_3');
 
 -- CreateEnum
-CREATE TYPE "EatSource" AS ENUM ('ELECTRICITY', 'GAZ', 'OIL');
+CREATE TYPE "HeatSource" AS ENUM ('ELECTRICITY', 'GAZ', 'OIL');
 
 -- CreateTable
 CREATE TABLE "su_answer" (
@@ -41,7 +41,7 @@ CREATE TABLE "su_answer" (
     "digital_intensity" "DigitalIntensity" NOT NULL,
     "purchasing_strategy" "PurchasingStrategy" NOT NULL,
     "air_travel_frequency" "AirTravelFrequency" NOT NULL,
-    "heat_source" "EatSource" NOT NULL,
+    "heat_source" "HeatSource" NOT NULL,
     "email" TEXT,
     "surveyId" INTEGER NOT NULL,
 

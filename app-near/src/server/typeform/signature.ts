@@ -1,11 +1,15 @@
 import crypto from "crypto";
 import { env } from "~/env";
 
-export const verifySignature = (sign: string, payload: string) => {
+export const signPayload = (payload: string) => {
   const hash = crypto
     .createHmac("sha256", env.TYPEFORM_SECRET)
     .update(payload)
     .digest("base64");
 
-  return sign === `sha256=${hash}`;
+  return `sha256=${hash}`;
+};
+
+export const verifySignature = (sign: string, payload: string) => {
+  return sign === signPayload(payload);
 };
