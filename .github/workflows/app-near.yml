@@ -18,6 +18,7 @@ jobs:
         env:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: password
+          POSTGRES_DB: app-near
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
@@ -50,7 +51,8 @@ jobs:
       - name: Create .env file
         run: | 
           cp .env.example .env
-          echo "DATABASE_URL='postgresql://postgres:password@postgres:5432/app-near'" >> .env
+          echo "DATABASE_URL='postgresql://postgres:password@postgres/app-near'" >> .env
+          echo $DATABASE_URL
 
       - name: Generate Prisma database
         run: npx prisma db push
