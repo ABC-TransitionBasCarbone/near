@@ -58,7 +58,7 @@ const SurveyInProgress: React.FC<SurveyInProgressProps> = ({
               </p>
             </div>
 
-            <div className="flex flex-col justify-center gap-10">
+            <div className="flex w-full flex-col justify-center gap-10 sm:w-auto">
               <Button
                 icon="/icons/rocket.svg"
                 rounded
