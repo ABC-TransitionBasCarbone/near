@@ -30,7 +30,7 @@ const SurveyInProgress: React.FC<SurveyInProgressProps> = ({
     <SurveyLayout
       banner={
         <>
-          <div className="flex flex-row flex-wrap justify-center gap-10">
+          <div className="flex flex-row flex-wrap items-stretch justify-center gap-10">
             <MetabaseIframe
               iframeNumber={MetabaseIFrameNumber.JAUGE_ERROR_MARGIN}
               iframeType={MetabaseIframeType.QUESTION}
@@ -38,7 +38,7 @@ const SurveyInProgress: React.FC<SurveyInProgressProps> = ({
               width="300px"
             />
 
-            <div className="flex max-w-lg flex-col">
+            <div className="flex max-w-lg flex-col justify-center">
               <Link
                 className="items-center gap-3 py-2 font-sans font-bold text-blue no-underline hover:ring-0"
                 onClick={() =>

@@ -16,6 +16,7 @@ export const surveysRouter = createTRPCRouter({
         data: z
           .object({
             phase: z.nativeEnum(SurveyPhase).optional(),
+            sampleTarget: z.number().optional(),
           })
           .strict(),
       }),

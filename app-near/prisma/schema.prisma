@@ -30,6 +30,7 @@ model Survey {
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
     phase     SurveyPhase @default(STEP_1_NEIGHBORHOOD_INFORMATION)
+    sampleTarget Int? @map("sample_target")
     quartier Quartier?
     @@map("surveys")
 }
@@ -116,22 +117,26 @@ model InseeIris2021 {
 
 view Quartier {
   iris_selectors         String[]
-  population_sum         Int
-  p21_pop1529_sum        Int
-  p21_pop3044_sum        Int
-  p21_pop4559_sum        Int
-  p21_pop6074_sum        Int
-  p21_pop75p_sum         Int
-  c21_pop15p_cs1_sum     Int
-  c21_pop15p_cs2_sum     Int
-  c21_pop15p_cs3_sum     Int
-  c21_pop15p_cs4_sum     Int
-  c21_pop15p_cs5_sum     Int
-  c21_pop15p_cs6_sum     Int
-  c21_pop15p_cs7_sum     Int
-  c21_pop15p_cs8_sum     Int
-  population_femme_sum   Int
-  population_homme_sum   Int
+  population_sum         Float
+  p21_pop1529_sum        Float
+  p21_pop3044_sum        Float
+  p21_pop4559_sum        Float
+  p21_pop6074_sum        Float
+  p21_pop75p_sum         Float
+  c21_pop15p_cs1_sum     Float
+  c21_pop15p_cs2_sum     Float
+  c21_pop15p_cs3_sum     Float
+  c21_pop15p_cs4_sum     Float
+  c21_pop15p_cs5_sum     Float
+  c21_pop15p_cs6_sum     Float
+  c21_pop15p_cs7_sum     Float
+  c21_pop15p_cs8_sum     Float
+  population_femme_sum   Float
+  population_homme_sum   Float
+  population_sum_threshold_3p Float
+  population_sum_threshold_4p Float
+  population_sum_threshold_4_5p Float
+  population_sum_threshold_5p Float
   surveyId         Int  @unique @map("survey_id")           // Foreign key unique field to survey
   survey           Survey @relation(fields: [surveyId], references: [id])
   @@map("quartiers")
