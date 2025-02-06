@@ -12,6 +12,18 @@ jobs:
   test:
     runs-on: ubuntu-latest
 
+    services:
+      postgres:
+        image: postgres:17.2
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: password
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
     steps:
       - uses: actions/checkout@v2
 
@@ -37,9 +49,14 @@ jobs:
 
       - name: Create .env file
         run: cp .env.example .env
+
+      - name: Generate Prisma database
+        run: npx prisma db:push
       
       - name: Test
-        run: npm run test:server && npm run test:components
+        run: | 
+          npm run test:server
+          npm run test:components
 
       - name: Build
         run: npm run build
