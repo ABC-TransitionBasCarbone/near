@@ -47,6 +47,7 @@ const SampleRadios: React.FC = ({}) => {
                   id={option.toString()}
                   type="radio"
                   value={option}
+                  name={"sample"}
                   checked={selected === option}
                   className="focus:ring-gray-500 peer h-5 w-5 cursor-pointer text-grayLight checked:text-white focus:ring-1"
                   onChange={() => {

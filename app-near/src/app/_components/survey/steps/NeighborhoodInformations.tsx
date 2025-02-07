@@ -35,9 +35,9 @@ const NeighborhoodInformations: React.FC = () => {
         <div className="m-auto flex max-w-5xl flex-col gap-5">
           <h1 className="text-3xl text-black">
             Informations sur le quartier :{" "}
-            {new Intl.NumberFormat("fr-FR").format(
+            {`${new Intl.NumberFormat("fr-FR").format(
               Number(neighborhood?.population_sum ?? "0"),
-            )}
+            )} `}
             personnes de plus de 15 ans.
           </h1>
           <p>

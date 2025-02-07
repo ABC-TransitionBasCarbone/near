@@ -108,7 +108,7 @@ const SurveyInProgress: React.FC<SurveyInProgressProps> = ({
       }
     >
       <div>
-        <SampleRadios></SampleRadios>
+        <SampleRadios />
       </div>
     </SurveyLayout>
   );

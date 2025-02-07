@@ -13,13 +13,12 @@ const Step2: React.FC = () => {
         setToggleBroadcastingPage={setToggleBroadcastingPage}
       ></Broadcasting>
     );
-  } else {
-    return (
-      <SurveyInProgress
-        setToggleBroadcastingPage={setToggleBroadcastingPage}
-      ></SurveyInProgress>
-    );
   }
+  return (
+    <SurveyInProgress
+      setToggleBroadcastingPage={setToggleBroadcastingPage}
+    ></SurveyInProgress>
+  );
 };
 
 export default Step2;
