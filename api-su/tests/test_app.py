@@ -109,8 +109,12 @@ def test_200_compute_sus_from_file(client):
     assert response.status_code == 200
     sus = response.json.get("computed_sus")
     assert len(sus) == len(expected_sus)
-    assert sorted(sus, key=lambda x: x["su"]) == sorted(expected_sus, key=lambda x: x["su"])
-    assert sorted(sus, key=lambda x: x["pop_percentage"]) == sorted(expected_sus, key=lambda x: x["pop_percentage"])
+    assert sorted(sus, key=lambda x: x["su"]) == sorted(
+        expected_sus, key=lambda x: x["su"]
+    )
+    assert sorted(sus, key=lambda x: x["pop_percentage"]) == sorted(
+        expected_sus, key=lambda x: x["pop_percentage"]
+    )
 
 
 def extract_from_file():
@@ -119,6 +123,8 @@ def extract_from_file():
     df.columns = ["user_id", "food", "mobility", "digital", "purchase", "plane", "home"]
     df = df.loc[df["user_id"].isin(test_file_data.L10)]
     for col, mapping in test_file_data.MAPPINGS.items():
-        df[col] = df[col].apply(lambda x: mapping.index(x) + 1 if x in mapping else np.nan)
+        df[col] = df[col].apply(
+            lambda x: mapping.index(x) + 1 if x in mapping else np.nan
+        )
 
     return df.to_dict(orient="records"), test_file_data.EXPECTED_SUS
