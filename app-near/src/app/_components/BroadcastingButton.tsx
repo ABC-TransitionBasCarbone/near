@@ -66,6 +66,7 @@ const BroadcastingButton: React.FC<BroadcastingButtonProps> = (
       </div>
       <div className="group relative">
         <Button
+          rounded
           onClick={() => generateTypeformUniqueLink(props.broadcastType)}
           icon={broadcastWordings[props.broadcastType].icon}
         >
