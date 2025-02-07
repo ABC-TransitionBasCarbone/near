@@ -146,7 +146,7 @@ def h_clustering(data, floor, top, min_count, distance=distance_euclidean):
     while len(clusters) > min_count and lowest_weight < floor and highest_weight < top:
         closest_pairs = [[0, 1]]
         lowest_distance = distance(clusters[0].vector, clusters[1].vector)
-        
+
         for i in range(len(clusters)):
             for j in range(i + 1, len(clusters)):
                 d = distance(clusters[i].vector, clusters[j].vector)
@@ -172,14 +172,14 @@ def get_user_attributed_su(user_data, clusters):
     su, distance = get_closest_cluster(clusters, convert_to_vector_co2eq(user_data))
     return {
         "user_id": user_data.get("user_id"),
-        "su": su,
+        "su": su + 1,
         "distance_to_barycenter": distance,
     }
 
 
-def format_computed_su(cluster, sample_size):
+def format_computed_su(cluster, i, sample_size):
     return {
-        "su": cluster.index,
+        "su": i + 1,
         "pop_percentage": round((cluster.weight / sample_size) * 100, 2),
         "barycenter": cluster.vector,
     }
@@ -195,7 +195,8 @@ def run(users_data):
     )
     return {
         "computed_sus": [
-            format_computed_su(cluster, sample_size) for cluster in clusters
+            format_computed_su(cluster, i, sample_size)
+            for i, cluster in enumerate(clusters)
         ],
         "user_attributed_su": [
             get_user_attributed_su(user_data, clusters) for user_data in users_data
