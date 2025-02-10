@@ -48,6 +48,7 @@ enum AgeCategory {
 enum Gender {
   MAN
   WOMAN
+  OTHER
 }
 
 enum ProfessionalCategory {
@@ -60,7 +61,6 @@ enum ProfessionalCategory {
   CS7
   CS8_unemployed
   CS8_student
-  CS8_other
 }
 
 enum EasyHealthAccess {

@@ -2,10 +2,10 @@
 CREATE TYPE "AgeCategory" AS ENUM ('UNDER_15', 'FROM_15_TO_29', 'FROM_30_TO_44', 'FROM_45_TO_59', 'FROM_60_TO_74', 'ABOVE_75');
 
 -- CreateEnum
-CREATE TYPE "Gender" AS ENUM ('MAN', 'WOMAN');
+CREATE TYPE "Gender" AS ENUM ('MAN', 'WOMAN', 'OTHER');
 
 -- CreateEnum
-CREATE TYPE "ProfessionalCategory" AS ENUM ('CS1', 'CS2', 'CS3', 'CS4', 'CS5', 'CS6', 'CS7', 'CS8_unemployed', 'CS8_student', 'CS8_other');
+CREATE TYPE "ProfessionalCategory" AS ENUM ('CS1', 'CS2', 'CS3', 'CS4', 'CS5', 'CS6', 'CS7', 'CS8_unemployed', 'CS8_student');
 
 -- CreateEnum
 CREATE TYPE "EasyHealthAccess" AS ENUM ('EASY', 'MODERATE', 'HARD');
