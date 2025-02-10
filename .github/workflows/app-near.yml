@@ -3,6 +3,8 @@ name: Next app tests
 on:
   pull_request:
     branches: [develop]
+    paths:
+      - 'app-near/**'
 
 defaults:
   run:

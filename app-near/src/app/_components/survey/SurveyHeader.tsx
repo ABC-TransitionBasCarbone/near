@@ -29,8 +29,14 @@ const SurveyHeader = () => {
   }
 
   return (
-    <div className="mx-12 my-8 flex flex-wrap items-center justify-center gap-4">
-      <img src="/logos/logo_near.svg" alt="" />
+    <div className="mx-2 my-8 flex flex-wrap items-center justify-center gap-4 sm:mx-12">
+      <div className="flex w-full items-center justify-between gap-2 sm:w-fit sm:gap-4">
+        <img src="/logos/logo_near.svg" alt="" />
+        <div className="flex gap-2 sm:hidden">
+          <img src="/icons/building.svg" alt="" />
+          <span>{survey.name}</span>
+        </div>
+      </div>
       <nav className="flex-grow">
         <ProgressBar
           isActive={surveyConfig[survey.phase as SurveyStep].isActive}
@@ -40,7 +46,7 @@ const SurveyHeader = () => {
           maxActiveStep={survey.phase as SurveyStep}
         />
       </nav>
-      <div className="flex gap-2">
+      <div className="hidden gap-2 sm:flex">
         <img src="/icons/building.svg" alt="" />
         {survey.name}
       </div>

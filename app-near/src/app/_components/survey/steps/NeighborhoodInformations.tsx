@@ -18,6 +18,8 @@ const NeighborhoodInformations: React.FC = () => {
   const { data: session } = useSession();
   const { step, updateStep } = useSurveyStateContext();
 
+  const updateSurveyMutation = api.surveys.update.useMutation();
+
   const { data: neighborhood } = api.neighborhoods.getOne.useQuery(
     session?.user?.surveyId ?? 0,
     {
@@ -29,15 +31,29 @@ const NeighborhoodInformations: React.FC = () => {
     return "loading...";
   }
 
+  const updateNextPhase = async () => {
+    if (!step) return;
+
+    const nextStep = surveyConfig[step]?.nextStep;
+    if (!nextStep) return;
+
+    updateStep(nextStep);
+
+    await updateSurveyMutation.mutateAsync({
+      surveyId: session?.user?.surveyId,
+      data: { phase: nextStep },
+    });
+  };
+
   return (
     <SurveyLayout
       banner={
-        <div className="flex flex-col gap-5">
+        <div className="m-auto flex max-w-5xl flex-col gap-5">
           <h1 className="text-3xl text-black">
             Informations sur le quartier :{" "}
-            {new Intl.NumberFormat("fr-FR").format(
+            {`${new Intl.NumberFormat("fr-FR").format(
               Number(neighborhood?.population_sum ?? "0"),
-            )}
+            )} `}
             personnes de plus de 15 ans.
           </h1>
           <p>
@@ -57,7 +73,7 @@ const NeighborhoodInformations: React.FC = () => {
             icon="/icons/flash.svg"
             rounded
             style={ButtonStyle.FILLED}
-            onClick={() => step && updateStep(surveyConfig[step].nextStep)}
+            onClick={updateNextPhase}
           >
             Démarrer l&apos;enquête
           </Button>
