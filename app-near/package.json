@@ -12,6 +12,7 @@
     "check": "next lint && tsc --noEmit",
     "db:generate": "prisma migrate dev",
     "db:migrate": "prisma migrate deploy",
+    "seed:answers": "tsx ./scripts/seed.ts",
     "db:push": "prisma db push",
     "db:studio": "prisma studio",
     "load:insee": "/bin/sh ./scripts/load_insee_data.sh",
@@ -33,6 +34,7 @@
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.7.2",
+    "@faker-js/faker": "^9.4.0",
     "@hookform/resolvers": "^3.10.0",
     "@prisma/client": "^6.3.0",
     "@t3-oss/env-nextjs": "^0.10.1",
