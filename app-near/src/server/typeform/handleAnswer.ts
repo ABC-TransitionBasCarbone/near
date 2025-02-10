@@ -1,6 +1,5 @@
 import { type NextRequest, NextResponse } from "next/server";
 import { verifySignature } from "./signature";
-import { FormId } from "~/types/enums/formId";
 import { getReferencesMapping } from "../surveys/references";
 import { convertFormToAnswer } from "./convert";
 import { TypeformWebhookSchema } from "~/types/typeform";
@@ -8,9 +7,10 @@ import { typeformSchemaMapper } from "./schema";
 import { createSu } from "../su/create";
 import { type SuAnswer } from "@prisma/client";
 import { z } from "zod";
+import { env } from "~/env";
 
 export const handleAnswer = async (req: NextRequest): Promise<NextResponse> => {
-  let formId: FormId | undefined = undefined;
+  let formId: string | undefined = undefined;
   try {
     const body = await req.text();
     const parsedBody = TypeformWebhookSchema.parse(JSON.parse(body));
@@ -45,9 +45,9 @@ export const handleAnswer = async (req: NextRequest): Promise<NextResponse> => {
     const answers = convertFormToAnswer(parsedBody, referencesMapping);
     console.info("[whebhook typeform]", formId, JSON.stringify(answers));
 
-    const parsedAnswer = typeformSchemaMapper[formId].parse(answers);
+    const parsedAnswer = typeformSchemaMapper[formId]?.parse(answers);
 
-    if (formId === FormId.SU) {
+    if (formId === env.SU_FORM_ID) {
       const surveyName = parsedBody.form_response.hidden?.neighborhood;
       if (!surveyName) {
         console.error("[whebhook typeform]", formId, "Survey name not found");
