@@ -74,7 +74,13 @@ export const handleAnswer = async (req: NextRequest): Promise<NextResponse> => {
         { status: 400 },
       );
     }
-    console.error("[whebhook typeform]", formId, "ERROR:", error);
+
+    if (error instanceof Error) {
+      console.error("[whebhook typeform]", formId, "ERROR :", error.message);
+      return NextResponse.json({ error: error.message }, { status: 400 });
+    }
+
+    console.error("[whebhook typeform]", formId, "UNKNOWN ERROR:", error);
     return NextResponse.json(
       { error: "Internal Server Error" },
       { status: 500 },
