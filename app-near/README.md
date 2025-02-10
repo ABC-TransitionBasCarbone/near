@@ -84,23 +84,23 @@ Pour les données de l'INSEE 2021
 curl -L -O https://www.insee.fr/fr/statistiques/fichier/8268806/base-ic-evol-struct-pop-2021_csv.zip && unzip base-ic-evol-struct-pop-2021_csv.zip && mv base-ic-evol-struct-pop-2021.CSV ./scripts/base-ic-evol-struct-pop-2021.csv && rm base-ic-evol-struct-pop-2021_csv.zip
 ```
 
-## 2. Charger la BDD INSEE et initialiser une enquête pour le 14eme arrondissement de Paris
+### 2. Charger la BDD INSEE et initialiser une enquête pour le 14eme arrondissement de Paris
 
-### En environnement local
+#### En environnement local
 
 ```bash
 npm run load:all
 ```
 
-### En environnement de production (ou dockerisé)
+#### En environnement de production (ou dockerisé)
 
-#### 2.1. Charger les données INSEE dans une base de données locale
+##### 2.1. Charger les données INSEE dans une base de données locale
 
 ```bash
 npm run load:insee -- "$(pwd)/scripts/base-ic-evol-struct-pop-2021.csv" postgresql://postgres:password@localhost:5432/app-near
 ```
 
-#### 2.2. Initialiser une enquête en base et calculer les données statistiques nécessaires à l'enquête
+##### 2.2. Initialiser une enquête en base et calculer les données statistiques nécessaires à l'enquête
 
 Le script utilise les variables du fichier `.env`
 
@@ -114,3 +114,17 @@ Pour plus de détail sur :
 - ou comment ajouter une enquête
 
 voir le [README du dossier scripts](./scritps/README.md)
+
+## Comment tester le webhook
+```bash
+./scripts/webhooks/query.sh
+
+# PROMPT (exemple):
+# Entrez l'URL de destination : localhost:3000/api/typeform
+# Entrez la clé secrète Typeform : secret
+# Entrez le nom du fichier JSON (ex: su.json) : ./scripts/webhooks/su.json
+```
+
+Note : 
+- su.json > exemple de payload pour le webhook sphère d'usage
+- Autres payload à créer pour les formulaires suivants
