@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { type Dispatch, type SetStateAction } from "react";
 import { ButtonStyle } from "~/types/enums/button";
 import { env } from "../../../../../env";
 import {
@@ -14,7 +15,6 @@ import MetabaseIframe from "../../../_ui/MetabaseIframe";
 import { renderIcon } from "../../../_ui/utils/renderIcon";
 import SurveyLayout from "../../SurveyLayout";
 import { surveyConfig } from "../config";
-import { type Dispatch, type SetStateAction } from "react";
 import SampleRadios from "./SampleRadios";
 
 interface SurveyInProgressProps {

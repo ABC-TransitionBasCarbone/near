@@ -25,7 +25,7 @@ const getRandomEnum = <T extends object>(enumObj: T): T[keyof T] => {
 async function main() {
   console.log("Seeding database...");
 
-  for (let i = 0; i < 100; i++) {
+  for (let i = 0; i < 400; i++) {
     // Générer 500 lignes
     // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
     await prisma.suAnswer.create({
@@ -43,7 +43,7 @@ async function main() {
         heatSource: getRandomEnum(HeatSource),
         email: faker.internet.email(),
         broadcastChannel: getRandomEnum(BroadcastChannel),
-        surveyId: 1, // Remplace par un ID valide d'un survey existant
+        surveyId: 1,
       },
     });
   }
