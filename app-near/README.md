@@ -128,3 +128,18 @@ voir le [README du dossier scripts](./scritps/README.md)
 Note : 
 - su.json > exemple de payload pour le webhook sphère d'usage
 - Autres payload à créer pour les formulaires suivants
+
+## Comment jouer les seeds
+```bash
+npm run seed
+```
+Vous donnera la liste des scopes valides. Ensuite en lancant la même commande avec un scope définit, vous aurez une définition des arguments attendus.
+
+```bash
+npm run seed -- scope=su_answer
+```
+
+Enfin vous pourrez jouer la commande complète. Par exemple pour les sphères d'usages
+```bash
+ npm run seed -- scope=su_answer surveyName=14e_arr surveyTarget=60 surveyCase=case_2
+```
