@@ -1,57 +1,64 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import {
-  AgeCategory,
-  AirTravelFrequency,
-  DigitalIntensity,
-  EasyHealthAccess,
-  BroadcastChannel,
-  Gender,
-  HeatSource,
-  MeatFrequency,
-  PrismaClient,
-  ProfessionalCategory,
-  PurchasingStrategy,
-  TransportationMode,
-} from "@prisma/client";
-import { faker } from "@faker-js/faker";
+import "dotenv/config";
+import { env } from "~/env";
+import { seedSuSurvey, type SurveyCase } from "./seeds/su";
 
-const prisma = new PrismaClient();
-
-const getRandomEnum = <T extends object>(enumObj: T): T[keyof T] => {
-  const values = Object.values(enumObj);
-  return values[Math.floor(Math.random() * values.length)] as T[keyof T];
-};
-
-async function main() {
-  console.log("Seeding database...");
-
-  for (let i = 0; i < 100; i++) {
-    // Générer 500 lignes
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
-    await prisma.suAnswer.create({
-      data: {
-        isNeighborhoodResident: faker.datatype.boolean(),
-        ageCategory: getRandomEnum(AgeCategory),
-        gender: getRandomEnum(Gender),
-        professionalCategory: getRandomEnum(ProfessionalCategory),
-        easyHealthAccess: getRandomEnum(EasyHealthAccess),
-        meatFrequency: getRandomEnum(MeatFrequency),
-        transportationMode: getRandomEnum(TransportationMode),
-        digitalIntensity: getRandomEnum(DigitalIntensity),
-        purchasingStrategy: getRandomEnum(PurchasingStrategy),
-        airTravelFrequency: getRandomEnum(AirTravelFrequency),
-        heatSource: getRandomEnum(HeatSource),
-        email: faker.internet.email(),
-        broadcastChannel: getRandomEnum(BroadcastChannel),
-        surveyId: 1, // Remplace par un ID valide d'un survey existant
-      },
-    });
-  }
-
-  console.log("Seeding completed!");
+enum SeedScope {
+  SU_ANSWER = "su_answer",
+  ALL = "all",
 }
 
-main().catch((e) => {
-  console.error("Seeding error:", e);
-  process.exit(1);
-});
+const parseArgs = () => {
+  const rawArgs = process.argv.slice(2);
+  const args: Record<string, string | boolean> = {};
+
+  rawArgs.forEach((arg) => {
+    if (arg.includes("=")) {
+      const [key, value] = arg.split("=");
+      if (key && value !== undefined) args[key] = value;
+    }
+  });
+
+  return args;
+};
+
+const args = parseArgs();
+
+const seed = async () => {
+  console.info(`start seeds with args ${JSON.stringify(args)}`);
+
+  if (env.NODE_ENV === "production") {
+    throw new Error("Can not seed on production environment");
+  }
+
+  const seedScope = args.scope as SeedScope | undefined;
+
+  if (!seedScope || !Object.values(SeedScope).includes(seedScope)) {
+    throw new Error(`
+You should select a valid scope. Valid values are: ${Object.values(SeedScope).join(", ")}
+
+Usage: npm run seed -- scope=su_answer
+      `);
+  }
+
+  if (seedScope === SeedScope.SU_ANSWER) {
+    const surveyName = args.surveyName as string | undefined;
+    const surveyTarget = parseInt(args.surveyTarget as string, 10);
+    const surveyCase = args.surveyCase as SurveyCase | undefined;
+
+    await seedSuSurvey(surveyName, surveyTarget, surveyCase);
+  }
+};
+
+await seed()
+  .catch((e) => {
+    if (e instanceof Error) {
+      console.error("End seed with error:", e.message);
+    } else {
+      console.error("End seed with error:", e);
+    }
+    process.exit(1);
+  })
+  .then(() => {
+    console.log("End seed successfully");
+    process.exit(0);
+  });
