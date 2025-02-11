@@ -1,10 +1,10 @@
 "use client";
 import { useState } from "react";
-import Button from "./_ui/Button";
+import Button from "../../../../_ui/Button";
 import {
   type SurveyType,
   type BroadcastType,
-} from "../../types/enums/broadcasting";
+} from "../../../../../../types/enums/broadcasting";
 import { env } from "~/env";
 
 interface BroadcastingButtonProps {

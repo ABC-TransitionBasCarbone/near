@@ -3,7 +3,7 @@ import BroadcastingButton from "./BroadcastingButton";
 import {
   type SurveyType,
   type BroadcastType,
-} from "../../types/enums/broadcasting";
+} from "../../../../../../types/enums/broadcasting";
 
 jest.mock("../../env", () => ({
   env: {

@@ -1,24 +1,24 @@
 "use client";
 
 import { useState } from "react";
-import Broadcasting from "./Broadcasting";
-import SurveyInProgress from "./SurveyInProgress";
+import BroadcastingLayout from "./broadcasting/BroadcastingLayout";
+import RepresentativenessLayout from "./representativeness/RepresentativenessLayout";
 
-const Step2: React.FC = () => {
+const Main: React.FC = () => {
   const [toggleBroadcastingPage, setToggleBroadcastingPage] = useState(false);
 
   if (toggleBroadcastingPage) {
     return (
-      <Broadcasting
+      <BroadcastingLayout
         setToggleBroadcastingPage={setToggleBroadcastingPage}
-      ></Broadcasting>
+      ></BroadcastingLayout>
     );
   }
   return (
-    <SurveyInProgress
+    <RepresentativenessLayout
       setToggleBroadcastingPage={setToggleBroadcastingPage}
-    ></SurveyInProgress>
+    ></RepresentativenessLayout>
   );
 };
 
-export default Step2;
+export default Main;

@@ -1,10 +1,10 @@
 import { useSession } from "next-auth/react";
-import { api } from "../../../../../trpc/react";
-import MetabaseIframe from "../../../_ui/MetabaseIframe";
+import { api } from "../../../../../../trpc/react";
+import MetabaseIframe from "../../../../_ui/MetabaseIframe";
 import {
   MetabaseIFrameNumber,
   MetabaseIframeType,
-} from "../../../../../types/enums/metabase";
+} from "../../../../../../types/enums/metabase";
 
 interface RepresentativenessProps {
   target: number;
