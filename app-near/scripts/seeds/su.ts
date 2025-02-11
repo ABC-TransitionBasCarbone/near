@@ -41,7 +41,7 @@ export const seedSuSurvey = async (
     throw new Error(`
 surveyName (${surveyName}) or surveyTarget (${surveyTarget}) or surveyCase (${surveyCase}) not defined. 
 
-Usage: npm run seed -- scope=su_answer surveyName=14e_arr surveyTarget=60 surveyCase=case_1
+Usage: npm run seed -- scope=su_answer surveyName=14e_arr surveyTarget=60 surveyCase=LESS_THAN_TARGET
 
 Valid values for surveyCase: ${Object.values(SurveyCase)
       .map((item) => `${item}`)
