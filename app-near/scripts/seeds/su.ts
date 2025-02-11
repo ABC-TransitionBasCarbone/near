@@ -3,26 +3,21 @@ import { db } from "~/server/db";
 import { buildSuAnswer } from "~/server/test-utils/create-data/suAnswer";
 
 export enum SurveyCase {
-  CAS_1 = "case_1",
-  CAS_2 = "case_2",
+  LESS_THAN_TARGET = "LESS_THAN_TARGET",
+  MORE_THAN_TARGET = "MORE_THAN_TARGET",
 }
-
-const surveyCaseDescription: Record<SurveyCase, string> = {
-  [SurveyCase.CAS_1]: "less than target",
-  [SurveyCase.CAS_2]: "more than target",
-};
 
 const getAnswerQuantity = (
   surveyCase: SurveyCase,
   surveyTarget: number,
 ): number => {
   switch (surveyCase) {
-    case SurveyCase.CAS_1:
+    case SurveyCase.LESS_THAN_TARGET:
       return faker.number.int({
         min: Math.floor(surveyTarget / 2),
         max: surveyTarget - 1,
       });
-    case SurveyCase.CAS_2:
+    case SurveyCase.MORE_THAN_TARGET:
       return faker.number.int({
         min: surveyTarget,
         max: surveyTarget + Math.floor(surveyTarget / 2),
@@ -49,14 +44,14 @@ surveyName (${surveyName}) or surveyTarget (${surveyTarget}) or surveyCase (${su
 Usage: npm run seed -- scope=su_answer surveyName=14e_arr surveyTarget=60 surveyCase=case_1
 
 Valid values for surveyCase: ${Object.values(SurveyCase)
-      .map((item) => `${item} (${surveyCaseDescription[item]})`)
+      .map((item) => `${item}`)
       .join(", ")}`);
   }
 
-  const survey = await db.survey.findFirst({ where: { name: surveyName } });
+  let survey = await db.survey.findFirst({ where: { name: surveyName } });
 
   if (!survey) {
-    await db.survey.create({
+    survey = await db.survey.create({
       data: { name: surveyName, sampleTarget: surveyTarget },
     });
   } else {
@@ -76,7 +71,7 @@ Valid values for surveyCase: ${Object.values(SurveyCase)
       (el, index) => index,
     ).map(() => {
       return db.suAnswer.create({
-        data: buildSuAnswer(1),
+        data: buildSuAnswer(survey.id),
       });
     }),
   );

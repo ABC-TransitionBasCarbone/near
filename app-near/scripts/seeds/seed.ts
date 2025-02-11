@@ -1,6 +1,6 @@
 import "dotenv/config";
 import { env } from "~/env";
-import { seedSuSurvey, type SurveyCase } from "./seeds/su";
+import { seedSuSurvey, type SurveyCase } from "./su";
 
 enum SeedScope {
   SU_ANSWER = "su_answer",
@@ -24,8 +24,6 @@ const parseArgs = () => {
 const args = parseArgs();
 
 const seed = async () => {
-  console.info(`start seeds with args ${JSON.stringify(args)}`);
-
   if (env.NODE_ENV === "production") {
     throw new Error("Can not seed on production environment");
   }
@@ -52,9 +50,9 @@ Usage: npm run seed -- scope=su_answer
 await seed()
   .catch((e) => {
     if (e instanceof Error) {
-      console.error("End seed with error:", e.message);
+      console.error(e.message);
     } else {
-      console.error("End seed with error:", e);
+      console.error(e);
     }
     process.exit(1);
   })

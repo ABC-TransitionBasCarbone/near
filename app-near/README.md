@@ -130,16 +130,20 @@ Note :
 - Autres payload à créer pour les formulaires suivants
 
 ## Comment jouer les seeds
+Pour lister les différents scopes (scénario de seed) possibles :
+
 ```bash
 npm run seed
 ```
-Vous donnera la liste des scopes valides. Ensuite en lancant la même commande avec un scope définit, vous aurez une définition des arguments attendus.
+
+Pour obtenir une définition des arguments attendus pour un scope :
 
 ```bash
 npm run seed -- scope=su_answer
 ```
 
-Enfin vous pourrez jouer la commande complète. Par exemple pour les sphères d'usages
+Pour jouer un scénario de seed (exemple pour les sphères d'usage) :
+
 ```bash
  npm run seed -- scope=su_answer surveyName=14e_arr surveyTarget=60 surveyCase=case_2
 ```
