@@ -1,7 +1,11 @@
 import { useSession } from "next-auth/react";
 import { api } from "../../../../../trpc/react";
+import MetabaseIframe from "../../../_ui/MetabaseIframe";
+import {
+  MetabaseIFrameNumber,
+  MetabaseIframeType,
+} from "../../../../../types/enums/metabase";
 
-// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 interface RepresentativenessProps {
   target: number;
 }
@@ -16,12 +20,20 @@ const Representativeness: React.FC<RepresentativenessProps> = ({ target }) => {
     },
   );
 
-  const hasReached75TargetPercentage = () => {
+  const hasReachedMoreThan75TargetPercentage = () => {
     return (answserCount ?? 0) >= (target * 75) / 100;
   };
 
-  if (hasReached75TargetPercentage()) {
-    return <div>Reached !</div>;
+  if (hasReachedMoreThan75TargetPercentage()) {
+    return (
+      <div>
+        <MetabaseIframe
+          iframeNumber={MetabaseIFrameNumber.PANEL_REPRESENTATIVNESS}
+          iframeType={MetabaseIframeType.DASHBOARD}
+          height="900px"
+        />
+      </div>
+    );
   }
 };
 
