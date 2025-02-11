@@ -65,14 +65,13 @@ Valid values for surveyCase: ${Object.values(SurveyCase)
     });
   }
 
-  await Promise.all(
-    Array.from(
-      { length: getAnswerQuantity(surveyCase, surveyTarget) },
-      (el, index) => index,
-    ).map(() => {
-      return db.suAnswer.create({
-        data: buildSuAnswer(survey.id),
-      });
-    }),
-  );
+  for (
+    let index = 0;
+    index < getAnswerQuantity(surveyCase, surveyTarget);
+    index++
+  ) {
+    await db.suAnswer.create({
+      data: buildSuAnswer(survey.id),
+    });
+  }
 };
