@@ -1,37 +1,20 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import React, { useEffect } from "react";
-import { useSession } from "next-auth/react";
+import { type Session } from "next-auth";
+import React, { type Dispatch, type SetStateAction } from "react";
 import { api } from "~/trpc/react";
 
 interface SampleRadioOptionsProps {
   selected: number | null;
-  setSelected: (option: number) => void;
+  setSelected: Dispatch<SetStateAction<number | null>>;
+  targetOptions: number[];
+  session: Session;
 }
 
 const SampleRadioOptions: React.FC<SampleRadioOptionsProps> = ({
   selected,
   setSelected,
+  targetOptions,
+  session,
 }) => {
-  const { data: session } = useSession();
-
-  const { data: survey, isLoading } = api.surveys.getOne.useQuery(undefined, {
-    enabled: !!session?.user?.surveyId,
-  });
-
-  useEffect(() => {
-    if (survey?.sampleTarget) {
-      setSelected(Math.ceil(survey?.sampleTarget / 50) * 50);
-    }
-  }, [setSelected, survey?.sampleTarget]);
-
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
-
-  if (!survey?.quartier) {
-    return <div>Erreur : Pas de quartier défini pour cette enquête</div>;
-  }
-
   const updateSurveyMutation = api.surveys.update.useMutation();
 
   return (
@@ -40,12 +23,7 @@ const SampleRadioOptions: React.FC<SampleRadioOptionsProps> = ({
         Combien de personnes voulez-vous interroger ?
       </div>
       <ul className="flex flex-wrap gap-4">
-        {[
-          survey.quartier.population_sum_threshold_5p,
-          survey.quartier.population_sum_threshold_4_5p,
-          survey.quartier.population_sum_threshold_4p,
-          survey.quartier.population_sum_threshold_3p,
-        ]
+        {targetOptions
           .map((sampleValue) => Math.ceil(sampleValue / 50) * 50)
           .map((option) => (
             <li key={option.toString()}>

@@ -1,18 +1,20 @@
-import { useSession } from "next-auth/react";
+import { type Session } from "next-auth";
 import { api } from "../../../../../../trpc/react";
-import MetabaseIframe from "../../../../_ui/MetabaseIframe";
 import {
   MetabaseIFrameNumber,
   MetabaseIframeType,
 } from "../../../../../../types/enums/metabase";
+import MetabaseIframe from "../../../../_ui/MetabaseIframe";
 
 interface RepresentativenessProps {
   target: number;
+  session: Session;
 }
 
-const Representativeness: React.FC<RepresentativenessProps> = ({ target }) => {
-  const { data: session } = useSession();
-
+const Representativeness: React.FC<RepresentativenessProps> = ({
+  target,
+  session,
+}) => {
   const { data: answserCount } = api.answers.count.useQuery(
     session?.user?.surveyId ?? 0,
     {
