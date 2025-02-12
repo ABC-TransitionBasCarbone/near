@@ -12,4 +12,13 @@ export const answersRouter = createTRPCRouter({
       }
       return countAnswsers(surveyId);
     }),
+
+  representativeness: protectedProcedure
+    .input(z.number())
+    .query(({ ctx, input: surveyId }) => {
+      if (surveyId !== ctx.session.user.surveyId) {
+        throw new TRPCError({ code: "FORBIDDEN" });
+      }
+      return countAnswsers(surveyId);
+    }),
 });
