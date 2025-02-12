@@ -48,12 +48,17 @@ Valid values for surveyCase: ${Object.values(SurveyCase)
       .join(", ")}`);
   }
 
-  let survey = await db.survey.findFirst({ where: { name: surveyName } });
+  const survey = await db.survey.findFirst({ where: { name: surveyName } });
 
   if (!survey) {
-    survey = await db.survey.create({
-      data: { name: surveyName, sampleTarget: surveyTarget },
+    const existingSurveys = await db.survey.findMany({
+      select: { name: true },
     });
+    throw new Error(`
+Usage: npm run seed -- scope=su_answer surveyName=14e_arr surveyTarget=60 surveyCase=LESS_THAN_TARGET
+
+Valid values for surveyName: ${existingSurveys.map((item) => item.name).join(", ")}
+    `);
   } else {
     await db.survey.update({
       data: { sampleTarget: surveyTarget },
