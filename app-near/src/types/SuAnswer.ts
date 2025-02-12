@@ -8,11 +8,12 @@ import {
   MeatFrequency,
   ProfessionalCategory,
   PurchasingStrategy,
+  type SuAnswer,
   TransportationMode,
 } from "@prisma/client";
 import { z } from "zod";
 
-export const suSchema = z.object({
+export const convertedSuAnswer = z.object({
   isNeighborhoodResident: z.boolean(),
   ageCategory: z.nativeEnum(AgeCategory),
   gender: z.nativeEnum(Gender),
@@ -27,4 +28,8 @@ export const suSchema = z.object({
   email: z.string().email().optional(),
 });
 
-export type SuSchema = z.infer<typeof suSchema>;
+export type BuilderSuAnswer = Omit<
+  SuAnswer,
+  "id" | "userSu" | "userDistanceToSuBarycentre"
+> &
+  Partial<Pick<SuAnswer, "id" | "userSu" | "userDistanceToSuBarycentre">>;
