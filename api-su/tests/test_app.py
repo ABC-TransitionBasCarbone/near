@@ -27,68 +27,68 @@ def test_400_missing_field(client):
     invalid_data = [
         {
             "id": 4,
-            "meatFrequency": 3,
-            "transportationMode": 1,
-            "digitalIntensity": 2,
-            "purchasingStrategy": 2,
-            "airTravelFrequency": 1,
+            "meat_frequency": 3,
+            "transportation_mode": 1,
+            "digital_intensity": 2,
+            "purchasing_strategy": 2,
+            "air_travel_frequency": 1,
         }
     ]
     response = client.post(
         "/api-su/compute", headers={"X-API-KEY": "1234"}, json=invalid_data
     )
     assert response.status_code == 400
-    assert "heatSource" in response.json["error"]["0"]
+    assert "heat_source" in response.json["error"]["0"]
 
 
 def test_400_invalid_format(client):
     invalid_data = [
         {
             "id": 4,
-            "meatFrequency": "un peu",
-            "transportationMode": 1,
-            "digitalIntensity": "beaucoup",
-            "purchasingStrategy": 2,
-            "airTravelFrequency": 1,
-            "heatSource": 3,
+            "meat_frequency": "un peu",
+            "transportation_mode": 1,
+            "digital_intensity": "beaucoup",
+            "purchasing_strategy": 2,
+            "air_travel_frequency": 1,
+            "heat_source": 3,
         }
     ]
     response = client.post(
         "/api-su/compute", headers={"X-API-KEY": "1234"}, json=invalid_data
     )
     assert response.status_code == 400
-    assert "meatFrequency" in response.json["error"]["0"]
-    assert "digitalIntensity" in response.json["error"]["0"]
+    assert "meat_frequency" in response.json["error"]["0"]
+    assert "digital_intensity" in response.json["error"]["0"]
 
 
 def test_200_compute_sus(client):
     valid_data = [
         {
             "id": 100,
-            "meatFrequency": 1,
-            "transportationMode": 3,
-            "purchasingStrategy": 2,
-            "airTravelFrequency": 3,
-            "heatSource": 2,
-            "digitalIntensity": 3,
+            "meat_frequency": 1,
+            "transportation_mode": 3,
+            "purchasing_strategy": 2,
+            "air_travel_frequency": 3,
+            "heat_source": 2,
+            "digital_intensity": 3,
         },
         {
             "id": 101,
-            "meatFrequency": 1,
-            "transportationMode": 3,
-            "purchasingStrategy": 1,
-            "airTravelFrequency": 3,
-            "heatSource": 2,
-            "digitalIntensity": 2,
+            "meat_frequency": 1,
+            "transportation_mode": 3,
+            "purchasing_strategy": 1,
+            "air_travel_frequency": 3,
+            "heat_source": 2,
+            "digital_intensity": 2,
         },
         {
             "id": 102,
-            "meatFrequency": 2,
-            "transportationMode": 3,
-            "purchasingStrategy": 1,
-            "airTravelFrequency": 3,
-            "heatSource": 2,
-            "digitalIntensity": 2,
+            "meat_frequency": 2,
+            "transportation_mode": 3,
+            "purchasing_strategy": 1,
+            "air_travel_frequency": 3,
+            "heat_source": 2,
+            "digital_intensity": 2,
         },
     ]
     response = client.post(
@@ -96,7 +96,7 @@ def test_200_compute_sus(client):
     )
     assert response.status_code == 200
     assert len(response.json.get("computed_sus")) >= constants.CLUSTER_NB_MIN
-    assert len(response.json.get("user_attributed_su")) == len(valid_data)
+    assert len(response.json.get("answer_attributed_su")) == len(valid_data)
 
 
 @pytest.mark.skip(reason="working only with specific constants")
@@ -120,7 +120,7 @@ def test_200_compute_sus_from_file(client):
 def extract_from_file():
     file_path = os.path.join(os.path.dirname(__file__), test_file_data.FILENAME)
     df = pandas.read_csv(file_path, sep="\t")
-    df.columns = ["id", "meatFrequency", "transportationMode", "digitalIntensity", "purchasingStrategy", "airTravelFrequency", "heatSource"]
+    df.columns = ["id", "meat_frequency", "transportation_mode", "digital_intensity", "purchasing_strategy", "air_travel_frequency", "heat_source"]
     df = df.loc[df["id"].isin(test_file_data.L10)]
     for col, mapping in test_file_data.MAPPINGS.items():
         df[col] = df[col].apply(

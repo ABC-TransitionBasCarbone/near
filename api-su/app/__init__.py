@@ -24,12 +24,12 @@ def check_api_key():
 
 class UserDataRequestSchema(Schema):
     id = fields.Int(required=True)
-    meatFrequency = fields.Int(required=True)
-    transportationMode = fields.Int(required=True)
-    purchasingStrategy = fields.Int(required=True)
-    airTravelFrequency = fields.Int(required=True)
-    heatSource = fields.Int(required=True)
-    digitalIntensity = fields.Int(required=True)
+    meat_frequency = fields.Int(required=True)
+    transportation_mode = fields.Int(required=True)
+    purchasing_strategy = fields.Int(required=True)
+    air_travel_frequency = fields.Int(required=True)
+    heat_source = fields.Int(required=True)
+    digital_intensity = fields.Int(required=True)
 
 
 compute_su_request_schema = UserDataRequestSchema(many=True)

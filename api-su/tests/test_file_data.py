@@ -159,28 +159,28 @@ L10 = [
 ]
 
 MAPPINGS = {
-    "meatFrequency": [
+    "meat_frequency": [
         "Aucun repas ou très rarement",
         "Quelques repas",
         "Tous les repas ou presque",
     ],
-    "transportationMode": [
+    "transportation_mode": [
         "Mobilités actives (vélo, marche",
         "Transport en commun",
         "Voiture individuelle",
     ],
-    "digitalIntensity": [
+    "digital_intensity": [
         "Faible",
         "Bureautique, Internet",
         "Jeux vidéos, streaming, vidéos",
     ],
-    "purchasingStrategy": [
+    "purchasing_strategy": [
         "Occasion en priorité",
         "Mélange occasion/neuf",
         "Achat de neuf systématiquement",
     ],
-    "airTravelFrequency": ["0", "1 à 3", "Plus de 3"],
-    "heatSource": ["électricité, réseau de chaleur,", "Gaz", "Fioul"],
+    "air_travel_frequency": ["0", "1 à 3", "Plus de 3"],
+    "heat_source": ["électricité, réseau de chaleur,", "Gaz", "Fioul"],
 }
 
 # Expected sus when using the following constants:
