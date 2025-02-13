@@ -26,69 +26,69 @@ def test_401_wrong_api_key(client):
 def test_400_missing_field(client):
     invalid_data = [
         {
-            "user_id": 4,
-            "food": 3,
-            "mobility": 1,
-            "digital": 2,
-            "purchase": 2,
-            "plane": 1,
+            "id": 4,
+            "meatFrequency": 3,
+            "transportationMode": 1,
+            "digitalIntensity": 2,
+            "purchasingStrategy": 2,
+            "airTravelFrequency": 1,
         }
     ]
     response = client.post(
         "/api-su/compute", headers={"X-API-KEY": "1234"}, json=invalid_data
     )
     assert response.status_code == 400
-    assert "home" in response.json["error"]["0"]
+    assert "heatSource" in response.json["error"]["0"]
 
 
 def test_400_invalid_format(client):
     invalid_data = [
         {
-            "user_id": 4,
-            "food": "un peu",
-            "mobility": 1,
-            "digital": "beaucoup",
-            "purchase": 2,
-            "plane": 1,
-            "home": 3,
+            "id": 4,
+            "meatFrequency": "un peu",
+            "transportationMode": 1,
+            "digitalIntensity": "beaucoup",
+            "purchasingStrategy": 2,
+            "airTravelFrequency": 1,
+            "heatSource": 3,
         }
     ]
     response = client.post(
         "/api-su/compute", headers={"X-API-KEY": "1234"}, json=invalid_data
     )
     assert response.status_code == 400
-    assert "food" in response.json["error"]["0"]
-    assert "digital" in response.json["error"]["0"]
+    assert "meatFrequency" in response.json["error"]["0"]
+    assert "digitalIntensity" in response.json["error"]["0"]
 
 
 def test_200_compute_sus(client):
     valid_data = [
         {
-            "user_id": 100,
-            "food": 1,
-            "mobility": 3,
-            "purchase": 2,
-            "plane": 3,
-            "home": 2,
-            "digital": 3,
+            "id": 100,
+            "meatFrequency": 1,
+            "transportationMode": 3,
+            "purchasingStrategy": 2,
+            "airTravelFrequency": 3,
+            "heatSource": 2,
+            "digitalIntensity": 3,
         },
         {
-            "user_id": 101,
-            "food": 1,
-            "mobility": 3,
-            "purchase": 1,
-            "plane": 3,
-            "home": 2,
-            "digital": 2,
+            "id": 101,
+            "meatFrequency": 1,
+            "transportationMode": 3,
+            "purchasingStrategy": 1,
+            "airTravelFrequency": 3,
+            "heatSource": 2,
+            "digitalIntensity": 2,
         },
         {
-            "user_id": 102,
-            "food": 2,
-            "mobility": 3,
-            "purchase": 1,
-            "plane": 3,
-            "home": 2,
-            "digital": 2,
+            "id": 102,
+            "meatFrequency": 2,
+            "transportationMode": 3,
+            "purchasingStrategy": 1,
+            "airTravelFrequency": 3,
+            "heatSource": 2,
+            "digitalIntensity": 2,
         },
     ]
     response = client.post(
@@ -120,8 +120,8 @@ def test_200_compute_sus_from_file(client):
 def extract_from_file():
     file_path = os.path.join(os.path.dirname(__file__), test_file_data.FILENAME)
     df = pandas.read_csv(file_path, sep="\t")
-    df.columns = ["user_id", "food", "mobility", "digital", "purchase", "plane", "home"]
-    df = df.loc[df["user_id"].isin(test_file_data.L10)]
+    df.columns = ["id", "meatFrequency", "transportationMode", "digitalIntensity", "purchasingStrategy", "airTravelFrequency", "heatSource"]
+    df = df.loc[df["id"].isin(test_file_data.L10)]
     for col, mapping in test_file_data.MAPPINGS.items():
         df[col] = df[col].apply(
             lambda x: mapping.index(x) + 1 if x in mapping else np.nan

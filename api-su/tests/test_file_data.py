@@ -159,40 +159,40 @@ L10 = [
 ]
 
 MAPPINGS = {
-    "food": [
+    "meatFrequency": [
         "Aucun repas ou très rarement",
         "Quelques repas",
         "Tous les repas ou presque",
     ],
-    "mobility": [
+    "transportationMode": [
         "Mobilités actives (vélo, marche",
         "Transport en commun",
         "Voiture individuelle",
     ],
-    "digital": [
+    "digitalIntensity": [
         "Faible",
         "Bureautique, Internet",
         "Jeux vidéos, streaming, vidéos",
     ],
-    "purchase": [
+    "purchasingStrategy": [
         "Occasion en priorité",
         "Mélange occasion/neuf",
         "Achat de neuf systématiquement",
     ],
-    "plane": ["0", "1 à 3", "Plus de 3"],
-    "home": ["électricité, réseau de chaleur,", "Gaz", "Fioul"],
+    "airTravelFrequency": ["0", "1 à 3", "Plus de 3"],
+    "heatSource": ["électricité, réseau de chaleur,", "Gaz", "Fioul"],
 }
 
 # Expected sus when using the following constants:
 # CLUSTER_MIN_SIZE = 0.11
 # CLUSTER_MAX_SIZE = 0.4
 # CLUSTER_NB_MIN = 3
-# RATIO_FOOD = [200, 1000, 2000]
-# RATIO_MOBILITY = [0, 300, 2300]
-# RATIO_DIGITAL = [90, 180, 360]
-# RATIO_PURCHASE = [400, 800, 1600]
-# RATIO_PLANE = [0, 800, 2000]
-# RATIO_HOME = [200, 1100, 1600]
+# RATIO_MEET_FREQUENCY = [200, 1000, 2000]
+# RATIO_TRANSPORTATION_MODE = [0, 300, 2300]
+# RATIO_DIGITAL_INTENSITY = [90, 180, 360]
+# RATIO_PURCHASING_STRATEGY = [400, 800, 1600]
+# RATIO_AIR_TRAVEL_FREQUENCY = [0, 800, 2000]
+# RATIO_HEAT_SOURCE = [200, 1100, 1600]
 EXPECTED_SUS = [
     {
         "barycenter": [200.0, 2300.0, 360.0, 800.0, 800.0, 1100.0],

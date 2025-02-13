@@ -5,12 +5,12 @@ from . import constants
 
 
 class DataIndex(IntEnum):
-    FOOD = 0
-    MOBILITY = 1
-    DIGITAL = 2
-    PURCHASE = 3
-    PLANE = 4
-    HOME = 5
+    MEET_FREQUENCY = 0
+    TRANSPORTATION_MODE = 1
+    DIGITAL_INTENSITY = 2
+    PURCHASING_STRATEGY = 3
+    AIR_TRAVEL_FREQUENCY = 4
+    HEAT_SOURCE = 5
 
 
 def convert_to_vector_co2eq(user_data):
@@ -19,18 +19,18 @@ def convert_to_vector_co2eq(user_data):
     # value 1 matches element with index 0 of ratio array
     # value 2 matches element with index 1 of ratio array
     # etc.
-    result[DataIndex.FOOD.value] = constants.RATIO_FOOD[user_data.get("food") - 1]
-    result[DataIndex.MOBILITY.value] = constants.RATIO_MOBILITY[
-        user_data.get("mobility") - 1
+    result[DataIndex.MEET_FREQUENCY.value] = constants.RATIO_MEET_FREQUENCY[user_data.get("meatFrequency") - 1]
+    result[DataIndex.TRANSPORTATION_MODE.value] = constants.RATIO_TRANSPORTATION_MODE[
+        user_data.get("transportationMode") - 1
     ]
-    result[DataIndex.DIGITAL.value] = constants.RATIO_DIGITAL[
-        user_data.get("digital") - 1
+    result[DataIndex.DIGITAL_INTENSITY.value] = constants.RATIO_DIGITAL_INTENSITY[
+        user_data.get("digitalIntensity") - 1
     ]
-    result[DataIndex.PURCHASE.value] = constants.RATIO_PURCHASE[
-        user_data.get("purchase") - 1
+    result[DataIndex.PURCHASING_STRATEGY.value] = constants.RATIO_PURCHASING_STRATEGY[
+        user_data.get("purchasingStrategy") - 1
     ]
-    result[DataIndex.PLANE.value] = constants.RATIO_PLANE[user_data.get("plane") - 1]
-    result[DataIndex.HOME.value] = constants.RATIO_HOME[user_data.get("home") - 1]
+    result[DataIndex.AIR_TRAVEL_FREQUENCY.value] = constants.RATIO_AIR_TRAVEL_FREQUENCY[user_data.get("airTravelFrequency") - 1]
+    result[DataIndex.HEAT_SOURCE.value] = constants.RATIO_HEAT_SOURCE[user_data.get("heatSource") - 1]
     return result
 
 
@@ -171,7 +171,7 @@ def h_clustering(data, floor, top, min_count, distance=distance_euclidean):
 def get_user_attributed_su(user_data, clusters):
     su, distance = get_closest_cluster(clusters, convert_to_vector_co2eq(user_data))
     return {
-        "user_id": user_data.get("user_id"),
+        "id": user_data.get("id"),
         "su": su + 1,
         "distance_to_barycenter": distance,
     }
