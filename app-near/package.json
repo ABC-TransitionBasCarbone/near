@@ -6,7 +6,6 @@
   "scripts": {
     "build": "next build",
     "prisma": "prisma",
-    "test": "jest --passWithNoTests",
     "test:components": "jest --config=jest.components.config.mjs",
     "test:server": "NODE_OPTIONS='--experimental-vm-modules' jest --config=jest.server.config.mjs",
     "check": "next lint && tsc --noEmit",
