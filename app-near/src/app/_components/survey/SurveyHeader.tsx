@@ -22,7 +22,7 @@ const SurveyHeader = () => {
       updateStep(survey.phase as SurveyStep);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [survey]);
+  }, [survey?.phase]);
 
   if (!step || !survey) {
     return null;
