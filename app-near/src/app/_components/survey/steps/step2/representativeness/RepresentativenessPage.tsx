@@ -6,16 +6,20 @@ import { api } from "../../../../../../trpc/react";
 
 const RepresentativenessPage: React.FC = ({}) => {
   const [selected, setSelected] = useState<number | null>(null);
-
   const { data: session } = useSession();
 
   const { data: survey, isLoading } = api.surveys.getOne.useQuery(undefined, {
     enabled: !!session?.user?.surveyId,
   });
 
+  const roundToUpper50 = (value: number): number => {
+    return Math.ceil(value / 50) * 50;
+  };
+
   useEffect(() => {
     if (survey?.sampleTarget) {
-      setSelected(Math.ceil(survey?.sampleTarget / 50) * 50);
+      const rounded = roundToUpper50(survey?.sampleTarget);
+      setSelected(rounded);
     }
   }, [survey?.sampleTarget]);
 
@@ -24,11 +28,11 @@ const RepresentativenessPage: React.FC = ({}) => {
   }
 
   if (!session) {
-    return <div>Pas de session utilisateur</div>;
+    return <p>Pas de session utilisateur</p>;
   }
 
   if (!survey?.quartier) {
-    return <div>Erreur : Pas de quartier défini pour cette enquête</div>;
+    return <p>Erreur : Pas de quartier défini pour cette enquête</p>;
   }
 
   return (
