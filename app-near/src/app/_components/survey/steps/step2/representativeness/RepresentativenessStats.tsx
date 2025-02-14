@@ -18,7 +18,10 @@ const RepresentativenessStats: React.FC<RepresentativenessStats> = ({
     },
   );
 
-  const getBelowThresholdValues = (criteria: Record<string, number>, threshold: number) => {
+  const getBelowThresholdValues = (
+    criteria: Record<string, number>,
+    threshold: number,
+  ) => {
     return Object.fromEntries(
       Object.entries(criteria).filter(([_, value]) => value < threshold),
     );
@@ -28,7 +31,7 @@ const RepresentativenessStats: React.FC<RepresentativenessStats> = ({
     return null;
   }
 
-  const filteredData = getLowValues(stats, THRESHOLD_VALUE);
+  const filteredData = getBelowThresholdValues(stats, THRESHOLD_VALUE);
 
   if (!filteredData || Object.keys(filteredData).length === 0) {
     return null;
