@@ -5,6 +5,7 @@ import {
   MetabaseIframeType,
 } from "../../../../../../types/enums/metabase";
 import MetabaseIframe from "../../../../_ui/MetabaseIframe";
+import { env } from "~/env";
 
 interface RepresentativenessProps {
   target: number;
@@ -22,11 +23,14 @@ const Representativeness: React.FC<RepresentativenessProps> = ({
     },
   );
 
-  const hasReachedMoreThan75TargetPercentage = () => {
-    return (answserCount ?? 0) >= (target * 75) / 100;
+  const hasReachedMoreThanTargetPercentage = () => {
+    return (
+      (answserCount ?? 0) >=
+      (target * parseInt(env.NEXT_PUBLIC_TARGET_PERCENTAGE_WARNING)) / 100
+    );
   };
 
-  if (hasReachedMoreThan75TargetPercentage()) {
+  if (hasReachedMoreThanTargetPercentage()) {
     return (
       <div>
         <MetabaseIframe
