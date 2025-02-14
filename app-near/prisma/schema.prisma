@@ -135,6 +135,16 @@ model SuAnswer {
   @@map("su_answer")
 }
 
+model SuData {
+    id            Int      @id @default(autoincrement())
+    survey_id     Int      @unique
+    survey        Survey   @relation(fields: [survey_id], references: [id])
+    su            Int
+    pop_percentage Float
+    barycenter    Json
+    @@map("su_data")
+}
+
 model InseeIris2021 {
   iris               String     @db.VarChar(255) @unique
   com                String     @db.VarChar(255)
