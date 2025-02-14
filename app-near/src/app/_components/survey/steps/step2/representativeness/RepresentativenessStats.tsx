@@ -28,8 +28,6 @@ const RepresentativenessStats: React.FC<RepresentativenessStats> = ({
     return <></>;
   }
 
-  console.debug(stats);
-
   const filteredData = getLowValues(stats, THRESHOLD_VALUE);
 
   if (!filteredData || Object.keys(filteredData).length === 0) {
