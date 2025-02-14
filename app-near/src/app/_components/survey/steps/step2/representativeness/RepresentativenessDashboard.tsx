@@ -16,6 +16,7 @@ const Representativeness: React.FC<RepresentativenessProps> = ({
   target,
   session,
 }) => {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const { data: answserCount } = api.answers.count.useQuery(
     session?.user?.surveyId ?? 0,
     {

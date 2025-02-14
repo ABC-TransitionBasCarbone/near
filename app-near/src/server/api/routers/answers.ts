@@ -10,6 +10,6 @@ export const answersRouter = createTRPCRouter({
       if (surveyId !== ctx.session.user.surveyId) {
         throw new TRPCError({ code: "FORBIDDEN" });
       }
-      return countAnswers(surveyId);
+      return countAnswsers(surveyId);
     }),
 });
