@@ -1,11 +1,12 @@
 "use client";
 import { useState } from "react";
-import Button from "../../../../_ui/Button";
-import {
-  type SurveyType,
-  type BroadcastType,
-} from "../../../../../../types/enums/broadcasting";
 import { env } from "~/env";
+import {
+  type BroadcastType,
+  type SurveyType,
+} from "../../../../../../types/enums/broadcasting";
+import Button from "../../../../_ui/Button";
+import QRCodeModal from "./QRCodeModal";
 
 interface BroadcastingButtonProps {
   surveyType: SurveyType;
@@ -45,16 +46,22 @@ const BroadcastingButton: React.FC<BroadcastingButtonProps> = (
     },
   };
 
-  const generateTypeformUniqueLink = async (type: BroadcastType) => {
-    const link = `${env.NEXT_PUBLIC_TYPEFORM_SU_LINK}#broadcast_channel=${
+  const buildLink = (type: BroadcastType): string => {
+    return `${env.NEXT_PUBLIC_TYPEFORM_SU_LINK}#broadcast_channel=${
       type
-    }&broadcast_id=${crypto.randomUUID()}`;
+    }&broadcast_id=${crypto.randomUUID()}&date=${encodeURIComponent(new Date().toISOString())}`;
+  };
+
+  const onGenerateClick = async (type: BroadcastType) => {
+    const link = buildLink(type);
     await navigator.clipboard.writeText(link);
     setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+    setShowQRCode(true);
+    setTimeout(() => setCopied(false), 4000);
   };
 
   const [copied, setCopied] = useState(false);
+  const [showQRCode, setShowQRCode] = useState(false);
 
   return (
     <div className="wrap-wrap flex flex-col justify-between space-y-4 sm:flex-row sm:space-y-0">
@@ -67,15 +74,24 @@ const BroadcastingButton: React.FC<BroadcastingButtonProps> = (
       <div className="group relative">
         <Button
           rounded
-          onClick={() => generateTypeformUniqueLink(props.broadcastType)}
+          onClick={() => onGenerateClick(props.broadcastType)}
           icon={broadcastWordings[props.broadcastType].icon}
         >
           {broadcastWordings[props.broadcastType].button}
         </Button>
         {copied && (
-          <div className="absolute left-1/2 top-10 -translate-x-1/2 px-3 py-1 text-center text-sm text-black opacity-0 transition-opacity group-hover:opacity-100">
-            Lien Copié !
+          <div className="absolute left-1/2 -translate-x-1/2 px-3 py-1 text-center text-sm text-black opacity-0 transition-opacity group-hover:opacity-100">
+            Lien Copié&nbsp;!
           </div>
+        )}
+        {props.broadcastType === "street_survey" && showQRCode && (
+          <QRCodeModal
+            onClose={() => {
+              setShowQRCode(false);
+              document.body.classList.remove("overflow-hidden");
+            }}
+            link={buildLink(props.broadcastType)}
+          ></QRCodeModal>
         )}
       </div>
     </div>
