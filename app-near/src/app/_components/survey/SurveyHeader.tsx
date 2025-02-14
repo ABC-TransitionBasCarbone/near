@@ -4,7 +4,7 @@ import { type SurveyStep } from "~/types/enums/surveyStep";
 import ProgressBar from "../progress-bar/Progressbar";
 import { api } from "~/trpc/react";
 import { useSession } from "next-auth/react";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useSurveyStateContext } from "../_context/surveyStateContext";
 import { surveyConfig, surveySteps } from "./steps/config";
 
@@ -17,12 +17,15 @@ const SurveyHeader = () => {
     enabled: !!session?.user?.surveyId,
   });
 
+  const previousSurveyPhase = useRef<SurveyStep | undefined>(undefined);
+
   useEffect(() => {
-    if (survey) {
+    if (survey && survey.phase !== previousSurveyPhase.current) {
       updateStep(survey.phase as SurveyStep);
+      previousSurveyPhase.current = survey.phase as SurveyStep;
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [survey?.phase]);
+  }, [survey, updateStep]);
 
   if (!step || !survey) {
     return null;
