@@ -12,6 +12,8 @@ const config = {
     "prettier",
   ],
   rules: {
+    "@typescript-eslint/no-unsafe-call": "off",
+    "@typescript-eslint/no-unsafe-member-access": "off",
     "prettier/prettier": "error",
     "prefer-template": "error",
     "@typescript-eslint/array-type": "off",

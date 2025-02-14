@@ -3,9 +3,9 @@ import BroadcastingButton from "./BroadcastingButton";
 import {
   type SurveyType,
   type BroadcastType,
-} from "../../types/enums/broadcasting";
+} from "../../../../../../types/enums/broadcasting";
 
-jest.mock("../../env", () => ({
+jest.mock("../../../../../../env", () => ({
   env: {
     NEXT_PUBLIC_TYPEFORM_SU_LINK: "https://example.com",
   },

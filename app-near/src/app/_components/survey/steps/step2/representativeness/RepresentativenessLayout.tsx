@@ -1,27 +1,27 @@
 "use client";
 
 import Link from "next/link";
+import { type Dispatch, type SetStateAction } from "react";
 import { ButtonStyle } from "~/types/enums/button";
-import { env } from "../../../../../env";
+import { env } from "../../../../../../env";
 import {
   MetabaseIFrameNumber,
   MetabaseIframeType,
-} from "../../../../../types/enums/metabase";
-import { useSurveyStateContext } from "../../../_context/surveyStateContext";
-import Button from "../../../_ui/Button";
-import LinkAsButton from "../../../_ui/LinkAsButton";
-import MetabaseIframe from "../../../_ui/MetabaseIframe";
-import { renderIcon } from "../../../_ui/utils/renderIcon";
-import SurveyLayout from "../../SurveyLayout";
-import { surveyConfig } from "../config";
-import { type Dispatch, type SetStateAction } from "react";
-import SampleRadios from "./SampleRadios";
+} from "../../../../../../types/enums/metabase";
+import { useSurveyStateContext } from "../../../../_context/surveyStateContext";
+import Button from "../../../../_ui/Button";
+import LinkAsButton from "../../../../_ui/LinkAsButton";
+import MetabaseIframe from "../../../../_ui/MetabaseIframe";
+import { renderIcon } from "../../../../_ui/utils/renderIcon";
+import SurveyLayout from "../../../SurveyLayout";
+import { surveyConfig } from "../../config";
+import RepresentativenessPage from "./RepresentativenessPage";
 
-interface SurveyInProgressProps {
+interface RepresentativenessLayoutProps {
   setToggleBroadcastingPage: Dispatch<SetStateAction<boolean>>;
 }
 
-const SurveyInProgress: React.FC<SurveyInProgressProps> = ({
+const RepresentativenessLayout: React.FC<RepresentativenessLayoutProps> = ({
   setToggleBroadcastingPage,
 }) => {
   const { step, updateStep } = useSurveyStateContext();
@@ -107,11 +107,9 @@ const SurveyInProgress: React.FC<SurveyInProgressProps> = ({
         </>
       }
     >
-      <div>
-        <SampleRadios />
-      </div>
+      <RepresentativenessPage />
     </SurveyLayout>
   );
 };
 
-export default SurveyInProgress;
+export default RepresentativenessLayout;

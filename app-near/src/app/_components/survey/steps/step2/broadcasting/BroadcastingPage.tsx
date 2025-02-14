@@ -1,4 +1,4 @@
-import { type SurveyType } from "../../types/enums/broadcasting";
+import { type SurveyType } from "../../../../../../types/enums/broadcasting";
 import BroadcastingButton from "./BroadcastingButton";
 
 interface BroadcastingPageProps {

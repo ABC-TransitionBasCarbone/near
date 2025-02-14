@@ -110,7 +110,7 @@ const createQuartiersView = async (survey_id: number) => {
     (1.96^2 * 0.5 * (1 - 0.5)) / (0.04^2 + (1.96^2*0.25) / sum(C21_POP15P) )  AS population_sum_threshold_4p,
     (1.96^2 * 0.5 * (1 - 0.5)) / (0.05^2 + (1.96^2*0.25) / sum(C21_POP15P) )  AS population_sum_threshold_5p
    FROM iris_14_arr)
-   SELECT *, population_sum_threshold_5p+population_sum_threshold_4p/2 as population_sum_threshold_4_5p from intermediates
+   SELECT *, (population_sum_threshold_4p + population_sum_threshold_5p) / 2::double precision as population_sum_threshold_4_5p from intermediates
     `;
 
   const dropQuartierView = "DROP VIEW IF EXISTS quartiers;";

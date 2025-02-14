@@ -1,30 +1,20 @@
-import { useSession } from "next-auth/react";
-import { useEffect, useState } from "react";
+import { type Session } from "next-auth";
+import React, { type Dispatch, type SetStateAction } from "react";
 import { api } from "~/trpc/react";
 
-const SampleRadios: React.FC = ({}) => {
-  const { data: session } = useSession();
+interface SampleRadioOptionsProps {
+  selected: number | null;
+  setSelected: Dispatch<SetStateAction<number | null>>;
+  targetOptions: number[];
+  session: Session;
+}
 
-  const { data: survey, isLoading } = api.surveys.getOne.useQuery(undefined, {
-    enabled: !!session?.user?.surveyId,
-  });
-
-  const [selected, setSelected] = useState(200);
-
-  useEffect(() => {
-    if (survey?.sampleTarget) {
-      setSelected(Math.ceil(survey?.sampleTarget / 50) * 50);
-    }
-  }, [survey?.sampleTarget]);
-
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
-
-  if (!survey?.quartier) {
-    return <div>Erreur : Pas de quartier défini pour cette enquête</div>;
-  }
-
+const SampleRadioOptions: React.FC<SampleRadioOptionsProps> = ({
+  selected,
+  setSelected,
+  targetOptions,
+  session,
+}) => {
   const updateSurveyMutation = api.surveys.update.useMutation();
 
   return (
@@ -33,12 +23,7 @@ const SampleRadios: React.FC = ({}) => {
         Combien de personnes voulez-vous interroger ?
       </div>
       <ul className="flex flex-wrap gap-4">
-        {[
-          survey.quartier.population_sum_threshold_5p,
-          survey.quartier.population_sum_threshold_4_5p,
-          survey.quartier.population_sum_threshold_4p,
-          survey.quartier.population_sum_threshold_3p,
-        ]
+        {targetOptions
           .map((sampleValue) => Math.ceil(sampleValue / 50) * 50)
           .map((option) => (
             <li key={option.toString()}>
@@ -77,4 +62,4 @@ const SampleRadios: React.FC = ({}) => {
   );
 };
 
-export default SampleRadios;
+export default SampleRadioOptions;
