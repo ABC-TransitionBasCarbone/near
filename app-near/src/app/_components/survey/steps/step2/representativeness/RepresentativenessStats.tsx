@@ -25,23 +25,23 @@ const RepresentativenessStats: React.FC<RepresentativenessStats> = ({
   };
 
   if (!stats) {
-    return <></>;
+    return null;
   }
 
   const filteredData = getLowValues(stats, THRESHOLD_VALUE);
 
   if (!filteredData || Object.keys(filteredData).length === 0) {
-    return <></>;
+    return null;
   }
 
   return (
     <div className="m-auto px-5">
       {Object.entries(filteredData).map(([key, value]) => (
-        <div key={key}>
-          Vous avez interrogé trop{" "}
+        <p key={key}>
+          Vous avez interrogé trop
           {CategoryLabels[key as keyof typeof CategoryLabels]} (
           {Math.abs(value)}% en plus par rapport aux chiffres de l&apos;INSEE)
-        </div>
+        </p>
       ))}
     </div>
   );
