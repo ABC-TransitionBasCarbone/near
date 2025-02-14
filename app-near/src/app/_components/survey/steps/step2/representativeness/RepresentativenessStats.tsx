@@ -38,7 +38,7 @@ const RepresentativenessStats: React.FC<RepresentativenessStats> = ({
     <div className="m-auto px-5">
       {Object.entries(filteredData).map(([key, value]) => (
         <p key={key}>
-          Vous avez interrogé trop
+          Vous avez interrogé trop&nbsp;
           {CategoryLabels[key as keyof typeof CategoryLabels]} (
           {Math.abs(value)}% en plus par rapport aux chiffres de l&apos;INSEE)
         </p>
