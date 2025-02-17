@@ -145,5 +145,5 @@ npm run seed -- scope=su_answer
 Pour jouer un scénario de seed (exemple pour les sphères d'usage) :
 
 ```bash
- npm run seed -- scope=su_answer surveyName=14e_arr surveyTarget=60 surveyCase=case_2
+ npm run seed -- scope=su_answer surveyName="Porte d'Orléans" surveyTarget=60 surveyCase=case_2
 ```
