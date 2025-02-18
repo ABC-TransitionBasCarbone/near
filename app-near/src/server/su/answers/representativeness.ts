@@ -1,6 +1,8 @@
 import { type CategoryStats } from "~/types/SuAnswer";
 import { db } from "../../db";
 
+// TODO: refactor to use only native prisma
+// Example for INSEE_STATS /scripts/seeds/su.ts > getAnswerTargetsByCategories
 export const representativeness = async (
   surveyId: number,
 ): Promise<CategoryStats[]> => {
