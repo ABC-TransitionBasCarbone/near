@@ -84,7 +84,7 @@ Pour les données de l'INSEE 2021
 curl -L -O https://www.insee.fr/fr/statistiques/fichier/8268806/base-ic-evol-struct-pop-2021_csv.zip && unzip base-ic-evol-struct-pop-2021_csv.zip && mv base-ic-evol-struct-pop-2021.CSV ./scripts/base-ic-evol-struct-pop-2021.csv && rm base-ic-evol-struct-pop-2021_csv.zip
 ```
 
-### 2. Charger la BDD INSEE et initialiser une enquête pour le 14eme arrondissement de Paris
+### 2. Charger la BDD INSEE et initialiser une enquête pour le quartier "Porte d'Orléans"
 
 #### En environnement local
 
