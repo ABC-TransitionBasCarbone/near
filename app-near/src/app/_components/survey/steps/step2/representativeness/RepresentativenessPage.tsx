@@ -2,22 +2,20 @@ import { useEffect, useState } from "react";
 import RepresentativenessDashboard from "./RepresentativenessDashboard";
 import SampleRadioOptions from "./SampleRadioOptions";
 import { useSession } from "next-auth/react";
-import { api } from "../../../../../../trpc/react";
 import RepresentativenessStats from "./RepresentativenessStats";
 import { type CategoryStats } from "~/types/SuAnswer";
+import { type Quartier, type Survey } from "@prisma/client";
 
 interface RepresentativenessPageProps {
   categoryStats?: CategoryStats;
+  survey: Survey & { quartier: Quartier | null };
 }
 const RepresentativenessPage: React.FC<RepresentativenessPageProps> = ({
   categoryStats,
+  survey,
 }) => {
   const [selected, setSelected] = useState<number | null>(null);
   const { data: session } = useSession();
-
-  const { data: survey, isLoading } = api.surveys.getOne.useQuery(undefined, {
-    enabled: !!session?.user?.surveyId,
-  });
 
   const roundToUpper50 = (value: number): number => {
     return Math.ceil(value / 50) * 50;
@@ -29,10 +27,6 @@ const RepresentativenessPage: React.FC<RepresentativenessPageProps> = ({
       setSelected(rounded);
     }
   }, [survey?.sampleTarget]);
-
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
 
   if (!session) {
     return <p>Pas de session utilisateur</p>;

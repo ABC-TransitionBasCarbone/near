@@ -1,11 +1,9 @@
 import { faker } from "@faker-js/faker";
+import { AgeCategory, Gender, ProfessionalCategory } from "@prisma/client";
 import { db } from "~/server/db";
 import { buildSuAnswer } from "~/server/test-utils/create-data/suAnswer";
-import {
-  CategoryStat,
-  categoryStatAnswerMap,
-  categoryStatQuartierMap,
-} from "~/types/SuAnswer";
+import { type CategoryStat, categoryStatQuartierMap } from "~/types/SuAnswer";
+import { select } from "weighted";
 
 export enum SurveyCase {
   LESS_THAN_GLOBAL_TARGET = "LESS_THAN_GLOBAL_TARGET",
@@ -107,26 +105,43 @@ Valid values for surveyName: ${existingSurveys.map((item) => item.name).join(", 
   const answerTargetsByCategories = await getAnswerTargetsByCategories(
     survey.id,
   );
+  const answerQuantity = getAnswerQuantity(surveyCase, surveyTarget);
 
-  for (const answerCategory in answerTargetsByCategories) {
-    const quantity = Math.floor(
-      getAnswerQuantity(surveyCase, surveyTarget) *
-        answerTargetsByCategories[answerCategory as CategoryStat],
-    );
-
-    if (
-      (answerCategory as CategoryStat) === CategoryStat.man &&
-      surveyCase === SurveyCase.MORE_THAN_GLOBAL_TARGET
-    ) {
-      continue;
-    }
-    for (let index = 0; index < quantity; index++) {
-      await db.suAnswer.create({
-        data: buildSuAnswer(
-          survey.id,
-          categoryStatAnswerMap[answerCategory as CategoryStat],
-        ),
-      });
-    }
+  for (let index = 0; index < answerQuantity; index++) {
+    await db.suAnswer.create({
+      data: buildSuAnswer(
+        survey.id,
+        surveyCase === SurveyCase.MORE_THAN_CATEGORIES_TARGETS
+          ? {
+              gender: select({
+                [Gender.MAN]: answerTargetsByCategories.man,
+                [Gender.WOMAN]: answerTargetsByCategories.woman,
+              }),
+              professionalCategory: select({
+                [ProfessionalCategory.CS1]: answerTargetsByCategories.cs1,
+                [ProfessionalCategory.CS2]: answerTargetsByCategories.cs2,
+                [ProfessionalCategory.CS3]: answerTargetsByCategories.cs3,
+                [ProfessionalCategory.CS4]: answerTargetsByCategories.cs4,
+                [ProfessionalCategory.CS5]: answerTargetsByCategories.cs5,
+                [ProfessionalCategory.CS6]: answerTargetsByCategories.cs6,
+                [ProfessionalCategory.CS7]: answerTargetsByCategories.cs7,
+                [ProfessionalCategory.CS8_student]:
+                  answerTargetsByCategories.cs8,
+              }),
+              ageCategory: select({
+                [AgeCategory.ABOVE_75]: answerTargetsByCategories.above_75,
+                [AgeCategory.FROM_15_TO_29]:
+                  answerTargetsByCategories.from_15_to_29,
+                [AgeCategory.FROM_30_TO_44]:
+                  answerTargetsByCategories.from_30_to_44,
+                [AgeCategory.FROM_45_TO_59]:
+                  answerTargetsByCategories.from_45_to_59,
+                [AgeCategory.FROM_60_TO_74]:
+                  answerTargetsByCategories.from_60_to_74,
+              }),
+            }
+          : undefined,
+      ),
+    });
   }
 };

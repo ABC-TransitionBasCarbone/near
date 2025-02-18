@@ -1,3 +1,7 @@
+import {
+  getBelowThresholdValues,
+  THRESHOLD_VALUE,
+} from "~/app/_services/su-surveys/threshold";
 import { CategoryLabels } from "../../../../../../types/enums/category";
 import { type CategoryStats } from "~/types/SuAnswer";
 
@@ -8,22 +12,9 @@ interface RepresentativenessStats {
 const RepresentativenessStats: React.FC<RepresentativenessStats> = ({
   categoryStats,
 }) => {
-  const THRESHOLD_VALUE = -3.5;
-
-  const getBelowThresholdValues = (
-    criteria: Record<string, number>,
-    threshold: number,
-  ) => {
-    return Object.fromEntries(
-      Object.entries(criteria).filter(([_, value]) => value < threshold),
-    );
-  };
-
   if (!categoryStats) {
     return null;
   }
-
-  console.log("categoryStats", categoryStats);
 
   const filteredData = getBelowThresholdValues(categoryStats, THRESHOLD_VALUE);
 

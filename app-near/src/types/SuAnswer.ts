@@ -74,23 +74,3 @@ export const categoryStatQuartierMap: Record<CategoryStat, keyof Quartier> = {
   [CategoryStat.cs7]: "c21_pop15p_cs7_sum",
   [CategoryStat.cs8]: "c21_pop15p_cs8_sum",
 };
-
-export const categoryStatAnswerMap: Record<CategoryStat, Partial<SuAnswer>> = {
-  [CategoryStat.man]: { gender: Gender.MAN },
-  [CategoryStat.woman]: { gender: Gender.WOMAN },
-  [CategoryStat.above_75]: { ageCategory: AgeCategory.ABOVE_75 },
-  [CategoryStat.from_60_to_74]: { ageCategory: AgeCategory.FROM_60_TO_74 },
-  [CategoryStat.from_45_to_59]: { ageCategory: AgeCategory.FROM_45_TO_59 },
-  [CategoryStat.from_30_to_44]: { ageCategory: AgeCategory.FROM_30_TO_44 },
-  [CategoryStat.from_15_to_29]: { ageCategory: AgeCategory.FROM_15_TO_29 },
-  [CategoryStat.cs1]: { professionalCategory: ProfessionalCategory.CS1 },
-  [CategoryStat.cs2]: { professionalCategory: ProfessionalCategory.CS2 },
-  [CategoryStat.cs3]: { professionalCategory: ProfessionalCategory.CS3 },
-  [CategoryStat.cs4]: { professionalCategory: ProfessionalCategory.CS4 },
-  [CategoryStat.cs5]: { professionalCategory: ProfessionalCategory.CS5 },
-  [CategoryStat.cs6]: { professionalCategory: ProfessionalCategory.CS6 },
-  [CategoryStat.cs7]: { professionalCategory: ProfessionalCategory.CS7 },
-  [CategoryStat.cs8]: {
-    professionalCategory: ProfessionalCategory.CS8_student,
-  },
-};
