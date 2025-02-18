@@ -11,6 +11,23 @@ jest.mock("../../../../../../env", () => ({
   },
 }));
 
+jest.mock("next-auth/react", () => ({
+  useSession: jest.fn(() => ({
+    data: { user: { firstName: "Test User" } },
+    status: "authenticated",
+  })),
+}));
+
+jest.mock("../../../../../../trpc/react", () => ({
+  api: {
+    surveys: {
+      getOne: {
+        useQuery: jest.fn().mockResolvedValue({ name: "survey_name" }),
+      },
+    },
+  },
+}));
+
 Object.assign(navigator, {
   clipboard: {
     writeText: jest.fn(),
