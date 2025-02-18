@@ -4,8 +4,14 @@ import SampleRadioOptions from "./SampleRadioOptions";
 import { useSession } from "next-auth/react";
 import { api } from "../../../../../../trpc/react";
 import RepresentativenessStats from "./RepresentativenessStats";
+import { type CategoryStats } from "~/types/SuAnswer";
 
-const RepresentativenessPage: React.FC = ({}) => {
+interface RepresentativenessPageProps {
+  categoryStats?: CategoryStats;
+}
+const RepresentativenessPage: React.FC<RepresentativenessPageProps> = ({
+  categoryStats,
+}) => {
   const [selected, setSelected] = useState<number | null>(null);
   const { data: session } = useSession();
 
@@ -52,7 +58,7 @@ const RepresentativenessPage: React.FC = ({}) => {
 
       {selected !== null && (
         <>
-          <RepresentativenessStats session={session} />
+          <RepresentativenessStats categoryStats={categoryStats} />
           <RepresentativenessDashboard target={selected} session={session} />
         </>
       )}

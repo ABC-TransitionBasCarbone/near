@@ -16,6 +16,8 @@ import { renderIcon } from "../../../../_ui/utils/renderIcon";
 import SurveyLayout from "../../../SurveyLayout";
 import { surveyConfig } from "../../config";
 import RepresentativenessPage from "./RepresentativenessPage";
+import { api } from "~/trpc/react";
+import { useSession } from "next-auth/react";
 
 interface RepresentativenessLayoutProps {
   setToggleBroadcastingPage: Dispatch<SetStateAction<boolean>>;
@@ -24,7 +26,21 @@ interface RepresentativenessLayoutProps {
 const RepresentativenessLayout: React.FC<RepresentativenessLayoutProps> = ({
   setToggleBroadcastingPage,
 }) => {
+  const { data: session } = useSession();
   const { step, updateStep } = useSurveyStateContext();
+  const { data: categoryStats } = api.answers.representativeness.useQuery(
+    session?.user?.surveyId ?? 0,
+    {
+      enabled: !!session?.user?.surveyId,
+    },
+  );
+
+  const allCategoriesReached = () => {
+    return (
+      categoryStats &&
+      !Object.entries(categoryStats).find(([, value]) => value < 0)
+    );
+  };
 
   return (
     <SurveyLayout
@@ -98,7 +114,7 @@ const RepresentativenessLayout: React.FC<RepresentativenessLayoutProps> = ({
           <Button
             icon="/icons/flash.svg"
             rounded
-            disabled
+            disabled={!allCategoriesReached()}
             style={ButtonStyle.FILLED}
             onClick={() => step && updateStep(surveyConfig[step].nextStep)}
           >
@@ -107,7 +123,7 @@ const RepresentativenessLayout: React.FC<RepresentativenessLayoutProps> = ({
         </>
       }
     >
-      <RepresentativenessPage />
+      <RepresentativenessPage categoryStats={categoryStats} />
     </SurveyLayout>
   );
 };

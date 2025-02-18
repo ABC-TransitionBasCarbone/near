@@ -8,6 +8,7 @@ import {
   MeatFrequency,
   ProfessionalCategory,
   PurchasingStrategy,
+  type Quartier,
   type SuAnswer,
   TransportationMode,
 } from "@prisma/client";
@@ -33,3 +34,63 @@ export type BuilderSuAnswer = Omit<
   "id" | "userSu" | "userDistanceToSuBarycentre"
 > &
   Partial<Pick<SuAnswer, "id" | "userSu" | "userDistanceToSuBarycentre">>;
+
+export enum CategoryStat {
+  man = "man",
+  woman = "woman",
+  above_75 = "above_75",
+  from_60_to_74 = "from_60_to_74",
+  from_45_to_59 = "from_45_to_59",
+  from_30_to_44 = "from_30_to_44",
+  from_15_to_29 = "from_15_to_29",
+  cs1 = "cs1",
+  cs2 = "cs2",
+  cs3 = "cs3",
+  cs4 = "cs4",
+  cs5 = "cs5",
+  cs6 = "cs6",
+  cs7 = "cs7",
+  cs8 = "cs8",
+}
+
+export const allCategoryStats = Object.values(CategoryStat);
+
+export type CategoryStats = Record<CategoryStat, number>;
+
+export const categoryStatQuartierMap: Record<CategoryStat, keyof Quartier> = {
+  [CategoryStat.man]: "population_homme_sum",
+  [CategoryStat.woman]: "population_femme_sum",
+  [CategoryStat.above_75]: "p21_pop75p_sum",
+  [CategoryStat.from_60_to_74]: "p21_pop6074_sum",
+  [CategoryStat.from_45_to_59]: "p21_pop4559_sum",
+  [CategoryStat.from_30_to_44]: "p21_pop3044_sum",
+  [CategoryStat.from_15_to_29]: "p21_pop1529_sum",
+  [CategoryStat.cs1]: "c21_pop15p_cs1_sum",
+  [CategoryStat.cs2]: "c21_pop15p_cs2_sum",
+  [CategoryStat.cs3]: "c21_pop15p_cs3_sum",
+  [CategoryStat.cs4]: "c21_pop15p_cs4_sum",
+  [CategoryStat.cs5]: "c21_pop15p_cs5_sum",
+  [CategoryStat.cs6]: "c21_pop15p_cs6_sum",
+  [CategoryStat.cs7]: "c21_pop15p_cs7_sum",
+  [CategoryStat.cs8]: "c21_pop15p_cs8_sum",
+};
+
+export const categoryStatAnswerMap: Record<CategoryStat, Partial<SuAnswer>> = {
+  [CategoryStat.man]: { gender: Gender.MAN },
+  [CategoryStat.woman]: { gender: Gender.WOMAN },
+  [CategoryStat.above_75]: { ageCategory: AgeCategory.ABOVE_75 },
+  [CategoryStat.from_60_to_74]: { ageCategory: AgeCategory.FROM_60_TO_74 },
+  [CategoryStat.from_45_to_59]: { ageCategory: AgeCategory.FROM_45_TO_59 },
+  [CategoryStat.from_30_to_44]: { ageCategory: AgeCategory.FROM_30_TO_44 },
+  [CategoryStat.from_15_to_29]: { ageCategory: AgeCategory.FROM_15_TO_29 },
+  [CategoryStat.cs1]: { professionalCategory: ProfessionalCategory.CS1 },
+  [CategoryStat.cs2]: { professionalCategory: ProfessionalCategory.CS2 },
+  [CategoryStat.cs3]: { professionalCategory: ProfessionalCategory.CS3 },
+  [CategoryStat.cs4]: { professionalCategory: ProfessionalCategory.CS4 },
+  [CategoryStat.cs5]: { professionalCategory: ProfessionalCategory.CS5 },
+  [CategoryStat.cs6]: { professionalCategory: ProfessionalCategory.CS6 },
+  [CategoryStat.cs7]: { professionalCategory: ProfessionalCategory.CS7 },
+  [CategoryStat.cs8]: {
+    professionalCategory: ProfessionalCategory.CS8_student,
+  },
+};
