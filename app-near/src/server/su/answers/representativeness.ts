@@ -81,4 +81,6 @@ const representativeness = async (
   `;
 };
 
-export default { representativeness };
+const representativenessService = { representativeness };
+
+export default representativenessService;
