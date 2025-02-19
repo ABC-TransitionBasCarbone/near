@@ -1,5 +1,10 @@
 import { faker } from "@faker-js/faker";
-import { AgeCategory, Gender, ProfessionalCategory } from "@prisma/client";
+import {
+  AgeCategory,
+  Gender,
+  ProfessionalCategory,
+  type Quartier,
+} from "@prisma/client";
 import { db } from "~/server/db";
 import { buildSuAnswer } from "~/server/test-utils/create-data/suAnswer";
 import { type CategoryStat, categoryStatQuartierMap } from "~/types/SuAnswer";
@@ -59,6 +64,25 @@ const getAnswerQuantity = (
   }
 };
 
+const verifySurveyTarget = (surveyTarget: number, quartier: Quartier) => {
+  const allowedSurveyTargets = [
+    quartier.population_sum_threshold_5p,
+    quartier.population_sum_threshold_4_5p,
+    quartier.population_sum_threshold_4p,
+    quartier.population_sum_threshold_3p,
+  ].map((val) => Math.round(val / 100) * 100);
+
+  if (!allowedSurveyTargets.includes(surveyTarget)) {
+    throw new Error(`
+Survey target (${surveyTarget}) not allowed. 
+
+Usage: npm run seed -- scope=su_answer surveyName=14e_arr surveyTarget=60 surveyCase=LESS_THAN_TARGET
+
+Valid values for surveyTarget: ${allowedSurveyTargets.join(", ")}
+`);
+  }
+};
+
 export const seedSuSurvey = async (
   surveyName: string | undefined,
   surveyTarget: number | undefined,
@@ -80,7 +104,10 @@ Valid values for surveyCase: ${Object.values(SurveyCase)
       .join(", ")}`);
   }
 
-  const survey = await db.survey.findFirst({ where: { name: surveyName } });
+  const survey = await db.survey.findFirst({
+    where: { name: surveyName },
+    include: { quartier: true },
+  });
 
   if (!survey) {
     const existingSurveys = await db.survey.findMany({
@@ -91,16 +118,22 @@ Usage: npm run seed -- scope=su_answer surveyName="Porte d'Orléans" surveyTarge
 
 Valid values for surveyName: ${existingSurveys.map((item) => item.name).join(", ")}
     `);
-  } else {
-    await db.survey.update({
-      data: { sampleTarget: surveyTarget },
-      where: { name: surveyName },
-    });
-
-    await db.suAnswer.deleteMany({
-      where: { surveyId: survey.id },
-    });
   }
+
+  if (!survey.quartier) {
+    throw new Error('Can not use "survey" that has null "quartier".');
+  }
+
+  verifySurveyTarget(surveyTarget, survey.quartier);
+
+  await db.survey.update({
+    data: { sampleTarget: surveyTarget },
+    where: { name: surveyName },
+  });
+
+  await db.suAnswer.deleteMany({
+    where: { surveyId: survey.id },
+  });
 
   const answerTargetsByCategories = await getAnswerTargetsByCategories(
     survey.id,

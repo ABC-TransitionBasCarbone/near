@@ -53,8 +53,6 @@ export enum CategoryStat {
   cs8 = "cs8",
 }
 
-export const allCategoryStats = Object.values(CategoryStat);
-
 export type CategoryStats = Record<CategoryStat, number>;
 
 export const categoryStatQuartierMap: Record<CategoryStat, keyof Quartier> = {

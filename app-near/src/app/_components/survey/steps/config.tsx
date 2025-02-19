@@ -1,55 +1,77 @@
-import { SurveyStep } from "~/types/enums/surveyStep";
 import { type Step, type StepParams } from "~/types/Step";
 import NeighborhoodInformations from "./NeighborhoodInformations";
 import Main from "./step2/Main";
+import { SurveyPhase } from "@prisma/client";
 
-export const surveySteps: Record<SurveyStep, Step> = {
-  [SurveyStep.STEP_1]: { label: "Informations sur le quartier", number: 1 },
-  [SurveyStep.STEP_2]: { label: "Enquête sur les Sphères d'Usages", number: 2 },
-  [SurveyStep.STEP_3]: { label: "Découverte et personnalisation", number: 3 },
-  [SurveyStep.STEP_4]: { label: "3 enquêtes complémentaires", number: 4 },
-  [SurveyStep.STEP_5]: { label: "Résultats finaux et analyses", number: 5 },
+export const surveySteps: Record<SurveyPhase, Step> = {
+  [SurveyPhase.STEP_1_NEIGHBORHOOD_INFORMATION]: {
+    label: "Informations sur le quartier",
+    number: 1,
+  },
+  [SurveyPhase.STEP_2_SU_SURVERY]: {
+    label: "Enquête sur les Sphères d'Usages",
+    number: 2,
+  },
+  [SurveyPhase.STEP_3_SU_EXPLORATION]: {
+    label: "Découverte et personnalisation",
+    number: 3,
+  },
+  [SurveyPhase.STEP_4_ADDITIONAL_SURVEY]: {
+    label: "3 enquêtes complémentaires",
+    number: 4,
+  },
+  [SurveyPhase.STEP_5_RESULTS]: {
+    label: "Résultats finaux et analyses",
+    number: 5,
+  },
 };
 
-export const surveyConfig: Record<SurveyStep, StepParams<SurveyStep>> = {
-  [SurveyStep.STEP_1]: {
+export const surveyConfig: Record<SurveyPhase, StepParams<SurveyPhase>> = {
+  [SurveyPhase.STEP_1_NEIGHBORHOOD_INFORMATION]: {
     component: <NeighborhoodInformations />,
-    previouxStep: SurveyStep.STEP_1,
-    nextStep: SurveyStep.STEP_2,
+    previouxStep: SurveyPhase.STEP_1_NEIGHBORHOOD_INFORMATION,
+    nextStep: SurveyPhase.STEP_2_SU_SURVERY,
     buttonType: "button",
     isActive: [],
   },
-  [SurveyStep.STEP_2]: {
+  [SurveyPhase.STEP_2_SU_SURVERY]: {
     component: <Main />,
-    previouxStep: SurveyStep.STEP_1,
-    nextStep: SurveyStep.STEP_3,
+    previouxStep: SurveyPhase.STEP_1_NEIGHBORHOOD_INFORMATION,
+    nextStep: SurveyPhase.STEP_3_SU_EXPLORATION,
     buttonType: "button",
-    isActive: [SurveyStep.STEP_1],
+    isActive: [SurveyPhase.STEP_1_NEIGHBORHOOD_INFORMATION],
   },
-  [SurveyStep.STEP_3]: {
+  [SurveyPhase.STEP_3_SU_EXPLORATION]: {
     component: <>Step 3</>,
-    previouxStep: SurveyStep.STEP_2,
-    nextStep: SurveyStep.STEP_4,
-    buttonType: "button",
-    isActive: [SurveyStep.STEP_1, SurveyStep.STEP_2],
-  },
-  [SurveyStep.STEP_4]: {
-    component: <>Step 4</>,
-    previouxStep: SurveyStep.STEP_3,
-    nextStep: SurveyStep.STEP_5,
-    buttonType: "button",
-    isActive: [SurveyStep.STEP_1, SurveyStep.STEP_2, SurveyStep.STEP_3],
-  },
-  [SurveyStep.STEP_5]: {
-    component: <>Step 5</>,
-    previouxStep: SurveyStep.STEP_4,
-    nextStep: SurveyStep.STEP_5,
+    previouxStep: SurveyPhase.STEP_2_SU_SURVERY,
+    nextStep: SurveyPhase.STEP_4_ADDITIONAL_SURVEY,
     buttonType: "button",
     isActive: [
-      SurveyStep.STEP_1,
-      SurveyStep.STEP_2,
-      SurveyStep.STEP_3,
-      SurveyStep.STEP_4,
+      SurveyPhase.STEP_1_NEIGHBORHOOD_INFORMATION,
+      SurveyPhase.STEP_2_SU_SURVERY,
+    ],
+  },
+  [SurveyPhase.STEP_4_ADDITIONAL_SURVEY]: {
+    component: <>Step 4</>,
+    previouxStep: SurveyPhase.STEP_3_SU_EXPLORATION,
+    nextStep: SurveyPhase.STEP_5_RESULTS,
+    buttonType: "button",
+    isActive: [
+      SurveyPhase.STEP_1_NEIGHBORHOOD_INFORMATION,
+      SurveyPhase.STEP_2_SU_SURVERY,
+      SurveyPhase.STEP_3_SU_EXPLORATION,
+    ],
+  },
+  [SurveyPhase.STEP_5_RESULTS]: {
+    component: <>Step 5</>,
+    previouxStep: SurveyPhase.STEP_4_ADDITIONAL_SURVEY,
+    nextStep: SurveyPhase.STEP_5_RESULTS,
+    buttonType: "button",
+    isActive: [
+      SurveyPhase.STEP_1_NEIGHBORHOOD_INFORMATION,
+      SurveyPhase.STEP_2_SU_SURVERY,
+      SurveyPhase.STEP_3_SU_EXPLORATION,
+      SurveyPhase.STEP_4_ADDITIONAL_SURVEY,
     ],
   },
 };

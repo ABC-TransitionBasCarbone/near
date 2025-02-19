@@ -1,11 +1,11 @@
 "use client";
 
+import { type SurveyPhase } from "@prisma/client";
 import { createContext, type ReactNode, useContext, useState } from "react";
-import { type SurveyStep } from "~/types/enums/surveyStep";
 
 interface SurveyStateContextType {
-  step?: SurveyStep;
-  updateStep: (newStep: SurveyStep) => void;
+  step?: SurveyPhase;
+  updateStep: (newStep: SurveyPhase) => void;
 }
 
 const SurveyStateContext = createContext<SurveyStateContextType>({
@@ -14,9 +14,9 @@ const SurveyStateContext = createContext<SurveyStateContextType>({
 });
 
 export function SurveyStateProvider({ children }: { children: ReactNode }) {
-  const [step, setStep] = useState<SurveyStep>();
+  const [step, setStep] = useState<SurveyPhase>();
 
-  const updateStep = (newStep: SurveyStep) => {
+  const updateStep = (newStep: SurveyPhase) => {
     setStep(newStep);
   };
 

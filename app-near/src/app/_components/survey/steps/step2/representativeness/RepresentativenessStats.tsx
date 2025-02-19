@@ -1,7 +1,7 @@
 import {
   getBelowThresholdValues,
   THRESHOLD_VALUE,
-} from "~/app/_services/su-surveys/threshold";
+} from "~/shared/services/su-surveys/threshold";
 import { CategoryLabels } from "../../../../../../types/enums/category";
 import { type CategoryStats } from "~/types/SuAnswer";
 

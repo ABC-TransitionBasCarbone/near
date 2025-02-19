@@ -21,9 +21,9 @@ import { useSession } from "next-auth/react";
 import {
   getBelowThresholdValues,
   THRESHOLD_VALUE,
-} from "~/app/_services/su-surveys/threshold";
+} from "~/shared/services/su-surveys/threshold";
 import useUpdateSurveyStep from "../../../hooks/useUpdateSurveyStep";
-import Modal from "~/app/_components/_ui/Modal";
+import RepresentativenessConfirmModal from "./RepresentativenessConfirmModal";
 
 interface RepresentativenessLayoutProps {
   setToggleBroadcastingPage: Dispatch<SetStateAction<boolean>>;
@@ -68,64 +68,11 @@ const RepresentativenessLayout: React.FC<RepresentativenessLayoutProps> = ({
 
   return (
     <>
-      <Modal show={showModal} onClose={() => setShowModal(false)}>
-        <div className="flex max-h-screen w-full max-w-[500px] flex-col gap-8 overflow-auto p-8">
-          <div className="flex justify-between text-blue">
-            <button
-              className="font-bold hover:underline"
-              onClick={() => setShowModal(false)}
-            >
-              {"< Retour"}
-            </button>
-            <button>
-              <img src="/icons/close.svg" alt="Fermer" />
-            </button>
-          </div>
-          <div className="flex flex-col gap-3">
-            <div className="h-auto w-12">
-              <img src="/icons/warning.svg" alt="" />
-            </div>
-            <p className="text-lg font-bold">
-              Forcer la fin de l&apos;enquête ?
-            </p>
-            <p>
-              Vous êtes sur le point de finaliser une enquête qui n’a pas
-              atteint ses objectifs de représentativité statistique. Il est
-              probable que votre enquête ne donne pas de résultats fidèles à la
-              diversité de la population.
-            </p>
-            <p>
-              N’hésitez pas à contacter l’équipe support NEAR pour avoir des
-              conseils d’expert avant de prendre cette décision.
-            </p>
-          </div>
-          <div className="flex flex-col gap-4">
-            <LinkAsButton
-              icon="/icons/arrow-right.svg"
-              color="blue"
-              style={ButtonStyle.FILLED}
-              href="mailto:todo@mail.com"
-            >
-              Contacter l&apos;équipe NEAR
-            </LinkAsButton>
-            <Button
-              icon="/icons/arrow-back.svg"
-              color="blue"
-              onClick={() => setShowModal(false)}
-            >
-              Revenir à l&apos;étape précédente
-            </Button>
-            <Button
-              icon="/icons/arrow-right-blue.svg"
-              color="blue"
-              border={false}
-              onClick={() => updateSurveyStep(surveyConfig[step].nextStep)}
-            >
-              Finaliser quand même l&apos;enquête
-            </Button>
-          </div>
-        </div>
-      </Modal>
+      <RepresentativenessConfirmModal
+        nextStep={surveyConfig[step].nextStep}
+        showModal={showModal}
+        setShowModal={setShowModal}
+      />
       <SurveyLayout
         banner={
           <>
