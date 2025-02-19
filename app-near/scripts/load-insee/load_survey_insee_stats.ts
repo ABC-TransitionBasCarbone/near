@@ -123,11 +123,11 @@ const createQuartiersView = async (survey_id: number) => {
 const createSurvey = async (): Promise<Survey> => {
   return prisma.survey.upsert({
     where: {
-      name: "14e_arr", // Ensure that `name` is unique or a unique constraint is applied
+      name: "Porte d'Orléans", // Ensure that `name` is unique or a unique constraint is applied
     },
     update: {},
     create: {
-      name: "14e_arr",
+      name: "Porte d'Orléans",
     },
   });
 };
