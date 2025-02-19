@@ -116,6 +116,7 @@ Pour plus de détail sur :
 voir le [README du dossier scripts](./scritps/README.md)
 
 ## Comment tester le webhook
+
 ```bash
 ./scripts/webhooks/query.sh
 
@@ -125,11 +126,13 @@ voir le [README du dossier scripts](./scritps/README.md)
 # Entrez le nom du fichier JSON (ex: su.json) : ./scripts/webhooks/su.json
 ```
 
-Note : 
+Note :
+
 - su.json > exemple de payload pour le webhook sphère d'usage
 - Autres payload à créer pour les formulaires suivants
 
 ## Comment jouer les seeds
+
 Pour lister les différents scopes (scénario de seed) possibles :
 
 ```bash
@@ -145,5 +148,5 @@ npm run seed -- scope=su_answer
 Pour jouer un scénario de seed (exemple pour les sphères d'usage) :
 
 ```bash
- npm run seed -- scope=su_answer surveyName="Porte d'Orléans" surveyTarget=60 surveyCase=case_2
+ npm run seed -- scope=su_answer surveyName="Porte d'Orléans" surveyTarget=60 surveyCase=LESS_THAN_TARGET
 ```

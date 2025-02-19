@@ -77,14 +77,16 @@ const RepresentativenessLayout: React.FC<RepresentativenessLayoutProps> = ({
         banner={
           <>
             <div className="flex flex-row flex-wrap items-stretch justify-center gap-10">
-              <MetabaseIframe
-                iframeNumber={MetabaseIFrameNumber.JAUGE_ERROR_MARGIN}
-                iframeType={MetabaseIframeType.QUESTION}
-                height="300px"
-                width="300px"
-              />
+              <div className="order-2 sm:order-1">
+                <MetabaseIframe
+                  iframeNumber={MetabaseIFrameNumber.JAUGE_ERROR_MARGIN}
+                  iframeType={MetabaseIframeType.QUESTION}
+                  height="300px"
+                  width="300px"
+                />
+              </div>
 
-              <div className="flex max-w-lg flex-col justify-center">
+              <div className="order-1 flex max-w-lg flex-col justify-center sm:order-2">
                 <Link
                   className="items-center gap-3 py-2 font-sans font-bold text-blue no-underline hover:ring-0"
                   onClick={() =>
@@ -104,7 +106,7 @@ const RepresentativenessLayout: React.FC<RepresentativenessLayoutProps> = ({
                 </p>
               </div>
 
-              <div className="flex w-full flex-col justify-center gap-10 sm:w-auto">
+              <div className="order-3 flex w-full flex-col justify-center gap-10 sm:w-auto">
                 <Button
                   icon="/icons/rocket.svg"
                   rounded
