@@ -68,7 +68,7 @@ const BroadcastingButton: React.FC<BroadcastingButtonProps> = (
     const link = buildLink(type);
     await navigator.clipboard.writeText(link);
     setCopiedMessage(
-      link === "error" ? "Lien copié !" : "Veuillez réessayer plus tard",
+      link === "error" ? "Veuillez réessayer plus tard" : "Lien copié !",
     );
     setShowQRCode(true);
     setTimeout(() => setCopiedMessage(""), 4000);
@@ -95,7 +95,7 @@ const BroadcastingButton: React.FC<BroadcastingButtonProps> = (
             {copiedMessage}
           </div>
         )}
-        {props.broadcastType === "street_survey" && showQRCode && (
+        {props.broadcastType === "qr_code" && showQRCode && (
           <QRCodeModal
             onClose={() => {
               setShowQRCode(false);
