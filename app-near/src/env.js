@@ -32,6 +32,7 @@ export const env = createEnv({
     NEXT_PUBLIC_TYPEFORM_SU_LINK: z.string().url(),
     NEXT_PUBLIC_TYPEFORM_SU_STATS: z.string().url(),
     NEXT_PUBLIC_TARGET_PERCENTAGE_WARNING: z.string(),
+    NEXT_PUBLIC_CONTACT_EMAIL: z.string().email(),
   },
 
   /**
@@ -52,6 +53,7 @@ export const env = createEnv({
     SU_FORM_ID: process.env.SU_FORM_ID,
     NEXT_PUBLIC_TARGET_PERCENTAGE_WARNING:
       process.env.NEXT_PUBLIC_TARGET_PERCENTAGE_WARNING,
+    NEXT_PUBLIC_CONTACT_EMAIL: process.env.NEXT_PUBLIC_CONTACT_EMAIL,
   },
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially

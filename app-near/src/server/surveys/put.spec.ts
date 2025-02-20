@@ -12,6 +12,9 @@ describe("surveys put", () => {
   beforeEach(async () => {
     // do not throw error when survey is not found
     await db.survey.delete({ where: { name: surveyName } }).catch(() => null);
+    jest
+      .spyOn(representativenessService, "representativeness")
+      .mockReturnValue(Promise.resolve([]));
   });
 
   afterEach(() => {
