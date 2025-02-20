@@ -7,6 +7,42 @@ import SurveyLayout from "../../SurveyLayout";
 import { api } from "~/trpc/react";
 import { useSession } from "next-auth/react";
 
+export const generateSuData = (surveyId: number) => {
+  // TODO: À modifier par Sandrine
+  return [
+    { su: 1, barycenter: [0.5, 1.5], popPercentage: 25.5 },
+    { su: 1, barycenter: [0.9, 1.9], popPercentage: 25.9 },
+  ];
+};
+
+export const getSuNames = async (surveyId: number) => {
+  try {
+    const computedSus = generateSuData(surveyId);
+
+    const detectSuMutation = api.suData.detectSu.useMutation();
+
+    const response = await detectSuMutation.mutateAsync({
+      surveyId,
+      computedSus,
+    });
+
+    return response;
+  } catch (error) {
+    console.error("Error while saving SU:", error);
+    throw error;
+  }
+};
+
+const launchSuDetection = async (surveyId: number) => {
+  try {
+    const suNames = await getSuNames(surveyId);
+
+    console.log("SU saved:", suNames);
+  } catch (error) {
+    console.error("Error during SU detection:", error);
+  }
+};
+
 const DetectSU: React.FC = () => {
   const { data: session } = useSession();
   const surveyId = session?.user?.surveyId;
@@ -40,7 +76,7 @@ const DetectSU: React.FC = () => {
             style={ButtonStyle.FILLED}
             onClick={async () => {
               if (surveyId) {
-                // await launchSuDetection(surveyId);
+                await launchSuDetection(surveyId);
               } else {
                 console.error("Survey ID is undefined");
               }
