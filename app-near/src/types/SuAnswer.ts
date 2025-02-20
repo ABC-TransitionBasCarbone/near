@@ -14,7 +14,7 @@ import {
 import { z } from "zod";
 
 export const convertedSuAnswer = z.object({
-  isNeighborhoodResident: z.boolean(),
+  isNeighborhoodResident: z.literal(true),
   ageCategory: z.nativeEnum(AgeCategory),
   gender: z.nativeEnum(Gender),
   professionalCategory: z.nativeEnum(ProfessionalCategory),
@@ -27,6 +27,8 @@ export const convertedSuAnswer = z.object({
   heatSource: z.nativeEnum(HeatSource),
   email: z.string().email().optional(),
 });
+
+export type ConvertedSuAnswer = z.infer<typeof convertedSuAnswer>;
 
 export type BuilderSuAnswer = Omit<
   SuAnswer,

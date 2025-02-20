@@ -69,6 +69,54 @@ describe("handleAnswer", () => {
     expect(await response.text()).toContain("Survey name not found");
   });
 
+  it("should return 400 when user as less than 15", async () => {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    const payload = JSON.parse(
+      JSON.stringify(valideSuSurveyPayload),
+    ) as TypeformWebhookPayload;
+
+    // @ts-expect-error allowed for test
+    payload.form_response.answers[1].choice = {
+      id: "quEgbNpyxmlD",
+      ref: "a403515c-5a86-4c4b-a842-bae699a09f47",
+      label: "Moins de 15 ans",
+    };
+
+    const signature = signPayload(JSON.stringify(payload));
+    const response = await handleAnswer(
+      // @ts-expect-error allow partial for test
+      buildRequest(payload, signature),
+    );
+    expect(response.status).toBe(400);
+    expect(await response.text()).toContain(
+      '{"error":"Invalid payload","details":[{"expected":"\'FROM_15_TO_29\' | \'FROM_30_TO_44\' | \'FROM_45_TO_59\' | \'FROM_60_TO_74\' | \'ABOVE_75\'","received":"undefined","code":"invalid_type","path":["ageCategory"],"message":"Required"}]}',
+    );
+  });
+
+  it("should return 400 when user is not resident", async () => {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    const payload = JSON.parse(
+      JSON.stringify(valideSuSurveyPayload),
+    ) as TypeformWebhookPayload;
+
+    // @ts-expect-error allowed for test
+    payload.form_response.answers[0].choice = {
+      id: "fugWMOloSfDA",
+      ref: "3a347ad6-7461-4549-8cf3-d45167702a74",
+      label: "Non",
+    };
+
+    const signature = signPayload(JSON.stringify(payload));
+    const response = await handleAnswer(
+      // @ts-expect-error allow partial for test
+      buildRequest(payload, signature),
+    );
+    expect(response.status).toBe(400);
+    expect(await response.text()).toContain(
+      '{"error":"Invalid payload","details":[{"received":false,"code":"invalid_literal","expected":true,"path":["isNeighborhoodResident"],"message":"Invalid literal value, expected true"}]}',
+    );
+  });
+
   it("should return 201", async () => {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const payload = JSON.parse(

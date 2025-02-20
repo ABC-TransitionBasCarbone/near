@@ -8,6 +8,7 @@ import { createSu } from "../su/create";
 import { type SuAnswer } from "@prisma/client";
 import { z } from "zod";
 import { env } from "~/env";
+import { type ConvertedSuAnswer } from "~/types/SuAnswer";
 
 export const handleAnswer = async (req: NextRequest): Promise<NextResponse> => {
   let formId: string | undefined = undefined;
@@ -59,8 +60,12 @@ export const handleAnswer = async (req: NextRequest): Promise<NextResponse> => {
       const broadcastChannel =
         parsedBody.form_response.hidden?.broadcast_channel;
 
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { isNeighborhoodResident, ...answersToCreate } =
+        parsedAnswer as ConvertedSuAnswer;
+
       await createSu(
-        { ...parsedAnswer, broadcastChannel } as SuAnswer,
+        { ...answersToCreate, broadcastChannel } as SuAnswer,
         surveyName,
       );
     }

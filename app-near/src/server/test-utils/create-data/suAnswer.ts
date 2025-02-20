@@ -15,7 +15,6 @@ import { faker } from "@faker-js/faker";
 import { type BuilderSuAnswer } from "~/types/SuAnswer";
 
 export const buildSuAnswer = (surveyId: number): BuilderSuAnswer => ({
-  isNeighborhoodResident: faker.datatype.boolean(),
   ageCategory: faker.helpers.arrayElement(Object.values(AgeCategory)),
   airTravelFrequency: faker.helpers.arrayElement(
     Object.values(AirTravelFrequency),

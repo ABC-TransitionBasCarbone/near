@@ -17,7 +17,6 @@ export const surveySUReferencesMapping: Record<string, string | boolean> = {
   ["6226e10f-baf0-43f8-af05-2cddc649f509"]: true,
   ["3a347ad6-7461-4549-8cf3-d45167702a74"]: false,
   // ageCategory
-  ["a403515c-5a86-4c4b-a842-bae699a09f47"]: AgeCategory.UNDER_15,
   ["e56029c8-f14a-45dc-8a90-4e61a0f45581"]: AgeCategory.FROM_15_TO_29,
   ["58756e59-7741-4e9b-8d7b-c16c8eca4361"]: AgeCategory.FROM_30_TO_44,
   ["e1d0ef1b-5caa-4b62-aed0-f8efa82131b3"]: AgeCategory.FROM_45_TO_59,
