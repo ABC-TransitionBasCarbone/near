@@ -7,6 +7,7 @@
 */
 -- AlterEnum
 BEGIN;
+DELETE FROM "su_answer" WHERE "age_category"='UNDER_15';
 CREATE TYPE "AgeCategory_new" AS ENUM ('FROM_15_TO_29', 'FROM_30_TO_44', 'FROM_45_TO_59', 'FROM_60_TO_74', 'ABOVE_75');
 ALTER TABLE "su_answer" ALTER COLUMN "age_category" TYPE "AgeCategory_new" USING ("age_category"::text::"AgeCategory_new");
 ALTER TYPE "AgeCategory" RENAME TO "AgeCategory_old";

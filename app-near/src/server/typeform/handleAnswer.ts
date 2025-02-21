@@ -5,7 +5,7 @@ import { convertFormToAnswer } from "./convert";
 import { TypeformWebhookSchema } from "~/types/typeform";
 import { typeformSchemaMapper } from "./schema";
 import { createSu } from "../su/create";
-import { type SuAnswer } from "@prisma/client";
+import { AgeCategory, type SuAnswer } from "@prisma/client";
 import { z } from "zod";
 import { env } from "~/env";
 import { type ConvertedSuAnswer } from "~/types/SuAnswer";
@@ -46,9 +46,23 @@ export const handleAnswer = async (req: NextRequest): Promise<NextResponse> => {
     const answers = convertFormToAnswer(parsedBody, referencesMapping);
     console.info("[whebhook typeform]", formId, JSON.stringify(answers));
 
-    const parsedAnswer = typeformSchemaMapper[formId]?.parse(answers);
-
     if (formId === env.SU_FORM_ID) {
+      if (answers.isNeighborhoodResident !== true) {
+        return NextResponse.json(
+          { message: "user should live in neighborhood" },
+          { status: 200 },
+        );
+      }
+      if (
+        !Object.values(AgeCategory).includes(answers.ageCategory as AgeCategory)
+      ) {
+        return NextResponse.json(
+          { message: "user age is not allowed" },
+          { status: 200 },
+        );
+      }
+
+      const parsedAnswer = typeformSchemaMapper[formId]?.parse(answers);
       const surveyName = parsedBody.form_response.hidden?.neighborhood;
       if (!surveyName) {
         console.error("[whebhook typeform]", formId, "Survey name not found");
