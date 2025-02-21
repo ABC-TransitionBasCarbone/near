@@ -129,7 +129,7 @@ model SuAnswer {
   heatSource                  HeatSource            @map("heat_source")
   email                       String?               @unique
   broadcastChannel            BroadcastChannel      @map("broadcast_channel")
-  su                          Int                   @map("su")
+  su                          Int?                  @map("su")
   distanceToBarycentre        Float?                @map("distance_to_barycentre")
   surveyId                    Int
   survey                      Survey                @relation(fields: [surveyId], references: [id])

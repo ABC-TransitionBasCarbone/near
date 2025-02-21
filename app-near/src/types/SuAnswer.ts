@@ -30,6 +30,6 @@ export const convertedSuAnswer = z.object({
 
 export type BuilderSuAnswer = Omit<
   SuAnswer,
-  "id" | "userSu" | "distanceToBarycentre"
+  "id" | "su" | "distanceToBarycentre"
 > &
   Partial<Pick<SuAnswer, "id" | "su" | "distanceToBarycentre">>;
