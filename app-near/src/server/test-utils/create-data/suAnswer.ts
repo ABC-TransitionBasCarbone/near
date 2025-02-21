@@ -9,12 +9,16 @@ import {
   MeatFrequency,
   ProfessionalCategory,
   PurchasingStrategy,
+  type SuAnswer,
   TransportationMode,
 } from "@prisma/client";
 import { faker } from "@faker-js/faker";
 import { type BuilderSuAnswer } from "~/types/SuAnswer";
 
-export const buildSuAnswer = (surveyId: number): BuilderSuAnswer => ({
+export const buildSuAnswer = (
+  surveyId: number,
+  data?: Partial<SuAnswer>,
+): BuilderSuAnswer => ({
   isNeighborhoodResident: faker.datatype.boolean(),
   ageCategory: faker.helpers.arrayElement(Object.values(AgeCategory)),
   airTravelFrequency: faker.helpers.arrayElement(
@@ -36,5 +40,6 @@ export const buildSuAnswer = (surveyId: number): BuilderSuAnswer => ({
   transportationMode: faker.helpers.arrayElement(
     Object.values(TransportationMode),
   ),
+  ...data,
   surveyId,
 });

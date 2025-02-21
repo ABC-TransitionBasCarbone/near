@@ -21,6 +21,7 @@ export const env = createEnv({
     METABASE_SITE_URL: z.string().url(),
     TYPEFORM_SECRET: z.string(),
     SU_FORM_ID: z.string(),
+    BREVO_API_KEY: z.string(),
   },
 
   /**
@@ -52,6 +53,7 @@ export const env = createEnv({
     SU_FORM_ID: process.env.SU_FORM_ID,
     NEXT_PUBLIC_TARGET_PERCENTAGE_WARNING:
       process.env.NEXT_PUBLIC_TARGET_PERCENTAGE_WARNING,
+    BREVO_API_KEY: process.env.BREVO_API_KEY,
   },
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially

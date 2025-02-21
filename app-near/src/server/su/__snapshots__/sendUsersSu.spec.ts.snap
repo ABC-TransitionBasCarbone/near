@@ -1,0 +1,22 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`sendUsersSu should send su email to users 1`] = `
+[
+  {
+    "reason": [Error: Missing email for answer_su with id: 1],
+    "status": "rejected",
+  },
+  {
+    "reason": [Error: Missing SU for answer_su with id: 2],
+    "status": "rejected",
+  },
+  {
+    "status": "fulfilled",
+    "value": undefined,
+  },
+  {
+    "status": "fulfilled",
+    "value": undefined,
+  },
+]
+`;
