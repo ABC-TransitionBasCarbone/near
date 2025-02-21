@@ -2,8 +2,7 @@ import { createCallerFactory, createTRPCRouter } from "~/server/api/trpc";
 import { metabaseRouter } from "./routers/metabase";
 import { neighborhoodsRouter } from "./routers/neighborhoods";
 import { surveysRouter } from "./routers/surveys";
-import { suDataRouter } from "./routers/suDetection";
-import { suAnswerRouter } from "./routers/suAnswerRouter";
+import { suDetectionRouter } from "./routers/suDetection";
 
 /**
  * This is the primary router for your server.
@@ -14,8 +13,7 @@ export const appRouter = createTRPCRouter({
   metabase: metabaseRouter,
   neighborhoods: neighborhoodsRouter,
   surveys: surveysRouter,
-  suData: suDataRouter,
-  suAnswer: suAnswerRouter,
+  suDetection: suDetectionRouter,
 });
 
 // export type definition of API

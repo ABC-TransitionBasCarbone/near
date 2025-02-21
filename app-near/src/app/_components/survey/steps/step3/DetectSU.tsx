@@ -7,45 +7,17 @@ import SurveyLayout from "../../SurveyLayout";
 import { api } from "~/trpc/react";
 import { useSession } from "next-auth/react";
 
-export const generateSuData = (surveyId: number) => {
-  // TODO: À modifier par Sandrine
-  return [
-    { su: 1, barycenter: [0.5, 1.5], popPercentage: 25.5 },
-    { su: 1, barycenter: [0.9, 1.9], popPercentage: 25.9 },
-  ];
-};
-
-export const getSuNames = async (surveyId: number) => {
-  try {
-    const computedSus = generateSuData(surveyId);
-
-    const detectSuMutation = api.suData.detectSu.useMutation();
-
-    const response = await detectSuMutation.mutateAsync({
-      surveyId,
-      computedSus,
-    });
-
-    return response;
-  } catch (error) {
-    console.error("Error while saving SU:", error);
-    throw error;
-  }
-};
-
-const launchSuDetection = async (surveyId: number) => {
-  try {
-    const suNames = await getSuNames(surveyId);
-
-    console.log("SU saved:", suNames);
-  } catch (error) {
-    console.error("Error during SU detection:", error);
-  }
-};
-
 const DetectSU: React.FC = () => {
-  const { data: session } = useSession();
-  const surveyId = session?.user?.surveyId;
+  // const { data: session } = useSession();
+  // const surveyId = session?.user?.surveyId;
+
+  const suDetectionMutation = api.suDetection.run.useMutation();
+
+  const launchSuDetection = async () => {
+    console.log("J'APPELLE");
+    await suDetectionMutation.mutateAsync();
+    console.log("J'AI APPELÉ");
+  };
 
   return (
     <SurveyLayout
@@ -55,9 +27,9 @@ const DetectSU: React.FC = () => {
             <Link
               className="items-center gap-3 py-2 font-sans font-bold text-blue no-underline hover:ring-0"
               onClick={() => {
-                ("");
+                (""); // TODO
               }}
-              href=""
+              href="" // TODO
             >
               &lt; Retour
             </Link>
@@ -74,14 +46,7 @@ const DetectSU: React.FC = () => {
             icon="/icons/arrow-right.svg"
             rounded
             style={ButtonStyle.FILLED}
-            onClick={async () => {
-              if (surveyId) {
-                await launchSuDetection(surveyId);
-              } else {
-                console.error("Survey ID is undefined");
-              }
-            }}
-            disabled={!surveyId}
+            onClick={launchSuDetection}
           >
             Détecter les sphères d&apos;usage
           </Button>
@@ -89,7 +54,7 @@ const DetectSU: React.FC = () => {
       }
       actions={<></>}
     >
-      <span>children</span>
+      <></> {/* TODO NEAR-31 */}
     </SurveyLayout>
   );
 };

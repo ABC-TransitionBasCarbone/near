@@ -1,24 +1,26 @@
-import { z } from "zod";
+import { computeSus } from "~/server/external-api/api-su";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
-import { saveSuData } from "~/server/su/put";
+import { TRPCError } from "@trpc/server";
+import {
+  type SuAnswerData,
+  type SuComputationResponse,
+} from "~/types/SuDetection";
 
-export const suDataRouter = createTRPCRouter({
-  detectSu: protectedProcedure
-    .input(
-      z.object({
-        surveyId: z.number(),
-        computedSus: z.array(
-          z.object({
-            su: z.number(),
-            barycenter: z.array(z.number()),
-            popPercentage: z.number(),
-          }),
-        ),
-      }),
-    )
-    .mutation(async ({ input }) => {
-      const { surveyId, computedSus } = input;
+export const suDetectionRouter = createTRPCRouter({
+  run: protectedProcedure.mutation(async ({ ctx }) => {
+    const { surveyId } = ctx.session.user;
+    if (!surveyId) {
+      throw new TRPCError({ code: "FORBIDDEN" });
+    }
+    console.log("Detect SU for", surveyId);
 
-      return saveSuData(surveyId, computedSus);
-    }),
+    const suAnswerData: SuAnswerData[] = [];
+    // getSuAnswer
+    const suComputationResponse: SuComputationResponse =
+      computeSus(suAnswerData);
+    // updateSuAnswer
+    // createSu
+    // updateSurvey
+    return null; // TODO NEAR-30
+  }),
 });
