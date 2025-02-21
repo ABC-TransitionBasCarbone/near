@@ -5,18 +5,12 @@ import { ButtonStyle } from "~/types/enums/button";
 import Button from "../../../_ui/Button";
 import SurveyLayout from "../../SurveyLayout";
 import { api } from "~/trpc/react";
-import { useSession } from "next-auth/react";
 
-const DetectSU: React.FC = () => {
-  // const { data: session } = useSession();
-  // const surveyId = session?.user?.surveyId;
-
+const DetectionLayout: React.FC = () => {
   const suDetectionMutation = api.suDetection.run.useMutation();
 
   const launchSuDetection = async () => {
-    console.log("J'APPELLE");
     await suDetectionMutation.mutateAsync();
-    console.log("J'AI APPELÉ");
   };
 
   return (
@@ -59,4 +53,4 @@ const DetectSU: React.FC = () => {
   );
 };
 
-export default DetectSU;
+export default DetectionLayout;
