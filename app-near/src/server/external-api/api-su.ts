@@ -1,7 +1,19 @@
-import { env } from "~/env";
-import snakecaseKeys from "snakecase-keys";
+import { type SuAnswer } from ".prisma/client";
 import camelcaseKeys from "camelcase-keys";
-import { type SuComputationData, type SuAnswerData } from "~/types/SuDetection";
+import snakecaseKeys from "snakecase-keys";
+import { env } from "~/env";
+import { type SuAnswerData, type SuComputationData } from "~/types/SuDetection";
+import { db } from "../db";
+import { convert } from "./convert";
+
+export const buildSuComputationRequest = async (
+  surveyId: number,
+): Promise<SuAnswerData[]> => {
+  const suAnswers: SuAnswer[] = await db.suAnswer.findMany({
+    where: { surveyId },
+  });
+  return suAnswers.map((suAnswer) => convert(suAnswer));
+};
 
 export const computeSus = async (
   payload: SuAnswerData[],
@@ -22,10 +34,19 @@ export const computeSus = async (
 
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const snakecaseData = await response.json();
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    const data: SuComputationData = camelcaseKeys(snakecaseData, {
+
+    if (response.status !== 200) {
+      console.error(
+        "Error when calling API SU compute:",
+        response.status,
+        snakecaseData,
+      );
+      throw new Error(`HTTP Status=${response.status}`);
+    }
+
+    const data = camelcaseKeys(snakecaseData, {
       deep: true,
-    });
+    }) as SuComputationData;
 
     return data;
   } catch (error) {

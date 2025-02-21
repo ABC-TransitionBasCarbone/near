@@ -33,8 +33,7 @@ describe.skip("API SU", () => {
       },
     ];
     const response = await computeSus(inputData);
-    expect(response.status).toBe(200);
-    expect(response.data.computedSus).toBeDefined();
-    expect(response.data.answerAttributedSu).toHaveLength(inputData.length);
+    expect(response.computedSus).toBeDefined();
+    expect(response.answerAttributedSu).toHaveLength(inputData.length);
   });
 });

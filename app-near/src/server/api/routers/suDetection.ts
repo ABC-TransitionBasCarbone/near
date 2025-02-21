@@ -1,7 +1,9 @@
-import { computeSus } from "~/server/external-api/api-su";
+import {
+  buildSuComputationRequest,
+  computeSus,
+} from "~/server/external-api/api-su";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
 import { TRPCError } from "@trpc/server";
-import { type SuAnswerData } from "~/types/SuDetection";
 import { updateAfterSUDetection } from "~/server/su/answers/update";
 import { saveSuData } from "~/server/su/data/save";
 import { updateSurvey } from "~/server/surveys/put";
@@ -12,17 +14,18 @@ export const suDetectionRouter = createTRPCRouter({
     if (!surveyId) {
       throw new TRPCError({ code: "FORBIDDEN" });
     }
-    console.log("Detect SU for", surveyId);
 
-    const suAnswerData: SuAnswerData[] = [];
+    const request = await buildSuComputationRequest(surveyId);
+    if (request.length === 0) {
+      return [];
+    }
 
-    const response = await computeSus(suAnswerData);
+    const response = await computeSus(request);
 
     const suNames = await saveSuData(surveyId, response.computedSus);
 
     await updateAfterSUDetection(response.answerAttributedSu);
 
-    //
     await updateSurvey(surveyId, { computedSu: true });
 
     return suNames;
