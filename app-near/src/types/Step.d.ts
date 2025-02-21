@@ -6,10 +6,10 @@ export interface Step {
   number: number;
 }
 
-export interface StepParams<StepType> {
+export interface StepParams<T> {
   component: ReactNode;
-  nextStep: StepType;
-  previouxStep: StepType;
+  nextStep: T;
+  previouxStep: T;
   buttonType: ButtonType;
-  isActive: StepType[];
+  isActive: T[];
 }
