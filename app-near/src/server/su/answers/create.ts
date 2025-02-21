@@ -1,5 +1,5 @@
 import { type SuAnswer } from "@prisma/client";
-import { db } from "../db";
+import { db } from "../../db";
 
 export const createSu = async (answer: SuAnswer, surveyName: string) => {
   const survey = await db.survey.findFirst({ where: { name: surveyName } });

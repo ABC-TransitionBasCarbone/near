@@ -8,11 +8,6 @@ export interface SuAnswerData {
   heatSource: number;
 }
 
-export interface SuComputationResponse {
-  status: number;
-  data: SuComputationData;
-}
-
 export interface SuComputationData {
   computedSus: ComputedSu[];
   answerAttributedSu: AnswerAttributedSu[];

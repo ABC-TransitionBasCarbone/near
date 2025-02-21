@@ -1,15 +1,11 @@
 import { env } from "~/env";
 import snakecaseKeys from "snakecase-keys";
 import camelcaseKeys from "camelcase-keys";
-import {
-  type SuComputationData,
-  type SuAnswerData,
-  type SuComputationResponse,
-} from "~/types/SuDetection";
+import { type SuComputationData, type SuAnswerData } from "~/types/SuDetection";
 
 export const computeSus = async (
   payload: SuAnswerData[],
-): Promise<SuComputationResponse> => {
+): Promise<SuComputationData> => {
   try {
     const snakecasePayload = payload.map((suAnswerData: SuAnswerData) =>
       snakecaseKeys(suAnswerData as unknown as Record<string, unknown>),
@@ -31,10 +27,7 @@ export const computeSus = async (
       deep: true,
     });
 
-    return {
-      status: response.status,
-      data,
-    };
+    return data;
   } catch (error) {
     console.error("Error calling API SU compute:", error);
     throw error;

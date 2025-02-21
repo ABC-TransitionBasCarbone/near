@@ -9,5 +9,5 @@
 -- AlterTable
 ALTER TABLE "su_answer" DROP COLUMN "user_distance_to_su_barycentre",
 DROP COLUMN "user_su",
-ADD COLUMN     "distance_to_barycentre" DOUBLE PRECISION,
+ADD COLUMN     "distance_to_barycenter" DOUBLE PRECISION,
 ADD COLUMN     "su" INTEGER NOT NULL;

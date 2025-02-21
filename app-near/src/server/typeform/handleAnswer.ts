@@ -4,7 +4,7 @@ import { getReferencesMapping } from "../surveys/references";
 import { convertFormToAnswer } from "./convert";
 import { TypeformWebhookSchema } from "~/types/typeform";
 import { typeformSchemaMapper } from "./schema";
-import { createSu } from "../su/create";
+import { createSu } from "../su/answers/create";
 import { type SuAnswer } from "@prisma/client";
 import { z } from "zod";
 import { env } from "~/env";

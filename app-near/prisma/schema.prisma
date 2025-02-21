@@ -36,6 +36,7 @@ model Survey {
     @@map("surveys")
     suAnswer SuAnswer[]
     suData   SuData[]
+    computedSu  Boolean @default(false)
 }
 
 enum AgeCategory {
@@ -131,7 +132,7 @@ model SuAnswer {
   email                       String?               @unique
   broadcastChannel            BroadcastChannel      @map("broadcast_channel")
   su                          Int?                  @map("su")
-  distanceToBarycentre        Float?                @map("distance_to_barycentre")
+  distanceToBarycenter        Float?                @map("distance_to_barycenter")
   surveyId                    Int
   survey                      Survey                @relation(fields: [surveyId], references: [id])
   @@map("su_answer")

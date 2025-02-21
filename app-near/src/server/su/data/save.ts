@@ -1,8 +1,9 @@
 import { db } from "~/server/db";
+import { type ComputedSu } from "~/types/SuDetection";
 
 export const saveSuData = async (
   surveyId: number,
-  computedSus: { su: number; barycenter: number[]; popPercentage: number }[],
+  computedSus: ComputedSu[],
 ): Promise<string[]> => {
   const suNames: string[] = [];
 
@@ -26,17 +27,4 @@ export const saveSuData = async (
   }
 
   return suNames;
-};
-
-export const updateSuAnswer = async (
-  answers: { id: number; su: number; distanceToBarycenter: number }[],
-) => {
-  return db.$transaction(
-    answers.map(({ id, su, distanceToBarycenter }) =>
-      db.suAnswer.update({
-        where: { id },
-        data: { su, distanceToBarycentre: distanceToBarycenter },
-      }),
-    ),
-  );
 };

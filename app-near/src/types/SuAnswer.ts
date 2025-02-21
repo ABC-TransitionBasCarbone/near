@@ -31,9 +31,9 @@ export const convertedSuAnswer = z.object({
 
 export type BuilderSuAnswer = Omit<
   SuAnswer,
-  "id" | "su" | "distanceToBarycentre"
+  "id" | "su" | "distanceToBarycenter"
 > &
-  Partial<Pick<SuAnswer, "id" | "su" | "distanceToBarycentre">>;
+  Partial<Pick<SuAnswer, "id" | "su" | "distanceToBarycenter">>;
 
 export enum CategoryStat {
   man = "man",
