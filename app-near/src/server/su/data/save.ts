@@ -13,7 +13,7 @@ export const saveSuData = async (
     });
     if (existingSuData) {
       await db.suData.update({
-        where: { survey_id: surveyId, su: suData.su },
+        where: { survey_id_su: { survey_id: surveyId, su: suData.su } },
         data: {
           pop_percentage: suData.popPercentage,
           barycenter: suData.barycenter,
