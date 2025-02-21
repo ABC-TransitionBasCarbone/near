@@ -72,3 +72,11 @@ export const categoryStatQuartierMap: Record<CategoryStat, keyof Quartier> = {
   [CategoryStat.cs7]: "c21_pop15p_cs7_sum",
   [CategoryStat.cs8]: "c21_pop15p_cs8_sum",
 };
+
+export const ageCategoryStatMap: Record<AgeCategory, CategoryStat> = {
+  [AgeCategory.ABOVE_75]: CategoryStat.above_75,
+  [AgeCategory.FROM_60_TO_74]: CategoryStat.from_60_to_74,
+  [AgeCategory.FROM_45_TO_59]: CategoryStat.from_45_to_59,
+  [AgeCategory.FROM_30_TO_44]: CategoryStat.from_30_to_44,
+  [AgeCategory.FROM_15_TO_29]: CategoryStat.from_15_to_29,
+};
