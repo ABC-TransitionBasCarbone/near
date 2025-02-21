@@ -35,7 +35,6 @@ const representativeness = async (
   );
 
   const inseeStats = await getInseeTargetsByCategories(surveyId);
-  console.log("inseeStats", inseeStats);
 
   const result = Object.values(CategoryStat).reduce(
     (acc, value) => {

@@ -12,6 +12,9 @@ describe("surveys put", () => {
   beforeEach(async () => {
     // do not throw error when survey is not found
     await db.survey.delete({ where: { name: surveyName } }).catch(() => null);
+    jest
+      .spyOn(representativenessService, "representativeness")
+      .mockReturnValue(Promise.resolve(null));
   });
 
   afterEach(() => {
@@ -36,25 +39,23 @@ describe("surveys put", () => {
       jest
         .spyOn(representativenessService, "representativeness")
         .mockReturnValue(
-          Promise.resolve([
-            {
-              [CategoryStat.above_75]: diff,
-              [CategoryStat.cs1]: diff,
-              [CategoryStat.cs2]: diff,
-              [CategoryStat.cs3]: diff,
-              [CategoryStat.cs4]: diff,
-              [CategoryStat.cs5]: diff,
-              [CategoryStat.cs6]: diff,
-              [CategoryStat.cs7]: diff,
-              [CategoryStat.cs8]: diff,
-              [CategoryStat.from_15_to_29]: diff,
-              [CategoryStat.from_30_to_44]: diff,
-              [CategoryStat.from_45_to_59]: diff,
-              [CategoryStat.from_60_to_74]: diff,
-              [CategoryStat.man]: diff,
-              [CategoryStat.woman]: diff,
-            },
-          ]),
+          Promise.resolve({
+            [CategoryStat.above_75]: diff,
+            [CategoryStat.cs1]: diff,
+            [CategoryStat.cs2]: diff,
+            [CategoryStat.cs3]: diff,
+            [CategoryStat.cs4]: diff,
+            [CategoryStat.cs5]: diff,
+            [CategoryStat.cs6]: diff,
+            [CategoryStat.cs7]: diff,
+            [CategoryStat.cs8]: diff,
+            [CategoryStat.from_15_to_29]: diff,
+            [CategoryStat.from_30_to_44]: diff,
+            [CategoryStat.from_45_to_59]: diff,
+            [CategoryStat.from_60_to_74]: diff,
+            [CategoryStat.man]: diff,
+            [CategoryStat.woman]: diff,
+          }),
         );
 
       const testSurvey = await db.survey.create({

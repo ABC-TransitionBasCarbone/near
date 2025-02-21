@@ -9,12 +9,40 @@ import { db } from "~/server/db";
 import { buildSuAnswer } from "~/server/test-utils/create-data/suAnswer";
 import { select } from "weighted";
 import { getInseeTargetsByCategories } from "~/server/neighborhoods/targets";
+import { type CategoryStat, categoryStatQuartierMap } from "~/types/SuAnswer";
 
 export enum SurveyCase {
   LESS_THAN_GLOBAL_TARGET = "LESS_THAN_GLOBAL_TARGET",
   MORE_THAN_GLOBAL_TARGET = "MORE_THAN_GLOBAL_TARGET",
   MORE_THAN_CATEGORIES_TARGETS = "MORE_THAN_CATEGORIES_TARGETS",
 }
+
+const getAnswerTargetsByCategories = async (
+  surveyId: number,
+): Promise<Record<CategoryStat, number>> => {
+  const neighborhood = await db.quartier.findFirst({ where: { surveyId } });
+  if (!neighborhood) {
+    const existingSurveys = await db.survey.findMany({
+      select: { name: true },
+    });
+
+    throw new Error(`
+survey not found. 
+
+Usage: npm run seed -- scope=su_answer surveyName="Porte d'Orléans" surveyTarget=60 surveyCase=LESS_THAN_GLOBAL_TARGET
+
+Valid values for surveyName: ${existingSurveys.map((item) => item.name).join(", ")}
+`);
+  }
+  return Object.entries(categoryStatQuartierMap).reduce(
+    (acc, [categoryStat, dbcolumn]) => {
+      acc[categoryStat as CategoryStat] =
+        Number(neighborhood[dbcolumn]) / (neighborhood?.population_sum || 1);
+      return acc;
+    },
+    {} as Record<CategoryStat, number>,
+  );
+};
 
 const getAnswerQuantity = (
   surveyCase: SurveyCase,
@@ -30,7 +58,7 @@ const getAnswerQuantity = (
     case SurveyCase.MORE_THAN_GLOBAL_TARGET:
       return faker.number.int({
         min: surveyTarget + Math.floor(surveyTarget / 2),
-        max: surveyTarget + Math.floor(surveyTarget),
+        max: 2 * surveyTarget,
       });
     default:
       return 0;
@@ -49,7 +77,7 @@ const verifySurveyTarget = (surveyTarget: number, quartier: Quartier) => {
     throw new Error(`
 Survey target (${surveyTarget}) not allowed. 
 
-Usage: npm run seed -- scope=su_answer surveyName=14e_arr surveyTarget=60 surveyCase=LESS_THAN_TARGET
+Usage: npm run seed -- scope=su_answer surveyName="Porte d'Orléans" surveyTarget=60 surveyCase=LESS_THAN_GLOBAL_TARGET
 
 Valid values for surveyTarget: ${allowedSurveyTargets.join(", ")}
 `);
@@ -70,7 +98,7 @@ export const seedSuSurvey = async (
     throw new Error(`
 surveyName (${surveyName}) or surveyTarget (${surveyTarget}) or surveyCase (${surveyCase}) not defined. 
 
-Usage: npm run seed -- scope=su_answer surveyName="Porte d'Orléans" surveyTarget=60 surveyCase=LESS_THAN_TARGET
+Usage: npm run seed -- scope=su_answer surveyName="Porte d'Orléans" surveyTarget=60 surveyCase=LESS_THAN_GLOBAL_TARGET
 
 Valid values for surveyCase: ${Object.values(SurveyCase)
       .map((item) => `${item}`)
@@ -87,7 +115,7 @@ Valid values for surveyCase: ${Object.values(SurveyCase)
       select: { name: true },
     });
     throw new Error(`
-Usage: npm run seed -- scope=su_answer surveyName="Porte d'Orléans" surveyTarget=60 surveyCase=LESS_THAN_TARGET
+Usage: npm run seed -- scope=su_answer surveyName="Porte d'Orléans" surveyTarget=60 surveyCase=LESS_THAN_GLOBAL_TARGET
 
 Valid values for surveyName: ${existingSurveys.map((item) => item.name).join(", ")}
     `);

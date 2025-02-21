@@ -5,6 +5,7 @@ import Modal from "~/app/_components/_ui/Modal";
 import { ButtonStyle } from "~/types/enums/button";
 import useUpdateSurveyStep from "../../../hooks/useUpdateSurveyStep";
 import { type SurveyPhase } from "@prisma/client";
+import { env } from "~/env";
 
 interface RepresentativenessConfirmModal {
   nextStep: SurveyPhase;
@@ -27,7 +28,11 @@ const RepresentativenessConfirmModal: React.FC<
             {"< Retour"}
           </button>
           <button>
-            <img src="/icons/close.svg" alt="Fermer" />
+            <img
+              src="/icons/close.svg"
+              alt="Fermer"
+              onClick={() => setShowModal(false)}
+            />
           </button>
         </div>
         <div className="flex flex-col gap-3">
@@ -51,7 +56,7 @@ const RepresentativenessConfirmModal: React.FC<
             icon="/icons/arrow-right.svg"
             color="blue"
             style={ButtonStyle.FILLED}
-            href="mailto:todo@mail.com"
+            href={`mailto:${env.NEXT_PUBLIC_CONTACT_EMAIL}`}
           >
             Contacter l&apos;équipe NEAR
           </LinkAsButton>

@@ -26,9 +26,9 @@ const Modal: React.FC<ModalProps> = ({ show, onClose, children }) => {
   };
 
   useEffect(() => {
-    document.addEventListener("keydown", handleKeyPress);
+    document.addEventListener("keyup", handleKeyPress);
     return () => {
-      document.removeEventListener("keydown", handleKeyPress);
+      document.removeEventListener("keyup", handleKeyPress);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
