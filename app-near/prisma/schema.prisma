@@ -140,12 +140,13 @@ model SuAnswer {
 
 model SuData {
     id              Int      @id @default(autoincrement())
-    survey_id       Int      @unique
+    survey_id       Int      
     survey          Survey   @relation(fields: [survey_id], references: [id])
     su              Int
     pop_percentage  Float
     barycenter      Json
     @@map("su_data")
+    @@unique([survey_id, su])
 }
 
 model InseeIris2021 {
