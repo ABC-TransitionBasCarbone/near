@@ -1,11 +1,14 @@
 "use client";
 import { useState } from "react";
-import Button from "./_ui/Button";
-import {
-  type SurveyType,
-  type BroadcastType,
-} from "../../types/enums/broadcasting";
 import { env } from "~/env";
+import {
+  type BroadcastType,
+  type SurveyType,
+} from "../../../../../../types/enums/broadcasting";
+import Button from "../../../../_ui/Button";
+import QRCodeModal from "./QRCodeModal";
+import { useSession } from "next-auth/react";
+import { api } from "~/trpc/react";
 
 interface BroadcastingButtonProps {
   surveyType: SurveyType;
@@ -15,6 +18,13 @@ interface BroadcastingButtonProps {
 const BroadcastingButton: React.FC<BroadcastingButtonProps> = (
   props: BroadcastingButtonProps,
 ) => {
+  const { data: session } = useSession();
+  const { data: survey } = api.surveys.getOne.useQuery(undefined, {
+    enabled: !!session?.user?.surveyId,
+  });
+  const [copiedMessage, setCopiedMessage] = useState("");
+  const [showQRCode, setShowQRCode] = useState(false);
+
   const broadcastWordings = {
     mail_campaign: {
       title: "Enquête par email ou message",
@@ -45,16 +55,24 @@ const BroadcastingButton: React.FC<BroadcastingButtonProps> = (
     },
   };
 
-  const generateTypeformUniqueLink = async (type: BroadcastType) => {
-    const link = `${env.NEXT_PUBLIC_TYPEFORM_SU_LINK}#broadcast_channel=${
-      type
-    }&broadcast_id=${crypto.randomUUID()}`;
-    await navigator.clipboard.writeText(link);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+  const buildLink = (type: BroadcastType): string => {
+    if (survey) {
+      return `${env.NEXT_PUBLIC_TYPEFORM_SU_LINK}#broadcast_channel=${
+        type
+      }&broadcast_id=${crypto.randomUUID()}&date=${encodeURIComponent(new Date().toISOString())}&neighborhood=${encodeURI(survey.name)}`;
+    }
+    return "error";
   };
 
-  const [copied, setCopied] = useState(false);
+  const onGenerateClick = async (type: BroadcastType) => {
+    const link = buildLink(type);
+    await navigator.clipboard.writeText(link);
+    setCopiedMessage(
+      link === "error" ? "Veuillez réessayer plus tard" : "Lien copié !",
+    );
+    setShowQRCode(true);
+    setTimeout(() => setCopiedMessage(""), 4000);
+  };
 
   return (
     <div className="wrap-wrap flex flex-col justify-between space-y-4 sm:flex-row sm:space-y-0">
@@ -67,15 +85,24 @@ const BroadcastingButton: React.FC<BroadcastingButtonProps> = (
       <div className="group relative">
         <Button
           rounded
-          onClick={() => generateTypeformUniqueLink(props.broadcastType)}
+          onClick={() => onGenerateClick(props.broadcastType)}
           icon={broadcastWordings[props.broadcastType].icon}
         >
           {broadcastWordings[props.broadcastType].button}
         </Button>
-        {copied && (
-          <div className="absolute left-1/2 top-10 -translate-x-1/2 px-3 py-1 text-center text-sm text-black opacity-0 transition-opacity group-hover:opacity-100">
-            Lien Copié !
+        {copiedMessage && (
+          <div className="absolute left-1/2 -translate-x-1/2 px-3 py-1 text-center text-sm text-black opacity-0 transition-opacity group-hover:opacity-100">
+            {copiedMessage}
           </div>
+        )}
+        {props.broadcastType === "qr_code" && showQRCode && (
+          <QRCodeModal
+            onClose={() => {
+              setShowQRCode(false);
+              document.body.classList.remove("overflow-hidden");
+            }}
+            link={buildLink(props.broadcastType)}
+          ></QRCodeModal>
         )}
       </div>
     </div>

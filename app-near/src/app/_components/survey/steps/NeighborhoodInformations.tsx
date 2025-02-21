@@ -13,12 +13,11 @@ import { api } from "~/trpc/react";
 import Button from "../../_ui/Button";
 import { useSurveyStateContext } from "../../_context/surveyStateContext";
 import { surveyConfig } from "./config";
+import useUpdateSurveyStep from "../hooks/useUpdateSurveyStep";
 
 const NeighborhoodInformations: React.FC = () => {
   const { data: session } = useSession();
-  const { step, updateStep } = useSurveyStateContext();
-
-  const updateSurveyMutation = api.surveys.update.useMutation();
+  const { step } = useSurveyStateContext();
 
   const { data: neighborhood } = api.neighborhoods.getOne.useQuery(
     session?.user?.surveyId ?? 0,
@@ -27,23 +26,11 @@ const NeighborhoodInformations: React.FC = () => {
     },
   );
 
-  if (!session) {
+  const updateSurveyStep = useUpdateSurveyStep();
+
+  if (!session || step === undefined) {
     return "loading...";
   }
-
-  const updateNextPhase = async () => {
-    if (!step) return;
-
-    const nextStep = surveyConfig[step]?.nextStep;
-    if (!nextStep) return;
-
-    updateStep(nextStep);
-
-    await updateSurveyMutation.mutateAsync({
-      surveyId: session?.user?.surveyId,
-      data: { phase: nextStep },
-    });
-  };
 
   return (
     <SurveyLayout
@@ -73,7 +60,7 @@ const NeighborhoodInformations: React.FC = () => {
             icon="/icons/flash.svg"
             rounded
             style={ButtonStyle.FILLED}
-            onClick={updateNextPhase}
+            onClick={() => updateSurveyStep(surveyConfig[step]?.nextStep)}
           >
             Démarrer l&apos;enquête
           </Button>

@@ -1,5 +1,6 @@
 "use client";
 
+import { type JSX } from "react";
 import { type Step } from "~/types/Step";
 
 interface ProgressBarProps<T extends string> {
@@ -42,11 +43,11 @@ const ProgressBar = <T extends string>({
         {Object.entries<Step>(steps).map(([stepItem, stepData]) => (
           <li
             key={stepItem}
-            className="flex flex-1 items-center gap-2 text-sm after:text-xl after:text-grayLight [&:not(:last-child)]:after:content-['>']"
+            className="flex flex-1 items-center gap-x-1 text-xs after:text-xl after:text-grayLight md:gap-x-2 md:text-sm [&:last-child]:after:hidden [&:not(:last-child)]:after:content-['>']"
           >
             <button
               type="button"
-              className={`${isCurrentStep(stepItem as T) ? "bg-blue" : "bg-transparent"} flex w-fit cursor-pointer items-center gap-2 rounded-lg border-none px-3 py-1 text-left outline-none hover:ring-0 hover:ring-offset-0 focus:outline-none focus:ring-0 focus:ring-offset-0`}
+              className={`${isCurrentStep(stepItem as T) ? "bg-blue" : "bg-transparent"} flex w-fit cursor-pointer items-center gap-2 rounded-lg border-none px-2 py-1 text-left outline-none hover:ring-0 hover:ring-offset-0 focus:outline-none focus:ring-0 focus:ring-offset-0 md:px-3`}
               onClick={() => handleStepClick(stepItem as T)}
               disabled={!isActiveStep(stepItem as T)}
             >

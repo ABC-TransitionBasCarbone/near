@@ -61,6 +61,7 @@ jobs:
       - name: Test
         run: | 
           npm run test:server
+          npm run test:shared
           npm run test:components
 
       - name: Build

@@ -3,6 +3,7 @@ import { metabaseRouter } from "./routers/metabase";
 import { neighborhoodsRouter } from "./routers/neighborhoods";
 import { surveysRouter } from "./routers/surveys";
 import { suDetectionRouter } from "./routers/suDetection";
+import { answersRouter } from "./routers/answers";
 
 /**
  * This is the primary router for your server.
@@ -14,6 +15,7 @@ export const appRouter = createTRPCRouter({
   neighborhoods: neighborhoodsRouter,
   surveys: surveysRouter,
   suDetection: suDetectionRouter,
+  answers: answersRouter,
 });
 
 // export type definition of API

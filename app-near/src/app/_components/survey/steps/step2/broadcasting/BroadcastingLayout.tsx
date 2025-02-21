@@ -2,21 +2,21 @@
 
 import Link from "next/link";
 import { ButtonStyle } from "~/types/enums/button";
-import { useSurveyStateContext } from "../../../_context/surveyStateContext";
-import Button from "../../../_ui/Button";
-import LinkAsButton from "../../../_ui/LinkAsButton";
-import BroadcastingPage from "../../../BroadcastingPage";
-import SurveyLayout from "../../SurveyLayout";
-import { surveyConfig } from "../config";
-import { env } from "../../../../../env";
-import { renderIcon } from "../../../_ui/utils/renderIcon";
+import { useSurveyStateContext } from "../../../../_context/surveyStateContext";
+import Button from "../../../../_ui/Button";
+import LinkAsButton from "../../../../_ui/LinkAsButton";
+import BroadcastingPage from "./BroadcastingPage";
+import SurveyLayout from "../../../SurveyLayout";
+import { surveyConfig } from "../../config";
+import { env } from "../../../../../../env";
+import { renderIcon } from "../../../../_ui/utils/renderIcon";
 import { type Dispatch, type SetStateAction } from "react";
 
-interface BroadcastingProps {
+interface BroadcastingLayoutProps {
   setToggleBroadcastingPage: Dispatch<SetStateAction<boolean>>;
 }
 
-const Broadcasting: React.FC<BroadcastingProps> = ({
+const BroadcastingLayout: React.FC<BroadcastingLayoutProps> = ({
   setToggleBroadcastingPage,
 }) => {
   const { step, updateStep } = useSurveyStateContext();
@@ -73,4 +73,4 @@ const Broadcasting: React.FC<BroadcastingProps> = ({
   );
 };
 
-export default Broadcasting;
+export default BroadcastingLayout;

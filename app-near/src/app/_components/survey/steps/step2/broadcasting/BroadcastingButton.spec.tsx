@@ -3,11 +3,28 @@ import BroadcastingButton from "./BroadcastingButton";
 import {
   type SurveyType,
   type BroadcastType,
-} from "../../types/enums/broadcasting";
+} from "../../../../../../types/enums/broadcasting";
 
-jest.mock("../../env", () => ({
+jest.mock("../../../../../../env", () => ({
   env: {
     NEXT_PUBLIC_TYPEFORM_SU_LINK: "https://example.com",
+  },
+}));
+
+jest.mock("next-auth/react", () => ({
+  useSession: jest.fn(() => ({
+    data: { user: { firstName: "Test User" } },
+    status: "authenticated",
+  })),
+}));
+
+jest.mock("../../../../../../trpc/react", () => ({
+  api: {
+    surveys: {
+      getOne: {
+        useQuery: jest.fn().mockResolvedValue({ name: "survey_name" }),
+      },
+    },
   },
 }));
 
