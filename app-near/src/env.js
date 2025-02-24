@@ -21,6 +21,8 @@ export const env = createEnv({
     METABASE_SITE_URL: z.string().url(),
     TYPEFORM_SECRET: z.string(),
     SU_FORM_ID: z.string(),
+    API_SU_URL: z.string().url(),
+    API_SU_KEY: z.string(),
   },
 
   /**
@@ -51,6 +53,8 @@ export const env = createEnv({
     METABASE_SITE_URL: process.env.METABASE_SITE_URL,
     TYPEFORM_SECRET: process.env.TYPEFORM_SECRET,
     SU_FORM_ID: process.env.SU_FORM_ID,
+    API_SU_URL: process.env.API_SU_URL,
+    API_SU_KEY: process.env.API_SU_KEY,
     NEXT_PUBLIC_TARGET_PERCENTAGE_WARNING:
       process.env.NEXT_PUBLIC_TARGET_PERCENTAGE_WARNING,
     NEXT_PUBLIC_CONTACT_EMAIL: process.env.NEXT_PUBLIC_CONTACT_EMAIL,

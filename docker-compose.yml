@@ -21,9 +21,18 @@ services:
       - "3000:3000"
     working_dir: /app
     volumes:
-      - .:/app
+      - ./app-near:/app
     depends_on:
       - database
+
+  api-su:
+    image: python:3.13-slim
+    command: sh -c "echo 'starting api-su...'; pip install pipenv && pipenv install --deploy --ignore-pipfile && pipenv run flask run --host 0.0.0.0"
+    ports: 
+      - "5000:5000"
+    working_dir: /app
+    volumes:
+      - ./api-su:/app
 
 volumes:
   app-near-postgresql-data:
