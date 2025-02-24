@@ -43,6 +43,7 @@ export const handleAnswer = async (req: NextRequest): Promise<NextResponse> => {
     if (formId === env.SU_FORM_ID) {
       return await handleSuForm(parsedBody, answers, formId);
     }
+    return unknwonFormIdResponse(formId);
   } catch (error) {
     if (error instanceof z.ZodError) {
       console.error("[whebhook typeform]", formId, "ZOD ERROR :", error.errors);
@@ -114,6 +115,12 @@ const isValidSignature = (req: NextRequest, body: string): boolean => {
   const signature = req.headers.get("Typeform-Signature");
   return verifySignature(signature, body);
 };
+
+const unknwonFormIdResponse = (formId?: string): NextResponse =>
+  NextResponse.json(
+    { error: "Unknown formid", details: formId },
+    { status: 404 },
+  );
 
 const unauthorizedResponse = (formId?: string): NextResponse =>
   NextResponse.json(
