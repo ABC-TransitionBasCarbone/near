@@ -31,6 +31,7 @@ model Survey {
     updatedAt DateTime    @updatedAt
     phase     SurveyPhase @default(STEP_1_NEIGHBORHOOD_INFORMATION)
     sampleTarget Int? @map("sample_target")
+    thresholdReached Boolean @default(false)
     quartier Quartier?
     @@map("surveys")
     suAnswer SuAnswer[]

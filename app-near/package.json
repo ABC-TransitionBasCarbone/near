@@ -7,8 +7,9 @@
     "build": "next build",
     "prisma": "prisma",
     "test": "jest --passWithNoTests",
-    "test:components": "jest --config=jest.components.config.mjs",
-    "test:server": "NODE_OPTIONS='--experimental-vm-modules' jest --config=jest.server.config.mjs",
+    "test:components": "jest --config=jest.components.config.mjs --runInBand",
+    "test:shared": "NODE_OPTIONS='--experimental-vm-modules' jest --config=jest.shared.config.mjs --runInBand",
+    "test:server": "NODE_OPTIONS='--experimental-vm-modules' jest --config=jest.server.config.mjs --runInBand",
     "check": "next lint && tsc --noEmit",
     "db:generate": "prisma migrate dev",
     "db:migrate": "prisma migrate deploy",
@@ -53,6 +54,7 @@
     "server-only": "^0.0.1",
     "superjson": "^2.2.1",
     "tsx": "^4.19.2",
+    "weighted": "^1.0.0",
     "zod": "^3.23.3"
   },
   "devDependencies": {

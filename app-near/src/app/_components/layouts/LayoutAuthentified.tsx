@@ -19,15 +19,17 @@ const LayoutAuthentified: React.FC<LayoutAuthentifiedProps> = async ({
   }
 
   return (
-    <>
+    <div className="flex min-h-screen flex-col">
       <header>
         <SurveyHeader />
       </header>
-      <main role="main">{children}</main>
+      <main role="main" className="flex-1">
+        {children}
+      </main>
       <footer>
         <SurveyFooter />
       </footer>
-    </>
+    </div>
   );
 };
 

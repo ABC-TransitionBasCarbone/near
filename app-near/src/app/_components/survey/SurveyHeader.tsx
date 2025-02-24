@@ -1,12 +1,12 @@
 "use client";
 
-import { type SurveyStep } from "~/types/enums/surveyStep";
 import ProgressBar from "../progress-bar/Progressbar";
 import { api } from "~/trpc/react";
 import { useSession } from "next-auth/react";
 import { useEffect, useRef } from "react";
 import { useSurveyStateContext } from "../_context/surveyStateContext";
 import { surveyConfig, surveySteps } from "./steps/config";
+import { type SurveyPhase } from "@prisma/client";
 
 const SurveyHeader = () => {
   const { data: session } = useSession();
@@ -17,12 +17,12 @@ const SurveyHeader = () => {
     enabled: !!session?.user?.surveyId,
   });
 
-  const previousSurveyPhase = useRef<SurveyStep | undefined>(undefined);
+  const previousSurveyPhase = useRef<SurveyPhase | undefined>(undefined);
 
   useEffect(() => {
     if (survey && survey.phase !== previousSurveyPhase.current) {
-      updateStep(survey.phase as SurveyStep);
-      previousSurveyPhase.current = survey.phase as SurveyStep;
+      updateStep(survey.phase);
+      previousSurveyPhase.current = survey.phase;
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [survey, updateStep]);
@@ -42,11 +42,11 @@ const SurveyHeader = () => {
       </div>
       <nav className="flex-grow">
         <ProgressBar
-          isActive={surveyConfig[survey.phase as SurveyStep].isActive}
+          isActive={surveyConfig[survey.phase].isActive}
           step={step}
           setStep={updateStep}
           steps={surveySteps}
-          maxActiveStep={survey.phase as SurveyStep}
+          maxActiveStep={survey.phase}
         />
       </nav>
       <div className="hidden gap-2 sm:flex">

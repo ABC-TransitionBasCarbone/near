@@ -2,7 +2,7 @@ import { TRPCError } from "@trpc/server";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
 import { countAnswsers } from "../../su/answers/count";
 import { z } from "zod";
-import { representativeness } from "../../su/answers/representativeness";
+import representativenessService from "../../su/answers/representativeness";
 
 export const answersRouter = createTRPCRouter({
   count: protectedProcedure
@@ -20,6 +20,6 @@ export const answersRouter = createTRPCRouter({
       if (surveyId !== ctx.session.user.surveyId) {
         throw new TRPCError({ code: "FORBIDDEN" });
       }
-      return (await representativeness(surveyId))[0];
+      return (await representativenessService.representativeness(surveyId))[0];
     }),
 });

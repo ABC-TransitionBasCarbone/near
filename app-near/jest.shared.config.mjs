@@ -5,10 +5,10 @@ const createJestConfig = nextJest({
   dir: "./",
 });
 
-const customJestServerConfig = {
+const customJestSharedConfig = {
   setupFilesAfterEnv: ["<rootDir>/jest.setup.js"],
   testEnvironment: "jest-environment-node",
-  testMatch: ["**/src/server/**/*.spec.ts"],
+  testMatch: ["**/src/shared/**/*.spec.ts"],
   extensionsToTreatAsEsm: ['.ts'],
   transform: {
     "^.+\\.(ts|tsx)$": ["ts-jest", { useESM: true }], // Transpile TypeScript with ts-jest
@@ -20,4 +20,4 @@ const customJestServerConfig = {
   moduleDirectories: ['node_modules', '<rootDir>'],
 };
 
-export default createJestConfig(customJestServerConfig);
+export default createJestConfig(customJestSharedConfig);
