@@ -8,7 +8,7 @@ import {
 import { db } from "~/server/db";
 import { buildSuAnswer } from "~/server/test-utils/create-data/suAnswer";
 import { select } from "weighted";
-import { getInseeTargetsByCategories } from "~/server/neighborhoods/targets";
+import targetService from "~/server/neighborhoods/targets";
 import { TRPCError } from "@trpc/server";
 import { type CategoryStat } from "~/types/SuAnswer";
 
@@ -112,7 +112,9 @@ Valid values for surveyName: ${existingSurveys.map((item) => item.name).join(", 
 
   let answerTargetsByCategories: Partial<Record<CategoryStat, number>> = {};
   try {
-    answerTargetsByCategories = await getInseeTargetsByCategories(survey.id);
+    answerTargetsByCategories = await targetService.getInseeTargetsByCategories(
+      survey.id,
+    );
   } catch (error) {
     if (error instanceof TRPCError) {
       const existingSurveys = await db.survey.findMany({

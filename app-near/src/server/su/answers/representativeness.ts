@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/prefer-nullish-coalescing */
 import { CategoryStat, type CategoryStats } from "~/types/SuAnswer";
 import { countAnswersByCategories, countAnswsers } from "./count";
-import { getInseeTargetsByCategories } from "~/server/neighborhoods/targets";
+import targetService from "~/server/neighborhoods/targets";
 import { getOneSurvey } from "~/server/surveys/get";
 import { TRPCError } from "@trpc/server";
 
@@ -9,6 +9,7 @@ const representativeness = async (
   surveyId: number,
 ): Promise<CategoryStats | null> => {
   const survey = await getOneSurvey(surveyId);
+
   if (!survey) {
     throw new TRPCError({
       code: "NOT_FOUND",
@@ -34,7 +35,7 @@ const representativeness = async (
     "professionalCategory",
   );
 
-  const inseeStats = await getInseeTargetsByCategories(surveyId);
+  const inseeStats = await targetService.getInseeTargetsByCategories(surveyId);
 
   const result = Object.values(CategoryStat).reduce(
     (acc, value) => {

@@ -2,7 +2,7 @@ import { type CategoryStat, categoryStatQuartierMap } from "~/types/SuAnswer";
 import { db } from "../db";
 import { TRPCError } from "@trpc/server";
 
-export const getInseeTargetsByCategories = async (
+const getInseeTargetsByCategories = async (
   surveyId: number,
 ): Promise<Record<CategoryStat, number>> => {
   const neighborhood = await db.quartier.findFirst({ where: { surveyId } });
@@ -21,3 +21,7 @@ export const getInseeTargetsByCategories = async (
     {} as Record<CategoryStat, number>,
   );
 };
+
+const targetService = { getInseeTargetsByCategories };
+
+export default targetService;
