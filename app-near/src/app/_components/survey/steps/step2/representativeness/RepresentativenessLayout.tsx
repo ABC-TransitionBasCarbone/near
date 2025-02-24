@@ -62,7 +62,7 @@ const RepresentativenessLayout: React.FC<RepresentativenessLayoutProps> = ({
     Object.values(getBelowThresholdValues(categoryStats, THRESHOLD_VALUE))
       .length !== 0;
 
-  if (!survey || step === undefined) {
+  if (!survey || step === undefined || !categoryStats) {
     return "Loading...";
   }
 

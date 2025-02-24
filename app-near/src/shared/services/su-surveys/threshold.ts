@@ -1,4 +1,4 @@
-export const THRESHOLD_VALUE = -3.5;
+export const THRESHOLD_VALUE = -1.5;
 
 export const getBelowThresholdValues = <T extends string>(
   criteria: Record<T, number>,

@@ -39,12 +39,13 @@ const representativeness = async (
   const result = Object.values(CategoryStat).reduce(
     (acc, value) => {
       acc[value as CategoryStat] =
-        (suAnswersByAge[value] ||
-          suAnswersByGender[value] ||
-          suAnswerByCS[value] ||
-          0) /
-          Math.max(Number(survey.sampleTarget), suAnswersTotal) -
-        inseeStats[value];
+        100 *
+        (inseeStats[value] -
+          (suAnswersByAge[value] ||
+            suAnswersByGender[value] ||
+            suAnswerByCS[value] ||
+            0) /
+            Math.max(Number(survey.sampleTarget), suAnswersTotal));
       return acc;
     },
     {} as Record<CategoryStat, number>,
