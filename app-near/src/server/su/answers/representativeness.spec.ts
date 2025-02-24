@@ -21,6 +21,12 @@ import { TRPCError } from "@trpc/server";
 describe("representativeness", () => {
   let survey: Survey;
   const surveyName = "survey-test-representativeness";
+  beforeAll(async () => {
+    await db.$executeRawUnsafe(`CREATE OR REPLACE VIEW quartier AS
+      SELECT 
+        0 AS A,
+        0 AS B;`);
+  });
   beforeEach(async () => {
     jest.spyOn(targetService, "getInseeTargetsByCategories").mockReturnValue(
       Promise.resolve({
