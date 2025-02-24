@@ -37,7 +37,7 @@ const RepresentativenessConfirmModal: React.FC<
         </div>
         <div className="flex flex-col gap-3">
           <div className="h-auto w-12">
-            <img src="/icons/warning.svg" alt="" />
+            <img src="/icons/warning-black.svg" alt="" />
           </div>
           <p className="text-lg font-bold">Forcer la fin de l&apos;enquête ?</p>
           <p>

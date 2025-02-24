@@ -3,16 +3,16 @@ import { getBelowThresholdValues } from "./threshold";
 describe("threshold", () => {
   it("should filter values bellow threshold", () => {
     const criteria = {
-      a: 3,
-      b: 3.499,
-      c: 3.501,
+      a: -1.501,
+      b: -1.8,
+      c: -1.499,
     };
-    const threshold = 3.5;
+    const threshold = -1.5;
 
     const result = getBelowThresholdValues(criteria, threshold);
     expect(result).toEqual({
-      a: 3,
-      b: 3.499,
+      a: -1.501,
+      b: -1.8,
     });
   });
 });

@@ -1,83 +1,57 @@
-import { type CategoryStats } from "~/types/SuAnswer";
-import { db } from "../../db";
+/* eslint-disable @typescript-eslint/prefer-nullish-coalescing */
+import { CategoryStat, type CategoryStats } from "~/types/SuAnswer";
+import { countAnswersByCategories, countAnswsers } from "./count";
+import targetService from "~/server/neighborhoods/targets";
+import { getOneSurvey } from "~/server/surveys/get";
+import { TRPCError } from "@trpc/server";
 
-// TODO: refactor to use only native prisma
-// Example for INSEE_STATS /scripts/seeds/su.ts > getAnswerTargetsByCategories
 const representativeness = async (
   surveyId: number,
-): Promise<CategoryStats[]> => {
-  return await db.$queryRaw`
-    WITH
-    SURVEY_STATS AS (
-      SELECT
-        COUNT(*) FILTER (WHERE GENDER = 'MAN')::DECIMAL / NULLIF(COUNT(*), 0) AS MAN_RATIO_SURVEY,
-        COUNT(*) FILTER (WHERE GENDER = 'WOMAN')::DECIMAL / NULLIF(COUNT(*), 0) AS WOMAN_RATIO_SURVEY,
-        
-        COUNT(*) FILTER (WHERE AGE_CATEGORY = 'ABOVE_75')::DECIMAL / NULLIF(COUNT(*), 0) AS ABOVE_75_RATIO_SURVEY,
-        COUNT(*) FILTER (WHERE AGE_CATEGORY = 'FROM_60_TO_74')::DECIMAL / NULLIF(COUNT(*), 0) AS FROM_60_TO_74_RATIO_SURVEY,
-        COUNT(*) FILTER (WHERE AGE_CATEGORY = 'FROM_45_TO_59')::DECIMAL / NULLIF(COUNT(*), 0) AS FROM_45_TO_59_RATIO_SURVEY,
-        COUNT(*) FILTER (WHERE AGE_CATEGORY = 'FROM_30_TO_44')::DECIMAL / NULLIF(COUNT(*), 0) AS FROM_30_TO_44_RATIO_SURVEY,
-        COUNT(*) FILTER (WHERE AGE_CATEGORY = 'FROM_15_TO_29')::DECIMAL / NULLIF(COUNT(*), 0) AS FROM_15_TO_29_RATIO_SURVEY,
-        
-        COUNT(*) FILTER (WHERE PROFESSIONAL_CATEGORY = 'CS1')::DECIMAL / NULLIF(COUNT(*), 0) AS CS1_RATIO_SURVEY,
-        COUNT(*) FILTER (WHERE PROFESSIONAL_CATEGORY = 'CS2')::DECIMAL / NULLIF(COUNT(*), 0) AS CS2_RATIO_SURVEY,
-        COUNT(*) FILTER (WHERE PROFESSIONAL_CATEGORY = 'CS3')::DECIMAL / NULLIF(COUNT(*), 0) AS CS3_RATIO_SURVEY,
-        COUNT(*) FILTER (WHERE PROFESSIONAL_CATEGORY = 'CS4')::DECIMAL / NULLIF(COUNT(*), 0) AS CS4_RATIO_SURVEY,
-        COUNT(*) FILTER (WHERE PROFESSIONAL_CATEGORY = 'CS5')::DECIMAL / NULLIF(COUNT(*), 0) AS CS5_RATIO_SURVEY,
-        COUNT(*) FILTER (WHERE PROFESSIONAL_CATEGORY = 'CS6')::DECIMAL / NULLIF(COUNT(*), 0) AS CS6_RATIO_SURVEY,
-        COUNT(*) FILTER (WHERE PROFESSIONAL_CATEGORY = 'CS7')::DECIMAL / NULLIF(COUNT(*), 0) AS CS7_RATIO_SURVEY,
-        COUNT(*) FILTER (WHERE PROFESSIONAL_CATEGORY = 'CS8_unemployed')::DECIMAL / NULLIF(COUNT(*), 0) AS CS8_RATIO_SURVEY
-      FROM
-        PUBLIC.SU_ANSWER
-      WHERE
-        "surveyId" = ${surveyId}
-    ),
-    INSEE_STATS AS (
-    SELECT
-      (POPULATION_HOMME_SUM::DECIMAL / POPULATION_SUM) AS MAN_RATIO_INSEE,
-      (POPULATION_FEMME_SUM::DECIMAL / POPULATION_SUM) AS WOMAN_RATIO_INSEE,
+): Promise<CategoryStats | null> => {
+  const survey = await getOneSurvey(surveyId);
 
-      (p21_pop75p_sum::DECIMAL / POPULATION_SUM) AS ABOVE_75_RATIO_INSEE,
-      (p21_pop6074_sum::DECIMAL / POPULATION_SUM) AS FROM_60_TO_74_RATIO_INSEE,
-      (p21_pop4559_sum::DECIMAL / POPULATION_SUM) AS FROM_45_TO_59_RATIO_INSEE,
-      (p21_pop3044_sum::DECIMAL / POPULATION_SUM) AS FROM_30_TO_44_RATIO_INSEE,
-      (p21_pop1529_sum::DECIMAL / POPULATION_SUM) AS FROM_15_TO_29_RATIO_INSEE,
-      -- TODO: add under 15  computational diff
+  if (!survey) {
+    throw new TRPCError({
+      code: "NOT_FOUND",
+      message: `survey ${surveyId} not found`,
+    });
+  }
 
+  const suAnswersTotal = await countAnswsers(surveyId);
 
-      (c21_pop15p_cs1_sum::DECIMAL / POPULATION_SUM) AS CS1_RATIO_INSEE,
-      (c21_pop15p_cs2_sum::DECIMAL / POPULATION_SUM) AS CS2_RATIO_INSEE,
-      (c21_pop15p_cs3_sum::DECIMAL / POPULATION_SUM) AS CS3_RATIO_INSEE,
-      (c21_pop15p_cs4_sum::DECIMAL / POPULATION_SUM) AS CS4_RATIO_INSEE,
-      (c21_pop15p_cs5_sum::DECIMAL / POPULATION_SUM) AS CS5_RATIO_INSEE,
-      (c21_pop15p_cs6_sum::DECIMAL / POPULATION_SUM) AS CS6_RATIO_INSEE,
-      (c21_pop15p_cs7_sum::DECIMAL / POPULATION_SUM) AS CS7_RATIO_INSEE,
-      (c21_pop15p_cs8_sum::DECIMAL / POPULATION_SUM) AS CS8_RATIO_INSEE
-    FROM
-      QUARTIERS where survey_id = ${surveyId}
-  )
-  SELECT
-    -- *,
-    ROUND(((MAN_RATIO_INSEE - MAN_RATIO_SURVEY)*100)::numeric,2) as MAN,
-    ROUND(((WOMAN_RATIO_INSEE - WOMAN_RATIO_SURVEY)*100)::numeric,2) as WOMAN,
-    ROUND(((ABOVE_75_RATIO_INSEE - ABOVE_75_RATIO_SURVEY)*100)::numeric,2) as ABOVE_75,
-    ROUND(((FROM_60_TO_74_RATIO_INSEE - FROM_60_TO_74_RATIO_SURVEY)*100)::numeric,2) as FROM_60_TO_74,
-    ROUND(((FROM_45_TO_59_RATIO_INSEE - FROM_45_TO_59_RATIO_SURVEY)*100)::numeric,2) as FROM_45_TO_59,
-    ROUND(((FROM_30_TO_44_RATIO_INSEE - FROM_30_TO_44_RATIO_SURVEY)*100)::numeric,2) as FROM_30_TO_44,
-    ROUND(((FROM_15_TO_29_RATIO_INSEE - FROM_15_TO_29_RATIO_SURVEY)*100)::numeric,2) as FROM_15_TO_29,
-    ROUND(((CS1_RATIO_INSEE - CS1_RATIO_SURVEY)*100)::numeric,2) as CS1,
-    ROUND(((CS2_RATIO_INSEE - CS2_RATIO_SURVEY)*100)::numeric,2) as CS2,
-    ROUND(((CS3_RATIO_INSEE - CS3_RATIO_SURVEY)*100)::numeric,2) as CS3,
-    ROUND(((CS4_RATIO_INSEE - CS4_RATIO_SURVEY)*100)::numeric,2) as CS4,
-    ROUND(((CS5_RATIO_INSEE - CS5_RATIO_SURVEY)*100)::numeric,2) as CS5,
-    ROUND(((CS6_RATIO_INSEE - CS6_RATIO_SURVEY)*100)::numeric,2) as CS6,
-    ROUND(((CS7_RATIO_INSEE - CS7_RATIO_SURVEY)*100)::numeric,2) as CS7,
-    ROUND(((CS8_RATIO_INSEE - CS8_RATIO_SURVEY)*100)::numeric,2) as CS8
-    -- TODO: add under 15 computational diff
-  FROM
-    SURVEY_STATS
-    CROSS JOIN INSEE_STATS
-  `;
+  if (!suAnswersTotal) {
+    return null;
+  }
+
+  const suAnswersByAge = await countAnswersByCategories(
+    surveyId,
+    "ageCategory",
+  );
+
+  const suAnswersByGender = await countAnswersByCategories(surveyId, "gender");
+
+  const suAnswerByCS = await countAnswersByCategories(
+    surveyId,
+    "professionalCategory",
+  );
+
+  const inseeStats = await targetService.getInseeTargetsByCategories(surveyId);
+
+  const result = Object.values(CategoryStat).reduce(
+    (acc, value) => {
+      acc[value as CategoryStat] =
+        100 *
+        (inseeStats[value] -
+          (suAnswersByAge[value] ||
+            suAnswersByGender[value] ||
+            suAnswerByCS[value] ||
+            0) /
+            Math.max(Number(survey.sampleTarget), suAnswersTotal));
+      return acc;
+    },
+    {} as Record<CategoryStat, number>,
+  );
+  return result;
 };
 
 const representativenessService = { representativeness };

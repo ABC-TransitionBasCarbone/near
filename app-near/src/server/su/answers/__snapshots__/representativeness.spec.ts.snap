@@ -1,0 +1,41 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`representativeness should return representativeness when answers quantity is above sampleTarget 1`] = `
+{
+  "above_75": -78,
+  "cs1": -78,
+  "cs2": 11,
+  "cs3": 18,
+  "cs4": 15,
+  "cs5": 5,
+  "cs6": 12,
+  "cs7": 8,
+  "cs8": 9,
+  "from_15_to_29": 18,
+  "from_30_to_44": 23,
+  "from_45_to_59": 17,
+  "from_60_to_74": 20,
+  "man": -56.00000000000001,
+  "woman": 56.00000000000001,
+}
+`;
+
+exports[`representativeness should return representativeness when answers quantity is below sampleTarget 1`] = `
+{
+  "above_75": -28.000000000000004,
+  "cs1": -28.000000000000004,
+  "cs2": 11,
+  "cs3": 18,
+  "cs4": 15,
+  "cs5": 5,
+  "cs6": 12,
+  "cs7": 8,
+  "cs8": 9,
+  "from_15_to_29": 18,
+  "from_30_to_44": 23,
+  "from_45_to_59": 17,
+  "from_60_to_74": 20,
+  "man": -6,
+  "woman": 56.00000000000001,
+}
+`;

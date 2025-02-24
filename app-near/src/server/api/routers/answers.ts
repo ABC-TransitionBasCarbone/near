@@ -20,6 +20,7 @@ export const answersRouter = createTRPCRouter({
       if (surveyId !== ctx.session.user.surveyId) {
         throw new TRPCError({ code: "FORBIDDEN" });
       }
-      return (await representativenessService.representativeness(surveyId))[0];
+
+      return representativenessService.representativeness(surveyId);
     }),
 });
