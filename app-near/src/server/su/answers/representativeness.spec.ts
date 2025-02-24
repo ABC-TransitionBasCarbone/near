@@ -22,7 +22,7 @@ describe("representativeness", () => {
   let survey: Survey;
   const surveyName = "survey-test-representativeness";
   beforeAll(async () => {
-    await db.$executeRawUnsafe(`CREATE OR REPLACE VIEW quartier AS
+    await db.$executeRawUnsafe(`CREATE OR REPLACE VIEW quartiers AS
       SELECT 
         0 AS A,
         0 AS B;`);
