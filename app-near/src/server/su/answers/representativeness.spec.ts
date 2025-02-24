@@ -13,41 +13,14 @@ import {
   TransportationMode,
 } from "@prisma/client";
 import { db } from "~/server/db";
-import targetService from "~/server/neighborhoods/targets";
-import { CategoryStat } from "~/types/SuAnswer";
 import representativenessService from "./representativeness";
 import { TRPCError } from "@trpc/server";
 
 describe("representativeness", () => {
   let survey: Survey;
   const surveyName = "survey-test-representativeness";
-  beforeAll(async () => {
-    await db.$executeRawUnsafe(`CREATE OR REPLACE VIEW quartiers AS
-      SELECT 
-        0 AS A,
-        0 AS B;`);
-  });
-  beforeEach(async () => {
-    jest.spyOn(targetService, "getInseeTargetsByCategories").mockReturnValue(
-      Promise.resolve({
-        [CategoryStat.cs1]: 0.22,
-        [CategoryStat.cs2]: 0.11,
-        [CategoryStat.cs3]: 0.18,
-        [CategoryStat.cs4]: 0.15,
-        [CategoryStat.cs5]: 0.05,
-        [CategoryStat.cs6]: 0.12,
-        [CategoryStat.cs7]: 0.08,
-        [CategoryStat.cs8]: 0.09,
-        [CategoryStat.above_75]: 0.22,
-        [CategoryStat.from_15_to_29]: 0.18,
-        [CategoryStat.from_30_to_44]: 0.23,
-        [CategoryStat.from_45_to_59]: 0.17,
-        [CategoryStat.from_60_to_74]: 0.2,
-        [CategoryStat.man]: 0.44,
-        [CategoryStat.woman]: 0.56,
-      }),
-    );
 
+  beforeEach(async () => {
     await db.suAnswer.deleteMany().catch(() => null);
     await db.survey.delete({ where: { name: surveyName } }).catch(() => null);
     survey = await db.survey.create({
@@ -57,10 +30,31 @@ describe("representativeness", () => {
         sampleTarget: 2,
       },
     });
-  });
-
-  afterEach(() => {
-    jest.restoreAllMocks();
+    await db.$executeRawUnsafe(`CREATE OR REPLACE VIEW quartiers AS
+      SELECT 
+        ${survey.id} AS survey_id,
+        ARRAY['75014', '75015', '75016']::text[] AS iris_selectors,
+        1000 AS population_sum,
+        180 AS p21_pop1529_sum,
+        230 AS p21_pop3044_sum,
+        170 AS p21_pop4559_sum,
+        200 AS p21_pop6074_sum,
+        220 AS p21_pop75p_sum,
+        220 AS c21_pop15p_cs1_sum,
+        110 AS c21_pop15p_cs2_sum,
+        180 AS c21_pop15p_cs3_sum,
+        150 AS c21_pop15p_cs4_sum,
+        50 AS c21_pop15p_cs5_sum,
+        120 AS c21_pop15p_cs6_sum,
+        80 AS c21_pop15p_cs7_sum,
+        90 AS c21_pop15p_cs8_sum,
+        560 AS population_femme_sum,
+        440 AS population_homme_sum,
+        0 AS population_sum_threshold_3p,
+        0 AS population_sum_threshold_4p,
+        0 AS population_sum_threshold_4_5p,
+        0 AS population_sum_threshold_5p
+        ;`);
   });
 
   it("should return null when no answer is available", async () => {
