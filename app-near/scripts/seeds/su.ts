@@ -9,40 +9,14 @@ import { db } from "~/server/db";
 import { buildSuAnswer } from "~/server/test-utils/create-data/suAnswer";
 import { select } from "weighted";
 import { getInseeTargetsByCategories } from "~/server/neighborhoods/targets";
-import { type CategoryStat, categoryStatQuartierMap } from "~/types/SuAnswer";
+import { TRPCError } from "@trpc/server";
+import { type CategoryStat } from "~/types/SuAnswer";
 
 export enum SurveyCase {
   LESS_THAN_GLOBAL_TARGET = "LESS_THAN_GLOBAL_TARGET",
   MORE_THAN_GLOBAL_TARGET = "MORE_THAN_GLOBAL_TARGET",
   MORE_THAN_CATEGORIES_TARGETS = "MORE_THAN_CATEGORIES_TARGETS",
 }
-
-const getAnswerTargetsByCategories = async (
-  surveyId: number,
-): Promise<Record<CategoryStat, number>> => {
-  const neighborhood = await db.quartier.findFirst({ where: { surveyId } });
-  if (!neighborhood) {
-    const existingSurveys = await db.survey.findMany({
-      select: { name: true },
-    });
-
-    throw new Error(`
-survey not found. 
-
-Usage: npm run seed -- scope=su_answer surveyName="Porte d'Orléans" surveyTarget=60 surveyCase=LESS_THAN_GLOBAL_TARGET
-
-Valid values for surveyName: ${existingSurveys.map((item) => item.name).join(", ")}
-`);
-  }
-  return Object.entries(categoryStatQuartierMap).reduce(
-    (acc, [categoryStat, dbcolumn]) => {
-      acc[categoryStat as CategoryStat] =
-        Number(neighborhood[dbcolumn]) / (neighborhood?.population_sum || 1);
-      return acc;
-    },
-    {} as Record<CategoryStat, number>,
-  );
-};
 
 const getAnswerQuantity = (
   surveyCase: SurveyCase,
@@ -136,9 +110,24 @@ Valid values for surveyName: ${existingSurveys.map((item) => item.name).join(", 
     where: { surveyId: survey.id },
   });
 
-  const answerTargetsByCategories = await getInseeTargetsByCategories(
-    survey.id,
-  );
+  let answerTargetsByCategories: Partial<Record<CategoryStat, number>> = {};
+  try {
+    answerTargetsByCategories = await getInseeTargetsByCategories(survey.id);
+  } catch (error) {
+    if (error instanceof TRPCError) {
+      const existingSurveys = await db.survey.findMany({
+        select: { name: true },
+      });
+      throw new Error(`
+      survey not found. 
+      
+      Usage: npm run seed -- scope=su_answer surveyName=14e_arr surveyTarget=60 surveyCase=LESS_THAN_TARGET
+      
+      Valid values for surveyName: ${existingSurveys.map((item) => item.name).join(", ")}
+      `);
+    }
+    throw Error("unexpected error");
+  }
   const answerQuantity = getAnswerQuantity(surveyCase, surveyTarget);
 
   for (let index = 0; index < answerQuantity; index++) {

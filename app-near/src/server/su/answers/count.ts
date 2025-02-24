@@ -10,7 +10,6 @@ const convertEnumToInseeKeys: Record<
   AgeCategory | Gender | ProfessionalCategory,
   CategoryStat | undefined
 > = {
-  [AgeCategory.UNDER_15]: undefined,
   [AgeCategory.ABOVE_75]: CategoryStat.above_75,
   [AgeCategory.FROM_15_TO_29]: CategoryStat.from_15_to_29,
   [AgeCategory.FROM_30_TO_44]: CategoryStat.from_30_to_44,
@@ -18,7 +17,7 @@ const convertEnumToInseeKeys: Record<
   [AgeCategory.FROM_60_TO_74]: CategoryStat.from_60_to_74,
   [Gender.MAN]: CategoryStat.man,
   [Gender.WOMAN]: CategoryStat.woman,
-  [Gender.OTHER]: undefined, // insee has no target -> probably ok
+  [Gender.OTHER]: undefined, // Insee has no target. Could be an issue to reach the target if we collect a lot of other genders
   [ProfessionalCategory.CS1]: CategoryStat.cs1,
   [ProfessionalCategory.CS2]: CategoryStat.cs2,
   [ProfessionalCategory.CS3]: CategoryStat.cs3,
