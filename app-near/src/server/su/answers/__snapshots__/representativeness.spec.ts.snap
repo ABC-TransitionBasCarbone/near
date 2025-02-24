@@ -20,7 +20,7 @@ exports[`representativeness should return representativeness when answers quanti
 }
 `;
 
-exports[`representativeness should return representativeness when answers quantity is bellow sampleTarget 1`] = `
+exports[`representativeness should return representativeness when answers quantity is below sampleTarget 1`] = `
 {
   "above_75": -28.000000000000004,
   "cs1": -28.000000000000004,

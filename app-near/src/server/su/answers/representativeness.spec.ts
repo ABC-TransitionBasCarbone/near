@@ -30,7 +30,7 @@ describe("representativeness", () => {
         sampleTarget: 2,
       },
     });
-    await db.$queryRaw`CREATE OR REPLACE VIEW quartiers AS
+    await db.$queryRawUnsafe(`CREATE OR REPLACE VIEW quartiers AS
       SELECT 
         ${survey.id} AS survey_id,
         ARRAY['75014', '75015', '75016']::text[] AS iris_selectors,
@@ -54,7 +54,7 @@ describe("representativeness", () => {
         0 AS population_sum_threshold_4p,
         0 AS population_sum_threshold_4_5p,
         0 AS population_sum_threshold_5p
-        ;`;
+        ;`);
   });
 
   it("should return null when no answer is available", async () => {
