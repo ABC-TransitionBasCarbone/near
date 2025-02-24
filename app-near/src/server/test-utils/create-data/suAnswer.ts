@@ -19,7 +19,6 @@ export const buildSuAnswer = (
   surveyId: number,
   data?: Partial<SuAnswer>,
 ): BuilderSuAnswer => ({
-  isNeighborhoodResident: faker.datatype.boolean(),
   ageCategory: faker.helpers.arrayElement(Object.values(AgeCategory)),
   airTravelFrequency: faker.helpers.arrayElement(
     Object.values(AirTravelFrequency),
