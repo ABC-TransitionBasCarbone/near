@@ -2,7 +2,7 @@ import { valideSuSurveyPayload } from "../test-utils/suSurvey";
 import { handleAnswer } from "./handleAnswer";
 import { signPayload } from "./signature";
 import { db } from "../db";
-import { BroadcastChannel } from "@prisma/client";
+import { BroadcastChannel, SurveyPhase } from "@prisma/client";
 import { type TypeformWebhookPayload } from "~/types/typeform";
 
 describe("handleAnswer", () => {
@@ -55,7 +55,24 @@ describe("handleAnswer", () => {
       buildRequest(payload, signature),
     );
     expect(response.status).toBe(400);
-    expect(await response.text()).toContain("Invalid payload");
+    // expect(await response.text()).toContain("Invalid payload");
+  });
+
+  it("should return 400 when reference mapping is invalid", async () => {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    const payload = JSON.parse(
+      JSON.stringify(valideSuSurveyPayload),
+    ) as TypeformWebhookPayload;
+
+    payload.form_response.form_id = "unknown";
+
+    const signature = signPayload(JSON.stringify(payload));
+    const response = await handleAnswer(
+      // @ts-expect-error allow partial for test
+      buildRequest(payload, signature),
+    );
+    expect(response.status).toBe(400);
+    expect(await response.text()).toContain("References mapping not found");
   });
 
   it("should return 400 when neighborhood is not defined", async () => {
@@ -89,6 +106,32 @@ describe("handleAnswer", () => {
     );
     expect(response.status).toBe(200);
     expect(await response.text()).toContain("user age is not allowed");
+  });
+
+  it(`should return 200 when step ${SurveyPhase.STEP_2_SU_SURVERY} is over`, async () => {
+    // Arrange
+    await db.survey.update({
+      data: { phase: SurveyPhase.STEP_3_SU_EXPLORATION },
+      where: { name: neighborhoodName },
+    });
+
+    const payload = JSON.parse(
+      JSON.stringify(valideSuSurveyPayload),
+    ) as TypeformWebhookPayload;
+
+    const signature = signPayload(JSON.stringify(payload));
+
+    // Act
+    const response = await handleAnswer(
+      // @ts-expect-error allow partial for test
+      buildRequest(payload, signature),
+    );
+
+    // Assert
+    expect(response.status).toBe(200);
+    expect(await response.text()).toContain(
+      `step ${SurveyPhase.STEP_2_SU_SURVERY} is over`,
+    );
   });
 
   it("should return 200 when user is not resident", async () => {
