@@ -23,14 +23,21 @@ const RepresentativenessStats: React.FC<RepresentativenessStats> = ({
   }
 
   return (
-    <div className="m-auto mt-10 px-5">
-      {Object.entries(filteredData).map(([key, value]) => (
-        <p key={key}>
-          Vous avez interrogé trop&nbsp;
-          {CategoryLabels[key as keyof typeof CategoryLabels]} (
-          {Math.abs(value)}% en plus par rapport aux chiffres de l&apos;INSEE)
-        </p>
-      ))}
+    <div className="m-auto mt-10 flex w-fit flex-col gap-4 rounded-lg bg-brownLight p-5">
+      <div className="mx-auto h-auto w-7">
+        <img src="/icons/warning-orange.svg" alt="" />
+      </div>
+      <div>
+        Vous avez interrogé suffisamment des catégories ci-dessous, attention à
+        ne pas en interroger d’avantage :
+        <ul className="mt-3 list-inside list-disc">
+          {Object.entries(filteredData).map(([key]) => (
+            <li key={key}>
+              {CategoryLabels[key as keyof typeof CategoryLabels]}
+            </li>
+          ))}
+        </ul>
+      </div>
     </div>
   );
 };

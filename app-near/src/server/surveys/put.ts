@@ -32,7 +32,7 @@ const enrichWithThresholdReached = async (
   step: SurveyPhase,
 ): Promise<Partial<Survey>> => {
   if (step === SurveyPhase.STEP_3_SU_EXPLORATION) {
-    const [representativenessData] =
+    const representativenessData =
       await representativenessService.representativeness(surveyId);
 
     return representativenessData &&
