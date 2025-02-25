@@ -9,6 +9,7 @@ describe("handleAnswer", () => {
   const neighborhoodName = "neighborhood_test";
   beforeEach(async () => {
     await db.suAnswer.deleteMany();
+    await db.suData.deleteMany();
     await db.survey.deleteMany();
     await db.survey.create({
       data: { name: neighborhoodName },

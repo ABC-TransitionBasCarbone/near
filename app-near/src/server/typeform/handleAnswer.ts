@@ -12,7 +12,7 @@ import {
   type TypeformWebhookPayload,
   TypeformWebhookSchema,
 } from "~/types/typeform";
-import { createSu } from "../su/create";
+import { createSu } from "../su/answers/create";
 import { getOneSurveyByName } from "../surveys/get";
 import { getReferencesMapping } from "../surveys/references";
 import { convertFormToAnswer } from "./convert";

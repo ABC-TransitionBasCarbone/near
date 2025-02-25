@@ -35,6 +35,8 @@ model Survey {
     quartier Quartier?
     @@map("surveys")
     suAnswer SuAnswer[]
+    suData   SuData[]
+    computedSu  Boolean @default(false)
 }
 
 enum AgeCategory {
@@ -127,11 +129,22 @@ model SuAnswer {
   heatSource                  HeatSource            @map("heat_source")
   email                       String?               @unique
   broadcastChannel            BroadcastChannel      @map("broadcast_channel")
-  userSu                      String?               @map("user_su")
-  userDistanceToSuBarycentre  Float?                @map("user_distance_to_su_barycentre")
+  su                          Int?                  @map("su")
+  distanceToBarycenter        Float?                @map("distance_to_barycenter")
   surveyId                    Int
   survey                      Survey                @relation(fields: [surveyId], references: [id])
   @@map("su_answer")
+}
+
+model SuData {
+    id              Int      @id @default(autoincrement())
+    survey_id       Int      
+    survey          Survey   @relation(fields: [survey_id], references: [id])
+    su              Int
+    pop_percentage  Float
+    barycenter      Json
+    @@map("su_data")
+    @@unique([survey_id, su])
 }
 
 model InseeIris2021 {

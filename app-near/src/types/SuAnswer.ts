@@ -33,9 +33,9 @@ export type ConvertedSuAnswer = z.infer<typeof convertedSuAnswer>;
 
 export type BuilderSuAnswer = Omit<
   SuAnswer,
-  "id" | "userSu" | "userDistanceToSuBarycentre"
+  "id" | "su" | "distanceToBarycenter"
 > &
-  Partial<Pick<SuAnswer, "id" | "userSu" | "userDistanceToSuBarycentre">>;
+  Partial<Pick<SuAnswer, "id" | "su" | "distanceToBarycenter">>;
 
 export enum CategoryStat {
   man = "man",
