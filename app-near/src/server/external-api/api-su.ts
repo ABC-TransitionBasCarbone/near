@@ -34,13 +34,13 @@ export const computeSus = async (
     });
 
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    const snakecaseData = await response.json();
+    const snakecaseComputedSu = await response.json();
 
     if (!response.ok) {
       console.error(
         "Error when calling API SU compute:",
         response.status,
-        snakecaseData,
+        snakecaseComputedSu,
       );
       throw new TRPCError({
         code: "BAD_REQUEST",
@@ -48,11 +48,11 @@ export const computeSus = async (
       });
     }
 
-    const data = camelcaseKeys(snakecaseData, {
+    const camelCaseComputedSu = camelcaseKeys(snakecaseComputedSu, {
       deep: true,
     }) as SuComputationData;
 
-    return data;
+    return camelCaseComputedSu;
   } catch (error) {
     console.error("Error calling API SU compute:", error);
     if (error instanceof TypeError) {
