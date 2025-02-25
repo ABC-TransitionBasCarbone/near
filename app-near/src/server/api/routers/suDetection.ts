@@ -7,6 +7,7 @@ import { TRPCError } from "@trpc/server";
 import { updateAfterSUDetection } from "~/server/su/answers/update";
 import { saveSuData } from "~/server/su/data/save";
 import { updateSurvey } from "~/server/surveys/put";
+import { db } from "~/server/db";
 
 export const suDetectionRouter = createTRPCRouter({
   run: protectedProcedure.mutation(async ({ ctx }) => {
@@ -22,12 +23,14 @@ export const suDetectionRouter = createTRPCRouter({
 
     const response = await computeSus(request);
 
-    const suNames = await saveSuData(surveyId, response.computedSus);
+    return await db.$transaction(async () => {
+      const suNames = await saveSuData(surveyId, response.computedSus);
 
-    await updateAfterSUDetection(response.answerAttributedSu);
+      await updateAfterSUDetection(response.answerAttributedSu);
 
-    await updateSurvey(surveyId, { computedSu: true });
+      await updateSurvey(surveyId, { computedSu: true });
 
-    return suNames;
+      return suNames;
+    });
   }),
 });
