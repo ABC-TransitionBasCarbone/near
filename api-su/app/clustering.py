@@ -5,12 +5,12 @@ from . import constants
 
 
 class DataIndex(IntEnum):
-    FOOD = 0
-    MOBILITY = 1
-    DIGITAL = 2
-    PURCHASE = 3
-    PLANE = 4
-    HOME = 5
+    MEET_FREQUENCY = 0
+    TRANSPORTATION_MODE = 1
+    DIGITAL_INTENSITY = 2
+    PURCHASING_STRATEGY = 3
+    AIR_TRAVEL_FREQUENCY = 4
+    HEAT_SOURCE = 5
 
 
 def convert_to_vector_co2eq(user_data):
@@ -19,18 +19,18 @@ def convert_to_vector_co2eq(user_data):
     # value 1 matches element with index 0 of ratio array
     # value 2 matches element with index 1 of ratio array
     # etc.
-    result[DataIndex.FOOD.value] = constants.RATIO_FOOD[user_data.get("food") - 1]
-    result[DataIndex.MOBILITY.value] = constants.RATIO_MOBILITY[
-        user_data.get("mobility") - 1
+    result[DataIndex.MEET_FREQUENCY.value] = constants.RATIO_MEET_FREQUENCY[user_data.get("meat_frequency") - 1]
+    result[DataIndex.TRANSPORTATION_MODE.value] = constants.RATIO_TRANSPORTATION_MODE[
+        user_data.get("transportation_mode") - 1
     ]
-    result[DataIndex.DIGITAL.value] = constants.RATIO_DIGITAL[
-        user_data.get("digital") - 1
+    result[DataIndex.DIGITAL_INTENSITY.value] = constants.RATIO_DIGITAL_INTENSITY[
+        user_data.get("digital_intensity") - 1
     ]
-    result[DataIndex.PURCHASE.value] = constants.RATIO_PURCHASE[
-        user_data.get("purchase") - 1
+    result[DataIndex.PURCHASING_STRATEGY.value] = constants.RATIO_PURCHASING_STRATEGY[
+        user_data.get("purchasing_strategy") - 1
     ]
-    result[DataIndex.PLANE.value] = constants.RATIO_PLANE[user_data.get("plane") - 1]
-    result[DataIndex.HOME.value] = constants.RATIO_HOME[user_data.get("home") - 1]
+    result[DataIndex.AIR_TRAVEL_FREQUENCY.value] = constants.RATIO_AIR_TRAVEL_FREQUENCY[user_data.get("air_travel_frequency") - 1]
+    result[DataIndex.HEAT_SOURCE.value] = constants.RATIO_HEAT_SOURCE[user_data.get("heat_source") - 1]
     return result
 
 
@@ -146,7 +146,7 @@ def h_clustering(data, floor, top, min_count, distance=distance_euclidean):
     while len(clusters) > min_count and lowest_weight < floor and highest_weight < top:
         closest_pairs = [[0, 1]]
         lowest_distance = distance(clusters[0].vector, clusters[1].vector)
-        
+
         for i in range(len(clusters)):
             for j in range(i + 1, len(clusters)):
                 d = distance(clusters[i].vector, clusters[j].vector)
@@ -168,18 +168,18 @@ def h_clustering(data, floor, top, min_count, distance=distance_euclidean):
     return clusters, sample_size
 
 
-def get_user_attributed_su(user_data, clusters):
+def get_answer_attributed_su(user_data, clusters):
     su, distance = get_closest_cluster(clusters, convert_to_vector_co2eq(user_data))
     return {
-        "user_id": user_data.get("user_id"),
-        "su": su,
+        "id": user_data.get("id"),
+        "su": su + 1,
         "distance_to_barycenter": distance,
     }
 
 
-def format_computed_su(cluster, sample_size):
+def format_computed_su(cluster, i, sample_size):
     return {
-        "su": cluster.index,
+        "su": i + 1,
         "pop_percentage": round((cluster.weight / sample_size) * 100, 2),
         "barycenter": cluster.vector,
     }
@@ -195,9 +195,10 @@ def run(users_data):
     )
     return {
         "computed_sus": [
-            format_computed_su(cluster, sample_size) for cluster in clusters
+            format_computed_su(cluster, i, sample_size)
+            for i, cluster in enumerate(clusters)
         ],
-        "user_attributed_su": [
-            get_user_attributed_su(user_data, clusters) for user_data in users_data
+        "answer_attributed_su": [
+            get_answer_attributed_su(user_data, clusters) for user_data in users_data
         ],
     }

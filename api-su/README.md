@@ -1,6 +1,16 @@
 # API SU
 
-## Installation
+## Lancement dans container docker (recommandé)
+
+Si vous n'avez pas besoin de développer sur l'API et souhaitez simplement la lancer, à partir de la racine de ce repository :
+
+```sh
+docker compose up -d
+```
+
+Cela lance en local, l'app near, l'api su et une base de données.
+
+## Lancement en local (usage avancé)
 
 * Installer [pyenv](https://github.com/pyenv/pyenv?tab=readme-ov-file#installation)
 Cela permet de gérer plusieurs versions de Python et utilise la version dans `.python-version` sur le projet.
@@ -13,17 +23,15 @@ Sinon, installer python 3.13 : `pyenv install 3.13`.
 Penser à configurer l'interpréteur python de votre IDE.
 
 * Définir les variables d'environnement : `cp .env.example .env`
-* Charger l'environnement virtuel : `pipenv shell`
-* Installer le precommit hook : `pre-commit install`
+* Installer le precommit hook : `pipenv run pre-commit install`
 
-## Lancement en local
-
-* S'assurer que l'environnement virtuel est chargé ou exécuter `pipenv shell`
-* Lancer l'application : `flask run`
+* Lancer l'application : `pipenv run flask run`
 * Lancer en mode debug : ajouter `--debug`
 * Lancer les tests : `pipenv run test`
 * Lancer le lint du code : `pipenv run lint`
 * Formatter le code : `pipenv run format`
+
+Pour ne pas avoir à spécifier `pipenv run` devant chaque commande, vous pouvez charger l'environnement virtuel avec `pipenv shell`
 
 ## Déploiement en production
 

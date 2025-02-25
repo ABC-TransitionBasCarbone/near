@@ -8,7 +8,7 @@ import { TRPCError } from "@trpc/server";
 export const sendUsersSu = async (
   surveyId: number,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-): Promise<PromiseSettledResult<AxiosResponse<any, any> | undefined>[]> => {
+): Promise<PromiseSettledResult<string | AxiosResponse<any, any>>[]> => {
   const survey = await db.survey.findFirst({ where: { id: surveyId } });
 
   if (!survey || survey.phase !== SurveyPhase.STEP_3_SU_EXPLORATION) {
@@ -18,17 +18,16 @@ export const sendUsersSu = async (
     });
   }
 
-  // waiting NEAR-57
-  // if (!survey.computedSurvey) {
-  //   throw new TRPCError({
-  //     code: "FORBIDDEN",
-  //     message: "surveys are not computed",
-  //   });
-  // }
+  if (!survey.computedSu) {
+    throw new TRPCError({
+      code: "FORBIDDEN",
+      message: "surveys are not computed",
+    });
+  }
 
   const answers = await db.suAnswer.findMany({
     where: { surveyId },
-    select: { id: true, email: true, userSu: true },
+    select: { id: true, email: true, su: true },
   }); // warning potential memory issue ?
 
   const results = await Promise.allSettled(
@@ -37,7 +36,7 @@ export const sendUsersSu = async (
         return Promise.reject(
           new Error(`Missing email for answer_su with id: ${answer.id}`),
         );
-      if (!answer.userSu)
+      if (!answer.su?.su)
         return Promise.reject(
           new Error(`Missing SU for answer_su with id: ${answer.id}`),
         );
@@ -45,7 +44,7 @@ export const sendUsersSu = async (
       return EmailService.sendEmail({
         templateId: TemplateId.SU_RESULT,
         to: [{ email: answer.email }],
-        params: { suName: answer.userSu },
+        params: { suName: `${answer.su.su}` },
       });
     }),
   );

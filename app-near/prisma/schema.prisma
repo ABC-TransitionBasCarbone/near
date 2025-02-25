@@ -2,42 +2,45 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-    provider = "prisma-client-js"
-    previewFeatures = ["views"]
-    binaryTargets = ["native", "debian-openssl-3.0.x", "rhel-openssl-1.1.x"]
+  provider        = "prisma-client-js"
+  previewFeatures = ["views"]
+  binaryTargets   = ["native", "debian-openssl-3.0.x", "rhel-openssl-1.1.x"]
 }
 
 datasource db {
-    provider = "postgresql"
-    // NOTE: When using mysql or sqlserver, uncomment the @db.Text annotations in model Account below
-    // Further reading:
-    // https://next-auth.js.org/adapters/prisma#create-the-prisma-schema
-    // https://www.prisma.io/docs/reference/api-reference/prisma-schema-reference#string
-    url      = env("DATABASE_URL")
+  provider = "postgresql"
+  // NOTE: When using mysql or sqlserver, uncomment the @db.Text annotations in model Account below
+  // Further reading:
+  // https://next-auth.js.org/adapters/prisma#create-the-prisma-schema
+  // https://www.prisma.io/docs/reference/api-reference/prisma-schema-reference#string
+  url      = env("DATABASE_URL")
 }
 
 enum SurveyPhase {
-    STEP_1_NEIGHBORHOOD_INFORMATION
-    STEP_2_SU_SURVERY
-    STEP_3_SU_EXPLORATION
-    STEP_4_ADDITIONAL_SURVEY
-    STEP_5_RESULTS
+  STEP_1_NEIGHBORHOOD_INFORMATION
+  STEP_2_SU_SURVERY
+  STEP_3_SU_EXPLORATION
+  STEP_4_ADDITIONAL_SURVEY
+  STEP_5_RESULTS
 }
 
 model Survey {
-    id        Int         @id @default(autoincrement())
-    name      String      @unique
-    createdAt DateTime    @default(now())
-    updatedAt DateTime    @updatedAt
-    phase     SurveyPhase @default(STEP_1_NEIGHBORHOOD_INFORMATION)
-    sampleTarget Int? @map("sample_target")
-    quartier Quartier?
-    @@map("surveys")
-    suAnswer SuAnswer[]
+  id               Int         @id @default(autoincrement())
+  name             String      @unique
+  createdAt        DateTime    @default(now())
+  updatedAt        DateTime    @updatedAt
+  phase            SurveyPhase @default(STEP_1_NEIGHBORHOOD_INFORMATION)
+  sampleTarget     Int?        @map("sample_target")
+  thresholdReached Boolean     @default(false)
+  quartier         Quartier?
+  suAnswer         SuAnswer[]
+  suData           SuData[]
+  computedSu       Boolean     @default(false)
+
+  @@map("surveys")
 }
 
 enum AgeCategory {
-  UNDER_15
   FROM_15_TO_29
   FROM_30_TO_44
   FROM_45_TO_59
@@ -110,134 +113,151 @@ enum BroadcastChannel {
   social_network
   qr_code
   street_survey
-	@@map("BroadcastChanel")
+
+  @@map("BroadcastChanel")
 }
 
 model SuAnswer {
-  id                          Int                   @id @default(autoincrement())
-  isNeighborhoodResident      Boolean               @map("is_neighborhood_resident")        
-  ageCategory                 AgeCategory           @map("age_category")
-  gender                      Gender                
-  professionalCategory        ProfessionalCategory  @map("professional_category")
-  easyHealthAccess            EasyHealthAccess      @map("easy_healt_access")
-  meatFrequency               MeatFrequency         @map("meat_frequency")
-  transportationMode          TransportationMode    @map("transportation_mode")
-  digitalIntensity            DigitalIntensity      @map("digital_intensity")
-  purchasingStrategy          PurchasingStrategy    @map("purchasing_strategy")
-  airTravelFrequency          AirTravelFrequency    @map("air_travel_frequency")
-  heatSource                  HeatSource            @map("heat_source")
-  email                       String?               @unique
-  broadcastChannel            BroadcastChannel      @map("broadcast_channel")
-  userSu                      String?               @map("user_su")
-  userDistanceToSuBarycentre  Float?                @map("user_distance_to_su_barycentre")
-  surveyId                    Int
-  survey                      Survey                @relation(fields: [surveyId], references: [id])
+  id                   Int                  @id @default(autoincrement())
+  ageCategory          AgeCategory          @map("age_category")
+  gender               Gender
+  professionalCategory ProfessionalCategory @map("professional_category")
+  easyHealthAccess     EasyHealthAccess     @map("easy_healt_access")
+  meatFrequency        MeatFrequency        @map("meat_frequency")
+  transportationMode   TransportationMode   @map("transportation_mode")
+  digitalIntensity     DigitalIntensity     @map("digital_intensity")
+  purchasingStrategy   PurchasingStrategy   @map("purchasing_strategy")
+  airTravelFrequency   AirTravelFrequency   @map("air_travel_frequency")
+  heatSource           HeatSource           @map("heat_source")
+  email                String?              @unique
+  broadcastChannel     BroadcastChannel     @map("broadcast_channel")
+  suId                 Int?                 @map("su_id")
+  su                   SuData?              @relation(fields: [suId], references: [id])
+  distanceToBarycenter Float?               @map("distance_to_barycenter")
+  surveyId             Int
+  survey               Survey               @relation(fields: [surveyId], references: [id])
+
   @@map("su_answer")
 }
 
+model SuData {
+  id            Int        @id @default(autoincrement())
+  surveyId      Int        @map("survey_id")
+  survey        Survey     @relation(fields: [surveyId], references: [id])
+  su            Int
+  popPercentage Float      @map("pop_percentage")
+  barycenter    Json
+  SuAnswer      SuAnswer[]
+
+  @@unique([surveyId, su])
+  @@map("su_data")
+}
+
 model InseeIris2021 {
-  iris               String     @db.VarChar(255) @unique
-  com                String     @db.VarChar(255)
-  typ_iris           String     @db.VarChar(255)
-  lab_iris           String     @db.VarChar(255)
-  p21_pop            Float?
-  p21_pop0002        Float?
-  p21_pop0305        Float?
-  p21_pop0610        Float?
-  p21_pop1117        Float?
-  p21_pop1824        Float?
-  p21_pop2539        Float?
-  p21_pop4054        Float?
-  p21_pop5564        Float?
-  p21_pop6579        Float?
-  p21_pop80p         Float?
-  p21_pop0014        Float?
-  p21_pop1529        Float?
-  p21_pop3044        Float?
-  p21_pop4559        Float?
-  p21_pop6074        Float?
-  p21_pop75p         Float?
-  p21_pop0019        Float?
-  p21_pop2064        Float?
-  p21_pop65p         Float?
-  p21_poph           Float?
-  p21_h0014          Float?
-  p21_h1529          Float?
-  p21_h3044          Float?
-  p21_h4559          Float?
-  p21_h6074          Float?
-  p21_h75p           Float?
-  p21_h0019          Float?
-  p21_h2064          Float?
-  p21_h65p           Float?
-  p21_popf           Float?
-  p21_f0014          Float?
-  p21_f1529          Float?
-  p21_f3044          Float?
-  p21_f4559          Float?
-  p21_f6074          Float?
-  p21_f75p           Float?
-  p21_f0019          Float?
-  p21_f2064          Float?
-  p21_f65p           Float?
-  c21_pop15p         Float?
-  c21_pop15p_cs1     Float?
-  c21_pop15p_cs2     Float?
-  c21_pop15p_cs3     Float?
-  c21_pop15p_cs4     Float?
-  c21_pop15p_cs5     Float?
-  c21_pop15p_cs6     Float?
-  c21_pop15p_cs7     Float?
-  c21_pop15p_cs8     Float?
-  c21_h15p           Float?
-  c21_h15p_cs1       Float?
-  c21_h15p_cs2       Float?
-  c21_h15p_cs3       Float?
-  c21_h15p_cs4       Float?
-  c21_h15p_cs5       Float?
-  c21_h15p_cs6       Float?
-  c21_h15p_cs7       Float?
-  c21_h15p_cs8       Float?
-  c21_f15p           Float?
-  c21_f15p_cs1       Float?
-  c21_f15p_cs2       Float?
-  c21_f15p_cs3       Float?
-  c21_f15p_cs4       Float?
-  c21_f15p_cs5       Float?
-  c21_f15p_cs6       Float?
-  c21_f15p_cs7       Float?
-  c21_f15p_cs8       Float?
-  p21_pop_fr         Float?
-  p21_pop_etr        Float?
-  p21_pop_imm        Float?
-  p21_pmen           Float?
-  p21_phormen        Float?
+  iris           String @unique @db.VarChar(255)
+  com            String @db.VarChar(255)
+  typ_iris       String @db.VarChar(255)
+  lab_iris       String @db.VarChar(255)
+  p21_pop        Float?
+  p21_pop0002    Float?
+  p21_pop0305    Float?
+  p21_pop0610    Float?
+  p21_pop1117    Float?
+  p21_pop1824    Float?
+  p21_pop2539    Float?
+  p21_pop4054    Float?
+  p21_pop5564    Float?
+  p21_pop6579    Float?
+  p21_pop80p     Float?
+  p21_pop0014    Float?
+  p21_pop1529    Float?
+  p21_pop3044    Float?
+  p21_pop4559    Float?
+  p21_pop6074    Float?
+  p21_pop75p     Float?
+  p21_pop0019    Float?
+  p21_pop2064    Float?
+  p21_pop65p     Float?
+  p21_poph       Float?
+  p21_h0014      Float?
+  p21_h1529      Float?
+  p21_h3044      Float?
+  p21_h4559      Float?
+  p21_h6074      Float?
+  p21_h75p       Float?
+  p21_h0019      Float?
+  p21_h2064      Float?
+  p21_h65p       Float?
+  p21_popf       Float?
+  p21_f0014      Float?
+  p21_f1529      Float?
+  p21_f3044      Float?
+  p21_f4559      Float?
+  p21_f6074      Float?
+  p21_f75p       Float?
+  p21_f0019      Float?
+  p21_f2064      Float?
+  p21_f65p       Float?
+  c21_pop15p     Float?
+  c21_pop15p_cs1 Float?
+  c21_pop15p_cs2 Float?
+  c21_pop15p_cs3 Float?
+  c21_pop15p_cs4 Float?
+  c21_pop15p_cs5 Float?
+  c21_pop15p_cs6 Float?
+  c21_pop15p_cs7 Float?
+  c21_pop15p_cs8 Float?
+  c21_h15p       Float?
+  c21_h15p_cs1   Float?
+  c21_h15p_cs2   Float?
+  c21_h15p_cs3   Float?
+  c21_h15p_cs4   Float?
+  c21_h15p_cs5   Float?
+  c21_h15p_cs6   Float?
+  c21_h15p_cs7   Float?
+  c21_h15p_cs8   Float?
+  c21_f15p       Float?
+  c21_f15p_cs1   Float?
+  c21_f15p_cs2   Float?
+  c21_f15p_cs3   Float?
+  c21_f15p_cs4   Float?
+  c21_f15p_cs5   Float?
+  c21_f15p_cs6   Float?
+  c21_f15p_cs7   Float?
+  c21_f15p_cs8   Float?
+  p21_pop_fr     Float?
+  p21_pop_etr    Float?
+  p21_pop_imm    Float?
+  p21_pmen       Float?
+  p21_phormen    Float?
+
   @@map("insee_iris_2021")
 }
 
 view Quartier {
-  iris_selectors         String[]
-  population_sum         Float
-  p21_pop1529_sum        Float
-  p21_pop3044_sum        Float
-  p21_pop4559_sum        Float
-  p21_pop6074_sum        Float
-  p21_pop75p_sum         Float
-  c21_pop15p_cs1_sum     Float
-  c21_pop15p_cs2_sum     Float
-  c21_pop15p_cs3_sum     Float
-  c21_pop15p_cs4_sum     Float
-  c21_pop15p_cs5_sum     Float
-  c21_pop15p_cs6_sum     Float
-  c21_pop15p_cs7_sum     Float
-  c21_pop15p_cs8_sum     Float
-  population_femme_sum   Float
-  population_homme_sum   Float
-  population_sum_threshold_3p Float
-  population_sum_threshold_4p Float
+  iris_selectors                String[]
+  population_sum                Float
+  p21_pop1529_sum               Float
+  p21_pop3044_sum               Float
+  p21_pop4559_sum               Float
+  p21_pop6074_sum               Float
+  p21_pop75p_sum                Float
+  c21_pop15p_cs1_sum            Float
+  c21_pop15p_cs2_sum            Float
+  c21_pop15p_cs3_sum            Float
+  c21_pop15p_cs4_sum            Float
+  c21_pop15p_cs5_sum            Float
+  c21_pop15p_cs6_sum            Float
+  c21_pop15p_cs7_sum            Float
+  c21_pop15p_cs8_sum            Float
+  population_femme_sum          Float
+  population_homme_sum          Float
+  population_sum_threshold_3p   Float
+  population_sum_threshold_4p   Float
   population_sum_threshold_4_5p Float
-  population_sum_threshold_5p Float
-  surveyId         Int  @unique @map("survey_id")           // Foreign key unique field to survey
-  survey           Survey @relation(fields: [surveyId], references: [id])
+  population_sum_threshold_5p   Float
+  surveyId                      Int      @unique @map("survey_id") // Foreign key unique field to survey
+  survey                        Survey   @relation(fields: [surveyId], references: [id])
+
   @@map("quartiers")
 }

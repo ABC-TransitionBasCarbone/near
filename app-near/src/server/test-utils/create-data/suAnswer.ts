@@ -19,7 +19,7 @@ export const buildSuAnswer = (
   surveyId: number,
   data?: Partial<SuAnswer>,
 ): BuilderSuAnswer => ({
-  isNeighborhoodResident: faker.datatype.boolean(),
+  suId: null,
   ageCategory: faker.helpers.arrayElement(Object.values(AgeCategory)),
   airTravelFrequency: faker.helpers.arrayElement(
     Object.values(AirTravelFrequency),
@@ -27,7 +27,7 @@ export const buildSuAnswer = (
   broadcastChannel: faker.helpers.arrayElement(Object.values(BroadcastChannel)),
   digitalIntensity: faker.helpers.arrayElement(Object.values(DigitalIntensity)),
   easyHealthAccess: faker.helpers.arrayElement(Object.values(EasyHealthAccess)),
-  email: faker.internet.email(),
+  email: Date.now() + faker.internet.email(),
   gender: faker.helpers.arrayElement(Object.values(Gender)),
   heatSource: faker.helpers.arrayElement(Object.values(HeatSource)),
   meatFrequency: faker.helpers.arrayElement(Object.values(MeatFrequency)),

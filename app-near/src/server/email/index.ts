@@ -22,7 +22,7 @@ curl --request POST \
      --header 'content-type: application/json' \
      --data '${JSON.stringify(body).replace(/'/g, "&apos;")}'
     `);
-  return;
+  return `Email template ${body.templateId} send`;
 };
 
 const EmailService = { sendEmail };

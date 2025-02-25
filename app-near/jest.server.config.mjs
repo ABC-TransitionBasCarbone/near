@@ -6,6 +6,7 @@ const createJestConfig = nextJest({
 });
 
 const customJestServerConfig = {
+  setupFilesAfterEnv: ["<rootDir>/jest.setup.js"],
   testEnvironment: "jest-environment-node",
   testMatch: ["**/src/server/**/*.spec.ts"],
   extensionsToTreatAsEsm: ['.ts'],

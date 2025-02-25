@@ -9,6 +9,7 @@ describe("handleAnswer", () => {
   const neighborhoodName = "neighborhood_test";
   beforeEach(async () => {
     await db.suAnswer.deleteMany();
+    await db.suData.deleteMany();
     await db.survey.deleteMany();
     await db.survey.create({
       data: { name: neighborhoodName },
@@ -67,6 +68,50 @@ describe("handleAnswer", () => {
     );
     expect(response.status).toBe(400);
     expect(await response.text()).toContain("Survey name not found");
+  });
+
+  it("should return 200 when user as less than 15", async () => {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    const payload = JSON.parse(
+      JSON.stringify(valideSuSurveyPayload),
+    ) as TypeformWebhookPayload;
+
+    // @ts-expect-error allowed for test
+    payload.form_response.answers[1].choice = {
+      id: "quEgbNpyxmlD",
+      ref: "a403515c-5a86-4c4b-a842-bae699a09f47",
+      label: "Moins de 15 ans",
+    };
+
+    const signature = signPayload(JSON.stringify(payload));
+    const response = await handleAnswer(
+      // @ts-expect-error allow partial for test
+      buildRequest(payload, signature),
+    );
+    expect(response.status).toBe(200);
+    expect(await response.text()).toContain("user age is not allowed");
+  });
+
+  it("should return 200 when user is not resident", async () => {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    const payload = JSON.parse(
+      JSON.stringify(valideSuSurveyPayload),
+    ) as TypeformWebhookPayload;
+
+    // @ts-expect-error allowed for test
+    payload.form_response.answers[0].choice = {
+      id: "fugWMOloSfDA",
+      ref: "3a347ad6-7461-4549-8cf3-d45167702a74",
+      label: "Non",
+    };
+
+    const signature = signPayload(JSON.stringify(payload));
+    const response = await handleAnswer(
+      // @ts-expect-error allow partial for test
+      buildRequest(payload, signature),
+    );
+    expect(response.status).toBe(200);
+    expect(await response.text()).toContain("user should live in neighborhood");
   });
 
   it("should return 201", async () => {

@@ -22,6 +22,8 @@ export const env = createEnv({
     TYPEFORM_SECRET: z.string(),
     SU_FORM_ID: z.string(),
     BREVO_API_KEY: z.string(),
+    API_SU_URL: z.string().url(),
+    API_SU_KEY: z.string(),
   },
 
   /**
@@ -33,6 +35,7 @@ export const env = createEnv({
     NEXT_PUBLIC_TYPEFORM_SU_LINK: z.string().url(),
     NEXT_PUBLIC_TYPEFORM_SU_STATS: z.string().url(),
     NEXT_PUBLIC_TARGET_PERCENTAGE_WARNING: z.string(),
+    NEXT_PUBLIC_CONTACT_EMAIL: z.string().email(),
   },
 
   /**
@@ -51,9 +54,12 @@ export const env = createEnv({
     METABASE_SITE_URL: process.env.METABASE_SITE_URL,
     TYPEFORM_SECRET: process.env.TYPEFORM_SECRET,
     SU_FORM_ID: process.env.SU_FORM_ID,
+    API_SU_URL: process.env.API_SU_URL,
+    API_SU_KEY: process.env.API_SU_KEY,
     NEXT_PUBLIC_TARGET_PERCENTAGE_WARNING:
       process.env.NEXT_PUBLIC_TARGET_PERCENTAGE_WARNING,
     BREVO_API_KEY: process.env.BREVO_API_KEY,
+    NEXT_PUBLIC_CONTACT_EMAIL: process.env.NEXT_PUBLIC_CONTACT_EMAIL,
   },
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially

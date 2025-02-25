@@ -7,7 +7,8 @@ import { TRPCError } from "@trpc/server";
 describe("sendUsersSu", () => {
   const surveyId = 654;
   beforeEach(async () => {
-    await db.suAnswer.deleteMany({ where: { surveyId } }).catch(() => null);
+    await db.suAnswer.deleteMany().catch(() => null);
+    await db.suData.deleteMany().catch(() => null);
     await db.survey.delete({ where: { id: surveyId } }).catch(() => null);
   });
 
@@ -22,7 +23,7 @@ describe("sendUsersSu", () => {
         id: surveyId,
         name: "test-send-user-su",
         phase,
-        // computedSu: true,
+        computedSu: true,
       },
     });
 
@@ -35,25 +36,25 @@ describe("sendUsersSu", () => {
     }
   });
 
-  // it(`should not send su email to users when su are not computed`, async () => {
-  //   expect.assertions(1);
-  //   await db.survey.create({
-  //     data: {
-  //       id: surveyId,
-  //       name: "test-send-user-su",
-  //       phase: SurveyPhase.STEP_3_SU_EXPLORATION,
-  //       computedSu: false,
-  //     },
-  //   });
+  it(`should not send su email to users when su are not computed`, async () => {
+    expect.assertions(1);
+    await db.survey.create({
+      data: {
+        id: surveyId,
+        name: "test-send-user-su",
+        phase: SurveyPhase.STEP_3_SU_EXPLORATION,
+        computedSu: false,
+      },
+    });
 
-  //   try {
-  //     await sendUsersSu(surveyId);
-  //   } catch (error) {
-  //     if (error instanceof TRPCError) {
-  //       expect(error.code).toBe("FORBIDDEN");
-  //     }
-  //   }
-  // });
+    try {
+      await sendUsersSu(surveyId);
+    } catch (error) {
+      if (error instanceof TRPCError) {
+        expect(error.code).toBe("FORBIDDEN");
+      }
+    }
+  });
 
   it("should send su email to users", async () => {
     await db.survey.create({
@@ -61,23 +62,41 @@ describe("sendUsersSu", () => {
         id: surveyId,
         name: "test-send-user-su",
         phase: SurveyPhase.STEP_3_SU_EXPLORATION,
-        // computedSu: true,
+        computedSu: true,
       },
+    });
+    await db.suData.createMany({
+      data: [
+        {
+          id: 1,
+          barycenter: 0.1,
+          popPercentage: 0.11,
+          su: 11,
+          surveyId: surveyId,
+        },
+        {
+          id: 2,
+          barycenter: 0.2,
+          popPercentage: 0.22,
+          su: 22,
+          surveyId: surveyId,
+        },
+      ],
     });
 
     await db.suAnswer.createMany({
       data: [
         buildSuAnswer(surveyId, { id: 1, email: undefined }),
-        buildSuAnswer(surveyId, { id: 2, userSu: undefined }),
+        buildSuAnswer(surveyId, { id: 2, suId: undefined }),
         buildSuAnswer(surveyId, {
           id: 3,
           email: "email1@mail.com",
-          userSu: "SU1",
+          suId: 1,
         }),
         buildSuAnswer(surveyId, {
           id: 4,
           email: "email2@mail.com",
-          userSu: "SU1",
+          suId: 2,
         }),
       ],
     });
