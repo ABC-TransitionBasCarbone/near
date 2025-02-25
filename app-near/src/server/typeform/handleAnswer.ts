@@ -1,17 +1,18 @@
+import { AgeCategory, type SuAnswer, SurveyPhase } from "@prisma/client";
 import { type NextRequest, NextResponse } from "next/server";
-import { verifySignature } from "./signature";
-import { getReferencesMapping } from "../surveys/references";
-import { convertFormToAnswer } from "./convert";
+import { z } from "zod";
+import { env } from "~/env";
+import { type ConvertedSuAnswer } from "~/types/SuAnswer";
 import {
   type TypeformWebhookPayload,
   TypeformWebhookSchema,
 } from "~/types/typeform";
-import { typeformSchemaMapper } from "./schema";
 import { createSu } from "../su/create";
-import { AgeCategory, type SuAnswer } from "@prisma/client";
-import { z } from "zod";
-import { env } from "~/env";
-import { type ConvertedSuAnswer } from "~/types/SuAnswer";
+import { getOneSurveyByName } from "../surveys/get";
+import { getReferencesMapping } from "../surveys/references";
+import { convertFormToAnswer } from "./convert";
+import { typeformSchemaMapper } from "./schema";
+import { verifySignature } from "./signature";
 
 export const handleAnswer = async (req: NextRequest): Promise<NextResponse> => {
   let formId: string | undefined = undefined;
@@ -73,12 +74,15 @@ const handleSuForm = async (
 ): Promise<
   NextResponse<{ message: string }> | NextResponse<{ error: string }>
 > => {
+  // should be part of neighborhood
   if (answers.isNeighborhoodResident !== true) {
     return NextResponse.json(
       { message: "user should live in neighborhood" },
       { status: 200 },
     );
   }
+
+  // should be under 15
   if (
     !Object.values(AgeCategory).includes(answers.ageCategory as AgeCategory)
   ) {
@@ -88,25 +92,35 @@ const handleSuForm = async (
     );
   }
 
-  const parsedAnswer = typeformSchemaMapper[formId]?.parse(answers);
+  // could throw zod exception from zod parsing
+  const parsedAnswer = typeformSchemaMapper[formId]?.parse(
+    answers,
+  ) as ConvertedSuAnswer;
+
+  // remove isNeighborhoodResident property
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { isNeighborhoodResident, ...createQuery } = parsedAnswer;
+
+  // no survey name in hidden fields
   const surveyName = parsedBody.form_response.hidden?.neighborhood;
   if (!surveyName) {
-    console.error("[whebhook typeform]", formId, "Survey name not found");
-    return NextResponse.json(
-      { error: "Survey name not found" },
-      { status: 400 },
-    );
+    return noSurveyNameProvided(formId);
   }
+
+  // continue only if we are in phase 2
+  const survey = await getOneSurveyByName(surveyName);
+  if (!survey) {
+    return noSurveyFoundResponse(surveyName);
+  }
+
+  if (survey.phase !== SurveyPhase.STEP_2_SU_SURVERY) {
+    return notInPhaseSuSurveyResponse(surveyName);
+  }
+
+  // create su
   const broadcastChannel = parsedBody.form_response.hidden?.broadcast_channel;
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { isNeighborhoodResident, ...answersToCreate } =
-    parsedAnswer as ConvertedSuAnswer;
-
-  await createSu(
-    { ...answersToCreate, broadcastChannel } as SuAnswer,
-    surveyName,
-  );
+  await createSu({ ...createQuery, broadcastChannel } as SuAnswer, surveyName);
 
   return NextResponse.json({ message: "created" }, { status: 201 });
 };
@@ -128,6 +142,23 @@ const unauthorizedResponse = (formId?: string): NextResponse =>
     { status: 401 },
   );
 
+const noSurveyFoundResponse = (
+  surveyName?: string,
+): NextResponse<{ error: string }> => {
+  console.error("[whebhook typeform]", surveyName, "Survey not found");
+  return NextResponse.json(
+    { error: `Survey name ${surveyName} not found` },
+    { status: 404 },
+  );
+};
+
+const noSurveyNameProvided = (
+  formId?: string,
+): NextResponse<{ error: string }> => {
+  console.error("[whebhook typeform]", formId, "Survey name not found");
+  return NextResponse.json({ error: "Survey name not found" }, { status: 400 });
+};
+
 const referenceMappingNotFoundResponse = (formId?: string): NextResponse => {
   console.error(
     "[whebhook typeform]",
@@ -139,3 +170,23 @@ const referenceMappingNotFoundResponse = (formId?: string): NextResponse => {
     { status: 400 },
   );
 };
+function notInPhaseSuSurveyResponse(
+  surveyName: string,
+):
+  | NextResponse<{ message: string }>
+  | NextResponse<{ error: string }>
+  | PromiseLike<
+      NextResponse<{ message: string }> | NextResponse<{ error: string }>
+    > {
+  console.error(
+    "[whebhook typeform]",
+    surveyName,
+    `step ${SurveyPhase.STEP_2_SU_SURVERY} is over for ${surveyName}`,
+  );
+  return NextResponse.json(
+    {
+      error: `step ${SurveyPhase.STEP_2_SU_SURVERY} is over for ${surveyName}`,
+    },
+    { status: 200 },
+  );
+}

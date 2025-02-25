@@ -41,6 +41,28 @@ describe("handleAnswer", () => {
     expect(await response.text()).toContain("Not authorized");
   });
 
+  it("should return 404 when no survey found by name", async () => {
+    // Arrange
+    const payload = JSON.parse(
+      JSON.stringify(valideSuSurveyPayload),
+    ) as TypeformWebhookPayload;
+
+    payload.form_response.hidden = {
+      neighborhood: "unknown",
+    };
+    const signature = signPayload(JSON.stringify(payload));
+
+    // Act
+    const response = await handleAnswer(
+      // @ts-expect-error allow partial for test
+      buildRequest(payload, signature),
+    );
+
+    // Assert
+    expect(response.status).toBe(404);
+    expect(await response.text()).toContain(`Survey name unknown not found`);
+  });
+
   it("should return 400 when transformed data is invalid", async () => {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const payload = JSON.parse(
@@ -108,7 +130,7 @@ describe("handleAnswer", () => {
     expect(await response.text()).toContain("user age is not allowed");
   });
 
-  it(`should return 200 when step ${SurveyPhase.STEP_2_SU_SURVERY} is over`, async () => {
+  it(`should return 200 when not in ${SurveyPhase.STEP_2_SU_SURVERY}`, async () => {
     // Arrange
     await db.survey.update({
       data: { phase: SurveyPhase.STEP_3_SU_EXPLORATION },
@@ -119,6 +141,10 @@ describe("handleAnswer", () => {
       JSON.stringify(valideSuSurveyPayload),
     ) as TypeformWebhookPayload;
 
+    payload.form_response.hidden = {
+      neighborhood: neighborhoodName,
+      broadcast_channel: BroadcastChannel.mail_campaign,
+    };
     const signature = signPayload(JSON.stringify(payload));
 
     // Act
@@ -130,7 +156,7 @@ describe("handleAnswer", () => {
     // Assert
     expect(response.status).toBe(200);
     expect(await response.text()).toContain(
-      `step ${SurveyPhase.STEP_2_SU_SURVERY} is over`,
+      `step ${SurveyPhase.STEP_2_SU_SURVERY} is over for ${neighborhoodName}`,
     );
   });
 
@@ -157,6 +183,11 @@ describe("handleAnswer", () => {
   });
 
   it("should return 201", async () => {
+    await db.survey.update({
+      data: { phase: SurveyPhase.STEP_2_SU_SURVERY },
+      where: { name: neighborhoodName },
+    });
+
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const payload = JSON.parse(
       JSON.stringify(valideSuSurveyPayload),
