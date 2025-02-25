@@ -1,15 +1,16 @@
-import axios from "axios";
 import { env } from "~/env";
 import { type BrevoBody } from "~/types/Brevo";
 
 const sendEmail = async (body: BrevoBody) => {
   if (env.NODE_ENV === "production") {
-    return axios.post("https://api.brevo.com/v3/smtp/email", body, {
+    return fetch("https://api.brevo.com/v3/smtp/email", {
+      method: "POST",
       headers: {
         Accept: "application/json",
         "api-key": env.BREVO_API_KEY,
         "Content-Type": "application/json",
       },
+      body: JSON.stringify(body),
     });
   }
 

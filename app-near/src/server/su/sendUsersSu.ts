@@ -1,7 +1,6 @@
 import { TemplateId } from "~/types/enums/brevo";
 import { db } from "../db";
 import EmailService from "../email";
-import { type AxiosResponse } from "axios";
 import { SurveyPhase } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 import { ErrorCode } from "~/types/enums/error";
@@ -9,7 +8,7 @@ import { ErrorCode } from "~/types/enums/error";
 export const sendUsersSu = async (
   surveyId: number,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-): Promise<PromiseSettledResult<string | AxiosResponse<any, any>>[]> => {
+): Promise<Promise<PromiseSettledResult<string | Response>[]>> => {
   const survey = await db.survey.findFirst({ where: { id: surveyId } });
 
   if (!survey || survey.phase !== SurveyPhase.STEP_3_SU_EXPLORATION) {
