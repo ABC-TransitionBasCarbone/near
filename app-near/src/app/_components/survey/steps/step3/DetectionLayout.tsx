@@ -5,6 +5,7 @@ import { ButtonStyle } from "~/types/enums/button";
 import Button from "../../../_ui/Button";
 import SurveyLayout from "../../SurveyLayout";
 import { api } from "~/trpc/react";
+import SuDashboard from "./SuDashboard";
 
 const DetectionLayout: React.FC = () => {
   const suDetectionMutation = api.suDetection.run.useMutation();
@@ -48,7 +49,7 @@ const DetectionLayout: React.FC = () => {
       }
       actions={<></>}
     >
-      <></> {/* TODO NEAR-31 */}
+      <SuDashboard />
     </SurveyLayout>
   );
 };
