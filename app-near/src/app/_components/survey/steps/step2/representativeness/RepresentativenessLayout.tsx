@@ -24,6 +24,7 @@ import {
 } from "~/shared/services/su-surveys/threshold";
 import useUpdateSurveyStep from "../../../hooks/useUpdateSurveyStep";
 import RepresentativenessConfirmModal from "./RepresentativenessConfirmModal";
+import { SurveyPhase } from "@prisma/client";
 
 interface RepresentativenessLayoutProps {
   setToggleBroadcastingPage: Dispatch<SetStateAction<boolean>>;
@@ -110,6 +111,7 @@ const RepresentativenessLayout: React.FC<RepresentativenessLayoutProps> = ({
                 <Button
                   icon="/icons/rocket.svg"
                   rounded
+                  disabled={survey.phase !== SurveyPhase.STEP_2_SU_SURVERY}
                   style={ButtonStyle.LIGHT}
                   onClick={() => {
                     setToggleBroadcastingPage(true);
