@@ -1,6 +1,7 @@
 import {
   buildSuComputationRequest,
   computeSus,
+  verifyStep,
 } from "~/server/external-api/api-su";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
 import { TRPCError } from "@trpc/server";
@@ -14,6 +15,8 @@ export const suDetectionRouter = createTRPCRouter({
     if (!surveyId) {
       throw new TRPCError({ code: "FORBIDDEN" });
     }
+
+    await verifyStep(surveyId);
 
     const request = await buildSuComputationRequest(surveyId);
     if (request.length === 0) {

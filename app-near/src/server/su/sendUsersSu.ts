@@ -4,6 +4,7 @@ import EmailService from "../email";
 import { type AxiosResponse } from "axios";
 import { SurveyPhase } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
+import { ErrorCode } from "~/types/enums/error";
 
 export const sendUsersSu = async (
   surveyId: number,
@@ -14,46 +15,41 @@ export const sendUsersSu = async (
   if (!survey || survey.phase !== SurveyPhase.STEP_3_SU_EXPLORATION) {
     throw new TRPCError({
       code: "FORBIDDEN",
-      message: "survey phase is not correct",
+      message: ErrorCode.MISSING_SURVEY_PHASE,
     });
   }
 
   if (!survey.computedSu) {
     throw new TRPCError({
       code: "FORBIDDEN",
-      message: "surveys are not computed",
+      message: ErrorCode.SU_NOT_COMPUTED,
     });
   }
 
   const answers = await db.suAnswer.findMany({
-    where: { surveyId },
+    where: { surveyId, email: { not: null }, su: { su: { not: undefined } } },
     select: { id: true, email: true, su: true },
   }); // warning potential memory issue ?
 
   const results = await Promise.allSettled(
     answers.map((answer) => {
-      if (!answer.email)
-        return Promise.reject(
-          new Error(`Missing email for answer_su with id: ${answer.id}`),
-        );
-      if (!answer.su?.su)
-        return Promise.reject(
-          new Error(`Missing SU for answer_su with id: ${answer.id}`),
-        );
-
       return EmailService.sendEmail({
         templateId: TemplateId.SU_RESULT,
-        to: [{ email: answer.email }],
-        params: { suName: `${answer.su.su}` },
+        to: [{ email: answer.email! }],
+        params: { suName: `${answer.su!.su}` },
       });
     }),
   );
 
-  results.forEach((result) => {
-    if (result.status === "rejected") {
-      console.error(result.reason);
-    }
-  });
+  const errors = results.filter((result) => result.status === "rejected");
+
+  if (errors.length) {
+    errors.forEach((error) => console.error(error));
+    throw new TRPCError({
+      code: "INTERNAL_SERVER_ERROR",
+      message: ErrorCode.SU_SEND_EMAIL,
+    });
+  }
 
   return results;
 };

@@ -1,10 +1,12 @@
-import { type SuAnswer } from ".prisma/client";
+import { SurveyPhase, type SuAnswer } from ".prisma/client";
 import camelcaseKeys from "camelcase-keys";
 import snakecaseKeys from "snakecase-keys";
 import { env } from "~/env";
 import { type SuAnswerData, type SuComputationData } from "~/types/SuDetection";
 import { db } from "../db";
 import { convert } from "./convert";
+import { TRPCError } from "@trpc/server";
+import { ErrorCode } from "~/types/enums/error";
 
 export const buildSuComputationRequest = async (
   surveyId: number,
@@ -52,5 +54,15 @@ export const computeSus = async (
   } catch (error) {
     console.error("Error calling API SU compute:", error);
     throw error;
+  }
+};
+
+export const verifyStep = async (surveyId: number) => {
+  const survey = await db.survey.findFirst({ where: { id: surveyId } });
+  if (!survey || survey.phase !== SurveyPhase.STEP_3_SU_EXPLORATION) {
+    throw new TRPCError({
+      code: "FORBIDDEN",
+      message: ErrorCode.WRONG_SURVEY_PHASE,
+    });
   }
 };

@@ -5,13 +5,54 @@ import { ButtonStyle } from "~/types/enums/button";
 import Button from "../../../_ui/Button";
 import SurveyLayout from "../../SurveyLayout";
 import { api } from "~/trpc/react";
+import useUpdateSurveyStep from "../../hooks/useUpdateSurveyStep";
+import { surveyConfig } from "../config";
+import { useSurveyStateContext } from "~/app/_components/_context/surveyStateContext";
+import { useSession } from "next-auth/react";
+import { useNotification } from "~/app/_components/_context/NotificationProvider";
+import { NotificationType } from "~/types/enums/notifications";
+import { SurveyPhase } from "@prisma/client";
+import { getErrorValue } from "~/app/_components/_services/error";
 
 const DetectionLayout: React.FC = () => {
-  const suDetectionMutation = api.suDetection.run.useMutation();
+  const { step } = useSurveyStateContext();
+  const updateSurveyStep = useUpdateSurveyStep();
+  const { data: session } = useSession();
+  const { setNotification } = useNotification();
+
+  const utils = api.useUtils();
+
+  const { data: survey } = api.surveys.getOne.useQuery(undefined, {
+    enabled: !!session?.user?.surveyId,
+  });
+
+  const suDetectionMutation = api.suDetection.run.useMutation({
+    onSuccess: async () => {
+      await utils.surveys.getOne.invalidate();
+    },
+    onError: (e) =>
+      setNotification({
+        type: NotificationType.ERROR,
+        value: getErrorValue(e),
+      }),
+  });
+
+  const sendSuEmailMutation = api.answers.sendSu.useMutation({
+    onSuccess: () => step && updateSurveyStep(surveyConfig[step]?.nextStep),
+    onError: (e) =>
+      setNotification({
+        type: NotificationType.ERROR,
+        value: getErrorValue(e),
+      }),
+  });
 
   const launchSuDetection = async () => {
     await suDetectionMutation.mutateAsync();
   };
+
+  if (!session?.user.surveyId || step === undefined) {
+    return "loading...";
+  }
 
   return (
     <SurveyLayout
@@ -36,17 +77,43 @@ const DetectionLayout: React.FC = () => {
             Lancez <b>l’algorithme de détection des Sphères d’Usages</b>. Si le
             résultat ne vous convient pas, vous pouvez relancer la détection.
           </p>
+          <div className="mt-8 flex justify-center">
+            <Button
+              icon="/icons/arrow-right.svg"
+              rounded
+              style={ButtonStyle.FILLED}
+              onClick={launchSuDetection}
+              disabled={
+                survey?.phase !== SurveyPhase.STEP_3_SU_EXPLORATION ||
+                suDetectionMutation.isPending
+              }
+            >
+              {suDetectionMutation.isPending
+                ? "...chargement"
+                : "Détecter les sphères d'usage"}
+            </Button>
+          </div>
+        </div>
+      }
+      actions={
+        <>
           <Button
             icon="/icons/arrow-right.svg"
             rounded
             style={ButtonStyle.FILLED}
-            onClick={launchSuDetection}
+            onClick={() => sendSuEmailMutation.mutate(session?.user.surveyId)}
+            disabled={
+              sendSuEmailMutation.isPending ||
+              !survey?.computedSu ||
+              survey.phase !== SurveyPhase.STEP_3_SU_EXPLORATION
+            }
           >
-            Détecter les sphères d&apos;usage
+            {sendSuEmailMutation.isPending
+              ? "...chargement"
+              : "Continuer l'enquête"}
           </Button>
-        </div>
+        </>
       }
-      actions={<></>}
     >
       <></> {/* TODO NEAR-31 */}
     </SurveyLayout>

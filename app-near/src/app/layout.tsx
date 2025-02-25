@@ -6,6 +6,7 @@ import { type Metadata } from "next";
 import { TRPCReactProvider } from "~/trpc/react";
 import { HydrateClient } from "~/trpc/server";
 import { SessionProvider } from "next-auth/react";
+import { NotificationProvider } from "./_components/_context/NotificationProvider";
 
 export const metadata: Metadata = {
   title: {
@@ -25,7 +26,9 @@ export default function RootLayout({
       <body>
         <TRPCReactProvider>
           <HydrateClient>
-            <SessionProvider>{children}</SessionProvider>
+            <SessionProvider>
+              <NotificationProvider>{children}</NotificationProvider>
+            </SessionProvider>
           </HydrateClient>
         </TRPCReactProvider>
       </body>
