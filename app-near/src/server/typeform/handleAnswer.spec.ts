@@ -127,7 +127,7 @@ describe("handleAnswer", () => {
       buildRequest(payload, signature),
     );
     expect(response.status).toBe(200);
-    expect(await response.text()).toContain("user age is not allowed");
+    expect(await response.text()).toContain("user should be under 15");
   });
 
   it(`should return 200 when not in ${SurveyPhase.STEP_2_SU_SURVERY}`, async () => {

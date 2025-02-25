@@ -1,4 +1,9 @@
-import { AgeCategory, type SuAnswer, SurveyPhase } from "@prisma/client";
+import {
+  AgeCategory,
+  type SuAnswer,
+  type Survey,
+  SurveyPhase,
+} from "@prisma/client";
 import { type NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { env } from "~/env";
@@ -23,7 +28,7 @@ export const handleAnswer = async (req: NextRequest): Promise<NextResponse> => {
       JSON.parse(body),
     );
     formId = parsedBody.form_response.form_id;
-    console.info("[whebhook typeform]", formId, body);
+    console.debug("[whebhook typeform]", formId, body);
 
     // check typeform signature header
     if (!isValidSignature(req, body)) {
@@ -38,7 +43,7 @@ export const handleAnswer = async (req: NextRequest): Promise<NextResponse> => {
 
     // convert
     const answers = convertFormToAnswer(parsedBody, referencesMapping);
-    console.info("[whebhook typeform]", formId, JSON.stringify(answers));
+    console.debug("[whebhook typeform]", formId, JSON.stringify(answers));
 
     // switch case mapping depending on forms
     if (formId === env.SU_FORM_ID) {
@@ -75,21 +80,13 @@ const handleSuForm = async (
   NextResponse<{ message: string }> | NextResponse<{ error: string }>
 > => {
   // should be part of neighborhood
-  if (answers.isNeighborhoodResident !== true) {
-    return NextResponse.json(
-      { message: "user should live in neighborhood" },
-      { status: 200 },
-    );
+  if (isPartOfNeighborhood(answers)) {
+    return okResponse("user should live in neighborhood");
   }
 
   // should be under 15
-  if (
-    !Object.values(AgeCategory).includes(answers.ageCategory as AgeCategory)
-  ) {
-    return NextResponse.json(
-      { message: "user age is not allowed" },
-      { status: 200 },
-    );
+  if (isUnder15(answers)) {
+    return okResponse("user should be under 15");
   }
 
   // could throw zod exception from zod parsing
@@ -104,7 +101,7 @@ const handleSuForm = async (
   // no survey name in hidden fields
   const surveyName = parsedBody.form_response.hidden?.neighborhood;
   if (!surveyName) {
-    return noSurveyNameProvided(formId);
+    return noSurveyNameProvidedResponse(formId);
   }
 
   // continue only if we are in phase 2
@@ -113,7 +110,7 @@ const handleSuForm = async (
     return noSurveyFoundResponse(surveyName);
   }
 
-  if (survey.phase !== SurveyPhase.STEP_2_SU_SURVERY) {
+  if (isNotInPhaseTwo(survey)) {
     return notInPhaseSuSurveyResponse(surveyName);
   }
 
@@ -129,6 +126,9 @@ const isValidSignature = (req: NextRequest, body: string): boolean => {
   const signature = req.headers.get("Typeform-Signature");
   return verifySignature(signature, body);
 };
+
+const okResponse = (message: string): NextResponse<{ message: string }> =>
+  NextResponse.json({ message }, { status: 200 });
 
 const unknwonFormIdResponse = (formId?: string): NextResponse =>
   NextResponse.json(
@@ -152,7 +152,7 @@ const noSurveyFoundResponse = (
   );
 };
 
-const noSurveyNameProvided = (
+const noSurveyNameProvidedResponse = (
   formId?: string,
 ): NextResponse<{ error: string }> => {
   console.error("[whebhook typeform]", formId, "Survey name not found");
@@ -170,14 +170,10 @@ const referenceMappingNotFoundResponse = (formId?: string): NextResponse => {
     { status: 400 },
   );
 };
-function notInPhaseSuSurveyResponse(
+
+const notInPhaseSuSurveyResponse = (
   surveyName: string,
-):
-  | NextResponse<{ message: string }>
-  | NextResponse<{ error: string }>
-  | PromiseLike<
-      NextResponse<{ message: string }> | NextResponse<{ error: string }>
-    > {
+): NextResponse<{ error: string }> => {
   console.error(
     "[whebhook typeform]",
     surveyName,
@@ -189,4 +185,18 @@ function notInPhaseSuSurveyResponse(
     },
     { status: 200 },
   );
-}
+};
+
+const isUnder15 = (answers: Record<string, string | boolean>) => {
+  return !Object.values(AgeCategory).includes(
+    answers.ageCategory as AgeCategory,
+  );
+};
+
+const isPartOfNeighborhood = (answers: Record<string, string | boolean>) => {
+  return answers.isNeighborhoodResident !== true;
+};
+
+const isNotInPhaseTwo = (survey: Survey) => {
+  return survey.phase !== SurveyPhase.STEP_2_SU_SURVERY;
+};
