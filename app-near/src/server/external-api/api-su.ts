@@ -21,6 +21,7 @@ export const computeSus = async (
 ): Promise<SuComputationData> => {
   try {
     const snakecasePayload = payload.map((suAnswerData: SuAnswerData) =>
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
       snakecaseKeys(suAnswerData as unknown as Record<string, unknown>),
     );
 

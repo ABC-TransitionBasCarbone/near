@@ -10,9 +10,9 @@ Installer postgresql-client pour pouvoir utiliser psql.
 
 Disponible sur <https://www.insee.fr/fr/statistiques/8268806#consulter>
 
-###  2. Créer une nouvelle table insee_iris_2022
+###  2. Créer une nouvelle table insee_iris_2021
 
-- Créer un nouveau model InseeIris2022 dans `./prisma/schema.prisma` qui correspond au format csv téléchargé
+- Créer un nouveau model InseeIris2021 dans `./prisma/schema.prisma` qui correspond au format csv téléchargé
 - Lancer la migration dans postgresql :
 
 ```bash
@@ -26,7 +26,7 @@ Si nécéssaire, il faut ensuite mettre à jour les vues SQL du fichier `./scrip
 Passer en paramètre du script `load_insee_data.sh` le csv de données afin de charger les données. Par exemple :
 
 ```bash
-npm run load:insee -- "$(pwd)/scripts/base-ic-evol-struct-pop-2022.csv" postgresql://postgres:password@localhost:5432/app-near
+npm run load:insee -- "$(pwd)/scripts/base-ic-evol-struct-pop-2021.csv" postgresql://postgres:password@localhost:5432/app-near
 ```
 
 ## Ajouter une nouvelle enquête pour un nouveau quartier

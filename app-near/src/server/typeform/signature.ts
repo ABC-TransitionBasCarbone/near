@@ -10,6 +10,6 @@ export const signPayload = (payload: string) => {
   return `sha256=${hash}`;
 };
 
-export const verifySignature = (sign: string, payload: string) => {
+export const verifySignature = (sign: string | null, payload: string) => {
   return sign === signPayload(payload);
 };

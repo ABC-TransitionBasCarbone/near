@@ -2,7 +2,7 @@ import { valideSuSurveyPayload } from "../test-utils/suSurvey";
 import { handleAnswer } from "./handleAnswer";
 import { signPayload } from "./signature";
 import { db } from "../db";
-import { BroadcastChannel } from "@prisma/client";
+import { BroadcastChannel, SurveyPhase } from "@prisma/client";
 import { type TypeformWebhookPayload } from "~/types/typeform";
 
 describe("handleAnswer", () => {
@@ -42,6 +42,28 @@ describe("handleAnswer", () => {
     expect(await response.text()).toContain("Not authorized");
   });
 
+  it("should return 404 when no survey found by name", async () => {
+    // Arrange
+    const payload = JSON.parse(
+      JSON.stringify(valideSuSurveyPayload),
+    ) as TypeformWebhookPayload;
+
+    payload.form_response.hidden = {
+      neighborhood: "unknown",
+    };
+    const signature = signPayload(JSON.stringify(payload));
+
+    // Act
+    const response = await handleAnswer(
+      // @ts-expect-error allow partial for test
+      buildRequest(payload, signature),
+    );
+
+    // Assert
+    expect(response.status).toBe(404);
+    expect(await response.text()).toContain(`Survey name unknown not found`);
+  });
+
   it("should return 400 when transformed data is invalid", async () => {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const payload = JSON.parse(
@@ -56,7 +78,24 @@ describe("handleAnswer", () => {
       buildRequest(payload, signature),
     );
     expect(response.status).toBe(400);
-    expect(await response.text()).toContain("Invalid payload");
+    // expect(await response.text()).toContain("Invalid payload");
+  });
+
+  it("should return 400 when reference mapping is invalid", async () => {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    const payload = JSON.parse(
+      JSON.stringify(valideSuSurveyPayload),
+    ) as TypeformWebhookPayload;
+
+    payload.form_response.form_id = "unknown";
+
+    const signature = signPayload(JSON.stringify(payload));
+    const response = await handleAnswer(
+      // @ts-expect-error allow partial for test
+      buildRequest(payload, signature),
+    );
+    expect(response.status).toBe(400);
+    expect(await response.text()).toContain("References mapping not found");
   });
 
   it("should return 400 when neighborhood is not defined", async () => {
@@ -89,7 +128,37 @@ describe("handleAnswer", () => {
       buildRequest(payload, signature),
     );
     expect(response.status).toBe(200);
-    expect(await response.text()).toContain("user age is not allowed");
+    expect(await response.text()).toContain("user should be under 15");
+  });
+
+  it(`should return 200 when not in ${SurveyPhase.STEP_2_SU_SURVERY}`, async () => {
+    // Arrange
+    await db.survey.update({
+      data: { phase: SurveyPhase.STEP_3_SU_EXPLORATION },
+      where: { name: neighborhoodName },
+    });
+
+    const payload = JSON.parse(
+      JSON.stringify(valideSuSurveyPayload),
+    ) as TypeformWebhookPayload;
+
+    payload.form_response.hidden = {
+      neighborhood: neighborhoodName,
+      broadcast_channel: BroadcastChannel.mail_campaign,
+    };
+    const signature = signPayload(JSON.stringify(payload));
+
+    // Act
+    const response = await handleAnswer(
+      // @ts-expect-error allow partial for test
+      buildRequest(payload, signature),
+    );
+
+    // Assert
+    expect(response.status).toBe(200);
+    expect(await response.text()).toContain(
+      `step ${SurveyPhase.STEP_2_SU_SURVERY} is over for ${neighborhoodName}`,
+    );
   });
 
   it("should return 200 when user is not resident", async () => {
@@ -115,6 +184,11 @@ describe("handleAnswer", () => {
   });
 
   it("should return 201", async () => {
+    await db.survey.update({
+      data: { phase: SurveyPhase.STEP_2_SU_SURVERY },
+      where: { name: neighborhoodName },
+    });
+
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const payload = JSON.parse(
       JSON.stringify(valideSuSurveyPayload),

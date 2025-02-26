@@ -8,3 +8,9 @@ export const getOneSurvey = async (id: number) => {
     },
   });
 };
+
+export const getOneSurveyByName = async (name: string) => {
+  return db.survey.findFirst({
+    where: { name },
+  });
+};
