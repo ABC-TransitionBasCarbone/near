@@ -20,6 +20,7 @@ export const buildSuAnswer = (
   data?: Partial<SuAnswer>,
 ): BuilderSuAnswer => ({
   suId: null,
+  emailApiCalled: false,
   ageCategory: faker.helpers.arrayElement(Object.values(AgeCategory)),
   airTravelFrequency: faker.helpers.arrayElement(
     Object.values(AirTravelFrequency),
