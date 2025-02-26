@@ -2,12 +2,16 @@ interface EmailInfo {
   name?: string;
   email: string;
 }
-export interface BrevoBody {
-  to: EmailInfo[];
+
+interface CommonBrevoBody {
+  to?: EmailInfo[];
   sender?: EmailInfo;
   replyTo?: EmailInfo;
   bcc?: EmailInfo[];
   subject?: string;
-  templateId: number;
+  templateId?: number;
   params?: Record<string, string>;
+}
+export interface BrevoBody extends CommonBrevoBody {
+  messageVersions?: CommonBrevoBody[];
 }

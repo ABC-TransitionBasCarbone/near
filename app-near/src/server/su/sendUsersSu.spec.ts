@@ -102,7 +102,18 @@ describe("sendUsersSu", () => {
     });
 
     const result = await sendUsersSu(surveyId);
+    expect(result.every((item) => item.status === "fulfilled")).toBe(true);
 
-    expect(result).toMatchSnapshot();
+    const suAnswers = await db.suAnswer.findMany();
+    const updatedAnswers = suAnswers
+      .filter((answer) => answer.emailApiCalled)
+      .map((answer) => answer.email);
+
+    expect(updatedAnswers.length).toBe(2);
+    expect(
+      updatedAnswers.every((email) =>
+        ["email1@mail.com", "email2@mail.com"].includes(email!),
+      ),
+    ).toBe(true);
   });
 });

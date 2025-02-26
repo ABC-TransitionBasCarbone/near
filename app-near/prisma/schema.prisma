@@ -131,6 +131,7 @@ model SuAnswer {
   heatSource           HeatSource           @map("heat_source")
   email                String?              @unique
   broadcastChannel     BroadcastChannel     @map("broadcast_channel")
+  emailApiCalled       Boolean?             @default(false) @map("email_api_called")
   suId                 Int?                 @map("su_id")
   su                   SuData?              @relation(fields: [suId], references: [id])
   distanceToBarycenter Float?               @map("distance_to_barycenter")
