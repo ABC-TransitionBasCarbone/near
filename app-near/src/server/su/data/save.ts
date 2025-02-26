@@ -8,28 +8,21 @@ export const saveSuData = async (
   const suNames: string[] = [];
 
   for (const suData of computedSus) {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    const existingSuData = await db.suData.findUnique({
-      where: { survey_id_su: { survey_id: surveyId, su: suData.su } },
+    await db.suData.upsert({
+      where: {
+        survey_id_su: { survey_id: surveyId, su: suData.su },
+      },
+      update: {
+        pop_percentage: suData.popPercentage,
+        barycenter: suData.barycenter,
+      },
+      create: {
+        survey_id: surveyId,
+        su: suData.su,
+        pop_percentage: suData.popPercentage,
+        barycenter: suData.barycenter,
+      },
     });
-    if (existingSuData) {
-      await db.suData.update({
-        where: { survey_id_su: { survey_id: surveyId, su: suData.su } },
-        data: {
-          pop_percentage: suData.popPercentage,
-          barycenter: suData.barycenter,
-        },
-      });
-    } else {
-      await db.suData.create({
-        data: {
-          survey_id: surveyId,
-          su: suData.su,
-          pop_percentage: suData.popPercentage,
-          barycenter: suData.barycenter,
-        },
-      });
-    }
 
     suNames.push(`${suData.su}`);
   }

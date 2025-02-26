@@ -5,6 +5,7 @@ import { env } from "~/env";
 import { type SuAnswerData, type SuComputationData } from "~/types/SuDetection";
 import { db } from "../db";
 import { convert } from "./convert";
+import { TRPCError } from "@trpc/server";
 
 export const buildSuComputationRequest = async (
   surveyId: number,
@@ -34,24 +35,36 @@ export const computeSus = async (
     });
 
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    const snakecaseData = await response.json();
+    const snakecaseComputedSu = await response.json();
 
-    if (response.status !== 200) {
+    if (!response.ok) {
       console.error(
         "Error when calling API SU compute:",
         response.status,
-        snakecaseData,
+        snakecaseComputedSu,
       );
-      throw new Error(`HTTP Status=${response.status}`);
+      throw new TRPCError({
+        code: "BAD_REQUEST",
+        message: `API Error: HTTP Status=${response.status}}`,
+      });
     }
 
-    const data = camelcaseKeys(snakecaseData, {
+    const camelCaseComputedSu = camelcaseKeys(snakecaseComputedSu, {
       deep: true,
     }) as SuComputationData;
 
-    return data;
+    return camelCaseComputedSu;
   } catch (error) {
     console.error("Error calling API SU compute:", error);
-    throw error;
+    if (error instanceof TypeError) {
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+        message: "Network error occurred while calling the API.",
+      });
+    }
+    throw new TRPCError({
+      code: "INTERNAL_SERVER_ERROR",
+      message: "An unexpected error occurred.",
+    });
   }
 };
