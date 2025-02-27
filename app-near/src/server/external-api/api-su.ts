@@ -73,7 +73,7 @@ export const verifyStep = async (surveyId: number) => {
   const survey = await db.survey.findFirst({ where: { id: surveyId } });
   if (!survey || survey.phase !== SurveyPhase.STEP_3_SU_EXPLORATION) {
     throw new TRPCError({
-      code: "FORBIDDEN",
+      code: "UNPROCESSABLE_CONTENT",
       message: ErrorCode.WRONG_SURVEY_PHASE,
     });
   }
