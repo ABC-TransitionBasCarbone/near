@@ -22,6 +22,7 @@ describe("representativeness", () => {
 
   beforeEach(async () => {
     await db.suAnswer.deleteMany().catch(() => null);
+    await db.suData.deleteMany().catch(() => null);
     await db.survey.delete({ where: { name: surveyName } }).catch(() => null);
     survey = await db.survey.create({
       data: {
