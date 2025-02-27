@@ -46,7 +46,7 @@ const enrichWithThresholdReached = async (
 };
 
 export const updateSurvey = async (id: number, data: Partial<Survey>) => {
-  const existingSurvey = await db.survey.findFirst({ where: { id } });
+  const existingSurvey = await db.survey.findUnique({ where: { id } });
 
   if (!existingSurvey) {
     throw new TRPCError({ code: "NOT_FOUND" });
