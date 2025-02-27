@@ -87,7 +87,9 @@ export const assignSu = async (
   payload: SuAssignementRequest,
 ): Promise<AnswerAttributedSu> => {
   try {
-    const snakeCaseAssignRequest = snakecaseKeys(payload);
+    const snakeCaseAssignRequest = snakecaseKeys(
+      payload as unknown as Record<string, unknown>,
+    );
 
     const response = await fetch(`${env.API_SU_URL}/api-su/assign`, {
       method: "POST",
