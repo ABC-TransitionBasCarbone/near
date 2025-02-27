@@ -1,4 +1,4 @@
-import { SurveyPhase, type SuAnswer } from ".prisma/client";
+import { type SuAnswer } from ".prisma/client";
 import camelcaseKeys from "camelcase-keys";
 import snakecaseKeys from "snakecase-keys";
 import { env } from "~/env";
@@ -6,7 +6,6 @@ import { type SuAnswerData, type SuComputationData } from "~/types/SuDetection";
 import { db } from "../db";
 import { convert } from "./convert";
 import { TRPCError } from "@trpc/server";
-import { ErrorCode } from "~/types/enums/error";
 
 export const buildSuComputationRequest = async (
   surveyId: number,
@@ -39,15 +38,9 @@ export const computeSus = async (
     const snakecaseComputedSu = await response.json();
 
     if (!response.ok) {
-      console.error(
-        "Error when calling API SU compute:",
-        response.status,
-        snakecaseComputedSu,
+      throw new Error(
+        `Status=${response.status} Content=${snakecaseComputedSu}`,
       );
-      throw new TRPCError({
-        code: "BAD_REQUEST",
-        message: `API Error: HTTP Status=${response.status}}`,
-      });
     }
 
     const camelCaseComputedSu = camelcaseKeys(snakecaseComputedSu, {
@@ -66,16 +59,6 @@ export const computeSus = async (
     throw new TRPCError({
       code: "INTERNAL_SERVER_ERROR",
       message: "An unexpected error occurred.",
-    });
-  }
-};
-
-export const verifyStep = async (surveyId: number) => {
-  const survey = await db.survey.findFirst({ where: { id: surveyId } });
-  if (!survey || survey.phase !== SurveyPhase.STEP_3_SU_EXPLORATION) {
-    throw new TRPCError({
-      code: "UNPROCESSABLE_CONTENT",
-      message: ErrorCode.WRONG_SURVEY_PHASE,
     });
   }
 };
