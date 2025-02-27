@@ -10,16 +10,16 @@ export const saveSuData = async (
   for (const suData of computedSus) {
     await db.suData.upsert({
       where: {
-        survey_id_su: { survey_id: surveyId, su: suData.su },
+        surveyId_su: { surveyId: surveyId, su: suData.su },
       },
       update: {
-        pop_percentage: suData.popPercentage,
+        popPercentage: suData.popPercentage,
         barycenter: suData.barycenter,
       },
       create: {
-        survey_id: surveyId,
+        surveyId: surveyId,
         su: suData.su,
-        pop_percentage: suData.popPercentage,
+        popPercentage: suData.popPercentage,
         barycenter: suData.barycenter,
       },
     });

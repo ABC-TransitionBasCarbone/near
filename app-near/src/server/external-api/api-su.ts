@@ -1,4 +1,4 @@
-import { type SuAnswer } from ".prisma/client";
+import { SurveyPhase, type SuAnswer } from ".prisma/client";
 import camelcaseKeys from "camelcase-keys";
 import snakecaseKeys from "snakecase-keys";
 import { env } from "~/env";
@@ -6,6 +6,7 @@ import { type SuAnswerData, type SuComputationData } from "~/types/SuDetection";
 import { db } from "../db";
 import { convert } from "./convert";
 import { TRPCError } from "@trpc/server";
+import { ErrorCode } from "~/types/enums/error";
 
 export const buildSuComputationRequest = async (
   surveyId: number,
@@ -65,6 +66,16 @@ export const computeSus = async (
     throw new TRPCError({
       code: "INTERNAL_SERVER_ERROR",
       message: "An unexpected error occurred.",
+    });
+  }
+};
+
+export const verifyStep = async (surveyId: number) => {
+  const survey = await db.survey.findFirst({ where: { id: surveyId } });
+  if (!survey || survey.phase !== SurveyPhase.STEP_3_SU_EXPLORATION) {
+    throw new TRPCError({
+      code: "UNPROCESSABLE_CONTENT",
+      message: ErrorCode.WRONG_SURVEY_PHASE,
     });
   }
 };

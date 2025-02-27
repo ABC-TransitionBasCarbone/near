@@ -7,7 +7,7 @@ export const updateAfterSUDetection = async (
     answers.map(({ id, su, distanceToBarycenter }) =>
       db.suAnswer.update({
         where: { id },
-        data: { su, distanceToBarycenter },
+        data: { suId: su, distanceToBarycenter },
       }),
     ),
   );

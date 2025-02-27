@@ -35,7 +35,7 @@ export type BuilderSuAnswer = Omit<
   SuAnswer,
   "id" | "su" | "distanceToBarycenter"
 > &
-  Partial<Pick<SuAnswer, "id" | "su" | "distanceToBarycenter">>;
+  Partial<Pick<SuAnswer, "id" | "suId" | "distanceToBarycenter">>;
 
 export enum CategoryStat {
   man = "man",

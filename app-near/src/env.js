@@ -21,6 +21,7 @@ export const env = createEnv({
     METABASE_SITE_URL: z.string().url(),
     TYPEFORM_SECRET: z.string(),
     SU_FORM_ID: z.string(),
+    BREVO_API_KEY: z.string(),
     API_SU_URL: z.string().url(),
     API_SU_KEY: z.string(),
   },
@@ -57,6 +58,7 @@ export const env = createEnv({
     API_SU_KEY: process.env.API_SU_KEY,
     NEXT_PUBLIC_TARGET_PERCENTAGE_WARNING:
       process.env.NEXT_PUBLIC_TARGET_PERCENTAGE_WARNING,
+    BREVO_API_KEY: process.env.BREVO_API_KEY,
     NEXT_PUBLIC_CONTACT_EMAIL: process.env.NEXT_PUBLIC_CONTACT_EMAIL,
   },
   /**

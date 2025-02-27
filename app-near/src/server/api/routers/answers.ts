@@ -3,6 +3,7 @@ import { createTRPCRouter, protectedProcedure } from "../trpc";
 import { countAnswsers } from "../../su/answers/count";
 import { z } from "zod";
 import representativenessService from "../../su/answers/representativeness";
+import { sendUsersSu } from "~/server/su/sendUsersSu";
 
 export const answersRouter = createTRPCRouter({
   count: protectedProcedure
@@ -22,5 +23,14 @@ export const answersRouter = createTRPCRouter({
       }
 
       return representativenessService.representativeness(surveyId);
+    }),
+  sendSu: protectedProcedure
+    .input(z.number())
+    .mutation(({ ctx, input: surveyId }) => {
+      if (surveyId !== ctx.session.user.surveyId) {
+        throw new TRPCError({ code: "FORBIDDEN" });
+      }
+
+      return sendUsersSu(surveyId);
     }),
 });
