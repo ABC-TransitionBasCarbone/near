@@ -37,7 +37,7 @@ const RepresentativenessPage: React.FC<RepresentativenessPageProps> = ({
   }
 
   return (
-    <div className="mx-6">
+    <div className="mx-6 my-8 flex flex-col gap-8">
       <SampleRadioOptions
         selected={selected}
         setSelected={setSelected}
