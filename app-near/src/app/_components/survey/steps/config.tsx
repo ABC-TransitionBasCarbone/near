@@ -1,5 +1,6 @@
 import { type Step, type StepParams } from "~/types/Step";
 import NeighborhoodInformations from "./NeighborhoodInformations";
+import Step4 from "./step4/Main";
 import Step3 from "./step3/Main";
 import Step2 from "./step2/Main";
 import { SurveyPhase } from "@prisma/client";
@@ -53,7 +54,7 @@ export const surveyConfig: Record<SurveyPhase, StepParams<SurveyPhase>> = {
     ],
   },
   [SurveyPhase.STEP_4_ADDITIONAL_SURVEY]: {
-    component: <>Step 4</>,
+    component: <Step4 />,
     previouxStep: SurveyPhase.STEP_3_SU_EXPLORATION,
     nextStep: SurveyPhase.STEP_5_RESULTS,
     buttonType: "button",
