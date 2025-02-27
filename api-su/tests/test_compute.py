@@ -120,7 +120,15 @@ def test_200_compute_sus_from_file(client):
 def extract_from_file():
     file_path = os.path.join(os.path.dirname(__file__), test_file_data.FILENAME)
     df = pandas.read_csv(file_path, sep="\t")
-    df.columns = ["id", "meat_frequency", "transportation_mode", "digital_intensity", "purchasing_strategy", "air_travel_frequency", "heat_source"]
+    df.columns = [
+        "id",
+        "meat_frequency",
+        "transportation_mode",
+        "digital_intensity",
+        "purchasing_strategy",
+        "air_travel_frequency",
+        "heat_source",
+    ]
     df = df.loc[df["id"].isin(test_file_data.L10)]
     for col, mapping in test_file_data.MAPPINGS.items():
         df[col] = df[col].apply(
