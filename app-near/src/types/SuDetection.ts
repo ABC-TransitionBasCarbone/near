@@ -1,5 +1,4 @@
 export interface SuAnswerData {
-  id: number;
   meatFrequency: number;
   transportationMode: number;
   digitalIntensity: number;
@@ -8,20 +7,34 @@ export interface SuAnswerData {
   heatSource: number;
 }
 
+export interface SuAnswerDataWithId extends SuAnswerData {
+  id: number;
+}
+
 export interface SuComputationData {
   computedSus: ComputedSu[];
-  answerAttributedSu: AnswerAttributedSu[];
+  answerAttributedSu: AnswerAttributedSuWithId[];
   error: unknown;
 }
 
-export interface ComputedSu {
+export interface SuDataToAssign {
   su: number;
   barycenter: number[];
+}
+export interface ComputedSu extends SuDataToAssign {
   popPercentage: number;
 }
 
 export interface AnswerAttributedSu {
-  id: number;
   su: number;
   distanceToBarycenter: number;
+}
+
+export interface AnswerAttributedSuWithId extends AnswerAttributedSu {
+  id: number;
+}
+
+export interface SuAssignementRequest {
+  sus: SuDataToAssign[];
+  userData: SuAnswerData;
 }

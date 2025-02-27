@@ -1,7 +1,8 @@
 import { db } from "~/server/db";
+import { type AnswerAttributedSuWithId } from "~/types/SuDetection";
 
 export const updateAfterSUDetection = async (
-  answers: { id: number; su: number; distanceToBarycenter: number }[],
+  answers: AnswerAttributedSuWithId[],
 ) => {
   await Promise.all(
     answers.map(({ id, su, distanceToBarycenter }) =>
