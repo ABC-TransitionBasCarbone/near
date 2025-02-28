@@ -7,7 +7,7 @@ import { type CategoryStats } from "~/types/SuAnswer";
 import { type Quartier, type Survey } from "@prisma/client";
 
 interface RepresentativenessPageProps {
-  categoryStats?: CategoryStats;
+  categoryStats?: CategoryStats | null;
   survey: Survey & { quartier: Quartier | null };
 }
 const RepresentativenessPage: React.FC<RepresentativenessPageProps> = ({
@@ -52,7 +52,9 @@ const RepresentativenessPage: React.FC<RepresentativenessPageProps> = ({
 
       {selected !== null && (
         <>
-          <RepresentativenessStats categoryStats={categoryStats} />
+          {categoryStats && (
+            <RepresentativenessStats categoryStats={categoryStats} />
+          )}
           <RepresentativenessDashboard target={selected} session={session} />
         </>
       )}
