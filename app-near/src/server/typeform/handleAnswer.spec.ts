@@ -2,16 +2,18 @@ import { valideSuSurveyPayload } from "../test-utils/suSurvey";
 import { handleAnswer } from "./handleAnswer";
 import { signPayload } from "./signature";
 import { db } from "../db";
-import { BroadcastChannel, SurveyPhase } from "@prisma/client";
+import { BroadcastChannel, type Survey, SurveyPhase } from "@prisma/client";
 import { type TypeformWebhookPayload } from "~/types/typeform";
+import { buildSuAnswer } from "../test-utils/create-data/suAnswer";
 
 describe("handleAnswer", () => {
   const neighborhoodName = "neighborhood_test";
+  let survey: Survey;
   beforeEach(async () => {
     await db.suAnswer.deleteMany();
     await db.suData.deleteMany();
     await db.survey.deleteMany();
-    await db.survey.create({
+    survey = await db.survey.create({
       data: { name: neighborhoodName },
     });
   });
@@ -198,6 +200,36 @@ describe("handleAnswer", () => {
       neighborhood: neighborhoodName,
       broadcast_channel: BroadcastChannel.mail_campaign,
     };
+    const signature = signPayload(JSON.stringify(payload));
+    const response = await handleAnswer(
+      // @ts-expect-error allow partial for test
+      buildRequest(payload, signature),
+    );
+    expect(response.status).toBe(201);
+    expect(await response.text()).toContain("created");
+  });
+
+  it("should return 201 when email is empty and empty email already exist", async () => {
+    await db.survey.update({
+      data: { phase: SurveyPhase.STEP_2_SU_SURVERY },
+      where: { name: neighborhoodName },
+    });
+
+    await db.suAnswer.create({
+      data: buildSuAnswer(survey.id, { email: null }),
+    });
+
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    const payload = JSON.parse(
+      JSON.stringify(valideSuSurveyPayload),
+    ) as TypeformWebhookPayload;
+
+    payload.form_response.answers.splice(11, 1);
+    payload.form_response.hidden = {
+      neighborhood: neighborhoodName,
+      broadcast_channel: BroadcastChannel.mail_campaign,
+    };
+
     const signature = signPayload(JSON.stringify(payload));
     const response = await handleAnswer(
       // @ts-expect-error allow partial for test

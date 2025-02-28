@@ -8,7 +8,12 @@ export const createSu = async (answer: SuAnswer, surveyName: string) => {
   }
 
   const userAlreadyExist = await db.suAnswer.findFirst({
-    where: { email: answer.email },
+    where: {
+      email: {
+        not: null,
+        equals: answer.email,
+      },
+    },
   });
 
   if (userAlreadyExist) {
