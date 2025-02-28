@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/prefer-nullish-coalescing */
 import { CategoryStat, type CategoryStats } from "~/types/SuAnswer";
-import { countAnswersByCategories, countAnswsers } from "./count";
+import { countAnswersByCategories, countAnswers } from "./count";
 import targetService from "~/server/neighborhoods/targets";
 import { getOneSurvey } from "~/server/surveys/get";
 import { TRPCError } from "@trpc/server";
@@ -17,7 +17,7 @@ const representativeness = async (
     });
   }
 
-  const suAnswersTotal = await countAnswsers(surveyId);
+  const suAnswersTotal = await countAnswers(surveyId);
 
   if (!suAnswersTotal) {
     return null;
