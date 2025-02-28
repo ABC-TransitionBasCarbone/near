@@ -2,6 +2,7 @@
 
 import { useSurveyStateContext } from "../_context/surveyStateContext";
 import { surveyConfig } from "./steps/config";
+import React from "react";
 
 const SurveyPage: React.FC = () => {
   const { step } = useSurveyStateContext();
