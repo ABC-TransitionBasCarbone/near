@@ -37,7 +37,7 @@ const Representativeness: React.FC<RepresentativenessProps> = ({
         <MetabaseIframe
           iframeNumber={MetabaseIFrameNumber.PANEL_REPRESENTATIVNESS}
           iframeType={MetabaseIframeType.DASHBOARD}
-          height="900px"
+          height="700px"
         />
       </div>
     );

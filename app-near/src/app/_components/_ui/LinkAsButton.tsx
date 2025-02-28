@@ -64,7 +64,7 @@ const LinkAsButton = ({
 
   return (
     <Link
-      className={`flex ${border ? "border" : ""} justify-center gap-3 ${iconRight ? "flex-row-reverse" : ""} ${colorVariants[style][color]} items-center px-5 py-2 font-sans font-bold ${underline ? "underline hover:no-underline" : "no-underline hover:underline"} ${customStyle} ${textColor ? textColorVariant[textColor] : ""} ${rounded ? "rounded-md" : ""} `}
+      className={`flex ${border ? "border" : ""} justify-center gap-3 ${iconRight ? "flex-row-reverse" : ""} ${colorVariants[style][color]} items-center px-5 py-2 font-sans font-bold ${underline ? "underline hover:no-underline" : "no-underline hover:underline"} ${textColor ? textColorVariant[textColor] : ""} ${rounded ? "rounded-md" : ""} ${customStyle}`}
       href={href}
       aria-label={ariaLabel}
       target={openNewTab ? "_blank" : "_self"}

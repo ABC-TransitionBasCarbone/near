@@ -23,7 +23,7 @@ const LayoutAuthentified: React.FC<LayoutAuthentifiedProps> = async ({
       <header>
         <SurveyHeader />
       </header>
-      <main role="main" className="flex-1">
+      <main role="main" className="flex flex-1 flex-col">
         {children}
       </main>
       <footer>
