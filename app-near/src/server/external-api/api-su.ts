@@ -128,3 +128,12 @@ export const assignSu = async (
     });
   }
 };
+
+const apiSu = {
+  buildSuComputationRequest,
+  computeSus,
+  buildSuAssignmentRequest,
+  assignSu,
+};
+
+export default apiSu;

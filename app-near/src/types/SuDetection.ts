@@ -14,7 +14,6 @@ export interface SuAnswerDataWithId extends SuAnswerData {
 export interface SuComputationData {
   computedSus: ComputedSu[];
   answerAttributedSu: AnswerAttributedSuWithId[];
-  error: unknown;
 }
 
 export interface SuDataToAssign {
