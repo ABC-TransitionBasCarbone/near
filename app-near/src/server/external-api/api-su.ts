@@ -58,7 +58,7 @@ export const computeSus = async (
     if (error instanceof TypeError) {
       throw new TRPCError({
         code: "INTERNAL_SERVER_ERROR",
-        message: "Network error occurred while calling the API.",
+        message: "Network error occurred while calling the API SU compute.",
       });
     }
     throw new TRPCError({
@@ -115,11 +115,11 @@ export const assignSu = async (
 
     return camelCaseAssignResponse;
   } catch (error) {
-    console.error("Error calling API SU compute:", error);
+    console.error("Error calling API SU assign:", error);
     if (error instanceof TypeError) {
       throw new TRPCError({
         code: "INTERNAL_SERVER_ERROR",
-        message: "Network error occurred while calling the API.",
+        message: "Network error occurred while calling the API SU assign.",
       });
     }
     throw new TRPCError({
