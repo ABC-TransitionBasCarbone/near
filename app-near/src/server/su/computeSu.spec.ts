@@ -96,6 +96,15 @@ describe("computeSu", () => {
     await expectSuAnswerUpdated(surveyId);
     await expectSurveyUpdated(surveyId);
   });
+
+  it("should erase data su before recomputing", () => {
+    // TODO mock api su to return 4 su
+    // TODO compute
+    // TODO mock api su to return 3 su
+    // TODO compute
+    // TODO assert that only 3 su are linked to this survey
+    fail("Not implemented yet");
+  });
 });
 
 const createSurvey = (surveyId: number) =>
