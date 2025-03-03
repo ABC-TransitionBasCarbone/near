@@ -39,7 +39,7 @@ export function SurveyStateProvider({ children }: { children: ReactNode }) {
       updateStep(survey?.phase);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [survey]);
+  }, [survey?.phase]);
 
   return (
     <SurveyStateContext.Provider value={{ step, updateStep }}>
