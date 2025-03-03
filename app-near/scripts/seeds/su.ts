@@ -79,7 +79,7 @@ Valid values for surveyCase: ${Object.values(SurveyCase)
       .join(", ")}`);
   }
 
-  const survey = await db.survey.findFirst({
+  const survey = await db.survey.findUnique({
     where: { name: surveyName },
     include: { quartier: true },
   });

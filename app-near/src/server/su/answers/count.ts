@@ -2,7 +2,7 @@ import { AgeCategory, Gender, ProfessionalCategory } from "@prisma/client";
 import { db } from "../../db";
 import { CategoryStat } from "~/types/SuAnswer";
 
-export const countAnswsers = async (surveyId: number): Promise<number> => {
+export const countAnswers = async (surveyId: number): Promise<number> => {
   return db.suAnswer.count({ where: { surveyId } });
 };
 

@@ -12,7 +12,7 @@ interface Result {
   value: string | unknown;
 }
 export const sendUsersSu = async (surveyId: number): Promise<Result[]> => {
-  const survey = await db.survey.findFirst({ where: { id: surveyId } });
+  const survey = await db.survey.findUnique({ where: { id: surveyId } });
 
   if (!survey || survey.phase !== SurveyPhase.STEP_3_SU_EXPLORATION) {
     throw new TRPCError({

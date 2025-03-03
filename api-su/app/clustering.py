@@ -19,7 +19,9 @@ def convert_to_vector_co2eq(user_data):
     # value 1 matches element with index 0 of ratio array
     # value 2 matches element with index 1 of ratio array
     # etc.
-    result[DataIndex.MEET_FREQUENCY.value] = constants.RATIO_MEET_FREQUENCY[user_data.get("meat_frequency") - 1]
+    result[DataIndex.MEET_FREQUENCY.value] = constants.RATIO_MEET_FREQUENCY[
+        user_data.get("meat_frequency") - 1
+    ]
     result[DataIndex.TRANSPORTATION_MODE.value] = constants.RATIO_TRANSPORTATION_MODE[
         user_data.get("transportation_mode") - 1
     ]
@@ -29,8 +31,12 @@ def convert_to_vector_co2eq(user_data):
     result[DataIndex.PURCHASING_STRATEGY.value] = constants.RATIO_PURCHASING_STRATEGY[
         user_data.get("purchasing_strategy") - 1
     ]
-    result[DataIndex.AIR_TRAVEL_FREQUENCY.value] = constants.RATIO_AIR_TRAVEL_FREQUENCY[user_data.get("air_travel_frequency") - 1]
-    result[DataIndex.HEAT_SOURCE.value] = constants.RATIO_HEAT_SOURCE[user_data.get("heat_source") - 1]
+    result[DataIndex.AIR_TRAVEL_FREQUENCY.value] = constants.RATIO_AIR_TRAVEL_FREQUENCY[
+        user_data.get("air_travel_frequency") - 1
+    ]
+    result[DataIndex.HEAT_SOURCE.value] = constants.RATIO_HEAT_SOURCE[
+        user_data.get("heat_source") - 1
+    ]
     return result
 
 
@@ -168,13 +174,22 @@ def h_clustering(data, floor, top, min_count, distance=distance_euclidean):
     return clusters, sample_size
 
 
+def convert_all_to_cluster(sus_data):
+    return [
+        Cluster(vector=su["barycenter"])
+        for su in sorted(sus_data, key=lambda x: x["su"])
+    ]
+
+
 def get_answer_attributed_su(user_data, clusters):
     su, distance = get_closest_cluster(clusters, convert_to_vector_co2eq(user_data))
-    return {
-        "id": user_data.get("id"),
+    result = {
         "su": su + 1,
         "distance_to_barycenter": distance,
     }
+    if user_data.get("id") is not None:
+        result["id"] = user_data["id"]
+    return result
 
 
 def format_computed_su(cluster, i, sample_size):

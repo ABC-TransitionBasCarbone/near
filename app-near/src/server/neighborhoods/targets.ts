@@ -5,7 +5,7 @@ import { TRPCError } from "@trpc/server";
 const getInseeTargetsByCategories = async (
   surveyId: number,
 ): Promise<Record<CategoryStat, number>> => {
-  const neighborhood = await db.quartier.findFirst({ where: { surveyId } });
+  const neighborhood = await db.quartier.findUnique({ where: { surveyId } });
   if (!neighborhood) {
     throw new TRPCError({
       code: "NOT_FOUND",

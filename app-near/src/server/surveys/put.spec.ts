@@ -10,6 +10,8 @@ describe("surveys put", () => {
   const allSurveyPhases = Object.values(SurveyPhase);
 
   beforeEach(async () => {
+    await db.suAnswer.deleteMany().catch(() => null);
+    await db.suData.deleteMany().catch(() => null);
     // do not throw error when survey is not found
     await db.survey.delete({ where: { name: surveyName } }).catch(() => null);
     jest
