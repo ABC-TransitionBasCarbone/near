@@ -3,10 +3,8 @@
 import ProgressBar from "../progress-bar/Progressbar";
 import { api } from "~/trpc/react";
 import { useSession } from "next-auth/react";
-import { useEffect, useRef } from "react";
 import { useSurveyStateContext } from "../_context/surveyStateContext";
 import { surveyConfig, surveySteps } from "./steps/config";
-import { type SurveyPhase } from "@prisma/client";
 
 const SurveyHeader = () => {
   const { data: session } = useSession();
@@ -16,16 +14,6 @@ const SurveyHeader = () => {
   const { data: survey } = api.surveys.getOne.useQuery(undefined, {
     enabled: !!session?.user?.surveyId,
   });
-
-  const previousSurveyPhase = useRef<SurveyPhase | undefined>(undefined);
-
-  useEffect(() => {
-    if (survey && survey.phase !== previousSurveyPhase.current) {
-      updateStep(survey.phase);
-      previousSurveyPhase.current = survey.phase;
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [survey, updateStep]);
 
   if (!step || !survey) {
     return null;

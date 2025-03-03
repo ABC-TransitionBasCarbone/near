@@ -33,7 +33,12 @@ export const handleAnswer = async (req: NextRequest): Promise<NextResponse> => {
     console.debug("[whebhook typeform]", formId, JSON.stringify(answers));
 
     if (formId === env.SU_FORM_ID) {
-      return await handleSuForm(parsedBody, answers, formId);
+      return await handleSuForm(
+        answers,
+        formId,
+        parsedBody.form_response.hidden?.neighborhood,
+        parsedBody.form_response.hidden?.broadcast_channel,
+      );
     }
     return unknwonFormIdResponse(formId);
   } catch (error) {
