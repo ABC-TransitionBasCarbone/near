@@ -20,9 +20,7 @@ describe("computeSu", () => {
   let apiSuSpy: jest.SpyInstance;
 
   beforeEach(async () => {
-    await db.suAnswer
-      .deleteMany({ where: { surveyId: surveyId } })
-      .catch(() => null);
+    await db.suAnswer.deleteMany().catch(() => null);
     await db.suData
       .deleteMany({ where: { surveyId: surveyId } })
       .catch(() => null);
