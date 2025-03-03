@@ -7,9 +7,7 @@ import { TRPCError } from "@trpc/server";
 describe("sendUsersSu", () => {
   const surveyId = 654;
   beforeEach(async () => {
-    await db.suAnswer
-      .deleteMany({ where: { surveyId: surveyId } })
-      .catch(() => null);
+    await db.suAnswer.deleteMany().catch(() => null);
     await db.suData
       .deleteMany({ where: { surveyId: surveyId } })
       .catch(() => null);

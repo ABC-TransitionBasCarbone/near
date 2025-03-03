@@ -7,16 +7,11 @@ export const saveSuData = async (
 ): Promise<string[]> => {
   const suNames: string[] = [];
 
+  await db.suData.deleteMany({ where: { surveyId } });
+
   for (const suData of computedSus) {
-    await db.suData.upsert({
-      where: {
-        surveyId_su: { surveyId: surveyId, su: suData.su },
-      },
-      update: {
-        popPercentage: suData.popPercentage,
-        barycenter: suData.barycenter,
-      },
-      create: {
+    await db.suData.create({
+      data: {
         surveyId: surveyId,
         su: suData.su,
         popPercentage: suData.popPercentage,

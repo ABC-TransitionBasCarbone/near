@@ -60,7 +60,7 @@ describe("computeSu", () => {
     }
   });
 
-  it.only("should throw error if api call failed", async () => {
+  it("should throw error if api call failed", async () => {
     await createSurvey(surveyId);
     await createSuAnswers(surveyId);
 
@@ -98,13 +98,34 @@ describe("computeSu", () => {
     await expectSurveyUpdated(surveyId);
   });
 
-  it("should erase data su before recomputing", () => {
-    // TODO mock api su to return 4 su
-    // TODO compute
-    // TODO mock api su to return 3 su
-    // TODO compute
-    // TODO assert that only 3 su are linked to this survey
-    fail("Not implemented yet");
+  it("should erase data su before recomputing", async () => {
+    await createSurvey(surveyId);
+    await createSuAnswers(surveyId);
+
+    const response = buildApiSuResponse();
+    response.computedSus.push({
+      su: 4,
+      barycenter: [800, 400, 280, 600, 500, 1200],
+      popPercentage: 20.0,
+    });
+
+    apiSuSpy.mockReturnValue(Promise.resolve(response));
+    await computeSu(surveyId);
+
+    const suDatas = await db.suData.findMany({
+      where: { surveyId },
+    });
+    expect(suDatas).toHaveLength(4);
+
+    apiSuSpy.mockReturnValue(Promise.resolve(buildApiSuResponse()));
+    await computeSu(surveyId);
+
+    const answer = await db.suAnswer.findMany({ where: { surveyId } });
+    expect(answer.length).toBe(3);
+
+    await expectSuDataCreated(surveyId);
+    await expectSuAnswerUpdated(surveyId);
+    await expectSurveyUpdated(surveyId);
   });
 });
 
