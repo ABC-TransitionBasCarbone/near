@@ -3,6 +3,8 @@ export enum ErrorCode {
   MISSING_SURVEY_PHASE = "MISSING_SURVEY_PHASE",
   SU_NOT_COMPUTED = "SU_NOT_COMPUTED",
   SU_SEND_EMAIL = "SU_SEND_EMAIL",
+  UNEXPECTED_ERROR = "UNEXPECTED_ERROR",
+  UNEXPECTED_COMPUTE_SU_ERROR = "UNEXPECTED_COMPUTE_SU_ERROR",
 }
 
 export const errorCodeMapper: Record<ErrorCode, string> = {
@@ -14,4 +16,7 @@ export const errorCodeMapper: Record<ErrorCode, string> = {
     "Les emails n'ont pas été correctement envoyés, veuillez vous rapporcher du support pour déterminer l'impact.",
   [ErrorCode.WRONG_SURVEY_PHASE]:
     "Votre sondage n'est pas à une phase lui permettant de réaliser cette action.",
+  [ErrorCode.UNEXPECTED_ERROR]: "An unexpected error occurred.",
+  [ErrorCode.UNEXPECTED_COMPUTE_SU_ERROR]:
+    "Une erreur inatentue pour computeSus s'est produite",
 };

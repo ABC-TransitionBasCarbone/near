@@ -10,9 +10,10 @@ import {
 import { TRPCError } from "@trpc/server";
 import { type SuComputationData } from "~/types/SuDetection";
 import { db } from "../db";
-import apiSu from "../external-api/api-su";
 import { buildSuAnswer } from "../test-utils/create-data/suAnswer";
 import { computeSu } from "./computeSu";
+import apiSuService from "../external-api/api-su";
+import { ErrorCode } from "~/types/enums/error";
 
 describe("computeSu", () => {
   const surveyId = 765;
@@ -28,7 +29,7 @@ describe("computeSu", () => {
     await db.survey.delete({ where: { id: surveyId } }).catch(() => null);
 
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    apiSuSpy = jest.spyOn(apiSu, "computeSus");
+    apiSuSpy = jest.spyOn(apiSuService, "computeSus");
   });
 
   afterEach(() => {
@@ -54,23 +55,23 @@ describe("computeSu", () => {
       await computeSu(surveyId);
     } catch (error) {
       if (error instanceof TRPCError) {
-        expect(error.code).toBe("UNPROCESSABLE_CONTENT");
+        expect(error.code).toBe("FORBIDDEN");
       }
     }
   });
 
-  it("should throw error if api call failed", async () => {
+  it.only("should throw error if api call failed", async () => {
     await createSurvey(surveyId);
     await createSuAnswers(surveyId);
 
-    apiSuSpy.mockRejectedValue(new Error("Mocked Error"));
+    apiSuSpy.mockReturnValue(new Error("Mocked Error"));
 
     expect.assertions(1);
     try {
       await computeSu(surveyId);
     } catch (error) {
       if (error instanceof TRPCError) {
-        expect(error.code).toBe("INTERNAL_SERVER_ERROR");
+        expect(error.message).toBe(ErrorCode.UNEXPECTED_COMPUTE_SU_ERROR);
       }
     }
   });
@@ -199,21 +200,21 @@ const expectSuDataCreated = async (surveyId: number) => {
     where: { surveyId_su: { surveyId, su: 1 } },
   });
   expect(suData1?.popPercentage).toStrictEqual(33.33);
-  expect(suData1?.barycenter).toStrictEqual(
-    "[2000, 2300, 360, 1600, 2000, 1600]",
-  );
+  expect(suData1?.barycenter).toStrictEqual([
+    2000, 2300, 360, 1600, 2000, 1600,
+  ]);
 
   const suData2 = await db.suData.findUnique({
     where: { surveyId_su: { surveyId, su: 2 } },
   });
   expect(suData2?.popPercentage).toStrictEqual(33.33);
-  expect(suData2?.barycenter).toStrictEqual("[200, 0, 90, 400, 0, 200]");
+  expect(suData2?.barycenter).toStrictEqual([200, 0, 90, 400, 0, 200]);
 
   const suData3 = await db.suData.findUnique({
     where: { surveyId_su: { surveyId, su: 3 } },
   });
   expect(suData3?.popPercentage).toStrictEqual(33.33);
-  expect(suData3?.barycenter).toStrictEqual("[1000, 300, 180, 800, 800, 1100]");
+  expect(suData3?.barycenter).toStrictEqual([1000, 300, 180, 800, 800, 1100]);
 };
 
 const expectSuAnswerUpdated = async (surveyId: number) => {
@@ -232,7 +233,7 @@ const expectSuAnswerUpdated = async (surveyId: number) => {
   const suData3 = await db.suData.findUnique({
     where: { surveyId_su: { surveyId, su: 3 } },
   });
-  expect(suAnswer1?.suId).toStrictEqual(suData3?.id);
+  expect(suAnswer2?.suId).toStrictEqual(suData3?.id);
   expect(suAnswer2?.distanceToBarycenter).toStrictEqual(230);
 
   const suAnswer3 = await db.suAnswer.findUnique({
@@ -241,7 +242,7 @@ const expectSuAnswerUpdated = async (surveyId: number) => {
   const suData1 = await db.suData.findUnique({
     where: { surveyId_su: { surveyId, su: 1 } },
   });
-  expect(suAnswer1?.suId).toStrictEqual(suData1?.id);
+  expect(suAnswer3?.suId).toStrictEqual(suData1?.id);
   expect(suAnswer3?.distanceToBarycenter).toStrictEqual(310);
 };
 

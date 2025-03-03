@@ -11,8 +11,9 @@ import {
 import { db } from "../db";
 import { TRPCError } from "@trpc/server";
 import { convertToSuAnswerData, convertToSuAnswerDataWithId } from "./convert";
+import { ErrorCode } from "~/types/enums/error";
 
-export const buildSuComputationRequest = async (
+const buildSuComputationRequest = async (
   surveyId: number,
 ): Promise<SuAnswerDataWithId[]> => {
   const suAnswers: SuAnswer[] = await db.suAnswer.findMany({
@@ -21,9 +22,10 @@ export const buildSuComputationRequest = async (
   return suAnswers.map((suAnswer) => convertToSuAnswerDataWithId(suAnswer));
 };
 
-export const computeSus = async (
+const computeSus = async (
   payload: SuAnswerDataWithId[],
 ): Promise<SuComputationData> => {
+  console.log("SHOULD NOT PASSSSSSSS");
   try {
     const snakecasePayload = payload.map((suAnswerData: SuAnswerDataWithId) =>
       // eslint-disable-next-line @typescript-eslint/no-unsafe-return
@@ -63,77 +65,77 @@ export const computeSus = async (
     }
     throw new TRPCError({
       code: "INTERNAL_SERVER_ERROR",
-      message: "An unexpected error occurred.",
+      message: ErrorCode.UNEXPECTED_ERROR,
     });
   }
 };
 
-export const buildSuAssignmentRequest = async (
-  surveyId: number,
-  suAnswer: SuAnswer, // TODO: update with correct type
-): Promise<SuAssignementRequest> => {
-  const suDatas: SuData[] = await db.suData.findMany({
-    where: { surveyId },
-  });
-  return {
-    sus: suDatas.map((suData) => {
-      return { su: suData.su, barycenter: suData.barycenter as number[] };
-    }),
-    userData: convertToSuAnswerData(suAnswer),
-  };
-};
+// ? those functions are not used
 
-export const assignSu = async (
-  payload: SuAssignementRequest,
-): Promise<AnswerAttributedSu> => {
-  try {
-    const snakeCaseAssignRequest = snakecaseKeys(
-      payload as unknown as Record<string, unknown>,
-    );
+// const buildSuAssignmentRequest = async (
+//   surveyId: number,
+//   suAnswer: SuAnswer, // TODO: update with correct type
+// ): Promise<SuAssignementRequest> => {
+//   const suDatas: SuData[] = await db.suData.findMany({
+//     where: { surveyId },
+//   });
+//   return {
+//     sus: suDatas.map((suData) => {
+//       return { su: suData.su, barycenter: suData.barycenter as number[] };
+//     }),
+//     userData: convertToSuAnswerData(suAnswer),
+//   };
+// };
 
-    const response = await fetch(`${env.API_SU_URL}/api-su/assign`, {
-      method: "POST",
-      headers: {
-        "X-API-KEY": `${env.API_SU_KEY}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(snakeCaseAssignRequest),
-    });
+// const assignSu = async (
+//   payload: SuAssignementRequest,
+// ): Promise<AnswerAttributedSu> => {
+//   try {
+//     const snakeCaseAssignRequest = snakecaseKeys(
+//       payload as unknown as Record<string, unknown>,
+//     );
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    const snakeCaseAssignResponse = await response.json();
+//     const response = await fetch(`${env.API_SU_URL}/api-su/assign`, {
+//       method: "POST",
+//       headers: {
+//         "X-API-KEY": `${env.API_SU_KEY}`,
+//         "Content-Type": "application/json",
+//       },
+//       body: JSON.stringify(snakeCaseAssignRequest),
+//     });
 
-    if (!response.ok) {
-      throw new Error(
-        `Status=${response.status} Content=${snakeCaseAssignResponse}`,
-      );
-    }
+//     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+//     const snakeCaseAssignResponse = await response.json();
 
-    const camelCaseAssignResponse = camelcaseKeys(snakeCaseAssignResponse, {
-      deep: true,
-    }) as AnswerAttributedSu;
+//     if (!response.ok) {
+//       throw new Error(
+//         `Status=${response.status} Content=${snakeCaseAssignResponse}`,
+//       );
+//     }
 
-    return camelCaseAssignResponse;
-  } catch (error) {
-    console.error("Error calling API SU assign:", error);
-    if (error instanceof TypeError) {
-      throw new TRPCError({
-        code: "INTERNAL_SERVER_ERROR",
-        message: "Network error occurred while calling the API SU assign.",
-      });
-    }
-    throw new TRPCError({
-      code: "INTERNAL_SERVER_ERROR",
-      message: "An unexpected error occurred.",
-    });
-  }
-};
+//     const camelCaseAssignResponse = camelcaseKeys(snakeCaseAssignResponse, {
+//       deep: true,
+//     }) as AnswerAttributedSu;
 
-const apiSu = {
+//     return camelCaseAssignResponse;
+//   } catch (error) {
+//     console.error("Error calling API SU assign:", error);
+//     if (error instanceof TypeError) {
+//       throw new TRPCError({
+//         code: "INTERNAL_SERVER_ERROR",
+//         message: "Network error occurred while calling the API SU assign.",
+//       });
+//     }
+//     throw new TRPCError({
+//       code: "INTERNAL_SERVER_ERROR",
+//       message: ErrorCode.UNEXPECTED_ERROR,
+//     });
+//   }
+// };
+
+const apiSuService = {
   buildSuComputationRequest,
   computeSus,
-  buildSuAssignmentRequest,
-  assignSu,
 };
 
-export default apiSu;
+export default apiSuService;
