@@ -5,16 +5,16 @@ import {
   type SuAnswer,
 } from "@prisma/client";
 import { NextResponse } from "next/server";
-import type { ConvertedSuAnswer } from "../../../types/SuAnswer";
-import type { TypeformWebhookPayload } from "../../../types/typeform";
 import { createSu } from "../../su/answers/create";
 import { getOneSurveyByName } from "../../surveys/get";
 import { typeformSchemaMapper } from "../schema";
+import { type ConvertedSuAnswer } from "~/types/SuAnswer";
 
 export const handleSuForm = async (
-  parsedBody: TypeformWebhookPayload,
   answers: Record<string, string | boolean>,
   formId: string,
+  neighborhood?: string,
+  broadcastChannel?: string,
 ): Promise<
   NextResponse<{ message: string }> | NextResponse<{ error: string }>
 > => {
@@ -36,7 +36,7 @@ export const handleSuForm = async (
   const { isNeighborhoodResident, ...createQuery } = parsedAnswer;
 
   // no survey name in hidden fields
-  const surveyName = parsedBody.form_response.hidden?.neighborhood;
+  const surveyName = neighborhood;
   if (!surveyName) {
     return noSurveyNameProvidedResponse(formId);
   }
@@ -53,7 +53,6 @@ export const handleSuForm = async (
   }
 
   // create su
-  const broadcastChannel = parsedBody.form_response.hidden?.broadcast_channel;
   await createSu({ ...createQuery, broadcastChannel } as SuAnswer, surveyName);
 
   return NextResponse.json({ message: "created" }, { status: 201 });
