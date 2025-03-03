@@ -1,6 +1,6 @@
 import {
   getBelowThresholdValues,
-  THRESHOLD_VALUE,
+  THRESHOLD_ALERT_VALUE,
 } from "~/shared/services/su-surveys/threshold";
 import { CategoryLabels } from "../../../../../../types/enums/category";
 import { type CategoryStats } from "~/types/SuAnswer";
@@ -16,7 +16,10 @@ const RepresentativenessStats: React.FC<RepresentativenessStats> = ({
     return null;
   }
 
-  const filteredData = getBelowThresholdValues(categoryStats, THRESHOLD_VALUE);
+  const filteredData = getBelowThresholdValues(
+    categoryStats,
+    THRESHOLD_ALERT_VALUE,
+  );
 
   if (!filteredData || Object.keys(filteredData).length === 0) {
     return null;

@@ -3,8 +3,8 @@ import { db } from "../db";
 import { type Survey, SurveyPhase } from "@prisma/client";
 import representativenessService from "../su/answers/representativeness";
 import {
-  getBelowThresholdValues,
-  THRESHOLD_VALUE,
+  isRepresentativenessValid,
+  THRESHOLD_ACCEPT_VALUE,
 } from "~/shared/services/su-surveys/threshold";
 
 const allSurveyPhases = Object.values(SurveyPhase);
@@ -36,9 +36,7 @@ const enrichWithThresholdReached = async (
       await representativenessService.representativeness(surveyId);
 
     return representativenessData &&
-      Object.values(
-        getBelowThresholdValues(representativenessData, THRESHOLD_VALUE),
-      ).length === 0
+      isRepresentativenessValid(representativenessData, THRESHOLD_ACCEPT_VALUE)
       ? { thresholdReached: true }
       : {};
   }
