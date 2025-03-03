@@ -18,7 +18,11 @@ const RepresentativenessConfirmModal: React.FC<
   const updateSurveyStep = useUpdateSurveyStep();
 
   return (
-    <Modal show={showModal} onClose={() => setShowModal(false)}>
+    <Modal
+      show={showModal}
+      onClose={() => setShowModal(false)}
+      styles="rounded-2xl"
+    >
       <div className="flex max-h-screen w-full max-w-[500px] flex-col gap-8 overflow-auto p-8">
         <div className="flex justify-between text-blue">
           <button
@@ -57,6 +61,7 @@ const RepresentativenessConfirmModal: React.FC<
             color="blue"
             style={ButtonStyle.FILLED}
             href={`mailto:${env.NEXT_PUBLIC_CONTACT_EMAIL}`}
+            customStyle="rounded-[4px]"
           >
             Contacter l&apos;équipe NEAR
           </LinkAsButton>
@@ -64,6 +69,7 @@ const RepresentativenessConfirmModal: React.FC<
             icon="/icons/arrow-back.svg"
             color="blue"
             onClick={() => setShowModal(false)}
+            customStyle="rounded-[4px]"
           >
             Revenir à l&apos;étape précédente
           </Button>
@@ -72,6 +78,7 @@ const RepresentativenessConfirmModal: React.FC<
             color="blue"
             border={false}
             onClick={() => updateSurveyStep(nextStep)}
+            customStyle="rounded-[4px]"
           >
             Finaliser quand même l&apos;enquête
           </Button>

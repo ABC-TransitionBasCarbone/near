@@ -19,11 +19,12 @@ import RepresentativenessPage from "./RepresentativenessPage";
 import { api } from "~/trpc/react";
 import { useSession } from "next-auth/react";
 import {
-  getBelowThresholdValues,
-  THRESHOLD_VALUE,
+  isRepresentativenessValid,
+  THRESHOLD_ACCEPT_VALUE,
 } from "~/shared/services/su-surveys/threshold";
 import useUpdateSurveyStep from "../../../hooks/useUpdateSurveyStep";
 import RepresentativenessConfirmModal from "./RepresentativenessConfirmModal";
+import { SurveyPhase } from "@prisma/client";
 
 interface RepresentativenessLayoutProps {
   setToggleBroadcastingPage: Dispatch<SetStateAction<boolean>>;
@@ -59,10 +60,9 @@ const RepresentativenessLayout: React.FC<RepresentativenessLayoutProps> = ({
     !count ||
     !survey?.sampleTarget ||
     count < survey.sampleTarget ||
-    Object.values(getBelowThresholdValues(categoryStats, THRESHOLD_VALUE))
-      .length !== 0;
+    !isRepresentativenessValid(categoryStats, THRESHOLD_ACCEPT_VALUE);
 
-  if (!survey || step === undefined || !categoryStats) {
+  if (!survey || step === undefined) {
     return "Loading...";
   }
 
@@ -110,6 +110,7 @@ const RepresentativenessLayout: React.FC<RepresentativenessLayoutProps> = ({
                 <Button
                   icon="/icons/rocket.svg"
                   rounded
+                  disabled={survey.phase !== SurveyPhase.STEP_2_SU_SURVERY}
                   style={ButtonStyle.LIGHT}
                   onClick={() => {
                     setToggleBroadcastingPage(true);

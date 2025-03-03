@@ -7,7 +7,7 @@ import { type CategoryStats } from "~/types/SuAnswer";
 import { type Quartier, type Survey } from "@prisma/client";
 
 interface RepresentativenessPageProps {
-  categoryStats?: CategoryStats;
+  categoryStats?: CategoryStats | null;
   survey: Survey & { quartier: Quartier | null };
 }
 const RepresentativenessPage: React.FC<RepresentativenessPageProps> = ({
@@ -37,7 +37,7 @@ const RepresentativenessPage: React.FC<RepresentativenessPageProps> = ({
   }
 
   return (
-    <div className="mx-6">
+    <div className="mx-6 my-8 flex flex-col gap-8">
       <SampleRadioOptions
         selected={selected}
         setSelected={setSelected}
@@ -52,7 +52,9 @@ const RepresentativenessPage: React.FC<RepresentativenessPageProps> = ({
 
       {selected !== null && (
         <>
-          <RepresentativenessStats categoryStats={categoryStats} />
+          {categoryStats && (
+            <RepresentativenessStats categoryStats={categoryStats} />
+          )}
           <RepresentativenessDashboard target={selected} session={session} />
         </>
       )}

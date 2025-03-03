@@ -31,8 +31,8 @@ const getAnswerQuantity = (
     case SurveyCase.MORE_THAN_CATEGORIES_TARGETS:
     case SurveyCase.MORE_THAN_GLOBAL_TARGET:
       return faker.number.int({
-        min: surveyTarget + Math.floor(surveyTarget / 2),
-        max: 2 * surveyTarget,
+        min: 5 * surveyTarget,
+        max: 10 * surveyTarget,
       });
     default:
       return 0;
@@ -79,7 +79,7 @@ Valid values for surveyCase: ${Object.values(SurveyCase)
       .join(", ")}`);
   }
 
-  const survey = await db.survey.findFirst({
+  const survey = await db.survey.findUnique({
     where: { name: surveyName },
     include: { quartier: true },
   });

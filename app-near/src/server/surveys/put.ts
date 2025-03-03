@@ -3,8 +3,8 @@ import { db } from "../db";
 import { type Survey, SurveyPhase } from "@prisma/client";
 import representativenessService from "../su/answers/representativeness";
 import {
-  getBelowThresholdValues,
-  THRESHOLD_VALUE,
+  isRepresentativenessValid,
+  THRESHOLD_ACCEPT_VALUE,
 } from "~/shared/services/su-surveys/threshold";
 
 const allSurveyPhases = Object.values(SurveyPhase);
@@ -36,9 +36,7 @@ const enrichWithThresholdReached = async (
       await representativenessService.representativeness(surveyId);
 
     return representativenessData &&
-      Object.values(
-        getBelowThresholdValues(representativenessData, THRESHOLD_VALUE),
-      ).length === 0
+      isRepresentativenessValid(representativenessData, THRESHOLD_ACCEPT_VALUE)
       ? { thresholdReached: true }
       : {};
   }
@@ -46,7 +44,7 @@ const enrichWithThresholdReached = async (
 };
 
 export const updateSurvey = async (id: number, data: Partial<Survey>) => {
-  const existingSurvey = await db.survey.findFirst({ where: { id } });
+  const existingSurvey = await db.survey.findUnique({ where: { id } });
 
   if (!existingSurvey) {
     throw new TRPCError({ code: "NOT_FOUND" });

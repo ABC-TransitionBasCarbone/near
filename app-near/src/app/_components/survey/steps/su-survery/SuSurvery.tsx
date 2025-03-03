@@ -4,7 +4,7 @@ import { useState } from "react";
 import BroadcastingLayout from "./broadcasting/BroadcastingLayout";
 import RepresentativenessLayout from "./representativeness/RepresentativenessLayout";
 
-const Main: React.FC = () => {
+const SuSurvery: React.FC = () => {
   const [toggleBroadcastingPage, setToggleBroadcastingPage] = useState(false);
 
   if (toggleBroadcastingPage) {
@@ -21,4 +21,4 @@ const Main: React.FC = () => {
   );
 };
 
-export default Main;
+export default SuSurvery;

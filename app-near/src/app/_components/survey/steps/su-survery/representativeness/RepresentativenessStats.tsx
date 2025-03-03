@@ -1,6 +1,6 @@
 import {
   getBelowThresholdValues,
-  THRESHOLD_VALUE,
+  THRESHOLD_ALERT_VALUE,
 } from "~/shared/services/su-surveys/threshold";
 import { CategoryLabels } from "../../../../../../types/enums/category";
 import { type CategoryStats } from "~/types/SuAnswer";
@@ -16,14 +16,17 @@ const RepresentativenessStats: React.FC<RepresentativenessStats> = ({
     return null;
   }
 
-  const filteredData = getBelowThresholdValues(categoryStats, THRESHOLD_VALUE);
+  const filteredData = getBelowThresholdValues(
+    categoryStats,
+    THRESHOLD_ALERT_VALUE,
+  );
 
   if (!filteredData || Object.keys(filteredData).length === 0) {
     return null;
   }
 
   return (
-    <div className="m-auto mt-10 flex w-fit flex-col gap-4 rounded-lg bg-brownLight p-5">
+    <div className="m-auto flex w-fit flex-col gap-4 rounded-lg bg-brownLight p-5">
       <div className="mx-auto h-auto w-7">
         <img src="/icons/warning-orange.svg" alt="" />
       </div>

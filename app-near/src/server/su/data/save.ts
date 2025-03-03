@@ -7,28 +7,17 @@ export const saveSuData = async (
 ): Promise<string[]> => {
   const suNames: string[] = [];
 
+  await db.suData.deleteMany({ where: { surveyId } });
+
   for (const suData of computedSus) {
-    const existingSuData = await db.suData.findUnique({
-      where: { survey_id_su: { survey_id: surveyId, su: suData.su } },
+    await db.suData.create({
+      data: {
+        surveyId: surveyId,
+        su: suData.su,
+        popPercentage: suData.popPercentage,
+        barycenter: suData.barycenter,
+      },
     });
-    if (existingSuData) {
-      await db.suData.update({
-        where: { survey_id_su: { survey_id: surveyId, su: suData.su } },
-        data: {
-          pop_percentage: suData.popPercentage,
-          barycenter: suData.barycenter,
-        },
-      });
-    } else {
-      await db.suData.create({
-        data: {
-          survey_id: surveyId,
-          su: suData.su,
-          pop_percentage: suData.popPercentage,
-          barycenter: suData.barycenter,
-        },
-      });
-    }
 
     suNames.push(`${suData.su}`);
   }

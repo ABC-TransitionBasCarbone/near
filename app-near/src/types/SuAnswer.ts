@@ -26,7 +26,7 @@ export const convertedSuAnswer = z.object({
   purchasingStrategy: z.nativeEnum(PurchasingStrategy),
   airTravelFrequency: z.nativeEnum(AirTravelFrequency),
   heatSource: z.nativeEnum(HeatSource),
-  email: z.string().email().optional(),
+  email: z.string().email().or(z.literal("")).optional().nullable(),
 });
 
 export type ConvertedSuAnswer = z.infer<typeof convertedSuAnswer>;
@@ -35,7 +35,7 @@ export type BuilderSuAnswer = Omit<
   SuAnswer,
   "id" | "su" | "distanceToBarycenter"
 > &
-  Partial<Pick<SuAnswer, "id" | "su" | "distanceToBarycenter">>;
+  Partial<Pick<SuAnswer, "id" | "suId" | "distanceToBarycenter">>;
 
 export enum CategoryStat {
   man = "man",

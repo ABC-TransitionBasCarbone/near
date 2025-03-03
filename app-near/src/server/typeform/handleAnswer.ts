@@ -1,90 +1,46 @@
 import { type NextRequest, NextResponse } from "next/server";
-import { verifySignature } from "./signature";
-import { getReferencesMapping } from "../surveys/references";
-import { convertFormToAnswer } from "./convert";
-import { TypeformWebhookSchema } from "~/types/typeform";
-import { typeformSchemaMapper } from "./schema";
-import { createSu } from "../su/answers/create";
-import { AgeCategory, type SuAnswer } from "@prisma/client";
 import { z } from "zod";
 import { env } from "~/env";
-import { type ConvertedSuAnswer } from "~/types/SuAnswer";
+import {
+  type TypeformWebhookPayload,
+  TypeformWebhookSchema,
+} from "~/types/typeform";
+import { getReferencesMapping } from "../surveys/references";
+import { convertFormToAnswer } from "./convert";
+import { handleSuForm } from "./handlers/handleSuForm";
+import { verifySignature } from "./signature";
 
 export const handleAnswer = async (req: NextRequest): Promise<NextResponse> => {
   let formId: string | undefined = undefined;
   try {
     const body = await req.text();
-    const parsedBody = TypeformWebhookSchema.parse(JSON.parse(body));
-    const header = req.headers;
+    const parsedBody: TypeformWebhookPayload = TypeformWebhookSchema.parse(
+      JSON.parse(body),
+    );
     formId = parsedBody.form_response.form_id;
-    const signature = header.get("Typeform-Signature") ?? "";
-    console.info("[whebhook typeform]", formId, body);
+    console.debug("[whebhook typeform]", formId, body);
 
-    const isSecure = verifySignature(signature, body);
-
-    if (!isSecure) {
-      return NextResponse.json(
-        { error: "Not authorized", details: formId },
-        { status: 401 },
-      );
+    if (!isValidSignature(req, body)) {
+      return unauthorizedResponse(formId);
     }
 
     const referencesMapping = getReferencesMapping(formId);
-
     if (!referencesMapping) {
-      console.error(
-        "[whebhook typeform]",
-        formId,
-        "ERROR: References mapping not found",
-      );
-      return NextResponse.json(
-        { error: "References mapping not found" },
-        { status: 401 },
-      );
+      return referenceMappingNotFoundResponse(formId);
     }
 
     const answers = convertFormToAnswer(parsedBody, referencesMapping);
-    console.info("[whebhook typeform]", formId, JSON.stringify(answers));
+    console.debug("[whebhook typeform]", formId, JSON.stringify(answers));
 
     if (formId === env.SU_FORM_ID) {
-      if (answers.isNeighborhoodResident !== true) {
-        return NextResponse.json(
-          { message: "user should live in neighborhood" },
-          { status: 200 },
-        );
-      }
-      if (
-        !Object.values(AgeCategory).includes(answers.ageCategory as AgeCategory)
-      ) {
-        return NextResponse.json(
-          { message: "user age is not allowed" },
-          { status: 200 },
-        );
-      }
-
-      const parsedAnswer = typeformSchemaMapper[formId]?.parse(answers);
-      const surveyName = parsedBody.form_response.hidden?.neighborhood;
-      if (!surveyName) {
-        console.error("[whebhook typeform]", formId, "Survey name not found");
-        return NextResponse.json(
-          { error: "Survey name not found" },
-          { status: 400 },
-        );
-      }
-      const broadcastChannel =
-        parsedBody.form_response.hidden?.broadcast_channel;
-
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { isNeighborhoodResident, ...answersToCreate } =
-        parsedAnswer as ConvertedSuAnswer;
-
-      await createSu(
-        { ...answersToCreate, broadcastChannel } as SuAnswer,
-        surveyName,
+      return await handleSuForm(
+        answers,
+        formId,
+        parsedBody.form_response.hidden?.neighborhood,
+        parsedBody.form_response.hidden?.broadcast_channel,
       );
     }
-
-    return NextResponse.json({ message: "created" }, { status: 201 });
+    return unknwonFormIdResponse(formId);
   } catch (error) {
     if (error instanceof z.ZodError) {
       console.error("[whebhook typeform]", formId, "ZOD ERROR :", error.errors);
@@ -105,4 +61,33 @@ export const handleAnswer = async (req: NextRequest): Promise<NextResponse> => {
       { status: 500 },
     );
   }
+};
+
+const isValidSignature = (req: NextRequest, body: string): boolean => {
+  const signature = req.headers.get("Typeform-Signature");
+  return verifySignature(signature, body);
+};
+
+const unknwonFormIdResponse = (formId?: string): NextResponse =>
+  NextResponse.json(
+    { error: "Unknown formid", details: formId },
+    { status: 404 },
+  );
+
+const unauthorizedResponse = (formId?: string): NextResponse =>
+  NextResponse.json(
+    { error: "Not authorized", details: formId },
+    { status: 401 },
+  );
+
+const referenceMappingNotFoundResponse = (formId?: string): NextResponse => {
+  console.error(
+    "[whebhook typeform]",
+    formId,
+    "ERROR: References mapping not found",
+  );
+  return NextResponse.json(
+    { error: "References mapping not found" },
+    { status: 400 },
+  );
 };

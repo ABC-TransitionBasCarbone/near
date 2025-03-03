@@ -10,6 +10,8 @@ describe("surveys put", () => {
   const allSurveyPhases = Object.values(SurveyPhase);
 
   beforeEach(async () => {
+    await db.suAnswer.deleteMany().catch(() => null);
+    await db.suData.deleteMany().catch(() => null);
     // do not throw error when survey is not found
     await db.survey.delete({ where: { name: surveyName } }).catch(() => null);
     jest
@@ -24,13 +26,27 @@ describe("surveys put", () => {
   describe(`When ${SurveyPhase.STEP_3_SU_EXPLORATION}`, () => {
     const thresholdTests = [
       {
-        label: "should update thresholdReached field to true",
-        diff: -0.2,
+        label:
+          "should update thresholdReached field to true with negative diff",
+        diff: -1.2,
         expected: true,
       },
       {
-        label: "should update thresholdReached field to false",
+        label:
+          "should update thresholdReached field to true with positive diff",
+        diff: 1.2,
+        expected: true,
+      },
+      {
+        label:
+          "should update thresholdReached field to false with negative diff",
         diff: -4.2,
+        expected: false,
+      },
+      {
+        label:
+          "should update thresholdReached field to false with positive diff",
+        diff: 4.2,
         expected: false,
       },
     ];

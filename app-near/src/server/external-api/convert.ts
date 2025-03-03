@@ -7,7 +7,10 @@ import {
   type SuAnswer,
   TransportationMode,
 } from ".prisma/client";
-import { type SuAnswerData } from "~/types/SuDetection";
+import {
+  type SuAnswerData,
+  type SuAnswerDataWithId,
+} from "~/types/SuDetection";
 
 const meatFrequencyMap: Record<MeatFrequency, number> = {
   [MeatFrequency.MINOR]: 1,
@@ -45,14 +48,22 @@ const heatSourceMap: Record<HeatSource, number> = {
   [HeatSource.OIL]: 3,
 };
 
-export const convert = (suAnswer: SuAnswer): SuAnswerData => {
+export const convertToSuAnswerData = (suAnswer: SuAnswer): SuAnswerData => {
   return {
-    id: suAnswer.id,
     meatFrequency: meatFrequencyMap[suAnswer.meatFrequency],
     transportationMode: transportationModeMap[suAnswer.transportationMode],
     digitalIntensity: digitalIntensityMap[suAnswer.digitalIntensity],
     purchasingStrategy: purchasingStategyMap[suAnswer.purchasingStrategy],
     airTravelFrequency: airTravelFrequencyMap[suAnswer.airTravelFrequency],
     heatSource: heatSourceMap[suAnswer.heatSource],
+  };
+};
+
+export const convertToSuAnswerDataWithId = (
+  suAnswer: SuAnswer,
+): SuAnswerDataWithId => {
+  return {
+    ...convertToSuAnswerData(suAnswer),
+    id: suAnswer.id,
   };
 };
