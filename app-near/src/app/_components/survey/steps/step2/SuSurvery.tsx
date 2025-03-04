@@ -1,8 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import BroadcastingLayout from "./broadcasting/BroadcastingLayout";
+import BroadcastingLayout from "../../broadcasting/BroadcastingLayout";
 import RepresentativenessLayout from "./representativeness/RepresentativenessLayout";
+import { SurveyType } from "~/types/enums/broadcasting";
 
 const SuSurvery: React.FC = () => {
   const [toggleBroadcastingPage, setToggleBroadcastingPage] = useState(false);
@@ -11,6 +12,7 @@ const SuSurvery: React.FC = () => {
     return (
       <BroadcastingLayout
         setToggleBroadcastingPage={setToggleBroadcastingPage}
+        surveyType={SurveyType.SU}
       ></BroadcastingLayout>
     );
   }

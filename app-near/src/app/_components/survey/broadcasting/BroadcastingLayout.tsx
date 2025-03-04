@@ -2,25 +2,23 @@
 
 import Link from "next/link";
 import { ButtonStyle } from "~/types/enums/button";
-import { useSurveyStateContext } from "../../../../_context/surveyStateContext";
-import Button from "../../../../_ui/Button";
-import LinkAsButton from "../../../../_ui/LinkAsButton";
+import Button from "../../_ui/Button";
+import LinkAsButton from "../../_ui/LinkAsButton";
 import BroadcastingPage from "./BroadcastingPage";
-import SurveyLayout from "../../../SurveyLayout";
-import { surveyConfig } from "../../config";
-import { env } from "../../../../../../env";
-import { renderIcon } from "../../../../_ui/utils/renderIcon";
+import SurveyLayout from "../SurveyLayout";
+import { renderIcon } from "../../_ui/utils/renderIcon";
 import { type Dispatch, type SetStateAction } from "react";
+import { type SurveyType, surveyTypeMapper } from "~/types/enums/broadcasting";
 
 interface BroadcastingLayoutProps {
   setToggleBroadcastingPage: Dispatch<SetStateAction<boolean>>;
+  surveyType: SurveyType;
 }
 
 const BroadcastingLayout: React.FC<BroadcastingLayoutProps> = ({
   setToggleBroadcastingPage,
+  surveyType,
 }) => {
-  const { step, updateStep } = useSurveyStateContext();
-
   return (
     <SurveyLayout
       banner={
@@ -36,7 +34,7 @@ const BroadcastingLayout: React.FC<BroadcastingLayoutProps> = ({
           </div>
 
           <h1 className="my-4 text-3xl text-black">
-            Diffusion du questionnaire Sphère d&apos;usage
+            Diffusion du questionnaire {surveyTypeMapper[surveyType].label}
           </h1>
           <p>
             Choississez un ou plusieurs modes de diffusion pour votre
@@ -49,26 +47,28 @@ const BroadcastingLayout: React.FC<BroadcastingLayoutProps> = ({
           <LinkAsButton icon="/icons/question.svg" rounded>
             Besoin d&apos;aide
           </LinkAsButton>
-          <LinkAsButton
-            href={`${env.NEXT_PUBLIC_TYPEFORM_SU_STATS}`}
-            icon="/icons/megaphone.svg"
-            openNewTab
-            rounded
-          >
-            Suivre la diffusion {renderIcon("/icons/external-link.svg")}
-          </LinkAsButton>
+          {surveyTypeMapper[surveyType].stat && (
+            <LinkAsButton
+              href={surveyTypeMapper[surveyType].stat}
+              icon="/icons/megaphone.svg"
+              openNewTab
+              rounded
+            >
+              Suivre la diffusion {renderIcon("/icons/external-link.svg")}
+            </LinkAsButton>
+          )}
           <Button
             icon="/icons/flash.svg"
             rounded
             style={ButtonStyle.FILLED}
-            onClick={() => step && updateStep(surveyConfig[step].nextStep)}
+            onClick={() => setToggleBroadcastingPage(false)}
           >
             Continuer l&apos;enquête
           </Button>
         </>
       }
     >
-      <BroadcastingPage surveyType={"su"} />
+      <BroadcastingPage surveyType={surveyType} />
     </SurveyLayout>
   );
 };

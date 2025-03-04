@@ -1,11 +1,11 @@
 "use client";
 import { useState } from "react";
-import { env } from "~/env";
 import {
-  type BroadcastType,
   type SurveyType,
-} from "../../../../../../types/enums/broadcasting";
-import Button from "../../../../_ui/Button";
+  type BroadcastType,
+  surveyTypeMapper,
+} from "../../../../types/enums/broadcasting";
+import Button from "../../_ui/Button";
 import QRCodeModal from "./QRCodeModal";
 import { useSession } from "next-auth/react";
 import { api } from "~/trpc/react";
@@ -15,9 +15,10 @@ interface BroadcastingButtonProps {
   broadcastType: BroadcastType;
 }
 
-const BroadcastingButton: React.FC<BroadcastingButtonProps> = (
-  props: BroadcastingButtonProps,
-) => {
+const BroadcastingButton: React.FC<BroadcastingButtonProps> = ({
+  broadcastType,
+  surveyType,
+}) => {
   const { data: session } = useSession();
   const { data: survey } = api.surveys.getOne.useQuery(undefined, {
     enabled: !!session?.user?.surveyId,
@@ -56,12 +57,12 @@ const BroadcastingButton: React.FC<BroadcastingButtonProps> = (
   };
 
   const buildLink = (type: BroadcastType): string => {
-    if (survey) {
-      return `${env.NEXT_PUBLIC_TYPEFORM_SU_LINK}#broadcast_channel=${
-        type
-      }&broadcast_id=${crypto.randomUUID()}&date=${encodeURIComponent(new Date().toISOString())}&neighborhood=${encodeURI(survey.name)}`;
+    if (!survey) {
+      return "error";
     }
-    return "error";
+    return `${surveyTypeMapper[surveyType].baseUrl}#broadcast_channel=${
+      type
+    }&broadcast_id=${crypto.randomUUID()}&date=${encodeURIComponent(new Date().toISOString())}&neighborhood=${encodeURI(survey.name)}`;
   };
 
   const onGenerateClick = async (type: BroadcastType) => {
@@ -77,31 +78,29 @@ const BroadcastingButton: React.FC<BroadcastingButtonProps> = (
   return (
     <div className="wrap-wrap flex flex-col justify-between space-y-4 sm:flex-row sm:space-y-0">
       <div>
-        <p className="font-bold">
-          {broadcastWordings[props.broadcastType].title}
-        </p>
-        <p>{broadcastWordings[props.broadcastType].description}</p>
+        <p className="font-bold">{broadcastWordings[broadcastType].title}</p>
+        <p>{broadcastWordings[broadcastType].description}</p>
       </div>
       <div className="group relative">
         <Button
           rounded
-          onClick={() => onGenerateClick(props.broadcastType)}
-          icon={broadcastWordings[props.broadcastType].icon}
+          onClick={() => onGenerateClick(broadcastType)}
+          icon={broadcastWordings[broadcastType].icon}
         >
-          {broadcastWordings[props.broadcastType].button}
+          {broadcastWordings[broadcastType].button}
         </Button>
         {copiedMessage && (
           <div className="absolute left-1/2 -translate-x-1/2 px-3 py-1 text-center text-sm text-black opacity-0 transition-opacity group-hover:opacity-100">
             {copiedMessage}
           </div>
         )}
-        {props.broadcastType === "qr_code" && showQRCode && (
+        {broadcastType === "qr_code" && showQRCode && (
           <QRCodeModal
             onClose={() => {
               setShowQRCode(false);
               document.body.classList.remove("overflow-hidden");
             }}
-            link={buildLink(props.broadcastType)}
+            link={buildLink(broadcastType)}
           ></QRCodeModal>
         )}
       </div>
