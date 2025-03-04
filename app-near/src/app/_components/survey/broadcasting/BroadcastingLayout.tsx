@@ -6,24 +6,9 @@ import Button from "../../_ui/Button";
 import LinkAsButton from "../../_ui/LinkAsButton";
 import BroadcastingPage from "./BroadcastingPage";
 import SurveyLayout from "../SurveyLayout";
-import { env } from "../../../../env";
 import { renderIcon } from "../../_ui/utils/renderIcon";
 import { type Dispatch, type SetStateAction } from "react";
-import { SurveyType } from "~/types/enums/broadcasting";
-
-const surveyTypeMapper: Record<SurveyType, { label: string; stat?: string }> = {
-  [SurveyType.CARBON_FOOTPRINT]: {
-    label: "Empreinte Carbone (Nos Gestes Climats)",
-  },
-  [SurveyType.WAY_OF_LIFE]: {
-    label: "Espace et Mode de Vie",
-    stat: env.NEXT_PUBLIC_TYPEFORM_WAY_OF_LIFE_STAT,
-  },
-  [SurveyType.SU]: {
-    label: "Sphère d'usage",
-    stat: env.NEXT_PUBLIC_TYPEFORM_SU_STATS,
-  },
-};
+import { type SurveyType, surveyTypeMapper } from "~/types/enums/broadcasting";
 
 interface BroadcastingLayoutProps {
   setToggleBroadcastingPage: Dispatch<SetStateAction<boolean>>;

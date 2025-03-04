@@ -1,9 +1,9 @@
 "use client";
 import { useState } from "react";
-import { env } from "~/env";
 import {
-  SurveyType,
+  type SurveyType,
   type BroadcastType,
+  surveyTypeMapper,
 } from "../../../../types/enums/broadcasting";
 import Button from "../../_ui/Button";
 import QRCodeModal from "./QRCodeModal";
@@ -56,24 +56,11 @@ const BroadcastingButton: React.FC<BroadcastingButtonProps> = ({
     },
   };
 
-  const getTypeformeBaseUrl = (surveyType: SurveyType) => {
-    switch (surveyType) {
-      case SurveyType.CARBON_FOOTPRINT:
-        return env.NEXT_PUBLIC_TYPEFORM_CARBON_FOOTPRINT_LINK;
-      case SurveyType.SU:
-        return env.NEXT_PUBLIC_TYPEFORM_SU_LINK;
-      case SurveyType.WAY_OF_LIFE:
-        return env.NEXT_PUBLIC_TYPEFORM_WAY_OF_LIFE_LINK;
-      default:
-        break;
-    }
-  };
-
   const buildLink = (type: BroadcastType): string => {
     if (!survey) {
       return "error";
     }
-    return `${getTypeformeBaseUrl(surveyType)}#broadcast_channel=${
+    return `${surveyTypeMapper[surveyType].baseUrl}#broadcast_channel=${
       type
     }&broadcast_id=${crypto.randomUUID()}&date=${encodeURIComponent(new Date().toISOString())}&neighborhood=${encodeURI(survey.name)}`;
   };
