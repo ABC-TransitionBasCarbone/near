@@ -5,15 +5,24 @@ import { api } from "~/trpc/react";
 import { useSession } from "next-auth/react";
 import { useSurveyStateContext } from "../_context/surveyStateContext";
 import { surveyConfig, surveySteps } from "./steps/config";
+import { useEffect } from "react";
 
 const SurveyHeader = () => {
   const { data: session } = useSession();
 
   const { step, updateStep } = useSurveyStateContext();
 
-  const { data: survey } = api.surveys.getOne.useQuery(undefined, {
+  const { data: survey, refetch } = api.surveys.getOne.useQuery(undefined, {
     enabled: !!session?.user?.surveyId,
   });
+
+  useEffect(() => {
+    if (step) {
+      // eslint-disable-next-line @typescript-eslint/no-floating-promises
+      refetch();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [step]);
 
   if (!step || !survey) {
     return null;
