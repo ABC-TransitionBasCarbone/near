@@ -110,12 +110,12 @@ const RespondentsNumberLayout: React.FC<RespondentsNumberLayoutProps> = ({
           showModal={showModal}
           setShowModal={setShowModal}
         /> */}
-        <div className="my-8 flex flex-col gap-16">
-          <div className="flex flex-wrap gap-4">
+        <div className="mx-6 my-8 flex flex-col gap-16">
+          <div className="flex flex-wrap gap-x-4 gap-y-16">
             {chartConfig.map((chart) => (
               <div
                 key={chart.iframeNumber}
-                className="flex flex-1 flex-col items-center gap-3"
+                className="flex min-w-96 flex-1 flex-col items-center gap-y-8"
               >
                 <div className="text-xl">{chart.title}</div>
                 <MetabaseIframe
