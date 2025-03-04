@@ -11,10 +11,18 @@ import { renderIcon } from "../../_ui/utils/renderIcon";
 import { type Dispatch, type SetStateAction } from "react";
 import { SurveyType } from "~/types/enums/broadcasting";
 
-const wordingMapper: Record<SurveyType, string> = {
-  [SurveyType.CARBON_FOOTPRINT]: "Empreinte Carbone (Nos Gestes Climats)",
-  [SurveyType.WAY_OF_LIFE]: "Espace et Mode de Vie",
-  [SurveyType.SU]: "Sphère d'usage",
+const surveyTypeMapper: Record<SurveyType, { label: string; stat?: string }> = {
+  [SurveyType.CARBON_FOOTPRINT]: {
+    label: "Empreinte Carbone (Nos Gestes Climats)",
+  },
+  [SurveyType.WAY_OF_LIFE]: {
+    label: "Espace et Mode de Vie",
+    stat: env.NEXT_PUBLIC_TYPEFORM_WAY_OF_LIFE_STAT,
+  },
+  [SurveyType.SU]: {
+    label: "Sphère d'usage",
+    stat: env.NEXT_PUBLIC_TYPEFORM_SU_STATS,
+  },
 };
 
 interface BroadcastingLayoutProps {
@@ -41,7 +49,7 @@ const BroadcastingLayout: React.FC<BroadcastingLayoutProps> = ({
           </div>
 
           <h1 className="my-4 text-3xl text-black">
-            Diffusion du questionnaire {wordingMapper[surveyType]}
+            Diffusion du questionnaire {surveyTypeMapper[surveyType].label}
           </h1>
           <p>
             Choississez un ou plusieurs modes de diffusion pour votre
@@ -54,14 +62,16 @@ const BroadcastingLayout: React.FC<BroadcastingLayoutProps> = ({
           <LinkAsButton icon="/icons/question.svg" rounded>
             Besoin d&apos;aide
           </LinkAsButton>
-          <LinkAsButton
-            href={`${env.NEXT_PUBLIC_TYPEFORM_SU_STATS}`}
-            icon="/icons/megaphone.svg"
-            openNewTab
-            rounded
-          >
-            Suivre la diffusion {renderIcon("/icons/external-link.svg")}
-          </LinkAsButton>
+          {surveyTypeMapper[surveyType].stat && (
+            <LinkAsButton
+              href={surveyTypeMapper[surveyType].stat}
+              icon="/icons/megaphone.svg"
+              openNewTab
+              rounded
+            >
+              Suivre la diffusion {renderIcon("/icons/external-link.svg")}
+            </LinkAsButton>
+          )}
           <Button
             icon="/icons/flash.svg"
             rounded
@@ -73,7 +83,7 @@ const BroadcastingLayout: React.FC<BroadcastingLayoutProps> = ({
         </>
       }
     >
-      <BroadcastingPage surveyType={SurveyType.SU} />
+      <BroadcastingPage surveyType={surveyType} />
     </SurveyLayout>
   );
 };

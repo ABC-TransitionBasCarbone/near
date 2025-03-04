@@ -12,10 +12,9 @@ import {
 } from "~/types/enums/metabase";
 import Button from "~/app/_components/_ui/Button";
 import { ButtonStyle } from "~/types/enums/button";
-import { useState, type Dispatch, type SetStateAction } from "react";
+import { type Dispatch, type SetStateAction } from "react";
 import { SurveyType } from "~/types/enums/broadcasting";
 import LinkAsButton from "~/app/_components/_ui/LinkAsButton";
-import RepresentativenessConfirmModal from "../step2/representativeness/RepresentativenessConfirmModal";
 import { surveyConfig } from "../config";
 import useUpdateSurveyStep from "../../hooks/useUpdateSurveyStep";
 
@@ -25,12 +24,12 @@ const chartConfig: {
   surveyType: SurveyType;
 }[] = [
   {
-    title: "Mode de vie",
+    title: "Espace et Mode de vie",
     iframeNumber: MetabaseIFrameNumber.WAY_OF_LIFE,
     surveyType: SurveyType.WAY_OF_LIFE,
   },
   {
-    title: "Empreinte carbone",
+    title: "Empreinte carbone (Nos Gestes Climats)",
     iframeNumber: MetabaseIFrameNumber.CARBON_FOOTPRINT,
     surveyType: SurveyType.CARBON_FOOTPRINT,
   },
@@ -48,9 +47,10 @@ const RespondentsNumberLayout: React.FC<RespondentsNumberLayoutProps> = ({
   const { data: session } = useSession();
   const updateSurveyStep = useUpdateSurveyStep();
 
-  const [showModal, setShowModal] = useState<boolean>(false);
+  // NEAR-34: const [showModal, setShowModal] = useState<boolean>(false);
 
-  const nextStepIsDisabled = true;
+  // NEAR-34: to change if sample target is confirmed
+  const nextStepIsDisabled = false;
 
   if (!session?.user.surveyId || step === undefined) {
     return "loading...";
@@ -82,14 +82,15 @@ const RespondentsNumberLayout: React.FC<RespondentsNumberLayoutProps> = ({
           <LinkAsButton icon="/icons/question.svg" rounded>
             Besoin d&apos;aide
           </LinkAsButton>
-          <Button
+          {/* NEAR-34: To restore if sample target is confirmed */}
+          {/* <Button
             icon="/icons/flash.svg"
             rounded
             style={ButtonStyle.FILLED}
             onClick={() => setShowModal(true)}
           >
             Forcer la fin de l&apos;enquête
-          </Button>
+          </Button> */}
           <Button
             icon="/icons/flash.svg"
             rounded
@@ -103,11 +104,12 @@ const RespondentsNumberLayout: React.FC<RespondentsNumberLayoutProps> = ({
       }
     >
       <>
-        <RepresentativenessConfirmModal
+        {/* NEAR-34: To restore if sample target is confirmed */}
+        {/* <RepresentativenessConfirmModal
           nextStep={surveyConfig[step].nextStep}
           showModal={showModal}
           setShowModal={setShowModal}
-        />
+        /> */}
         <div className="my-8 flex flex-col gap-16">
           <div className="flex flex-wrap gap-4">
             {chartConfig.map((chart) => (
@@ -137,6 +139,7 @@ const RespondentsNumberLayout: React.FC<RespondentsNumberLayoutProps> = ({
           </div>
           <div className="flex flex-col items-center gap-10">
             <div className="text-xl">Rappel des Sphères d&apos;Usage</div>
+            {/* NEAR-34: to update when near-31 finished */}
             <div className="h-32">Pending NEAR-31...</div>
           </div>
         </div>

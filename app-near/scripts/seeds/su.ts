@@ -51,7 +51,7 @@ const verifySurveyTarget = (surveyTarget: number, quartier: Quartier) => {
     throw new Error(`
 Survey target (${surveyTarget}) not allowed. 
 
-Usage: npm run seed -- scope=su_answer surveyName="Porte d'Orléans" surveyTarget=60 surveyCase=LESS_THAN_GLOBAL_TARGET
+Usage: npm run seed -- scope=su_answer surveyName="Porte d'Orléans" surveyTarget=400 surveyCase=LESS_THAN_GLOBAL_TARGET
 
 Valid values for surveyTarget: ${allowedSurveyTargets.join(", ")}
 `);
@@ -72,7 +72,7 @@ export const seedSuSurvey = async (
     throw new Error(`
 surveyName (${surveyName}) or surveyTarget (${surveyTarget}) or surveyCase (${surveyCase}) not defined. 
 
-Usage: npm run seed -- scope=su_answer surveyName="Porte d'Orléans" surveyTarget=60 surveyCase=LESS_THAN_GLOBAL_TARGET
+Usage: npm run seed -- scope=su_answer surveyName="Porte d'Orléans" surveyTarget=400 surveyCase=LESS_THAN_GLOBAL_TARGET
 
 Valid values for surveyCase: ${Object.values(SurveyCase)
       .map((item) => `${item}`)
@@ -89,7 +89,7 @@ Valid values for surveyCase: ${Object.values(SurveyCase)
       select: { name: true },
     });
     throw new Error(`
-Usage: npm run seed -- scope=su_answer surveyName="Porte d'Orléans" surveyTarget=60 surveyCase=LESS_THAN_GLOBAL_TARGET
+Usage: npm run seed -- scope=su_answer surveyName="Porte d'Orléans" surveyTarget=400 surveyCase=LESS_THAN_GLOBAL_TARGET
 
 Valid values for surveyName: ${existingSurveys.map((item) => item.name).join(", ")}
     `);
@@ -123,7 +123,7 @@ Valid values for surveyName: ${existingSurveys.map((item) => item.name).join(", 
       throw new Error(`
       survey not found. 
       
-      Usage: npm run seed -- scope=su_answer surveyName=14e_arr surveyTarget=60 surveyCase=LESS_THAN_TARGET
+      Usage: npm run seed -- scope=su_answer surveyName=14e_arr surveyTarget=400 surveyCase=LESS_THAN_TARGET
       
       Valid values for surveyName: ${existingSurveys.map((item) => item.name).join(", ")}
       `);
