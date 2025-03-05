@@ -1,13 +1,10 @@
 name: Production deployment
 
 on:
-  push:
-    branches: [main]
-  workflow_dispatch:
+  workflow_dispatch: 
 
 jobs:
   merge-develop-to-main:
-    if: github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout main branch
@@ -17,6 +14,9 @@ jobs:
 
       - name: Merge develop into main
         run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git pull origin main
           git pull origin develop
           git merge --no-ff --log develop -m "Merge develop into main"
           git push origin main

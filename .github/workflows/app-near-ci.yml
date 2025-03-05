@@ -5,6 +5,7 @@ on:
     branches: [develop]
     paths:
       - 'app-near/**'
+  workflow_dispatch:
 
 defaults:
   run:
