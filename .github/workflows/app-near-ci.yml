@@ -1,4 +1,4 @@
-name: Next app tests
+name: Build and Test APP NEAR on develop branch
 
 on:
   pull_request:
@@ -30,7 +30,8 @@ jobs:
           - 5432:5432
 
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout code
+        uses: actions/checkout@v4
 
       - name: Setup Node
         uses: actions/setup-node@v3
