@@ -28,7 +28,7 @@ describe("representativeness", () => {
       data: {
         name: surveyName,
         phase: SurveyPhase.STEP_2_SU_SURVERY,
-        sampleTarget: 2,
+        sampleTarget: 3,
       },
     });
     await db.$queryRawUnsafe(`CREATE OR REPLACE VIEW quartiers AS
@@ -79,21 +79,37 @@ describe("representativeness", () => {
   });
 
   it("should return representativeness when answers quantity is below sampleTarget", async () => {
-    await db.suAnswer.create({
-      data: {
-        ageCategory: AgeCategory.ABOVE_75,
-        airTravelFrequency: AirTravelFrequency.ABOVE_3,
-        broadcastChannel: "mail_campaign",
-        digitalIntensity: DigitalIntensity.INTENSE,
-        easyHealthAccess: EasyHealthAccess.EASY,
-        gender: Gender.MAN,
-        heatSource: HeatSource.ELECTRICITY,
-        meatFrequency: MeatFrequency.MAJOR,
-        professionalCategory: ProfessionalCategory.CS1,
-        purchasingStrategy: PurchasingStrategy.MIXED,
-        transportationMode: TransportationMode.CAR,
-        surveyId: survey.id,
-      },
+    await db.suAnswer.createMany({
+      data: [
+        {
+          ageCategory: AgeCategory.ABOVE_75,
+          airTravelFrequency: AirTravelFrequency.ABOVE_3,
+          broadcastChannel: "mail_campaign",
+          digitalIntensity: DigitalIntensity.INTENSE,
+          easyHealthAccess: EasyHealthAccess.EASY,
+          gender: Gender.MAN,
+          heatSource: HeatSource.ELECTRICITY,
+          meatFrequency: MeatFrequency.MAJOR,
+          professionalCategory: ProfessionalCategory.CS1,
+          purchasingStrategy: PurchasingStrategy.MIXED,
+          transportationMode: TransportationMode.CAR,
+          surveyId: survey.id,
+        },
+        {
+          ageCategory: AgeCategory.ABOVE_75,
+          airTravelFrequency: AirTravelFrequency.ABOVE_3,
+          broadcastChannel: "mail_campaign",
+          digitalIntensity: DigitalIntensity.INTENSE,
+          easyHealthAccess: EasyHealthAccess.EASY,
+          gender: Gender.OTHER,
+          heatSource: HeatSource.ELECTRICITY,
+          meatFrequency: MeatFrequency.MAJOR,
+          professionalCategory: ProfessionalCategory.CS1,
+          purchasingStrategy: PurchasingStrategy.MIXED,
+          transportationMode: TransportationMode.CAR,
+          surveyId: survey.id,
+        },
+      ],
     });
 
     const result = await representativenessService.representativeness(
@@ -141,6 +157,20 @@ describe("representativeness", () => {
           digitalIntensity: DigitalIntensity.INTENSE,
           easyHealthAccess: EasyHealthAccess.EASY,
           gender: Gender.MAN,
+          heatSource: HeatSource.ELECTRICITY,
+          meatFrequency: MeatFrequency.MAJOR,
+          professionalCategory: ProfessionalCategory.CS1,
+          purchasingStrategy: PurchasingStrategy.MIXED,
+          transportationMode: TransportationMode.CAR,
+          surveyId: survey.id,
+        },
+        {
+          ageCategory: AgeCategory.ABOVE_75,
+          airTravelFrequency: AirTravelFrequency.ABOVE_3,
+          broadcastChannel: "mail_campaign",
+          digitalIntensity: DigitalIntensity.INTENSE,
+          easyHealthAccess: EasyHealthAccess.EASY,
+          gender: Gender.OTHER,
           heatSource: HeatSource.ELECTRICITY,
           meatFrequency: MeatFrequency.MAJOR,
           professionalCategory: ProfessionalCategory.CS1,
