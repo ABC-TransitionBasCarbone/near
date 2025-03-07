@@ -78,7 +78,7 @@ describe("representativeness", () => {
     }
   });
 
-  it.only("should return representativeness when answers quantity is below sampleTarget", async () => {
+  it("should return representativeness when answers quantity is below sampleTarget", async () => {
     await db.suAnswer.createMany({
       data: [
         {
