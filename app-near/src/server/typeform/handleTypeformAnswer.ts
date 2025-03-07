@@ -4,13 +4,16 @@ import { env } from "~/env";
 import {
   type TypeformWebhookPayload,
   TypeformWebhookSchema,
-} from "~/types/typeform";
+} from "~/types/Typeform";
 import { getReferencesMapping } from "../surveys/references";
 import { convertFormToAnswer } from "./convert";
 import { handleSuForm } from "./handlers/handleSuForm";
 import { verifySignature } from "./signature";
+import { handleWayOfLifeForm } from "./handlers/handleWayOfLifeForm";
 
-export const handleAnswer = async (req: NextRequest): Promise<NextResponse> => {
+export const handleTypeformAnswer = async (
+  req: NextRequest,
+): Promise<NextResponse> => {
   let formId: string | undefined = undefined;
   try {
     const body = await req.text();
@@ -36,10 +39,20 @@ export const handleAnswer = async (req: NextRequest): Promise<NextResponse> => {
       return await handleSuForm(
         answers,
         formId,
+        parsedBody.form_response.hidden.neighborhood,
+        parsedBody.form_response.hidden.broadcast_channel,
+      );
+    }
+
+    if (formId === env.WAY_OF_LIFE_FORM_ID) {
+      return await handleWayOfLifeForm(
+        answers,
+        formId,
         parsedBody.form_response.hidden?.neighborhood,
         parsedBody.form_response.hidden?.broadcast_channel,
       );
     }
+
     return unknwonFormIdResponse(formId);
   } catch (error) {
     if (error instanceof z.ZodError) {

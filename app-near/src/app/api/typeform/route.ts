@@ -1,6 +1,6 @@
 import { type NextRequest } from "next/server";
-import { handleAnswer } from "~/server/typeform/handleAnswer";
+import { handleTypeformAnswer } from "~/server/typeform/handleTypeformAnswer";
 
 export async function POST(req: NextRequest) {
-  return handleAnswer(req);
+  return handleTypeformAnswer(req);
 }

@@ -17,69 +17,109 @@ import { db } from "~/server/db";
 import { buildSuAnswer } from "~/server/test-utils/create-data/suAnswer";
 import { handleSuForm } from "./handleSuForm";
 import { env } from "~/env";
+import { TRPCError } from "@trpc/server";
+import { ErrorCode } from "~/types/enums/error";
+import { ZodError } from "zod";
+import { clearAllSurveys } from "~/server/test-utils/clear/survey";
 
-describe("", () => {
+describe("handleSuForm", () => {
   const neighborhoodName = "neighborhood_test";
   let survey: Survey;
 
   beforeEach(async () => {
-    await db.suAnswer.deleteMany();
-    await db.suData.deleteMany();
-    await db.survey.deleteMany();
+    await clearAllSurveys();
     survey = await db.survey.create({
       data: { name: neighborhoodName },
     });
   });
 
   it("should return 404 when no survey found by name", async () => {
-    // Act
-    const response = await handleSuForm(
-      {
-        isNeighborhoodResident: true,
-        ageCategory: AgeCategory.FROM_15_TO_29,
-        airTravelFrequency: AirTravelFrequency.ABOVE_3,
-        digitalIntensity: DigitalIntensity.INTENSE,
-        easyHealthAccess: EasyHealthAccess.EASY,
-        gender: Gender.MAN,
-        heatSource: HeatSource.ELECTRICITY,
-        meatFrequency: MeatFrequency.MAJOR,
-        professionalCategory: ProfessionalCategory.CS1,
-        purchasingStrategy: PurchasingStrategy.MIXED,
-        transportationMode: TransportationMode.CAR,
-        email: "test@mail.com",
-      },
-      env.SU_FORM_ID,
-      "unknown",
-      BroadcastChannel.mail_campaign,
-    );
-
-    // Assert
-    expect(response.status).toBe(404);
-    expect(await response.text()).toContain(`Survey name unknown not found`);
+    expect.assertions(2);
+    try {
+      await handleSuForm(
+        {
+          isNeighborhoodResident: true,
+          ageCategory: AgeCategory.FROM_15_TO_29,
+          airTravelFrequency: AirTravelFrequency.ABOVE_3,
+          digitalIntensity: DigitalIntensity.INTENSE,
+          easyHealthAccess: EasyHealthAccess.EASY,
+          gender: Gender.MAN,
+          heatSource: HeatSource.ELECTRICITY,
+          meatFrequency: MeatFrequency.MAJOR,
+          professionalCategory: ProfessionalCategory.CS1,
+          purchasingStrategy: PurchasingStrategy.MIXED,
+          transportationMode: TransportationMode.CAR,
+          email: "test@mail.com",
+        },
+        env.SU_FORM_ID,
+        "unknown",
+        BroadcastChannel.mail_campaign,
+      );
+    } catch (error) {
+      if (error instanceof TRPCError) {
+        expect(error.code).toBe("NOT_FOUND");
+        expect(error.message).toBe(ErrorCode.WRONG_SURVEY_NAME);
+      }
+    }
   });
 
   it("should return 400 when neighborhood is not defined", async () => {
-    const response = await handleSuForm(
-      {
-        isNeighborhoodResident: true,
-        ageCategory: AgeCategory.FROM_15_TO_29,
-        airTravelFrequency: AirTravelFrequency.ABOVE_3,
-        digitalIntensity: DigitalIntensity.INTENSE,
-        easyHealthAccess: EasyHealthAccess.EASY,
-        gender: Gender.MAN,
-        heatSource: HeatSource.ELECTRICITY,
-        meatFrequency: MeatFrequency.MAJOR,
-        professionalCategory: ProfessionalCategory.CS1,
-        purchasingStrategy: PurchasingStrategy.MIXED,
-        transportationMode: TransportationMode.CAR,
-        email: "test@mail.com",
-      },
-      env.SU_FORM_ID,
-      "",
-      BroadcastChannel.mail_campaign,
-    );
-    expect(response.status).toBe(400);
-    expect(await response.text()).toContain("Survey name not found");
+    expect.assertions(2);
+    try {
+      await handleSuForm(
+        {
+          isNeighborhoodResident: true,
+          ageCategory: AgeCategory.FROM_15_TO_29,
+          airTravelFrequency: AirTravelFrequency.ABOVE_3,
+          digitalIntensity: DigitalIntensity.INTENSE,
+          easyHealthAccess: EasyHealthAccess.EASY,
+          gender: Gender.MAN,
+          heatSource: HeatSource.ELECTRICITY,
+          meatFrequency: MeatFrequency.MAJOR,
+          professionalCategory: ProfessionalCategory.CS1,
+          purchasingStrategy: PurchasingStrategy.MIXED,
+          transportationMode: TransportationMode.CAR,
+          email: "test@mail.com",
+        },
+        env.SU_FORM_ID,
+        "",
+        BroadcastChannel.mail_campaign,
+      );
+    } catch (error) {
+      if (error instanceof TRPCError) {
+        expect(error.code).toBe("BAD_REQUEST");
+        expect(error.message).toBe(ErrorCode.WRONG_SURVEY_NAME);
+      }
+    }
+  });
+
+  it("should throw zod exception when data is not valid", async () => {
+    expect.assertions(1);
+    try {
+      await handleSuForm(
+        {
+          isNeighborhoodResident: true,
+          ageCategory: AgeCategory.FROM_15_TO_29,
+          airTravelFrequency: AirTravelFrequency.ABOVE_3,
+          digitalIntensity: DigitalIntensity.INTENSE,
+          easyHealthAccess: EasyHealthAccess.EASY,
+          gender: Gender.MAN,
+          heatSource: HeatSource.ELECTRICITY,
+          meatFrequency: MeatFrequency.MAJOR,
+          professionalCategory: ProfessionalCategory.CS1,
+          purchasingStrategy: PurchasingStrategy.MIXED,
+          transportationMode: TransportationMode.CAR,
+          email: "test@mail",
+        },
+        env.SU_FORM_ID,
+        neighborhoodName,
+        BroadcastChannel.mail_campaign,
+      );
+    } catch (error) {
+      if (error instanceof ZodError) {
+        expect(error.errors[0]?.message).toContain("Invalid email");
+      }
+    }
   });
 
   it("should return 200 when user as less than 15", async () => {

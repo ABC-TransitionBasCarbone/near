@@ -25,17 +25,19 @@ enum SurveyPhase {
 }
 
 model Survey {
-  id               Int         @id @default(autoincrement())
-  name             String      @unique
-  createdAt        DateTime    @default(now())
-  updatedAt        DateTime    @updatedAt
-  phase            SurveyPhase @default(STEP_1_NEIGHBORHOOD_INFORMATION)
-  sampleTarget     Int?        @map("sample_target")
-  thresholdReached Boolean     @default(false)
-  quartier         Quartier?
-  suAnswer         SuAnswer[]
-  suData           SuData[]
-  computedSu       Boolean     @default(false)
+  id                    Int                     @id @default(autoincrement())
+  name                  String                  @unique
+  createdAt             DateTime                @default(now())
+  updatedAt             DateTime                @updatedAt
+  phase                 SurveyPhase             @default(STEP_1_NEIGHBORHOOD_INFORMATION)
+  sampleTarget          Int?                    @map("sample_target")
+  thresholdReached      Boolean                 @default(false)
+  quartier              Quartier?
+  suAnswer              SuAnswer[]
+  wayOfLifeAnswer       WayOfLifeAnswer[]
+  carbonFootprintAnswer CarbonFootprintAnswer[]
+  suData                SuData[]
+  computedSu            Boolean                 @default(false)
 
   @@map("surveys")
 }
@@ -152,6 +154,28 @@ model SuData {
 
   @@unique([surveyId, su])
   @@map("su_data")
+}
+
+model WayOfLifeAnswer {
+  id               Int              @id @default(autoincrement())
+  email            String?          @unique
+  broadcastChannel BroadcastChannel @map("broadcast_channel")
+  emailApiCalled   Boolean?         @default(false) @map("email_api_called")
+  surveyId         Int
+  survey           Survey           @relation(fields: [surveyId], references: [id])
+
+  @@map("way_of_life_answer")
+}
+
+model CarbonFootprintAnswer {
+  id               Int              @id @default(autoincrement())
+  email            String?          @unique
+  broadcastChannel BroadcastChannel @map("broadcast_channel")
+  emailApiCalled   Boolean?         @default(false) @map("email_api_called")
+  surveyId         Int
+  survey           Survey           @relation(fields: [surveyId], references: [id])
+
+  @@map("carbon_footprint_answer")
 }
 
 model InseeIris2021 {
