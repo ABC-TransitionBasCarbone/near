@@ -66,12 +66,26 @@ export const surveySUReferencesMapping: Record<string, string | boolean> = {
   ["8d91547d-f2aa-4987-9d0b-cb3ce17527c5"]: HeatSource.OIL,
 };
 
+// TODO NEAR-45 update when form finalized
+export const surveyWayOfLifeReferencesMapping: Record<
+  string,
+  string | boolean
+> = {
+  // isNeighborhoodResident > example to update
+  ["6226e10f-baf0-43f8-af05-2cddc649f509"]: true,
+  ["3a347ad6-7461-4549-8cf3-d45167702a74"]: false,
+};
+
 export const getReferencesMapping = (
   formId: string,
 ): Record<string, string | boolean> | undefined => {
   let referencesMapping: Record<string, string | boolean> | undefined;
   if (formId === env.SU_FORM_ID) {
     referencesMapping = surveySUReferencesMapping;
+  }
+
+  if (formId === env.WAY_OF_LIFE_FORM_ID) {
+    referencesMapping = surveyWayOfLifeReferencesMapping;
   }
 
   return referencesMapping;
