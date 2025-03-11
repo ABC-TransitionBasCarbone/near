@@ -1,10 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
-import {
-  getSurveyInformations,
-  isNotInPhase,
-  notInPhaseSuSurveyResponse,
-} from "../typeform/handlers/helpers";
-import { SurveyPhase, type CarbonFootprintAnswer } from "@prisma/client";
+import { getSurveyInformations } from "../typeform/handlers/helpers";
+import { type CarbonFootprintAnswer } from "@prisma/client";
 import { createCarbonFooprintAnswer } from "./create";
 import { sendPhaseTwoFormNotification } from "../surveys/email";
 import { convertedCarbonFootprintAnswer } from "~/types/CarbonFootprint";
@@ -23,17 +19,7 @@ export const handleCarbonFootprintAnswer = async (
   // could throw zod exception from zod parsing
   const parsedAnswer = convertedCarbonFootprintAnswer.parse(data);
 
-  const { surveyName, survey } = await getSurveyInformations(
-    neighborhood,
-    "ngc-form",
-  );
-
-  if (isNotInPhase(survey, SurveyPhase.STEP_4_ADDITIONAL_SURVEY)) {
-    return notInPhaseSuSurveyResponse(
-      surveyName,
-      SurveyPhase.STEP_4_ADDITIONAL_SURVEY,
-    );
-  }
+  const { surveyName } = await getSurveyInformations(neighborhood, "ngc-form");
 
   await createCarbonFooprintAnswer(
     parsedAnswer as CarbonFootprintAnswer,

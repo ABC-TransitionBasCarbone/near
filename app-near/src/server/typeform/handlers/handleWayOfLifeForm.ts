@@ -1,15 +1,7 @@
 import { NextResponse } from "next/server";
 import { typeformSchemaMapper } from "../schema";
-import {
-  getSurveyInformations,
-  isNotInPhase,
-  notInPhaseSuSurveyResponse,
-} from "./helpers";
-import {
-  type BroadcastChannel,
-  SurveyPhase,
-  type WayOfLifeAnswer,
-} from "@prisma/client";
+import { getSurveyInformations } from "./helpers";
+import { type BroadcastChannel, type WayOfLifeAnswer } from "@prisma/client";
 import { sendPhaseTwoFormNotification } from "~/server/surveys/email";
 import { createWayOfLifeAnswer } from "~/server/way-of-life/create";
 
@@ -26,17 +18,7 @@ export const handleWayOfLifeForm = async (
     answers,
   ) as WayOfLifeAnswer;
 
-  const { surveyName, survey } = await getSurveyInformations(
-    neighborhood,
-    formId,
-  );
-
-  if (isNotInPhase(survey, SurveyPhase.STEP_4_ADDITIONAL_SURVEY)) {
-    return notInPhaseSuSurveyResponse(
-      surveyName,
-      SurveyPhase.STEP_4_ADDITIONAL_SURVEY,
-    );
-  }
+  const { surveyName } = await getSurveyInformations(neighborhood, formId);
 
   await createWayOfLifeAnswer(
     { ...parsedAnswer, broadcastChannel },

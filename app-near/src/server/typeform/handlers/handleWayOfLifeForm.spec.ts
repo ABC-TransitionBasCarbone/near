@@ -93,28 +93,6 @@ describe("handleWayOfLifeForm", () => {
     }
   });
 
-  it(`should return 200 when not in ${SurveyPhase.STEP_4_ADDITIONAL_SURVEY}`, async () => {
-    await db.survey.update({
-      data: { phase: SurveyPhase.STEP_3_SU_EXPLORATION },
-      where: { name: neighborhoodName },
-    });
-
-    const response = await handleWayOfLifeForm(
-      {
-        email: "test@mail.com",
-      },
-      env.WAY_OF_LIFE_FORM_ID,
-      neighborhoodName,
-      BroadcastChannel.mail_campaign,
-    );
-
-    expect(response.status).toBe(200);
-    expect(await response.text()).toContain(
-      `step ${SurveyPhase.STEP_4_ADDITIONAL_SURVEY} is over for ${neighborhoodName}`,
-    );
-    expect(sendEmailMock).not.toHaveBeenCalled();
-  });
-
   it("should return 201 and send email", async () => {
     await db.survey.update({
       data: { phase: SurveyPhase.STEP_4_ADDITIONAL_SURVEY },

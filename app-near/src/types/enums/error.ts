@@ -6,6 +6,7 @@ export enum ErrorCode {
   UNEXPECTED_ERROR = "UNEXPECTED_ERROR",
   UNEXPECTED_COMPUTE_SU_ERROR = "UNEXPECTED_COMPUTE_SU_ERROR",
   WRONG_SURVEY_NAME = "WRONG_SURVEY_NAME",
+  UNEXPECTED_NGCFORM = "UNEXPECTED_NGCFORM",
 }
 
 export const errorCodeMapper: Record<ErrorCode, string> = {
@@ -21,4 +22,5 @@ export const errorCodeMapper: Record<ErrorCode, string> = {
   [ErrorCode.UNEXPECTED_COMPUTE_SU_ERROR]:
     "Une erreur inatentue pour computeSus s'est produite",
   [ErrorCode.WRONG_SURVEY_NAME]: "Vérifiez le survey name",
+  [ErrorCode.UNEXPECTED_NGCFORM]: "Erreur inconnue sur le webhook ngcform",
 };
