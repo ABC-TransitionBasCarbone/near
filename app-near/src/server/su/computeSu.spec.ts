@@ -89,7 +89,7 @@ describe("computeSu", () => {
     apiSuSpy.mockReturnValue(Promise.resolve(buildApiSuResponse()));
 
     const result = await computeSu(surveyId);
-    expect(result).toStrictEqual(["1", "2", "3"]);
+    expect(result).toStrictEqual([1, 2, 3]);
 
     await expectSuDataCreated(surveyId);
     await expectSuAnswerUpdated(surveyId);
