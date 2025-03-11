@@ -10,18 +10,6 @@ export const createWayOfLifeAnswer = async (
     throw new Error("survey not found");
   }
 
-  if (answer.email) {
-    const userAlreadyExist = await db.wayOfLifeAnswer.findFirst({
-      where: {
-        email: answer.email,
-      },
-    });
-
-    if (userAlreadyExist) {
-      throw new Error("user email already exist");
-    }
-  }
-
   return db.wayOfLifeAnswer.create({
     data: { ...answer, surveyId: survey.id },
   });

@@ -233,6 +233,39 @@ describe("handleSuForm", () => {
     expect(await response.text()).toContain("created");
   });
 
+  it("should return 201 when email already exists", async () => {
+    await db.survey.update({
+      data: { phase: SurveyPhase.STEP_2_SU_SURVERY },
+      where: { name: neighborhoodName },
+    });
+
+    await db.suAnswer.create({
+      data: buildSuAnswer(survey.id, { email: "test@mail.com" }),
+    });
+
+    const response = await handleSuForm(
+      {
+        isNeighborhoodResident: true,
+        ageCategory: AgeCategory.FROM_15_TO_29,
+        airTravelFrequency: AirTravelFrequency.ABOVE_3,
+        digitalIntensity: DigitalIntensity.INTENSE,
+        easyHealthAccess: EasyHealthAccess.EASY,
+        gender: Gender.MAN,
+        heatSource: HeatSource.ELECTRICITY,
+        meatFrequency: MeatFrequency.MAJOR,
+        professionalCategory: ProfessionalCategory.CS1,
+        purchasingStrategy: PurchasingStrategy.MIXED,
+        transportationMode: TransportationMode.CAR,
+        email: "test@mail.com",
+      },
+      env.SU_FORM_ID,
+      neighborhoodName,
+      BroadcastChannel.mail_campaign,
+    );
+    expect(response.status).toBe(201);
+    expect(await response.text()).toContain("created");
+  });
+
   it("should return 201 when email is empty and empty email already exist", async () => {
     await db.survey.update({
       data: { phase: SurveyPhase.STEP_2_SU_SURVERY },

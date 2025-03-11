@@ -116,6 +116,33 @@ describe("handleWayOfLifeForm", () => {
     });
   });
 
+  it("should return 201 and send email when email already exists", async () => {
+    await db.survey.update({
+      data: { phase: SurveyPhase.STEP_4_ADDITIONAL_SURVEY },
+      where: { name: neighborhoodName },
+    });
+
+    await db.wayOfLifeAnswer.create({
+      data: buildWayOfLifeAnswer(survey.id, { email: "test@mail.com" }),
+    });
+
+    const response = await handleWayOfLifeForm(
+      {
+        email: "test@mail.com",
+      },
+      env.WAY_OF_LIFE_FORM_ID,
+      neighborhoodName,
+      BroadcastChannel.mail_campaign,
+    );
+    expect(response.status).toBe(201);
+    expect(await response.text()).toContain("created");
+    expect(sendEmailMock).toHaveBeenCalledWith({
+      params: { displayCarbonFootprint: "true", displayWayOfLife: "false" },
+      templateId: TemplateId.PHASE_2_NOTIFICATION,
+      to: [{ email: "test@mail.com" }],
+    });
+  });
+
   it("should return 201 when email is empty and empty email already exist", async () => {
     await db.survey.update({
       data: { phase: SurveyPhase.STEP_4_ADDITIONAL_SURVEY },

@@ -128,13 +128,43 @@ describe("handleCarbonFootprintAnswer", () => {
     });
   });
 
+  it("should return 201 and send email when email already exists", async () => {
+    await db.survey.update({
+      data: { phase: SurveyPhase.STEP_4_ADDITIONAL_SURVEY },
+      where: { name: neighborhoodName },
+    });
+
+    await db.carbonFootprintAnswer.create({
+      data: buildCarbonFootprintAnswer(survey.id, { email: "test@mail.com" }),
+    });
+
+    const response = await handleCarbonFootprintAnswer(
+      // @ts-expect-error allow partial for test
+      buildRequest(
+        {
+          email: "test@mail.com",
+          neighborhood: neighborhoodName,
+          broadcastChannel: BroadcastChannel.mail_campaign,
+        },
+        "signature",
+      ),
+    );
+    expect(response.status).toBe(201);
+    expect(await response.text()).toContain("created");
+    expect(sendEmailMock).toHaveBeenCalledWith({
+      params: { displayCarbonFootprint: "false", displayWayOfLife: "true" },
+      templateId: TemplateId.PHASE_2_NOTIFICATION,
+      to: [{ email: "test@mail.com" }],
+    });
+  });
+
   it("should return 201 when email is empty and empty email already exist", async () => {
     await db.survey.update({
       data: { phase: SurveyPhase.STEP_4_ADDITIONAL_SURVEY },
       where: { name: neighborhoodName },
     });
 
-    await db.wayOfLifeAnswer.createMany({
+    await db.carbonFootprintAnswer.createMany({
       data: [
         buildCarbonFootprintAnswer(survey.id),
         buildCarbonFootprintAnswer(survey.id, { email: null }),

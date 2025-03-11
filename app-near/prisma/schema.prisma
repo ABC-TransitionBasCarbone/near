@@ -131,7 +131,7 @@ model SuAnswer {
   purchasingStrategy   PurchasingStrategy   @map("purchasing_strategy")
   airTravelFrequency   AirTravelFrequency   @map("air_travel_frequency")
   heatSource           HeatSource           @map("heat_source")
-  email                String?              @unique
+  email                String?
   broadcastChannel     BroadcastChannel     @map("broadcast_channel")
   emailApiCalled       Boolean?             @default(false) @map("email_api_called")
   suId                 Int?                 @map("su_id")
@@ -139,6 +139,8 @@ model SuAnswer {
   distanceToBarycenter Float?               @map("distance_to_barycenter")
   surveyId             Int
   survey               Survey               @relation(fields: [surveyId], references: [id])
+  createdAt            DateTime             @default(now()) @map("created_at")
+  updatedAt            DateTime             @updatedAt @map("updated_at")
 
   @@map("su_answer")
 }
@@ -151,6 +153,8 @@ model SuData {
   popPercentage Float      @map("pop_percentage")
   barycenter    Json
   SuAnswer      SuAnswer[]
+  createdAt     DateTime   @default(now()) @map("created_at")
+  updatedAt     DateTime   @updatedAt @map("updated_at")
 
   @@unique([surveyId, su])
   @@map("su_data")
@@ -158,22 +162,26 @@ model SuData {
 
 model WayOfLifeAnswer {
   id               Int              @id @default(autoincrement())
-  email            String?          @unique
+  email            String?
   broadcastChannel BroadcastChannel @map("broadcast_channel")
   emailApiCalled   Boolean?         @default(false) @map("email_api_called")
   surveyId         Int
   survey           Survey           @relation(fields: [surveyId], references: [id])
+  createdAt        DateTime         @default(now()) @map("created_at")
+  updatedAt        DateTime         @updatedAt @map("updated_at")
 
   @@map("way_of_life_answer")
 }
 
 model CarbonFootprintAnswer {
   id               Int              @id @default(autoincrement())
-  email            String?          @unique
+  email            String?
   broadcastChannel BroadcastChannel @map("broadcast_channel")
   emailApiCalled   Boolean?         @default(false) @map("email_api_called")
   surveyId         Int
   survey           Survey           @relation(fields: [surveyId], references: [id])
+  createdAt        DateTime         @default(now()) @map("created_at")
+  updatedAt        DateTime         @updatedAt @map("updated_at")
 
   @@map("carbon_footprint_answer")
 }
