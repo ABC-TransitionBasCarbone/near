@@ -14,14 +14,16 @@ import { useNotification } from "~/app/_components/_context/NotificationProvider
 import { NotificationType } from "~/types/enums/notifications";
 import { SurveyPhase } from "@prisma/client";
 import { getErrorValue } from "~/app/_components/_services/error";
+import { useState } from "react";
 
 const DetectionLayout: React.FC = () => {
   const { step } = useSurveyStateContext();
   const updateSurveyStep = useUpdateSurveyStep();
   const { data: session } = useSession();
   const { setNotification } = useNotification();
-
   const utils = api.useUtils();
+
+  const [suNumberList, setSuNumberList] = useState<number[]>([]);
 
   const { data: survey } = api.surveys.getOne.useQuery(undefined, {
     enabled: !!session?.user?.surveyId,
@@ -48,11 +50,16 @@ const DetectionLayout: React.FC = () => {
   });
 
   const launchSuDetection = async () => {
-    await suDetectionMutation.mutateAsync();
+    try {
+      const response = await suDetectionMutation.mutateAsync();
+      setSuNumberList(response);
+    } catch (error) {
+      console.error("Error while detecting su:", error);
+    }
   };
 
   if (!session?.user.surveyId || step === undefined) {
-    return "loading...";
+    return "Loading...";
   }
 
   return (
@@ -63,9 +70,11 @@ const DetectionLayout: React.FC = () => {
             <Link
               className="items-center gap-3 py-2 font-sans font-bold text-blue no-underline hover:ring-0"
               onClick={() => {
-                (""); // TODO
+                updateSurveyStep(surveyConfig[step].previouxStep).catch(
+                  (error) => console.error(error),
+                );
               }}
-              href="" // TODO
+              href=""
             >
               &lt; Retour
             </Link>
@@ -90,7 +99,7 @@ const DetectionLayout: React.FC = () => {
               }
             >
               {suDetectionMutation.isPending
-                ? "...chargement"
+                ? "Chargement..."
                 : "Détecter les sphères d'usage"}
             </Button>
           </div>
@@ -116,7 +125,7 @@ const DetectionLayout: React.FC = () => {
         </>
       }
     >
-      <SuDashboard />
+      <SuDashboard suNumberList={suNumberList} />
     </SurveyLayout>
   );
 };

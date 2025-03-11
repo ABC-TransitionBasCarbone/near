@@ -4,8 +4,8 @@ import { type ComputedSu } from "~/types/SuDetection";
 export const saveSuData = async (
   surveyId: number,
   computedSus: ComputedSu[],
-): Promise<string[]> => {
-  const suNames: string[] = [];
+): Promise<number[]> => {
+  const suNames: number[] = [];
 
   await db.suData.deleteMany({ where: { surveyId } });
 
@@ -19,7 +19,7 @@ export const saveSuData = async (
       },
     });
 
-    suNames.push(`${suData.su}`);
+    suNames.push(suData.su);
   }
 
   return suNames;

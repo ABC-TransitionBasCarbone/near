@@ -7,7 +7,7 @@ import { saveSuData } from "~/server/su/data/save";
 import { updateSurvey } from "~/server/surveys/put";
 import { ErrorCode } from "~/types/enums/error";
 
-export const computeSu = async (surveyId: number): Promise<string[]> => {
+export const computeSu = async (surveyId: number): Promise<number[]> => {
   const survey = await db.survey.findUnique({ where: { id: surveyId } });
   if (!survey || survey.phase !== SurveyPhase.STEP_3_SU_EXPLORATION) {
     throw new TRPCError({
