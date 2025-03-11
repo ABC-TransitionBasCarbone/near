@@ -25,7 +25,6 @@ const buildSuComputationRequest = async (
 const computeSus = async (
   payload: SuAnswerDataWithId[],
 ): Promise<SuComputationData> => {
-  console.log("SHOULD NOT PASSSSSSSS");
   try {
     const snakecasePayload = payload.map((suAnswerData: SuAnswerDataWithId) =>
       // eslint-disable-next-line @typescript-eslint/no-unsafe-return

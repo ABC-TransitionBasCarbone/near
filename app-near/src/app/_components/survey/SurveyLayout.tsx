@@ -15,7 +15,7 @@ const SurveyLayout: React.FC<SurveyLayoutProps> = ({
     <div className="flex flex-1 flex-col">
       <div className="flex-grow">
         <SimpleBanner>{banner}</SimpleBanner>
-        <div className="mx-auto max-w-5xl">{children}</div>
+        <div>{children}</div>
       </div>
       <div className="sticky bottom-0 flex w-full flex-col flex-wrap justify-center gap-4 bg-white p-4 py-8 shadow-[0_-4px_5px_-5px_gray] sm:flex-row">
         {actions}
