@@ -10,5 +10,8 @@ export type ConvertedCarbonFootprintAnswer = z.infer<
   typeof convertedCarbonFootprintAnswer
 >;
 
-export type BuilderCarbonFootprintAnswer = Omit<CarbonFootprintAnswer, "id"> &
-  Partial<Pick<CarbonFootprintAnswer, "id">>;
+export type BuilderCarbonFootprintAnswer = Omit<
+  CarbonFootprintAnswer,
+  "id" | "createdAt" | "updatedAt"
+> &
+  Partial<Pick<CarbonFootprintAnswer, "id" | "createdAt" | "updatedAt">>;
