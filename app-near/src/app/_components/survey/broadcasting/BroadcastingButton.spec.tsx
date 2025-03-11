@@ -1,11 +1,11 @@
 import { render } from "@testing-library/react";
 import BroadcastingButton from "./BroadcastingButton";
 import {
-  type SurveyType,
+  SurveyType,
   type BroadcastType,
-} from "../../../../../../types/enums/broadcasting";
+} from "../../../../types/enums/broadcasting";
 
-jest.mock("../../../../../../env", () => ({
+jest.mock("../../../../env", () => ({
   env: {
     NEXT_PUBLIC_TYPEFORM_SU_LINK: "https://example.com",
   },
@@ -18,7 +18,7 @@ jest.mock("next-auth/react", () => ({
   })),
 }));
 
-jest.mock("../../../../../../trpc/react", () => ({
+jest.mock("../../../../trpc/react", () => ({
   api: {
     surveys: {
       getOne: {
@@ -35,7 +35,7 @@ Object.assign(navigator, {
 });
 
 describe("BroadcastingButton", () => {
-  const surveyType: SurveyType = "su";
+  const surveyType: SurveyType = SurveyType.SU;
   const broadcastType: BroadcastType = "mail_campaign";
 
   it("renders correctly with given props", () => {

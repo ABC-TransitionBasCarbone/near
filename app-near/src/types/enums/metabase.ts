@@ -9,4 +9,6 @@ export enum MetabaseIFrameNumber {
   PANEL_REPRESENTATIVNESS = 4,
   SU = 5,
   POPULATION_PERCENTAGE = 76,
+  WAY_OF_LIFE = 58,
+  CARBON_FOOTPRINT = 75,
 }

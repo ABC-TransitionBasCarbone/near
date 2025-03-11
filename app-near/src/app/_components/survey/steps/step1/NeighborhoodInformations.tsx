@@ -5,15 +5,15 @@ import {
   MetabaseIFrameNumber,
   MetabaseIframeType,
 } from "~/types/enums/metabase";
-import MetabaseIframe from "../../_ui/MetabaseIframe";
+import MetabaseIframe from "../../../_ui/MetabaseIframe";
 import { ButtonStyle } from "~/types/enums/button";
-import LinkAsButton from "../../_ui/LinkAsButton";
-import SurveyLayout from "../SurveyLayout";
+import LinkAsButton from "../../../_ui/LinkAsButton";
+import SurveyLayout from "../../SurveyLayout";
 import { api } from "~/trpc/react";
-import Button from "../../_ui/Button";
-import { useSurveyStateContext } from "../../_context/surveyStateContext";
-import { surveyConfig } from "./config";
-import useUpdateSurveyStep from "../hooks/useUpdateSurveyStep";
+import Button from "../../../_ui/Button";
+import { useSurveyStateContext } from "../../../_context/surveyStateContext";
+import { surveyConfig } from "../config";
+import useUpdateSurveyStep from "../../hooks/useUpdateSurveyStep";
 
 const NeighborhoodInformations: React.FC = () => {
   const { data: session } = useSession();
