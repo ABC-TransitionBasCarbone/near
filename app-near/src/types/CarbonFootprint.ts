@@ -12,6 +12,8 @@ export type ConvertedCarbonFootprintAnswer = z.infer<
 
 export type BuilderCarbonFootprintAnswer = Omit<
   CarbonFootprintAnswer,
-  "id" | "createdAt" | "updatedAt"
+  "id" | "createdAt" | "updatedAt" | "su" | "suId"
 > &
-  Partial<Pick<CarbonFootprintAnswer, "id" | "createdAt" | "updatedAt">>;
+  Partial<
+    Pick<CarbonFootprintAnswer, "id" | "createdAt" | "updatedAt" | "suId">
+  >;
