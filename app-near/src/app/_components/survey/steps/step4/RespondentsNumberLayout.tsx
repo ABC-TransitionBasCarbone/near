@@ -12,11 +12,13 @@ import {
 } from "~/types/enums/metabase";
 import Button from "~/app/_components/_ui/Button";
 import { ButtonStyle } from "~/types/enums/button";
-import { type Dispatch, type SetStateAction } from "react";
+import { useState, type Dispatch, type SetStateAction } from "react";
 import { SurveyType } from "~/types/enums/broadcasting";
 import LinkAsButton from "~/app/_components/_ui/LinkAsButton";
 import { surveyConfig } from "../config";
 import useUpdateSurveyStep from "../../hooks/useUpdateSurveyStep";
+import RepresentativenessConfirmModal from "../step2/representativeness/RepresentativenessConfirmModal";
+import { api } from "~/trpc/react";
 
 const chartConfig: {
   title: string;
@@ -47,10 +49,21 @@ const RespondentsNumberLayout: React.FC<RespondentsNumberLayoutProps> = ({
   const { data: session } = useSession();
   const updateSurveyStep = useUpdateSurveyStep();
 
-  // NEAR-34: const [showModal, setShowModal] = useState<boolean>(false);
+  const { data: wayOfLifeAnswersCount } = api.wayOfLifeAnswers.count.useQuery(
+    session?.user?.surveyId ?? 0,
+    {
+      enabled: !!session?.user?.surveyId,
+    },
+  );
+  const { data: carbonFootprintAnswersCount } =
+    api.carbonFootprintAnswers.count.useQuery(session?.user?.surveyId ?? 0, {
+      enabled: !!session?.user?.surveyId,
+    });
 
-  // NEAR-34: to change if sample target is confirmed
-  const nextStepIsDisabled = false;
+  const [showModal, setShowModal] = useState<boolean>(false);
+
+  const nextStepIsDisabled =
+    wayOfLifeAnswersCount! < 80 && carbonFootprintAnswersCount! < 80;
 
   if (!session?.user.surveyId || step === undefined) {
     return "loading...";
@@ -82,15 +95,14 @@ const RespondentsNumberLayout: React.FC<RespondentsNumberLayoutProps> = ({
           <LinkAsButton icon="/icons/question.svg" rounded>
             Besoin d&apos;aide
           </LinkAsButton>
-          {/* NEAR-34: To restore if sample target is confirmed */}
-          {/* <Button
+          <Button
             icon="/icons/flash.svg"
             rounded
             style={ButtonStyle.FILLED}
             onClick={() => setShowModal(true)}
           >
-            Forcer la fin de l&apos;enquête
-          </Button> */}
+            Forcer la visualisation
+          </Button>
           <Button
             icon="/icons/flash.svg"
             rounded
@@ -98,18 +110,17 @@ const RespondentsNumberLayout: React.FC<RespondentsNumberLayoutProps> = ({
             style={ButtonStyle.FILLED}
             onClick={() => updateSurveyStep(surveyConfig[step].nextStep)}
           >
-            Continuer l&apos;enquête
+            Visualiser les résultats
           </Button>
         </>
       }
     >
       <>
-        {/* NEAR-34: To restore if sample target is confirmed */}
-        {/* <RepresentativenessConfirmModal
+        <RepresentativenessConfirmModal
           nextStep={surveyConfig[step].nextStep}
           showModal={showModal}
           setShowModal={setShowModal}
-        /> */}
+        />
         <div className="mx-6 my-8 flex flex-col gap-16">
           <div className="flex flex-wrap gap-x-4 gap-y-16">
             {chartConfig.map((chart) => (
