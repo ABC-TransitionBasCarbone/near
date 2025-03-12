@@ -140,21 +140,23 @@ model SuAnswer {
   surveyId             Int
   survey               Survey               @relation(fields: [surveyId], references: [id])
   createdAt            DateTime             @default(now()) @map("created_at")
-  updatedAt            DateTime             @updatedAt @map("updated_at")
+  updatedAt            DateTime             @default(now()) @updatedAt @map("updated_at")
 
   @@map("su_answer")
 }
 
 model SuData {
-  id            Int        @id @default(autoincrement())
-  surveyId      Int        @map("survey_id")
-  survey        Survey     @relation(fields: [surveyId], references: [id])
-  su            Int
-  popPercentage Float      @map("pop_percentage")
-  barycenter    Json
-  SuAnswer      SuAnswer[]
-  createdAt     DateTime   @default(now()) @map("created_at")
-  updatedAt     DateTime   @updatedAt @map("updated_at")
+  id                    Int                     @id @default(autoincrement())
+  surveyId              Int                     @map("survey_id")
+  survey                Survey                  @relation(fields: [surveyId], references: [id])
+  su                    Int
+  popPercentage         Float                   @map("pop_percentage")
+  barycenter            Json
+  SuAnswer              SuAnswer[]
+  wayOfLifeAnswer       WayOfLifeAnswer[]
+  carbonFootprintAnswer CarbonFootprintAnswer[]
+  createdAt             DateTime                @default(now()) @map("created_at")
+  updatedAt             DateTime                @default(now()) @updatedAt @map("updated_at")
 
   @@unique([surveyId, su])
   @@map("su_data")
@@ -167,8 +169,10 @@ model WayOfLifeAnswer {
   emailApiCalled   Boolean?         @default(false) @map("email_api_called")
   surveyId         Int
   survey           Survey           @relation(fields: [surveyId], references: [id])
+  suId             Int?             @map("su_id")
+  su               SuData?          @relation(fields: [suId], references: [id])
   createdAt        DateTime         @default(now()) @map("created_at")
-  updatedAt        DateTime         @updatedAt @map("updated_at")
+  updatedAt        DateTime         @default(now()) @updatedAt @map("updated_at")
 
   @@map("way_of_life_answer")
 }
@@ -180,8 +184,10 @@ model CarbonFootprintAnswer {
   emailApiCalled   Boolean?         @default(false) @map("email_api_called")
   surveyId         Int
   survey           Survey           @relation(fields: [surveyId], references: [id])
+  suId             Int?             @map("su_id")
+  su               SuData?          @relation(fields: [suId], references: [id])
   createdAt        DateTime         @default(now()) @map("created_at")
-  updatedAt        DateTime         @updatedAt @map("updated_at")
+  updatedAt        DateTime         @default(now()) @updatedAt @map("updated_at")
 
   @@map("carbon_footprint_answer")
 }

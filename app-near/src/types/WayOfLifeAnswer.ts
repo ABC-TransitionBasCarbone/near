@@ -7,6 +7,6 @@ export const convertedWayOfLifeAnswer = z.object({
 
 export type BuilderWayOfLifeAnswer = Omit<
   WayOfLifeAnswer,
-  "id" | "createdAt" | "updatedAt"
+  "id" | "createdAt" | "updatedAt" | "su" | "suId"
 > &
-  Partial<Pick<WayOfLifeAnswer, "id" | "createdAt" | "updatedAt">>;
+  Partial<Pick<WayOfLifeAnswer, "id" | "createdAt" | "updatedAt" | "suId">>;
