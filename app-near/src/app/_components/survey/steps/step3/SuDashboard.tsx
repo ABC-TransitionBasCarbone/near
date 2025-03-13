@@ -7,16 +7,16 @@ import {
 } from "~/types/enums/metabase";
 
 interface SuDashboardProps {
-  suNumberList: number[];
+  suIdList: number[];
 }
 
-const SuDashboard: React.FC<SuDashboardProps> = ({ suNumberList }) => {
+const SuDashboard: React.FC<SuDashboardProps> = ({ suIdList }) => {
   const { data: session } = useSession();
   const { data: survey } = api.surveys.getOne.useQuery(undefined, {
     enabled: !!session?.user?.surveyId,
   });
 
-  if (!survey?.computedSu || !suNumberList || suNumberList.length === 0) {
+  if (!survey?.computedSu || !suIdList || suIdList.length === 0) {
     return;
   }
 
@@ -44,15 +44,15 @@ const SuDashboard: React.FC<SuDashboardProps> = ({ suNumberList }) => {
           />
         </div>
         <div className="flex overflow-y-auto">
-          {suNumberList.map((suNumber) => (
-            <div key={suNumber} className="flex flex-col">
-              <h2 className="text-lg font-semibold">Su n°{suNumber}</h2>
+          {suIdList.map((suId) => (
+            <div key={suId} className="flex flex-col">
+              <h2 className="text-lg font-semibold">Su n°{suId}</h2>
               <MetabaseIframe
                 iframeNumber={MetabaseIFrameNumber.SU}
                 iframeType={MetabaseIframeType.DASHBOARD}
                 width="450px"
                 height="3450px"
-                params={{ su: suNumber, surveyname: survey?.name }}
+                params={{ su: suId, surveyname: survey?.name }}
               />
             </div>
           ))}

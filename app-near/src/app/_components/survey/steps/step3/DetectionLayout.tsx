@@ -19,18 +19,20 @@ import { useState } from "react";
 const DetectionLayout: React.FC = () => {
   const { step } = useSurveyStateContext();
   const updateSurveyStep = useUpdateSurveyStep();
+  const { updateStep } = useSurveyStateContext();
   const { data: session } = useSession();
   const { setNotification } = useNotification();
   const utils = api.useUtils();
 
-  const [suNumberList, setSuNumberList] = useState<number[]>([]);
+  const [suIdList, setSuIdList] = useState<number[]>([]);
 
   const { data: survey } = api.surveys.getOne.useQuery(undefined, {
     enabled: !!session?.user?.surveyId,
   });
 
   const suDetectionMutation = api.suDetection.run.useMutation({
-    onSuccess: async () => {
+    onSuccess: async (response) => {
+      setSuIdList(response);
       await utils.surveys.getOne.invalidate();
     },
     onError: (e) =>
@@ -50,12 +52,7 @@ const DetectionLayout: React.FC = () => {
   });
 
   const launchSuDetection = async () => {
-    try {
-      const response = await suDetectionMutation.mutateAsync();
-      setSuNumberList(response);
-    } catch (error) {
-      console.error("Error while detecting su:", error);
-    }
+    await suDetectionMutation.mutateAsync();
   };
 
   if (!session?.user.surveyId || step === undefined) {
@@ -70,9 +67,7 @@ const DetectionLayout: React.FC = () => {
             <Link
               className="items-center gap-3 py-2 font-sans font-bold text-blue no-underline hover:ring-0"
               onClick={() => {
-                updateSurveyStep(surveyConfig[step].previouxStep).catch(
-                  (error) => console.error(error),
-                );
+                updateStep(surveyConfig[step].previouxStep);
               }}
               href=""
             >
@@ -125,7 +120,7 @@ const DetectionLayout: React.FC = () => {
         </>
       }
     >
-      <SuDashboard suNumberList={suNumberList} />
+      <SuDashboard suIdList={suIdList} />
     </SurveyLayout>
   );
 };
