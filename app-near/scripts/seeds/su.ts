@@ -123,7 +123,7 @@ Valid values for surveyName: ${existingSurveys.map((item) => item.name).join(", 
       throw new Error(`
       survey not found. 
       
-      Usage: npm run seed -- scope=su_answer surveyName=14e_arr surveyTarget=400 surveyCase=LESS_THAN_TARGET
+      Usage: npm run seed -- scope=su_answer surveyName="Porte d'Orléans" surveyTarget=400 surveyCase=LESS_THAN_TARGET
       
       Valid values for surveyName: ${existingSurveys.map((item) => item.name).join(", ")}
       `);
