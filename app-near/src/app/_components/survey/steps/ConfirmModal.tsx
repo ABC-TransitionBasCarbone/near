@@ -3,18 +3,22 @@ import Button from "~/app/_components/_ui/Button";
 import LinkAsButton from "~/app/_components/_ui/LinkAsButton";
 import Modal from "~/app/_components/_ui/Modal";
 import { ButtonStyle } from "~/types/enums/button";
-import useUpdateSurveyStep from "../../../hooks/useUpdateSurveyStep";
+import useUpdateSurveyStep from "../hooks/useUpdateSurveyStep";
 import { type SurveyPhase } from "@prisma/client";
 import { env } from "~/env";
 
-interface RepresentativenessConfirmModal {
+interface ConfirmModalProps {
   nextStep: SurveyPhase;
   showModal: boolean;
   setShowModal: Dispatch<SetStateAction<boolean>>;
+  text: string;
 }
-const RepresentativenessConfirmModal: React.FC<
-  RepresentativenessConfirmModal
-> = ({ nextStep, showModal, setShowModal }) => {
+const ConfirmModal: React.FC<ConfirmModalProps> = ({
+  nextStep,
+  showModal,
+  setShowModal,
+  text,
+}) => {
   const updateSurveyStep = useUpdateSurveyStep();
 
   return (
@@ -44,12 +48,7 @@ const RepresentativenessConfirmModal: React.FC<
             <img src="/icons/warning-black.svg" alt="" />
           </div>
           <p className="text-lg font-bold">Forcer la fin de l&apos;enquête ?</p>
-          <p>
-            Vous êtes sur le point de finaliser une enquête qui n’a pas atteint
-            ses objectifs de représentativité statistique. Il est probable que
-            votre enquête ne donne pas de résultats fidèles à la diversité de la
-            population.
-          </p>
+          <p>{text}</p>
           <p>
             N’hésitez pas à contacter l’équipe support NEAR pour avoir des
             conseils d’expert avant de prendre cette décision.
@@ -88,4 +87,4 @@ const RepresentativenessConfirmModal: React.FC<
   );
 };
 
-export default RepresentativenessConfirmModal;
+export default ConfirmModal;

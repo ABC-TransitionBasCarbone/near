@@ -5,7 +5,7 @@ import { z } from "zod";
 import representativenessService from "../../su/answers/representativeness";
 import { sendUsersSu } from "~/server/su/sendUsersSu";
 
-export const answersRouter = createTRPCRouter({
+export const suAnswersRouter = createTRPCRouter({
   count: protectedProcedure
     .input(z.number())
     .query(({ ctx, input: surveyId }) => {

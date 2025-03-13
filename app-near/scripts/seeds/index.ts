@@ -1,10 +1,12 @@
 import "dotenv/config";
 import { env } from "~/env";
 import { seedSuSurvey, type SurveyCase } from "./su";
+import { seedWayOfLifeOrCarbonFootprintSurvey } from "./way-of-life-or-carbon-footprint";
 
-enum SeedScope {
+export enum SeedScope {
   SU_ANSWER = "su_answer",
-  ALL = "all",
+  WAY_OF_LIFE_ANSWER = "way_of_life_answer",
+  CARBON_FOOTPRINT_ANSWER = "carbon_footprint_answer",
 }
 
 const parseArgs = () => {
@@ -34,7 +36,12 @@ const seed = async () => {
     throw new Error(`
 You should select a valid scope. Valid values are: ${Object.values(SeedScope).join(", ")}
 
-Usage: npm run seed -- scope=su_answer
+Usages: 
+  - npm run seed -- scope=su_answer surveyName="Porte d'Orléans" surveyTarget=400 surveyCase=LESS_THAN_TARGET
+  - npm run seed -- scope=su_answer surveyName="Porte d'Orléans" surveyTarget=400 surveyCase=MORE_THAN_GLOBAL_TARGET
+  - npm run seed -- scope=su_answer surveyName="Porte d'Orléans" surveyTarget=400 surveyCase=MORE_THAN_CATEGORIES_TARGETS
+  - npm run seed -- scope=way_of_life_answer surveyName="Porte d'Orléans" quantity=90
+  - npm run seed -- scope=carbon_footprint_answer surveyName="Porte d'Orléans" quantity=90
       `);
   }
 
@@ -44,6 +51,17 @@ Usage: npm run seed -- scope=su_answer
     const surveyCase = args.surveyCase as SurveyCase | undefined;
 
     await seedSuSurvey(surveyName, surveyTarget, surveyCase);
+  }
+
+  if (
+    [SeedScope.CARBON_FOOTPRINT_ANSWER, SeedScope.WAY_OF_LIFE_ANSWER].includes(
+      seedScope,
+    )
+  ) {
+    const surveyName = args.surveyName as string | undefined;
+    const quantity = parseInt(args.quantity as string, 10);
+
+    await seedWayOfLifeOrCarbonFootprintSurvey(surveyName, quantity, seedScope);
   }
 };
 
