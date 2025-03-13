@@ -40,7 +40,7 @@ const SuDashboard: React.FC<SuDashboardProps> = ({ suNumberList }) => {
             iframeType={MetabaseIframeType.DASHBOARD}
             width="450px"
             height="3450px"
-            params={{ su: 0 }}
+            params={{ su: 0, surveyname: survey?.name }}
           />
         </div>
         <div className="flex overflow-y-auto">
@@ -52,7 +52,7 @@ const SuDashboard: React.FC<SuDashboardProps> = ({ suNumberList }) => {
                 iframeType={MetabaseIframeType.DASHBOARD}
                 width="450px"
                 height="3450px"
-                params={{ su: suNumber }}
+                params={{ su: suNumber, surveyname: survey?.name }}
               />
             </div>
           ))}
