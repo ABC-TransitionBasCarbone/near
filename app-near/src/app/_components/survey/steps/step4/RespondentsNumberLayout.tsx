@@ -17,7 +17,7 @@ import { SurveyType } from "~/types/enums/broadcasting";
 import LinkAsButton from "~/app/_components/_ui/LinkAsButton";
 import { surveyConfig } from "../config";
 import useUpdateSurveyStep from "../../hooks/useUpdateSurveyStep";
-import RepresentativenessConfirmModal from "../step2/representativeness/RepresentativenessConfirmModal";
+import ConfirmModal from "../ConfirmModal";
 import { api } from "~/trpc/react";
 
 const chartConfig: {
@@ -116,10 +116,14 @@ const RespondentsNumberLayout: React.FC<RespondentsNumberLayoutProps> = ({
       }
     >
       <>
-        <RepresentativenessConfirmModal
+        <ConfirmModal
           nextStep={surveyConfig[step].nextStep}
           showModal={showModal}
           setShowModal={setShowModal}
+          text="Vous êtes sur le point de finaliser des enquêtes qui n’ont pas atteint
+            leurs objectifs en quantité de réponses attendues. Il est probable que
+            vos enquêtes ne donnent pas de résultats fidèles à la diversité de la
+            population."
         />
         <div className="mx-6 my-8 flex flex-col gap-16">
           <div className="flex flex-wrap gap-x-4 gap-y-16">
