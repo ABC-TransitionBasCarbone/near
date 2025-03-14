@@ -23,7 +23,7 @@ import {
   THRESHOLD_ACCEPT_VALUE,
 } from "~/shared/services/su-surveys/threshold";
 import useUpdateSurveyStep from "../../../hooks/useUpdateSurveyStep";
-import RepresentativenessConfirmModal from "./RepresentativenessConfirmModal";
+import ConfirmModal from "../../ConfirmModal";
 import { SurveyPhase } from "@prisma/client";
 
 interface RepresentativenessLayoutProps {
@@ -35,13 +35,13 @@ const RepresentativenessLayout: React.FC<RepresentativenessLayoutProps> = ({
 }) => {
   const { data: session } = useSession();
   const { step } = useSurveyStateContext();
-  const { data: categoryStats } = api.answers.representativeness.useQuery(
+  const { data: categoryStats } = api.suAnswers.representativeness.useQuery(
     session?.user?.surveyId ?? 0,
     {
       enabled: !!session?.user?.surveyId,
     },
   );
-  const { data: count } = api.answers.count.useQuery(
+  const { data: count } = api.suAnswers.count.useQuery(
     session?.user?.surveyId ?? 0,
     {
       enabled: !!session?.user?.surveyId,
@@ -68,10 +68,14 @@ const RepresentativenessLayout: React.FC<RepresentativenessLayoutProps> = ({
 
   return (
     <>
-      <RepresentativenessConfirmModal
+      <ConfirmModal
         nextStep={surveyConfig[step].nextStep}
         showModal={showModal}
         setShowModal={setShowModal}
+        text="Vous êtes sur le point de finaliser une enquête qui n’a pas atteint
+            ses objectifs de représentativité statistique. Il est probable que
+            votre enquête ne donne pas de résultats fidèles à la diversité de la
+            population."
       />
       <SurveyLayout
         banner={

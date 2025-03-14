@@ -25,17 +25,19 @@ enum SurveyPhase {
 }
 
 model Survey {
-  id               Int         @id @default(autoincrement())
-  name             String      @unique
-  createdAt        DateTime    @default(now())
-  updatedAt        DateTime    @updatedAt
-  phase            SurveyPhase @default(STEP_1_NEIGHBORHOOD_INFORMATION)
-  sampleTarget     Int?        @map("sample_target")
-  thresholdReached Boolean     @default(false)
-  quartier         Quartier?
-  suAnswer         SuAnswer[]
-  suData           SuData[]
-  computedSu       Boolean     @default(false)
+  id                    Int                     @id @default(autoincrement())
+  name                  String                  @unique
+  createdAt             DateTime                @default(now())
+  updatedAt             DateTime                @updatedAt
+  phase                 SurveyPhase             @default(STEP_1_NEIGHBORHOOD_INFORMATION)
+  sampleTarget          Int?                    @map("sample_target")
+  thresholdReached      Boolean                 @default(false)
+  quartier              Quartier?
+  suAnswer              SuAnswer[]
+  wayOfLifeAnswer       WayOfLifeAnswer[]
+  carbonFootprintAnswer CarbonFootprintAnswer[]
+  suData                SuData[]
+  computedSu            Boolean                 @default(false)
 
   @@map("surveys")
 }
@@ -129,7 +131,7 @@ model SuAnswer {
   purchasingStrategy   PurchasingStrategy   @map("purchasing_strategy")
   airTravelFrequency   AirTravelFrequency   @map("air_travel_frequency")
   heatSource           HeatSource           @map("heat_source")
-  email                String?              @unique
+  email                String?
   broadcastChannel     BroadcastChannel     @map("broadcast_channel")
   emailApiCalled       Boolean?             @default(false) @map("email_api_called")
   suId                 Int?                 @map("su_id")
@@ -137,21 +139,57 @@ model SuAnswer {
   distanceToBarycenter Float?               @map("distance_to_barycenter")
   surveyId             Int
   survey               Survey               @relation(fields: [surveyId], references: [id])
+  createdAt            DateTime             @default(now()) @map("created_at")
+  updatedAt            DateTime             @default(now()) @updatedAt @map("updated_at")
 
   @@map("su_answer")
 }
 
 model SuData {
-  id            Int        @id @default(autoincrement())
-  surveyId      Int        @map("survey_id")
-  survey        Survey     @relation(fields: [surveyId], references: [id])
-  su            Int
-  popPercentage Float      @map("pop_percentage")
-  barycenter    Json
-  SuAnswer      SuAnswer[]
+  id                    Int                     @id @default(autoincrement())
+  surveyId              Int                     @map("survey_id")
+  survey                Survey                  @relation(fields: [surveyId], references: [id])
+  su                    Int
+  popPercentage         Float                   @map("pop_percentage")
+  barycenter            Json
+  SuAnswer              SuAnswer[]
+  wayOfLifeAnswer       WayOfLifeAnswer[]
+  carbonFootprintAnswer CarbonFootprintAnswer[]
+  createdAt             DateTime                @default(now()) @map("created_at")
+  updatedAt             DateTime                @default(now()) @updatedAt @map("updated_at")
 
   @@unique([surveyId, su])
   @@map("su_data")
+}
+
+model WayOfLifeAnswer {
+  id               Int              @id @default(autoincrement())
+  email            String?
+  broadcastChannel BroadcastChannel @map("broadcast_channel")
+  emailApiCalled   Boolean?         @default(false) @map("email_api_called")
+  surveyId         Int
+  survey           Survey           @relation(fields: [surveyId], references: [id])
+  suId             Int?             @map("su_id")
+  su               SuData?          @relation(fields: [suId], references: [id])
+  createdAt        DateTime         @default(now()) @map("created_at")
+  updatedAt        DateTime         @default(now()) @updatedAt @map("updated_at")
+
+  @@map("way_of_life_answer")
+}
+
+model CarbonFootprintAnswer {
+  id               Int              @id @default(autoincrement())
+  email            String?
+  broadcastChannel BroadcastChannel @map("broadcast_channel")
+  emailApiCalled   Boolean?         @default(false) @map("email_api_called")
+  surveyId         Int
+  survey           Survey           @relation(fields: [surveyId], references: [id])
+  suId             Int?             @map("su_id")
+  su               SuData?          @relation(fields: [suId], references: [id])
+  createdAt        DateTime         @default(now()) @map("created_at")
+  updatedAt        DateTime         @default(now()) @updatedAt @map("updated_at")
+
+  @@map("carbon_footprint_answer")
 }
 
 model InseeIris2021 {

@@ -42,7 +42,7 @@ const DetectionLayout: React.FC = () => {
       }),
   });
 
-  const sendSuEmailMutation = api.answers.sendSu.useMutation({
+  const sendSuEmailMutation = api.suAnswers.sendSu.useMutation({
     onSuccess: () => step && updateSurveyStep(surveyConfig[step]?.nextStep),
     onError: (e) =>
       setNotification({

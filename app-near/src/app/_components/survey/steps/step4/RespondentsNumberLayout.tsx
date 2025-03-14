@@ -12,11 +12,13 @@ import {
 } from "~/types/enums/metabase";
 import Button from "~/app/_components/_ui/Button";
 import { ButtonStyle } from "~/types/enums/button";
-import { type Dispatch, type SetStateAction } from "react";
+import { useState, type Dispatch, type SetStateAction } from "react";
 import { SurveyType } from "~/types/enums/broadcasting";
 import LinkAsButton from "~/app/_components/_ui/LinkAsButton";
 import { surveyConfig } from "../config";
 import useUpdateSurveyStep from "../../hooks/useUpdateSurveyStep";
+import ConfirmModal from "../ConfirmModal";
+import { api } from "~/trpc/react";
 
 const chartConfig: {
   title: string;
@@ -29,7 +31,7 @@ const chartConfig: {
     surveyType: SurveyType.WAY_OF_LIFE,
   },
   {
-    title: "Empreinte carbone (Nos Gestes Climats)",
+    title: "Empreinte carbone",
     iframeNumber: MetabaseIFrameNumber.CARBON_FOOTPRINT,
     surveyType: SurveyType.CARBON_FOOTPRINT,
   },
@@ -47,10 +49,21 @@ const RespondentsNumberLayout: React.FC<RespondentsNumberLayoutProps> = ({
   const { data: session } = useSession();
   const updateSurveyStep = useUpdateSurveyStep();
 
-  // NEAR-34: const [showModal, setShowModal] = useState<boolean>(false);
+  const { data: wayOfLifeAnswersCount } = api.wayOfLifeAnswers.count.useQuery(
+    session?.user?.surveyId ?? 0,
+    {
+      enabled: !!session?.user?.surveyId,
+    },
+  );
+  const { data: carbonFootprintAnswersCount } =
+    api.carbonFootprintAnswers.count.useQuery(session?.user?.surveyId ?? 0, {
+      enabled: !!session?.user?.surveyId,
+    });
 
-  // NEAR-34: to change if sample target is confirmed
-  const nextStepIsDisabled = false;
+  const [showModal, setShowModal] = useState<boolean>(false);
+
+  const nextStepIsDisabled =
+    wayOfLifeAnswersCount! < 80 && carbonFootprintAnswersCount! < 80;
 
   if (!session?.user.surveyId || step === undefined) {
     return "loading...";
@@ -82,15 +95,14 @@ const RespondentsNumberLayout: React.FC<RespondentsNumberLayoutProps> = ({
           <LinkAsButton icon="/icons/question.svg" rounded>
             Besoin d&apos;aide
           </LinkAsButton>
-          {/* NEAR-34: To restore if sample target is confirmed */}
-          {/* <Button
+          <Button
             icon="/icons/flash.svg"
             rounded
             style={ButtonStyle.FILLED}
             onClick={() => setShowModal(true)}
           >
-            Forcer la fin de l&apos;enquête
-          </Button> */}
+            Forcer la visualisation
+          </Button>
           <Button
             icon="/icons/flash.svg"
             rounded
@@ -98,31 +110,36 @@ const RespondentsNumberLayout: React.FC<RespondentsNumberLayoutProps> = ({
             style={ButtonStyle.FILLED}
             onClick={() => updateSurveyStep(surveyConfig[step].nextStep)}
           >
-            Continuer l&apos;enquête
+            Visualiser les résultats
           </Button>
         </>
       }
     >
       <>
-        {/* NEAR-34: To restore if sample target is confirmed */}
-        {/* <RepresentativenessConfirmModal
+        <ConfirmModal
           nextStep={surveyConfig[step].nextStep}
           showModal={showModal}
           setShowModal={setShowModal}
-        /> */}
+          text="Vous êtes sur le point de finaliser des enquêtes qui n’ont pas atteint
+            leurs objectifs en quantité de réponses attendues. Il est probable que
+            vos enquêtes ne donnent pas de résultats fidèles à la diversité de la
+            population."
+        />
         <div className="mx-6 my-8 flex flex-col gap-16">
-          <div className="flex flex-wrap gap-x-4 gap-y-16">
+          <div className="flex flex-wrap gap-x-8 gap-y-16">
             {chartConfig.map((chart) => (
               <div
                 key={chart.iframeNumber}
                 className="flex min-w-96 flex-1 flex-col items-center gap-y-8"
               >
-                <div className="text-xl">{chart.title}</div>
-                <MetabaseIframe
-                  iframeNumber={chart.iframeNumber}
-                  iframeType={MetabaseIframeType.QUESTION}
-                  height="300px"
-                />
+                <div className="w-full">
+                  <div className="mb-1 text-center text-3xl">{chart.title}</div>
+                  <MetabaseIframe
+                    iframeNumber={chart.iframeNumber}
+                    iframeType={MetabaseIframeType.QUESTION}
+                    height="300px"
+                  />
+                </div>
                 <Button
                   icon="/icons/rocket.svg"
                   rounded

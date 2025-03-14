@@ -22,8 +22,8 @@ exports[`representativeness should return representativeness when answers quanti
 
 exports[`representativeness should return representativeness when answers quantity is below sampleTarget 1`] = `
 {
-  "above_75": -28.000000000000004,
-  "cs1": -28.000000000000004,
+  "above_75": -44.666666666666664,
+  "cs1": -44.666666666666664,
   "cs2": 11,
   "cs3": 18,
   "cs4": 15,
@@ -35,7 +35,7 @@ exports[`representativeness should return representativeness when answers quanti
   "from_30_to_44": 23,
   "from_45_to_59": 17,
   "from_60_to_74": 20,
-  "man": -6,
+  "man": 10.666666666666668,
   "woman": 56.00000000000001,
 }
 `;

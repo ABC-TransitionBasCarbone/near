@@ -1,4 +1,4 @@
-import { type Answer, type TypeformWebhookPayload } from "~/types/typeform";
+import { type Answer, type TypeformWebhookPayload } from "~/types/Typeform";
 
 export const convertFormToAnswer = (
   parsedBody: TypeformWebhookPayload,
