@@ -14,7 +14,6 @@ import { useNotification } from "~/app/_components/_context/NotificationProvider
 import { NotificationType } from "~/types/enums/notifications";
 import { SurveyPhase } from "@prisma/client";
 import { getErrorValue } from "~/app/_components/_services/error";
-import { useState } from "react";
 
 const DetectionLayout: React.FC = () => {
   const { step } = useSurveyStateContext();
@@ -24,15 +23,12 @@ const DetectionLayout: React.FC = () => {
   const { setNotification } = useNotification();
   const utils = api.useUtils();
 
-  const [suIdList, setSuIdList] = useState<number[]>([]);
-
   const { data: survey } = api.surveys.getOne.useQuery(undefined, {
     enabled: !!session?.user?.surveyId,
   });
 
   const suDetectionMutation = api.suDetection.run.useMutation({
-    onSuccess: async (response) => {
-      setSuIdList(response);
+    onSuccess: async () => {
       await utils.surveys.getOne.invalidate();
     },
     onError: (e) =>
@@ -120,7 +116,7 @@ const DetectionLayout: React.FC = () => {
         </>
       }
     >
-      <SuDashboard suIdList={suIdList} />
+      <SuDashboard />
     </SurveyLayout>
   );
 };
