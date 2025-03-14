@@ -31,7 +31,7 @@ const chartConfig: {
     surveyType: SurveyType.WAY_OF_LIFE,
   },
   {
-    title: "Empreinte carbone (Nos Gestes Climats)",
+    title: "Empreinte carbone",
     iframeNumber: MetabaseIFrameNumber.CARBON_FOOTPRINT,
     surveyType: SurveyType.CARBON_FOOTPRINT,
   },
@@ -126,18 +126,20 @@ const RespondentsNumberLayout: React.FC<RespondentsNumberLayoutProps> = ({
             population."
         />
         <div className="mx-6 my-8 flex flex-col gap-16">
-          <div className="flex flex-wrap gap-x-4 gap-y-16">
+          <div className="flex flex-wrap gap-x-8 gap-y-16">
             {chartConfig.map((chart) => (
               <div
                 key={chart.iframeNumber}
                 className="flex min-w-96 flex-1 flex-col items-center gap-y-8"
               >
-                <div className="text-xl">{chart.title}</div>
-                <MetabaseIframe
-                  iframeNumber={chart.iframeNumber}
-                  iframeType={MetabaseIframeType.QUESTION}
-                  height="300px"
-                />
+                <div className="w-full">
+                  <div className="mb-1 text-center text-3xl">{chart.title}</div>
+                  <MetabaseIframe
+                    iframeNumber={chart.iframeNumber}
+                    iframeType={MetabaseIframeType.QUESTION}
+                    height="300px"
+                  />
+                </div>
                 <Button
                   icon="/icons/rocket.svg"
                   rounded
