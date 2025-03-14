@@ -53,8 +53,6 @@ const computeSus = async (
       deep: true,
     }) as SuComputationData;
 
-    console.log("camelCasecomputedSu", camelCaseComputedSu);
-
     return camelCaseComputedSu;
   } catch (error) {
     console.error("Error calling API SU compute:", error);
