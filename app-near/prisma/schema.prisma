@@ -59,6 +59,7 @@ enum Gender {
 enum ProfessionalCategory {
   CS1
   CS2
+  CS2_platform_entrepreneurship
   CS3
   CS4
   CS5
@@ -66,6 +67,7 @@ enum ProfessionalCategory {
   CS7
   CS8_unemployed
   CS8_student
+  CS8_home
 }
 
 enum EasyHealthAccess {
