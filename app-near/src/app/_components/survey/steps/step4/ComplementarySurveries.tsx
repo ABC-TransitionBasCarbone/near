@@ -2,8 +2,8 @@
 
 import { useState } from "react";
 import RespondentsNumberLayout from "./RespondentsNumberLayout";
-import { type SurveyType } from "~/types/enums/broadcasting";
 import BroadcastingLayout from "../../broadcasting/BroadcastingLayout";
+import { type SurveyType } from "~/types/enums/survey";
 
 const ComplementarySurveries: React.FC = () => {
   const [toggleBroadcastingPage, setToggleBroadcastingPage] = useState(false);

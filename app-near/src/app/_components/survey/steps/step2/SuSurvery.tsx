@@ -3,7 +3,7 @@
 import { useState } from "react";
 import BroadcastingLayout from "../../broadcasting/BroadcastingLayout";
 import RepresentativenessLayout from "./representativeness/RepresentativenessLayout";
-import { SurveyType } from "~/types/enums/broadcasting";
+import { SurveyType } from "~/types/enums/survey";
 
 const SuSurvery: React.FC = () => {
   const [toggleBroadcastingPage, setToggleBroadcastingPage] = useState(false);

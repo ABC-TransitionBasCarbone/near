@@ -1,10 +1,5 @@
 import { env } from "~/env";
-
-export enum SurveyType {
-  SU = "su",
-  WAY_OF_LIFE = "way_of_life",
-  CARBON_FOOTPRINT = "carbone_footprint",
-}
+import { SurveyType } from "./survey";
 
 export type BroadcastType =
   | "mail_campaign"

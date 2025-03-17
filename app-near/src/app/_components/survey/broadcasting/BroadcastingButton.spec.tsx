@@ -1,9 +1,7 @@
 import { render } from "@testing-library/react";
 import BroadcastingButton from "./BroadcastingButton";
-import {
-  SurveyType,
-  type BroadcastType,
-} from "../../../../types/enums/broadcasting";
+import { type BroadcastType } from "../../../../types/enums/broadcasting";
+import { SurveyType } from "~/types/enums/survey";
 
 jest.mock("../../../../env", () => ({
   env: {

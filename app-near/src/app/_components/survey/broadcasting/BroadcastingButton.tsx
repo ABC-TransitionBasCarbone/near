@@ -1,7 +1,6 @@
 "use client";
 import { useState } from "react";
 import {
-  type SurveyType,
   type BroadcastType,
   surveyTypeMapper,
 } from "../../../../types/enums/broadcasting";
@@ -9,6 +8,7 @@ import Button from "../../_ui/Button";
 import QRCodeModal from "./QRCodeModal";
 import { useSession } from "next-auth/react";
 import { api } from "~/trpc/react";
+import { type SurveyType } from "~/types/enums/survey";
 
 interface BroadcastingButtonProps {
   surveyType: SurveyType;
