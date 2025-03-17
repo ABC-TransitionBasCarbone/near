@@ -6,14 +6,15 @@ import {
   MetabaseIframeType,
 } from "~/types/enums/metabase";
 
-interface SuDashboardProps {
-  suIdList: number[];
-}
-
-const SuDashboard: React.FC<SuDashboardProps> = ({ suIdList }) => {
+const SuDashboard: React.FC = () => {
   const { data: session } = useSession();
   const { data: survey } = api.surveys.getOne.useQuery(undefined, {
     enabled: !!session?.user?.surveyId,
+  });
+
+  //@ts-expect-error enabled when survey.id is not null
+  const { data: suIdList } = api.suDetection.getList.useQuery(survey.id, {
+    enabled: !!survey?.id,
   });
 
   if (!survey?.computedSu || !suIdList || suIdList.length === 0) {

@@ -7,6 +7,20 @@ import { saveSuData } from "~/server/su/data/save";
 import { updateSurvey } from "~/server/surveys/put";
 import { ErrorCode } from "~/types/enums/error";
 
+export const getSuList = async (surveyId: number): Promise<number[]> => {
+  const survey = await db.survey.findUnique({ where: { id: surveyId } });
+  if (!survey?.computedSu) {
+    throw new TRPCError({
+      code: "FORBIDDEN",
+      message: ErrorCode.SU_NOT_COMPUTED,
+    });
+  }
+
+  const su = await db.suData.findMany({ where: { surveyId: survey.id } });
+
+  return su.map((item) => item.su);
+};
+
 export const computeSu = async (surveyId: number): Promise<number[]> => {
   const survey = await db.survey.findUnique({ where: { id: surveyId } });
   if (!survey || survey.phase !== SurveyPhase.STEP_3_SU_EXPLORATION) {

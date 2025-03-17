@@ -19,6 +19,7 @@ import { surveyConfig } from "../config";
 import useUpdateSurveyStep from "../../hooks/useUpdateSurveyStep";
 import ConfirmModal from "../ConfirmModal";
 import { api } from "~/trpc/react";
+import SuDashboard from "../step3/SuDashboard";
 
 const chartConfig: {
   title: string;
@@ -156,7 +157,7 @@ const RespondentsNumberLayout: React.FC<RespondentsNumberLayoutProps> = ({
           </div>
           <div className="flex flex-col items-center gap-10">
             <div className="text-xl">Rappel des Sphères d&apos;Usage</div>
-            {/* NEAR-34: to update when near-31 finished */}
+            <SuDashboard />
             <div className="h-32">Pending NEAR-31...</div>
           </div>
         </div>
