@@ -127,11 +127,11 @@ const RespondentsNumberLayout: React.FC<RespondentsNumberLayoutProps> = ({
             population."
         />
         <div className="mx-6 my-8 flex flex-col gap-16">
-          <div className="flex flex-wrap gap-x-8 gap-y-16">
+          <div className="flex flex-wrap justify-center gap-x-8 gap-y-16">
             {chartConfig.map((chart) => (
               <div
                 key={chart.iframeNumber}
-                className="flex min-w-96 flex-1 flex-col items-center gap-y-8"
+                className="flex w-full flex-col items-center gap-y-8 sm:w-[600px]"
               >
                 <div className="w-full">
                   <div className="mb-1 text-center text-3xl">{chart.title}</div>
