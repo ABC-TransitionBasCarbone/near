@@ -14,6 +14,7 @@ import Button from "../../../_ui/Button";
 import { useSurveyStateContext } from "../../../_context/surveyStateContext";
 import { surveyConfig } from "../config";
 import useUpdateSurveyStep from "../../hooks/useUpdateSurveyStep";
+import { SurveyPhase } from "@prisma/client";
 
 const NeighborhoodInformations: React.FC = () => {
   const { data: session } = useSession();
@@ -25,6 +26,10 @@ const NeighborhoodInformations: React.FC = () => {
       enabled: !!session?.user?.surveyId,
     },
   );
+
+  const { data: survey } = api.surveys.getOne.useQuery(undefined, {
+    enabled: !!session?.user?.surveyId,
+  });
 
   const updateSurveyStep = useUpdateSurveyStep();
 
@@ -56,14 +61,16 @@ const NeighborhoodInformations: React.FC = () => {
           <LinkAsButton icon="/icons/question.svg" rounded>
             Besoin d&apos;aide
           </LinkAsButton>
-          <Button
-            icon="/icons/flash.svg"
-            rounded
-            style={ButtonStyle.FILLED}
-            onClick={() => updateSurveyStep(surveyConfig[step]?.nextStep)}
-          >
-            Démarrer l&apos;enquête
-          </Button>
+          {survey?.phase === SurveyPhase.STEP_1_NEIGHBORHOOD_INFORMATION && (
+            <Button
+              icon="/icons/flash.svg"
+              rounded
+              style={ButtonStyle.FILLED}
+              onClick={() => updateSurveyStep(surveyConfig[step]?.nextStep)}
+            >
+              Démarrer l&apos;enquête
+            </Button>
+          )}
         </>
       }
     >
