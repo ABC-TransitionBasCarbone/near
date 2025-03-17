@@ -28,6 +28,8 @@ export const surveySUReferencesMapping: Record<string, string | boolean> = {
   ["9ac0fb83-a344-44d4-a235-add149bb6de3"]: Gender.OTHER,
   // professionalCategory
   ["34937a02-6445-4624-9d37-06158160fedc"]: ProfessionalCategory.CS1,
+  ["392aa02d-894f-4359-96e3-dbe902090974"]:
+    ProfessionalCategory.CS2_platform_entrepreneurship,
   ["eafa75de-50ee-42b5-8a49-9edc5a665d5c"]: ProfessionalCategory.CS2,
   ["a69d126e-0436-4b3d-b1b7-ba39af69354f"]: ProfessionalCategory.CS3,
   ["d8ff03ac-c2e7-4db7-a4ba-dd1162d31d0d"]: ProfessionalCategory.CS4,
@@ -36,6 +38,7 @@ export const surveySUReferencesMapping: Record<string, string | boolean> = {
   ["144ee3b6-cc45-4c8a-bd6b-d507579a8a27"]: ProfessionalCategory.CS7,
   ["c72b89cf-162b-422c-a55c-cd831494fcfb"]: ProfessionalCategory.CS8_unemployed,
   ["a18b427c-ab45-4534-ad45-326c142a7869"]: ProfessionalCategory.CS8_student,
+  ["db5c0ae8-772d-430a-84d6-b6a44026a25c"]: ProfessionalCategory.CS8_home,
   // easyHealthAccess
   ["2360d7d5-b501-4f3e-b829-4b374483849e"]: EasyHealthAccess.EASY,
   ["bd25627f-8aa4-4c43-a013-635e5af4cee0"]: EasyHealthAccess.MODERATE,

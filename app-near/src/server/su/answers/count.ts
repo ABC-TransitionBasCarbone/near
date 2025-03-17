@@ -20,6 +20,7 @@ const convertEnumToInseeKeys: Record<
   [Gender.OTHER]: undefined, // Insee has no target. Could be an issue to reach the target if we collect a lot of other genders
   [ProfessionalCategory.CS1]: CategoryStat.cs1,
   [ProfessionalCategory.CS2]: CategoryStat.cs2,
+  [ProfessionalCategory.CS2_platform_entrepreneurship]: CategoryStat.cs2,
   [ProfessionalCategory.CS3]: CategoryStat.cs3,
   [ProfessionalCategory.CS4]: CategoryStat.cs4,
   [ProfessionalCategory.CS5]: CategoryStat.cs5,
@@ -27,6 +28,7 @@ const convertEnumToInseeKeys: Record<
   [ProfessionalCategory.CS7]: CategoryStat.cs7,
   [ProfessionalCategory.CS8_student]: CategoryStat.cs8,
   [ProfessionalCategory.CS8_unemployed]: CategoryStat.cs8,
+  [ProfessionalCategory.CS8_home]: CategoryStat.cs8,
 };
 
 export const countAnswersByCategories = async (
