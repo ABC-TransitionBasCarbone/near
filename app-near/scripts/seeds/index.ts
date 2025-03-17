@@ -37,7 +37,7 @@ const seed = async () => {
 You should select a valid scope. Valid values are: ${Object.values(SeedScope).join(", ")}
 
 Usages: 
-  - npm run seed -- scope=su_answer surveyName="Porte d'Orléans" surveyTarget=400 surveyCase=LESS_THAN_TARGET
+  - npm run seed -- scope=su_answer surveyName="Porte d'Orléans" surveyTarget=400 surveyCase=LESS_THAN_GLOBAL_TARGET
   - npm run seed -- scope=su_answer surveyName="Porte d'Orléans" surveyTarget=400 surveyCase=MORE_THAN_GLOBAL_TARGET
   - npm run seed -- scope=su_answer surveyName="Porte d'Orléans" surveyTarget=400 surveyCase=MORE_THAN_CATEGORIES_TARGETS
   - npm run seed -- scope=way_of_life_answer surveyName="Porte d'Orléans" quantity=90

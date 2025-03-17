@@ -123,7 +123,7 @@ Valid values for surveyName: ${existingSurveys.map((item) => item.name).join(", 
       throw new Error(`
       survey not found. 
       
-      Usage: npm run seed -- scope=su_answer surveyName="Porte d'Orléans" surveyTarget=400 surveyCase=LESS_THAN_TARGET
+      Usage: npm run seed -- scope=su_answer surveyName="Porte d'Orléans" surveyTarget=400 surveyCase=LESS_THAN_GLOBAL_TARGET
       
       Valid values for surveyName: ${existingSurveys.map((item) => item.name).join(", ")}
       `);
@@ -144,14 +144,20 @@ Valid values for surveyName: ${existingSurveys.map((item) => item.name).join(", 
               }),
               professionalCategory: select({
                 [ProfessionalCategory.CS1]: answerTargetsByCategories.cs1,
-                [ProfessionalCategory.CS2]: answerTargetsByCategories.cs2,
+                [ProfessionalCategory.CS2]: answerTargetsByCategories.cs2! / 2,
+                [ProfessionalCategory.CS2_platform_entrepreneurship]:
+                  answerTargetsByCategories.cs2! / 2,
                 [ProfessionalCategory.CS3]: answerTargetsByCategories.cs3,
                 [ProfessionalCategory.CS4]: answerTargetsByCategories.cs4,
                 [ProfessionalCategory.CS5]: answerTargetsByCategories.cs5,
                 [ProfessionalCategory.CS6]: answerTargetsByCategories.cs6,
                 [ProfessionalCategory.CS7]: answerTargetsByCategories.cs7,
                 [ProfessionalCategory.CS8_student]:
-                  answerTargetsByCategories.cs8,
+                  answerTargetsByCategories.cs8! / 3,
+                [ProfessionalCategory.CS8_home]:
+                  answerTargetsByCategories.cs8! / 3,
+                [ProfessionalCategory.CS8_unemployed]:
+                  answerTargetsByCategories.cs8! / 3,
               }),
               ageCategory: select({
                 [AgeCategory.ABOVE_75]: answerTargetsByCategories.above_75,
