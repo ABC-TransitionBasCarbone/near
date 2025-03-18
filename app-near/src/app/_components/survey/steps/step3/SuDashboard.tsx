@@ -12,8 +12,7 @@ const SuDashboard: React.FC = () => {
     enabled: !!session?.user?.surveyId,
   });
 
-  //@ts-expect-error enabled when survey.id is not null
-  const { data: suIdList } = api.suDetection.getList.useQuery(survey.id, {
+  const { data: suIdList } = api.suDetection.getList.useQuery(undefined, {
     enabled: !!survey?.id,
   });
 
