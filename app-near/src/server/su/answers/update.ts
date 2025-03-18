@@ -15,7 +15,7 @@ export const updateSuAnswerWithSu = async (
       throw new Error(
         "Trying to add su to suAnswer without suData being created.",
       );
-    return db.suAnswer.update({
+    await db.suAnswer.update({
       where: { id },
       data: { suId: suData.id, distanceToBarycenter },
     });
