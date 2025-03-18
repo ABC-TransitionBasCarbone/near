@@ -13,13 +13,13 @@ import {
 import Button from "~/app/_components/_ui/Button";
 import { ButtonStyle } from "~/types/enums/button";
 import { useState, type Dispatch, type SetStateAction } from "react";
-import { SurveyType } from "~/types/enums/broadcasting";
 import LinkAsButton from "~/app/_components/_ui/LinkAsButton";
 import { surveyConfig } from "../config";
-import useUpdateSurveyStep from "../../hooks/useUpdateSurveyStep";
 import ConfirmModal from "../ConfirmModal";
 import { api } from "~/trpc/react";
 import SuDashboard from "../step3/SuDashboard";
+import { SurveyType } from "~/types/enums/survey";
+import useUpdateSurveyStep from "../../hooks/useUpdateSurveyStep";
 
 const chartConfig: {
   title: string;

@@ -2,7 +2,10 @@ import { allSurveyTypes, SurveyType } from "~/types/enums/survey";
 import { db } from "../db";
 import { TRPCError } from "@trpc/server";
 import { ErrorCode } from "~/types/enums/error";
-import { type QualityStatistics } from "~/types/QualityStatistics";
+import {
+  type QualityStatisticsWithPopulation,
+  type QualityStatistics,
+} from "~/types/QualityStatistics";
 
 const surveyTypeMapper: Record<
   SurveyType,
@@ -45,7 +48,7 @@ const getQualityStatistics = async (
 
 export const getAllQualityStatistics = async (
   surveyId: number,
-): Promise<QualityStatistics[]> => {
+): Promise<QualityStatisticsWithPopulation> => {
   const neighborhood = await db.quartier.findUnique({ where: { surveyId } });
 
   if (!neighborhood) {
@@ -55,9 +58,15 @@ export const getAllQualityStatistics = async (
     });
   }
 
-  return Promise.all(
+  const qualityStat = await Promise.all(
     allSurveyTypes.map((surveyType) =>
       getQualityStatistics(surveyType, surveyId, neighborhood.population_sum),
     ),
   );
+
+  return {
+    qualityStatistics: qualityStat,
+    populationSum: neighborhood.population_sum,
+    populationSumWith15: neighborhood.population_sum_with_under_fifteen,
+  };
 };

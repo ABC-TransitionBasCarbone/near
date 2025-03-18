@@ -3,7 +3,7 @@ import SurveyLayout from "../../SurveyLayout";
 import { surveyConfig } from "../config";
 import Link from "next/link";
 import Button from "~/app/_components/_ui/Button";
-import { Component, useState } from "react";
+import { useState } from "react";
 import {
   allResultDashboards,
   ResultDashboard,
@@ -85,7 +85,7 @@ const Results: React.FC = () => {
         </div>
       }
     >
-      <div className="m-auto mt-8 max-w-5xl">
+      <div className="mx-auto mb-10 mt-8 max-w-5xl">
         {dahboardMapping[resultDashboard].component}
       </div>
     </SurveyLayout>

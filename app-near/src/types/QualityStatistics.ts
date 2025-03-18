@@ -6,3 +6,9 @@ export interface QualityStatistics {
   correctedMarginError: number;
   confidence: number;
 }
+
+export interface QualityStatisticsWithPopulation {
+  qualityStatistics: QualityStatistics[];
+  populationSum: number;
+  populationSumWith15: number;
+}

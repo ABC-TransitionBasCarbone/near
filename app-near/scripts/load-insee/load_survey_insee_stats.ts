@@ -90,6 +90,7 @@ const createQuartiersView = async (survey_id: number) => {
         ),
  intermediates as (SELECT ${survey_id} AS survey_id,
    ARRAY['751145501', '751145503', '751145601' ] AS iris_selectors,
+    sum(p21_pop) AS population_sum_with_under_fifteen,
     sum(c21_pop15p) AS population_sum,
     sum(p21_pop1529) AS p21_pop1529_sum,
     sum(p21_pop3044) AS p21_pop3044_sum,
