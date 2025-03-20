@@ -25,7 +25,7 @@ export const surveySUReferencesMapping: Record<string, string | boolean> = {
   // gender
   ["191de28b-587d-4f34-b57f-b687c77e1c1e"]: Gender.WOMAN,
   ["1caec0f3-6a02-42e6-9bf7-10030b6d38b6"]: Gender.MAN,
-  ["9ac0fb83-a344-44d4-a235-add149bb6de3"]: Gender.OTHER,
+  ["0fea5725-a8da-42a7-b60b-b6eb14746a6c"]: Gender.OTHER,
   // professionalCategory
   ["34937a02-6445-4624-9d37-06158160fedc"]: ProfessionalCategory.CS1,
   ["392aa02d-894f-4359-96e3-dbe902090974"]:
