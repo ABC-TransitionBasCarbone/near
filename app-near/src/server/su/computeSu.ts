@@ -18,7 +18,7 @@ export const getSuList = async (surveyId: number): Promise<number[]> => {
 
   const su = await db.suData.findMany({ where: { surveyId: survey.id } });
 
-  return su.map((item) => item.su);
+  return su.map((item) => item.id);
 };
 
 export const computeSu = async (surveyId: number): Promise<number[]> => {
