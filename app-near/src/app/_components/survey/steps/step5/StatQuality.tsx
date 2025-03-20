@@ -10,7 +10,7 @@ const StatQuality: React.FC = () => {
   const { data: session } = useSession();
   const { data: qualityStatisticsWithPopulation } =
     api.analyzes.quality.useQuery(undefined, {
-      enabled: !!session?.user.surveyId,
+      enabled: !!session?.user.surveyName,
     });
 
   return (
@@ -53,7 +53,7 @@ const StatQuality: React.FC = () => {
           Population générale :{" "}
           {`${new Intl.NumberFormat("fr-FR").format(qualityStatisticsWithPopulation?.populationSumWith15 ?? 0)} `}
         </div>
-        {session?.user.surveyId && (
+        {session?.user.surveyName && (
           <div className="flex flex-col gap-8">
             <div className="mt-5 flex flex-col flex-wrap gap-6 md:flex-row">
               <div className="flex-1">
@@ -63,7 +63,7 @@ const StatQuality: React.FC = () => {
                 <MetabaseIframe
                   iframeNumber={MetabaseIFrameNumber.RESULT_GENDER}
                   iframeType={MetabaseIframeType.QUESTION}
-                  params={{ surveyId: session?.user.surveyId }}
+                  params={{ surveyName: session?.user.surveyName }}
                   height="250px"
                 />
               </div>
@@ -72,7 +72,7 @@ const StatQuality: React.FC = () => {
                 <MetabaseIframe
                   iframeNumber={MetabaseIFrameNumber.RESULT_AGE}
                   iframeType={MetabaseIframeType.QUESTION}
-                  params={{ surveyId: session?.user.surveyId }}
+                  params={{ surveyName: session?.user.surveyName }}
                   height="250px"
                 />
               </div>
@@ -84,7 +84,7 @@ const StatQuality: React.FC = () => {
               <MetabaseIframe
                 iframeNumber={MetabaseIFrameNumber.RESULT_CS}
                 iframeType={MetabaseIframeType.QUESTION}
-                params={{ surveyId: session?.user.surveyId }}
+                params={{ surveyName: session?.user.surveyName }}
                 height="250px"
               />
             </div>
