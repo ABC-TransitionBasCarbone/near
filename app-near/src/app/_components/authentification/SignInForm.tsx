@@ -58,7 +58,7 @@ export default function SignInForm(): JSX.Element {
     setLoginError(error);
   }, [errors, error]);
 
-  if (session?.user.email) {
+  if (session?.user?.email) {
     redirect("/");
   }
 

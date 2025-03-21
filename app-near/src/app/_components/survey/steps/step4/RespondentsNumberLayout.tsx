@@ -6,10 +6,7 @@ import { useSurveyStateContext } from "~/app/_components/_context/surveyStateCon
 import { useSession } from "next-auth/react";
 import { SurveyPhase } from "@prisma/client";
 import MetabaseIframe from "~/app/_components/_ui/MetabaseIframe";
-import {
-  MetabaseIFrameNumber,
-  MetabaseIframeType,
-} from "~/types/enums/metabase";
+import { MetabaseIframeType } from "~/types/enums/metabase";
 import Button from "~/app/_components/_ui/Button";
 import { ButtonStyle } from "~/types/enums/button";
 import { useState, type Dispatch, type SetStateAction } from "react";
@@ -20,20 +17,21 @@ import useUpdateSurveyStep from "../../hooks/useUpdateSurveyStep";
 import ConfirmModal from "../ConfirmModal";
 import { api } from "~/trpc/react";
 import SuDashboard from "../step3/SuDashboard";
+import { env } from "~/env";
 
 const chartConfig: {
   title: string;
-  iframeNumber: MetabaseIFrameNumber;
+  iframeNumber: number;
   surveyType: SurveyType;
 }[] = [
   {
     title: "Espace et Mode de vie",
-    iframeNumber: MetabaseIFrameNumber.WAY_OF_LIFE,
+    iframeNumber: env.NEXT_PUBLIC_METABASE_WAY_OF_LIFE,
     surveyType: SurveyType.WAY_OF_LIFE,
   },
   {
     title: "Empreinte carbone",
-    iframeNumber: MetabaseIFrameNumber.CARBON_FOOTPRINT,
+    iframeNumber: env.NEXT_PUBLIC_METABASE_CARBON_FOOTPRINT,
     surveyType: SurveyType.CARBON_FOOTPRINT,
   },
 ];

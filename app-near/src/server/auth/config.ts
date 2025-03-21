@@ -71,6 +71,7 @@ export const authConfig = {
           userId: user.id,
           email: currentUser.email,
           surveyId: currentUser.surveyId,
+          surveyName: currentUser.surveyName,
         };
       }
       return token;
