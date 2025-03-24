@@ -4,10 +4,7 @@ import Link from "next/link";
 import { useState, type Dispatch, type SetStateAction } from "react";
 import { ButtonStyle } from "~/types/enums/button";
 import { env } from "../../../../../../env";
-import {
-  MetabaseIFrameNumber,
-  MetabaseIframeType,
-} from "../../../../../../types/enums/metabase";
+import { MetabaseIframeType } from "../../../../../../types/enums/metabase";
 import { useSurveyStateContext } from "../../../../_context/surveyStateContext";
 import Button from "../../../../_ui/Button";
 import LinkAsButton from "../../../../_ui/LinkAsButton";
@@ -83,7 +80,7 @@ const RepresentativenessLayout: React.FC<RepresentativenessLayoutProps> = ({
             <div className="flex flex-row flex-wrap items-stretch justify-center gap-10">
               <div className="order-2 sm:order-1">
                 <MetabaseIframe
-                  iframeNumber={MetabaseIFrameNumber.JAUGE_ERROR_MARGIN}
+                  iframeNumber={env.NEXT_PUBLIC_METABASE_JAUGE_ERROR_MARGIN}
                   iframeType={MetabaseIframeType.QUESTION}
                   height="300px"
                   width="300px"

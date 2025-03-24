@@ -40,6 +40,7 @@ export const login = async (
     user: {
       email,
       surveyId: userSurvey.id,
+      surveyName: userSurvey.name,
     },
   };
 };

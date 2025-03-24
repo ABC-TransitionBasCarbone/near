@@ -1,7 +1,7 @@
 import { type Session } from "next-auth";
 import { redirect } from "next/navigation";
 import { type ReactNode } from "react";
-import { auth } from "~/server/auth";
+import { auth, signOut } from "~/server/auth";
 import SurveyHeader from "../survey/SurveyHeader";
 import SurveyFooter from "../survey/SurveyFooter";
 
@@ -16,6 +16,10 @@ const LayoutAuthentified: React.FC<LayoutAuthentifiedProps> = async ({
 
   if (!session?.user) {
     redirect(`${process.env.AUTH_URL}/connexion`);
+  }
+
+  if (!session.user.surveyName) {
+    await signOut();
   }
 
   return (
