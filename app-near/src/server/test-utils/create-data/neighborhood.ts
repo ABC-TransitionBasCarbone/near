@@ -14,6 +14,7 @@ export const createNeighborhood = async (surveyName: string) => {
       SELECT 
         ${survey.id} AS survey_id,
         ARRAY['75014', '75015', '75016']::text[] AS iris_selectors,
+        1100::double precision AS population_sum_with_under_fifteen,
         1000::double precision AS population_sum,
         180::double precision AS p21_pop1529_sum,
         230::double precision AS p21_pop3044_sum,

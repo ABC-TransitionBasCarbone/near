@@ -1,24 +1,28 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`quality getAllQualityStatistics should return quality statistices 1`] = `
-[
-  {
-    "confidence": 1.96,
-    "correctedMarginError": 0.06139153916527164,
-    "sampleSize": 10,
-    "type": "su",
-  },
-  {
-    "confidence": 1.96,
-    "correctedMarginError": 0.060771422608046674,
-    "sampleSize": 20,
-    "type": "way_of_life",
-  },
-  {
-    "confidence": 1.96,
-    "correctedMarginError": 0.0601513060508217,
-    "sampleSize": 30,
-    "type": "carbone_footprint",
-  },
-]
+{
+  "populationSum": 1000,
+  "populationSumWith15": 1100,
+  "qualityStatistics": [
+    {
+      "confidence": 0.95,
+      "correctedMarginError": 0.06139153916527164,
+      "sampleSize": 10,
+      "type": "su",
+    },
+    {
+      "confidence": 0.95,
+      "correctedMarginError": 0.060771422608046674,
+      "sampleSize": 20,
+      "type": "way_of_life",
+    },
+    {
+      "confidence": 0.95,
+      "correctedMarginError": 0.0601513060508217,
+      "sampleSize": 30,
+      "type": "carbone_footprint",
+    },
+  ],
+}
 `;
