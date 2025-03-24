@@ -1,10 +1,7 @@
 "use client";
 
 import { useSession } from "next-auth/react";
-import {
-  MetabaseIFrameNumber,
-  MetabaseIframeType,
-} from "~/types/enums/metabase";
+import { MetabaseIframeType } from "~/types/enums/metabase";
 import MetabaseIframe from "../../../_ui/MetabaseIframe";
 import { ButtonStyle } from "~/types/enums/button";
 import LinkAsButton from "../../../_ui/LinkAsButton";
@@ -14,6 +11,7 @@ import Button from "../../../_ui/Button";
 import { useSurveyStateContext } from "../../../_context/surveyStateContext";
 import { surveyConfig } from "../config";
 import useUpdateSurveyStep from "../../hooks/useUpdateSurveyStep";
+import { env } from "~/env";
 
 const NeighborhoodInformations: React.FC = () => {
   const { data: session } = useSession();
@@ -68,7 +66,7 @@ const NeighborhoodInformations: React.FC = () => {
       }
     >
       <MetabaseIframe
-        iframeNumber={MetabaseIFrameNumber.POPULATION_STATISTICS}
+        iframeNumber={env.NEXT_PUBLIC_METABASE_POPULATION_STATISTICS}
         iframeType={MetabaseIframeType.DASHBOARD}
         height="600px"
       />

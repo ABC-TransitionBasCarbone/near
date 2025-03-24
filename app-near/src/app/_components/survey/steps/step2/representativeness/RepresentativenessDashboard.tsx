@@ -1,9 +1,6 @@
 import { type Session } from "next-auth";
 import { api } from "../../../../../../trpc/react";
-import {
-  MetabaseIFrameNumber,
-  MetabaseIframeType,
-} from "../../../../../../types/enums/metabase";
+import { MetabaseIframeType } from "../../../../../../types/enums/metabase";
 import MetabaseIframe from "../../../../_ui/MetabaseIframe";
 import { env } from "~/env";
 
@@ -35,9 +32,10 @@ const Representativeness: React.FC<RepresentativenessProps> = ({
     return (
       <div>
         <MetabaseIframe
-          iframeNumber={MetabaseIFrameNumber.PANEL_REPRESENTATIVNESS}
+          iframeNumber={env.NEXT_PUBLIC_METABASE_PANEL_REPRESENTATIVNESS}
           iframeType={MetabaseIframeType.DASHBOARD}
           height="700px"
+          params={{ surveyname: session.user.surveyName }}
         />
       </div>
     );

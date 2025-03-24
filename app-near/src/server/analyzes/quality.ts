@@ -31,10 +31,8 @@ const getQualityStatistics = async (
 
   const p = sampleSize / populationSize;
 
-  const confidence = 1.96;
-
   const correctedMarginError =
-    confidence *
+    1.96 *
     Math.sqrt((p * (1 - p)) / sampleSize) *
     Math.sqrt((populationSize - sampleSize) / (populationSize - 1));
 

@@ -1,11 +1,8 @@
 import { api } from "~/trpc/react";
-import {
-  type MetabaseIFrameNumber,
-  type MetabaseIframeType,
-} from "~/types/enums/metabase";
+import { type MetabaseIframeType } from "~/types/enums/metabase";
 
 interface MetabaseIframeProps {
-  iframeNumber: MetabaseIFrameNumber;
+  iframeNumber: number;
   iframeType: MetabaseIframeType;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   params?: Record<string, any>;

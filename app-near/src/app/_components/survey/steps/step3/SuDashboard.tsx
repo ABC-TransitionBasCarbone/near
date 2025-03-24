@@ -1,10 +1,8 @@
 import { useSession } from "next-auth/react";
 import { api } from "../../../../../trpc/react";
 import MetabaseIframe from "~/app/_components/_ui/MetabaseIframe";
-import {
-  MetabaseIFrameNumber,
-  MetabaseIframeType,
-} from "~/types/enums/metabase";
+import { MetabaseIframeType } from "~/types/enums/metabase";
+import { env } from "~/env";
 
 const SuDashboard: React.FC = () => {
   const { data: session } = useSession();
@@ -25,7 +23,7 @@ const SuDashboard: React.FC = () => {
       <div className="mb-4">
         <h2 className="text-lg font-semibold">% de la population</h2>
         <MetabaseIframe
-          iframeNumber={MetabaseIFrameNumber.POPULATION_PERCENTAGE}
+          iframeNumber={env.NEXT_PUBLIC_METABASE_POPULATION_PERCENTAGE}
           iframeType={MetabaseIframeType.QUESTION}
           width="100%"
           height="250px"
@@ -36,7 +34,7 @@ const SuDashboard: React.FC = () => {
         <div key={0} className="">
           <h2 className="text-lg font-semibold">Quartier</h2>
           <MetabaseIframe
-            iframeNumber={MetabaseIFrameNumber.SU}
+            iframeNumber={env.NEXT_PUBLIC_METABASE_SU}
             iframeType={MetabaseIframeType.DASHBOARD}
             width="450px"
             height="3450px"
@@ -48,7 +46,7 @@ const SuDashboard: React.FC = () => {
             <div key={suId} className="flex flex-col">
               <h2 className="text-lg font-semibold">Su n°{suId}</h2>
               <MetabaseIframe
-                iframeNumber={MetabaseIFrameNumber.SU}
+                iframeNumber={env.NEXT_PUBLIC_METABASE_SU}
                 iframeType={MetabaseIframeType.DASHBOARD}
                 width="450px"
                 height="3450px"

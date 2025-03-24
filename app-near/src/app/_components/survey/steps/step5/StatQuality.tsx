@@ -1,10 +1,8 @@
 import { useSession } from "next-auth/react";
 import MetabaseIframe from "~/app/_components/_ui/MetabaseIframe";
+import { env } from "~/env";
 import { api } from "~/trpc/react";
-import {
-  MetabaseIFrameNumber,
-  MetabaseIframeType,
-} from "~/types/enums/metabase";
+import { MetabaseIframeType } from "~/types/enums/metabase";
 
 const StatQuality: React.FC = () => {
   const { data: session } = useSession();
@@ -61,7 +59,7 @@ const StatQuality: React.FC = () => {
                   Répartion des âges dans le quartier :
                 </div>
                 <MetabaseIframe
-                  iframeNumber={MetabaseIFrameNumber.RESULT_GENDER}
+                  iframeNumber={env.NEXT_PUBLIC_METABASE_RESULT_GENDER}
                   iframeType={MetabaseIframeType.QUESTION}
                   params={{ surveyName: session?.user.surveyName }}
                   height="250px"
@@ -70,7 +68,7 @@ const StatQuality: React.FC = () => {
               <div className="flex-1">
                 <div className="text-sm font-bold">Répartion du genre :</div>
                 <MetabaseIframe
-                  iframeNumber={MetabaseIFrameNumber.RESULT_AGE}
+                  iframeNumber={env.NEXT_PUBLIC_METABASE_RESULT_AGE}
                   iframeType={MetabaseIframeType.QUESTION}
                   params={{ surveyName: session?.user.surveyName }}
                   height="250px"
@@ -82,7 +80,7 @@ const StatQuality: React.FC = () => {
                 Répartion des CSP dans le quartier :
               </div>
               <MetabaseIframe
-                iframeNumber={MetabaseIFrameNumber.RESULT_CS}
+                iframeNumber={env.NEXT_PUBLIC_METABASE_RESULT_CS}
                 iframeType={MetabaseIframeType.QUESTION}
                 params={{ surveyName: session?.user.surveyName }}
                 height="250px"
