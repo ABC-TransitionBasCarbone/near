@@ -1,14 +1,13 @@
 "use client";
 import { useState } from "react";
 import {
-  type SurveyType,
   type BroadcastType,
   surveyTypeMapper,
 } from "../../../../types/enums/broadcasting";
 import Button from "../../_ui/Button";
 import QRCodeModal from "./QRCodeModal";
 import { useSession } from "next-auth/react";
-import { api } from "~/trpc/react";
+import { type SurveyType } from "~/types/enums/survey";
 
 interface BroadcastingButtonProps {
   surveyType: SurveyType;
@@ -20,9 +19,7 @@ const BroadcastingButton: React.FC<BroadcastingButtonProps> = ({
   surveyType,
 }) => {
   const { data: session } = useSession();
-  const { data: survey } = api.surveys.getOne.useQuery(undefined, {
-    enabled: !!session?.user?.surveyId,
-  });
+
   const [copiedMessage, setCopiedMessage] = useState("");
   const [showQRCode, setShowQRCode] = useState(false);
 
@@ -57,12 +54,12 @@ const BroadcastingButton: React.FC<BroadcastingButtonProps> = ({
   };
 
   const buildLink = (type: BroadcastType): string => {
-    if (!survey) {
+    if (!session?.user.surveyName) {
       return "error";
     }
     return `${surveyTypeMapper[surveyType].baseUrl}#broadcast_channel=${
       type
-    }&broadcast_id=${crypto.randomUUID()}&date=${encodeURIComponent(new Date().toISOString())}&neighborhood=${encodeURI(survey.name)}`;
+    }&broadcast_id=${crypto.randomUUID()}&date=${encodeURIComponent(new Date().toISOString())}&neighborhood=${encodeURI(session.user.surveyName)}`;
   };
 
   const onGenerateClick = async (type: BroadcastType) => {

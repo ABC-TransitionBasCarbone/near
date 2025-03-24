@@ -8,7 +8,8 @@ import BroadcastingPage from "./BroadcastingPage";
 import SurveyLayout from "../SurveyLayout";
 import { renderIcon } from "../../_ui/utils/renderIcon";
 import { type Dispatch, type SetStateAction } from "react";
-import { type SurveyType, surveyTypeMapper } from "~/types/enums/broadcasting";
+import { surveyTypeMapper } from "~/types/enums/broadcasting";
+import { type SurveyType } from "~/types/enums/survey";
 
 interface BroadcastingLayoutProps {
   setToggleBroadcastingPage: Dispatch<SetStateAction<boolean>>;

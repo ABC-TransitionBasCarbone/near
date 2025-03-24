@@ -47,6 +47,9 @@ export const env = createEnv({
     NEXT_PUBLIC_METABASE_POPULATION_PERCENTAGE: z.number(),
     NEXT_PUBLIC_METABASE_WAY_OF_LIFE: z.number(),
     NEXT_PUBLIC_METABASE_CARBON_FOOTPRINT: z.number(),
+    NEXT_PUBLIC_METABASE_RESULT_AGE: z.number(),
+    NEXT_PUBLIC_METABASE_RESULT_GENDER: z.number(),
+    NEXT_PUBLIC_METABASE_RESULT_CS: z.number(),
   },
 
   /**
@@ -96,6 +99,15 @@ export const env = createEnv({
     ),
     NEXT_PUBLIC_METABASE_CARBON_FOOTPRINT: Number(
       process.env.NEXT_PUBLIC_METABASE_CARBON_FOOTPRINT,
+    ),
+    NEXT_PUBLIC_METABASE_RESULT_AGE: Number(
+      process.env.NEXT_PUBLIC_METABASE_RESULT_AGE,
+    ),
+    NEXT_PUBLIC_METABASE_RESULT_GENDER: Number(
+      process.env.NEXT_PUBLIC_METABASE_RESULT_GENDER,
+    ),
+    NEXT_PUBLIC_METABASE_RESULT_CS: Number(
+      process.env.NEXT_PUBLIC_METABASE_RESULT_CS,
     ),
   },
   /**
