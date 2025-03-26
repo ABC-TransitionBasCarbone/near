@@ -14,17 +14,14 @@ import { buildSuAnswer } from "../test-utils/create-data/suAnswer";
 import { computeSu } from "./computeSu";
 import apiSuService from "../external-api/api-su";
 import { ErrorCode } from "~/types/enums/error";
+import { clearAllSurveys } from "../test-utils/clear/survey";
 
 describe("computeSu", () => {
   const surveyId = 765;
   let apiSuSpy: jest.SpyInstance;
 
   beforeEach(async () => {
-    await db.suAnswer.deleteMany().catch(() => null);
-    await db.suData
-      .deleteMany({ where: { surveyId: surveyId } })
-      .catch(() => null);
-    await db.survey.delete({ where: { id: surveyId } }).catch(() => null);
+    await clearAllSurveys();
 
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     apiSuSpy = jest.spyOn(apiSuService, "computeSus");
