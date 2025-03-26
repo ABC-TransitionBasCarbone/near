@@ -188,7 +188,7 @@ model CarbonFootprintAnswer {
 
   transportation                          Float
   transportationCar                       Float   @map("transportation_car")
-  transportationCarKm2                    String?   @map("transportation_car_km2")
+  transportationCarKm2                    String? @map("transportation_car_km2")
   transportationCarOilConsumption100      String? @map("transportation_car_oil_consumption_100")
   transportationCarOilType                String? @map("transportation_car_oil_type")
   transportationCarElectricConsumption100 String? @map("transportation_car_electric_consumption_100")
