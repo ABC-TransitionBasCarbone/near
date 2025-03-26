@@ -8,7 +8,7 @@ import { buildRequest } from "../test-utils/request/buildRequest";
 import { buildCarbonFootprintAnswer } from "../test-utils/create-data/carbonFootprintAnswer";
 import { clearAllSurveys } from "../test-utils/clear/survey";
 import { getValideCarbonFootprintPayload } from "../test-utils/carbonFootprint";
-import { signPayload } from "../typeform/signature";
+import { SignatureType, signPayload } from "../typeform/signature";
 
 describe("handleCarbonFootprintAnswer", () => {
   const neighborhoodName = "neighborhood_test";
@@ -61,7 +61,10 @@ describe("handleCarbonFootprintAnswer", () => {
 
     // @ts-expect-error pas string rather than number for test purpose
     payload.calculatedResults.alimentation = "should be nuumber";
-    const signature = signPayload(JSON.stringify(payload));
+    const signature = signPayload(
+      JSON.stringify(payload),
+      SignatureType.NGC_FORM,
+    );
 
     const response = await handleCarbonFootprintAnswer(
       // @ts-expect-error allow partial for test
@@ -77,7 +80,10 @@ describe("handleCarbonFootprintAnswer", () => {
       "email@mail.com",
     );
     payload.neighborhood = "unknown";
-    const signature = signPayload(JSON.stringify(payload));
+    const signature = signPayload(
+      JSON.stringify(payload),
+      SignatureType.NGC_FORM,
+    );
 
     const response = await handleCarbonFootprintAnswer(
       // @ts-expect-error allow partial for test
@@ -99,7 +105,10 @@ describe("handleCarbonFootprintAnswer", () => {
       "email@mail.com",
     );
     payload.neighborhood = "";
-    const signature = signPayload(JSON.stringify(payload));
+    const signature = signPayload(
+      JSON.stringify(payload),
+      SignatureType.NGC_FORM,
+    );
 
     const response = await handleCarbonFootprintAnswer(
       // @ts-expect-error allow partial for test
@@ -135,7 +144,10 @@ describe("handleCarbonFootprintAnswer", () => {
       "random@mail.com",
       suId,
     );
-    const signature = signPayload(JSON.stringify(payload));
+    const signature = signPayload(
+      JSON.stringify(payload),
+      SignatureType.NGC_FORM,
+    );
 
     const response = await handleCarbonFootprintAnswer(
       // @ts-expect-error allow partial for test
@@ -180,7 +192,10 @@ describe("handleCarbonFootprintAnswer", () => {
       "random@mail.com",
       suId,
     );
-    const signature = signPayload(JSON.stringify(payload));
+    const signature = signPayload(
+      JSON.stringify(payload),
+      SignatureType.NGC_FORM,
+    );
 
     const response = await handleCarbonFootprintAnswer(
       // @ts-expect-error allow partial for test
@@ -227,7 +242,10 @@ describe("handleCarbonFootprintAnswer", () => {
     });
 
     const payload = getValideCarbonFootprintPayload(neighborhoodName, "", suId);
-    const signature = signPayload(JSON.stringify(payload));
+    const signature = signPayload(
+      JSON.stringify(payload),
+      SignatureType.NGC_FORM,
+    );
 
     const response = await handleCarbonFootprintAnswer(
       // @ts-expect-error allow partial for test
