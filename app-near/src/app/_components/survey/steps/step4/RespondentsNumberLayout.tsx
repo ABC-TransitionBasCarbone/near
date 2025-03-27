@@ -137,6 +137,7 @@ const RespondentsNumberLayout: React.FC<RespondentsNumberLayoutProps> = ({
                     iframeNumber={chart.iframeNumber}
                     iframeType={MetabaseIframeType.QUESTION}
                     height="300px"
+                    params={{ surveyName: session?.user.surveyName }}
                   />
                 </div>
                 <Button
@@ -156,7 +157,6 @@ const RespondentsNumberLayout: React.FC<RespondentsNumberLayoutProps> = ({
           <div className="flex flex-col items-center gap-10">
             <div className="text-xl">Rappel des Sphères d&apos;Usage</div>
             <SuDashboard />
-            <div className="h-32">Pending NEAR-31...</div>
           </div>
         </div>
       </>
