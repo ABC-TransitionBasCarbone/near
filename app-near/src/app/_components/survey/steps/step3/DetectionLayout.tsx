@@ -116,7 +116,7 @@ const DetectionLayout: React.FC = () => {
         </>
       }
     >
-      <SuDashboard />
+      <SuDashboard phase={SurveyPhase.STEP_3_SU_EXPLORATION} />
     </SurveyLayout>
   );
 };
