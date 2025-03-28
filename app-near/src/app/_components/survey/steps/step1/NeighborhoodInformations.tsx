@@ -41,12 +41,20 @@ const NeighborhoodInformations: React.FC = () => {
             )} `}
             personnes de plus de 15 ans.
           </h1>
-          <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
-            sagittis quam ex, iaculis elementum lacus aliquet a. Pellentesque
-            eleifend libero quis cursus hendrerit. Praesent at ullamcorper
-            ipsum.
-          </p>
+          <div className="flex flex-col gap-2">
+            <p className="text-lg font-bold italic">
+              Prêt·e à lancer une grande enquête NEAR dans votre quartier ?
+            </p>
+            <p>
+              Commençons par (re)prendre connaissance de la composition
+              sociologique de votre quartier (la zone que vous avez sélectionnée
+              lors de votre inscription) : la répartition en âges, sexes et
+              catégories socioprofessionnelles d’après les études les plus
+              récentes de l’INSEE. Il vous faudra bientôt interroger un
+              échantillon avec une répartition similaire pour que votre étude
+              soit fiable. La plateforme sera là pour vous aider !
+            </p>
+          </div>
         </div>
       }
       actions={
