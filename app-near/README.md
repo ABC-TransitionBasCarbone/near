@@ -120,16 +120,22 @@ voir le [README du dossier scripts](./scritps/README.md)
 ```bash
 ./scripts/webhooks/query.sh
 
-# PROMPT (exemple):
+# PROMPT (exemple pour les su):
 # Entrez l'URL de destination : localhost:3000/api/typeform
-# Entrez la clé secrète Typeform : secret
+# Entrez la clé secrète Typeform : typeform-secret
 # Entrez le nom du fichier JSON (ex: su.json) : ./scripts/webhooks/su.json
+
+# PROMPT (exemple pour les ngc):
+# Entrez l'URL de destination : localhost:3000/api/ngcform
+# Entrez la clé secrète Typeform : ngc-secret
+# Entrez le nom du fichier JSON (ex: su.json) : ./scripts/webhooks/ngc.json
+# /!\ pour enregistrer un ngc, il faut une su valide. Donc d'abord jouer les su, puis dans le ngc.json saisir un suId valide
 ```
 
 Note :
 
 - su.json > exemple de payload pour le webhook sphère d'usage
-- Autres payload à créer pour les formulaires suivants
+- ngc.json > exemple de payload pour le webhook ngcform
 
 ## Comment jouer les seeds
 

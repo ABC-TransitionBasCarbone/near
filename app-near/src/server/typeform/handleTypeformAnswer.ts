@@ -8,7 +8,7 @@ import {
 import { getReferencesMapping } from "../surveys/references";
 import { convertFormToAnswer } from "./convert";
 import { handleSuForm } from "./handlers/handleSuForm";
-import { verifySignature } from "./signature";
+import { isValidSignature, SignatureType } from "./signature";
 import { handleWayOfLifeForm } from "./handlers/handleWayOfLifeForm";
 
 export const handleTypeformAnswer = async (
@@ -21,9 +21,9 @@ export const handleTypeformAnswer = async (
       JSON.parse(body),
     );
     formId = parsedBody.form_response.form_id;
-    console.debug("[whebhook typeform]", formId, body);
+    console.debug("[whebhook]", formId, body);
 
-    if (!isValidSignature(req, body)) {
+    if (!isValidSignature(req, body, SignatureType.TYPEFORM)) {
       return unauthorizedResponse(formId);
     }
 
@@ -33,7 +33,7 @@ export const handleTypeformAnswer = async (
     }
 
     const answers = convertFormToAnswer(parsedBody, referencesMapping);
-    console.debug("[whebhook typeform]", formId, JSON.stringify(answers));
+    console.debug("[whebhook]", formId, JSON.stringify(answers));
 
     if (formId === env.SU_FORM_ID) {
       return await handleSuForm(
@@ -56,7 +56,7 @@ export const handleTypeformAnswer = async (
     return unknwonFormIdResponse(formId);
   } catch (error) {
     if (error instanceof z.ZodError) {
-      console.error("[whebhook typeform]", formId, "ZOD ERROR :", error.errors);
+      console.error("[whebhook]", formId, "ZOD ERROR :", error.errors);
       return NextResponse.json(
         { error: "Invalid payload", details: error.errors },
         { status: 400 },
@@ -64,21 +64,16 @@ export const handleTypeformAnswer = async (
     }
 
     if (error instanceof Error) {
-      console.error("[whebhook typeform]", formId, "ERROR :", error.message);
+      console.error("[whebhook]", formId, "ERROR :", error.message);
       return NextResponse.json({ error: error.message }, { status: 400 });
     }
 
-    console.error("[whebhook typeform]", formId, "UNKNOWN ERROR:", error);
+    console.error("[whebhook]", formId, "UNKNOWN ERROR:", error);
     return NextResponse.json(
       { error: "Internal Server Error" },
       { status: 500 },
     );
   }
-};
-
-const isValidSignature = (req: NextRequest, body: string): boolean => {
-  const signature = req.headers.get("Typeform-Signature");
-  return verifySignature(signature, body);
 };
 
 const unknwonFormIdResponse = (formId?: string): NextResponse =>
@@ -94,11 +89,7 @@ const unauthorizedResponse = (formId?: string): NextResponse =>
   );
 
 const referenceMappingNotFoundResponse = (formId?: string): NextResponse => {
-  console.error(
-    "[whebhook typeform]",
-    formId,
-    "ERROR: References mapping not found",
-  );
+  console.error("[whebhook]", formId, "ERROR: References mapping not found");
   return NextResponse.json(
     { error: "References mapping not found" },
     { status: 400 },

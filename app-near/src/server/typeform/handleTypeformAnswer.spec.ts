@@ -1,6 +1,6 @@
 import { valideSuSurveyPayload } from "../test-utils/suSurvey";
 import { handleTypeformAnswer } from "./handleTypeformAnswer";
-import { signPayload } from "./signature";
+import { SignatureType, signPayload } from "./signature";
 import { db } from "../db";
 import { type TypeformWebhookPayload } from "~/types/Typeform";
 import { buildRequest } from "../test-utils/request/buildRequest";
@@ -39,7 +39,10 @@ describe("handleAnswer", () => {
       ) as TypeformWebhookPayload;
 
       payload.form_response.answers.splice(2, 2);
-      const signature = signPayload(JSON.stringify(payload));
+      const signature = signPayload(
+        JSON.stringify(payload),
+        SignatureType.TYPEFORM,
+      );
 
       const response = await handleTypeformAnswer(
         // @ts-expect-error allow partial for test
@@ -57,7 +60,10 @@ describe("handleAnswer", () => {
 
       payload.form_response.form_id = "unknown";
 
-      const signature = signPayload(JSON.stringify(payload));
+      const signature = signPayload(
+        JSON.stringify(payload),
+        SignatureType.TYPEFORM,
+      );
       const response = await handleTypeformAnswer(
         // @ts-expect-error allow partial for test
         buildRequest(payload, signature),
@@ -88,7 +94,10 @@ describe("handleAnswer", () => {
         neighborhood: neighborhoodName,
         broadcast_channel: BroadcastChannel.mail_campaign,
       };
-      const signature = signPayload(JSON.stringify(payload));
+      const signature = signPayload(
+        JSON.stringify(payload),
+        SignatureType.TYPEFORM,
+      );
       const response = await handleTypeformAnswer(
         // @ts-expect-error allow partial for test
         buildRequest(payload, signature),
@@ -120,7 +129,10 @@ describe("handleAnswer", () => {
         neighborhood: neighborhoodName,
         broadcast_channel: BroadcastChannel.mail_campaign,
       };
-      const signature = signPayload(JSON.stringify(payload));
+      const signature = signPayload(
+        JSON.stringify(payload),
+        SignatureType.TYPEFORM,
+      );
       const response = await handleTypeformAnswer(
         // @ts-expect-error allow partial for test
         buildRequest(payload, signature),
