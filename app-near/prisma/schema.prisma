@@ -292,6 +292,22 @@ view Quartier {
   c21_pop15p_cs6_sum                Float
   c21_pop15p_cs7_sum                Float
   c21_pop15p_cs8_sum                Float
+  c21_h15p_cs1_sum                  Float
+  c21_f15p_cs1_sum                  Float
+  c21_h15p_cs2_sum                  Float
+  c21_f15p_cs2_sum                  Float
+  c21_h15p_cs3_sum                  Float
+  c21_f15p_cs3_sum                  Float
+  c21_h15p_cs4_sum                  Float
+  c21_f15p_cs4_sum                  Float
+  c21_h15p_cs5_sum                  Float
+  c21_f15p_cs5_sum                  Float
+  c21_h15p_cs6_sum                  Float
+  c21_f15p_cs6_sum                  Float
+  c21_h15p_cs7_sum                  Float
+  c21_f15p_cs7_sum                  Float
+  c21_h15p_cs8_sum                  Float
+  c21_f15p_cs8_sum                  Float
   population_femme_sum              Float
   population_homme_sum              Float
   population_sum_threshold_3p       Float
