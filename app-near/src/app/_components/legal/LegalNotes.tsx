@@ -3,7 +3,7 @@ import Link from "next/link";
 const LegalNotes: React.FC = () => {
   return (
     <div>
-      <h1 className="pb-4 text-center text-black">Mentions Légales</h1>
+      <h1 className="pb-6 text-center text-black">Mentions Légales</h1>
       <p>
         Conformément aux dispositions des articles 6-III et 19 de la loi pour la
         Confiance dans l’Économie Numérique, nous vous informons que ce site est
@@ -21,7 +21,10 @@ const LegalNotes: React.FC = () => {
             </li>
             <li>Téléphone : 09 81 10 27 93</li>
             <li>
-              <Link href="mailto:contact@associationbilancarbone.fr">
+              <Link
+                className="font-normal"
+                href="mailto:contact@associationbilancarbone.fr"
+              >
                 contact@associationbilancarbone.fr
               </Link>
             </li>
@@ -39,7 +42,10 @@ const LegalNotes: React.FC = () => {
             </li>
             <li>Téléphone : 06 30 98 80 97</li>
             <li>
-              <Link href="mailto:contact@quartiers-en-transitions.fr ">
+              <Link
+                className="font-normal"
+                href="mailto:contact@quartiers-en-transitions.fr "
+              >
                 contact@quartiers-en-transitions.fr
               </Link>
             </li>
@@ -52,7 +58,13 @@ const LegalNotes: React.FC = () => {
         En vertu de l’article 6 de la loi n° 2004-575 du 21 juin 2004 pour la
         confiance dans l’économie numérique, il est précisé aux utilisateurs du
         site internet{" "}
-        <Link href="https://projetnear.org">https://projetnear.org</Link>{" "}
+        <Link
+          className="font-normal"
+          target="_blank"
+          href="https://projetnear.org"
+        >
+          https://projetnear.org
+        </Link>{" "}
         l’identité des différents intervenants dans le cadre de sa réalisation
         et de son suivi.
       </p>
@@ -80,19 +92,38 @@ const LegalNotes: React.FC = () => {
       </p>
       <p className="pt-2">
         <u>Utilisateur :</u> internaute qui navigue, lit, visionne et utilise le
-        site <Link href="https://projetnear.org/">https://projetnear.org/</Link>{" "}
+        site{" "}
+        <Link
+          target="_blank"
+          className="font-normal"
+          href="https://projetnear.org/"
+        >
+          https://projetnear.org/
+        </Link>{" "}
         et ses services.
       </p>
 
       <h2 className="pb-2 pt-3 font-bold">Développement Web</h2>
       <p>
         Graphisme, développement et intégration :{" "}
-        <Link href="https://pathtech.coop/">Pathtech</Link>
+        <Link
+          target="_blank"
+          className="font-normal"
+          href="https://pathtech.coop/"
+        >
+          Pathtech
+        </Link>
       </p>
 
       <h2 className="pb-2 pt-3 font-bold">Hébergeur</h2>
       <p>
-        <Link href="https://scalingo.com/fr">Scalingo</Link>
+        <Link
+          target="_blank"
+          className="font-normal"
+          href="https://scalingo.com/fr/conditions-generales-de-services"
+        >
+          Scalingo
+        </Link>
       </p>
 
       <h2 className="pb-2 pt-3 font-bold">
@@ -101,13 +132,25 @@ const LegalNotes: React.FC = () => {
       </h2>
       <p>
         L’utilisation du site{" "}
-        <Link href="https://projetnear.org">https://projetnear.org</Link>{" "}
+        <Link
+          target="_blank"
+          className="font-normal"
+          href="https://projetnear.org"
+        >
+          https://projetnear.org
+        </Link>{" "}
         implique l’acceptation pleine et entière des conditions générales
         d’utilisation ci-après décrites. Ces conditions d’utilisation sont
         susceptibles d’être modifiées ou complétées à tout moment, les
         utilisateurs du site{" "}
-        <Link href="https://projetnear.org">https://projetnear.org</Link> sont
-        donc invités à les consulter de manière régulière.
+        <Link
+          target="_blank"
+          className="font-normal"
+          href="https://projetnear.org"
+        >
+          https://projetnear.org
+        </Link>{" "}
+        sont donc invités à les consulter de manière régulière.
       </p>
       <p className="pt-2">
         L’utilisateur reconnaît avoir pris connaissance des présentes CGU et
@@ -117,14 +160,26 @@ const LegalNotes: React.FC = () => {
       <h2 className="pb-2 pt-3 font-bold">Description des services fournis</h2>
       <p>
         Le site{" "}
-        <Link href="https://projetnear.org">https://projetnear.org</Link> a pour
-        objet de fournir une information concernant l’ensemble des éléments liés
-        au projet NEAR.
+        <Link
+          target="_blank"
+          className="font-normal"
+          href="https://projetnear.org"
+        >
+          https://projetnear.org
+        </Link>{" "}
+        a pour objet de fournir une information concernant l’ensemble des
+        éléments liés au projet NEAR.
       </p>
       <p className="pt-2">
         L&apos;Association pour la transition Bas Carbone et le Réseau des
         Quartiers en Transition s’efforcent de fournir sur le site{" "}
-        <Link href="https://projetnear.org">https://projetnear.org</Link>
+        <Link
+          target="_blank"
+          className="font-normal"
+          href="https://projetnear.org"
+        >
+          https://projetnear.org
+        </Link>
         des informations aussi précises que possible. Toutefois, ils ne pourront
         pas être tenue responsable des omissions, des inexactitudes des carences
         dans la mise à jour ou de tout autres manquements qu’ils soient de son
@@ -133,13 +188,25 @@ const LegalNotes: React.FC = () => {
       </p>
       <p className="pt-2">
         Toutes les informations indiquées sur le site{" "}
-        <Link href="https://projetnear.org">https://projetnear.org</Link> ont un
-        caractère purement informatif, ne sont données qu’à titre indicatif et
-        sont susceptibles d’évoluer. Par ailleurs, les renseignements figurant
-        sur le site{" "}
-        <Link href="https://projetnear.org">https://projetnear.org</Link> ne
-        sont pas exhaustifs. Ils sont donnés sous réserve de modifications ayant
-        été apportées depuis leur mise en ligne
+        <Link
+          target="_blank"
+          className="font-normal"
+          href="https://projetnear.org"
+        >
+          https://projetnear.org
+        </Link>{" "}
+        ont un caractère purement informatif, ne sont données qu’à titre
+        indicatif et sont susceptibles d’évoluer. Par ailleurs, les
+        renseignements figurant sur le site{" "}
+        <Link
+          target="_blank"
+          className="font-normal"
+          href="https://projetnear.org"
+        >
+          https://projetnear.org
+        </Link>{" "}
+        ne sont pas exhaustifs. Ils sont donnés sous réserve de modifications
+        ayant été apportées depuis leur mise en ligne
       </p>
 
       <h2 className="pb-2 pt-3 font-bold">Disponibilité du site</h2>
@@ -203,7 +270,10 @@ const LegalNotes: React.FC = () => {
         utilisation ou sa personnalisation en fonction de l’internaute, le site
         https://projetnear.org utilise des Cookies. Pour connaître notre
         politique des cookies, vous êtes invités à cliquer sur le lien{" "}
-        <Link href="/mentions-legales#personal-data">ici</Link>.
+        <Link className="font-normal" href="/mentions-legales#personal-data">
+          ici
+        </Link>
+        .
       </p>
 
       <h2 className="pb-2 pt-3 font-bold">Liens hypertextes</h2>
@@ -219,7 +289,7 @@ const LegalNotes: React.FC = () => {
         données à caractère personnel, vous disposez sur vos données des droit
         d’accès, droit de rectification et du droit d’opposition. Pour en savoir
         plus, vous pouvez consulter notre{" "}
-        <Link href="/mentions-legales#personal-data">
+        <Link className="font-normal" href="/mentions-legales#personal-data">
           politique de protection des données
         </Link>
         .

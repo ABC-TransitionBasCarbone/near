@@ -3,7 +3,7 @@ import Link from "next/link";
 const PersonalData: React.FC = () => {
   return (
     <div>
-      <h1 className="pb-4 text-center text-black">
+      <h1 id="personal-data" className="pb-6 text-center text-black">
         Protection des données personnelles
       </h1>
 
@@ -28,7 +28,7 @@ const PersonalData: React.FC = () => {
         <li>ARTICLE 3. RÉSEAUX SOCIAUX</li>
       </ul>
 
-      <h2 className="pt-3 font-bold">
+      <h2 className="pb-2 pt-3 font-bold">
         ARTICLE 1. DONNÉES PERSONNELLES QUE NOUS RECUEILLONS
       </h2>
       <p className="pt-2">
@@ -79,7 +79,10 @@ const PersonalData: React.FC = () => {
         pour la transition Bas Carbone et le Réseau des Quartiers en Transition,
         via le Site ont fait l’objet des registres et notifications prévus par
         la loi française « Informatique & Libertés » no 78-17 du 6 janvier 1978,
-        notamment auprès de la CNIL (<Link href="www.cnil.fr">www.cnil.fr</Link>
+        notamment auprès de la CNIL (
+        <Link target="_blank" className="font-normal" href="www.cnil.fr">
+          www.cnil.fr
+        </Link>
         ). Conformément à cette loi, vous disposez d’un droit d’accès, de
         modification, de rectification et de suppression portant sur les données
         personnelles vous concernant, que vous pouvez exercer en écrivant à ”
@@ -93,7 +96,7 @@ const PersonalData: React.FC = () => {
         formulaire de contact présent sur le Site.
       </p>
 
-      <h2 className="pt-3 font-bold">
+      <h2 className="pb-2 pt-3 font-bold">
         ARTICLE 2. DONNEES RELATIVES A LA CONSULTATION DU SITE
       </h2>
       <p>
@@ -173,7 +176,7 @@ const PersonalData: React.FC = () => {
         leur fonctionnement et que vous auriez refusés ou supprimés.
       </p>
 
-      <h3 className="pt-3 italic">
+      <h3 className="pb-1 pt-3 italic">
         2.1 En cas d’utilisation partagée de votre terminal
       </h3>
       <p>
@@ -189,7 +192,7 @@ const PersonalData: React.FC = () => {
         responsabilité.
       </p>
 
-      <h3 className="pt-3 italic">2.2 Cookies tiers</h3>
+      <h3 className="pb-1 pt-3 italic">2.2 Cookies tiers</h3>
       <p>
         Lorsque vous naviguez sur le Site, des cookies émis par des sociétés
         tierces peuvent être placés par ces dernières sur votre terminal, sous
@@ -219,10 +222,10 @@ const PersonalData: React.FC = () => {
         l’égard de ces cookies et de leurs émetteurs respectifs.
       </p>
 
-      <h3 className="pt-3 italic">
+      <h3 className="pb-1 pt-3 italic">
         2.3 Comment exprimer vos choix concernant les cookies ?
       </h3>
-      <h4 className="pt-3 italic">
+      <h4 className="pb-1 italic">
         2.3.1 Vos choix exprimés directement via votre terminal
       </h4>
       <p>
@@ -241,37 +244,57 @@ const PersonalData: React.FC = () => {
       <ul>
         <li>
           <strong>Pour Internet Explorer™ :</strong>{" "}
-          <Link href="https://windows.microsoft.com/fr-FR/windows-vista/Block-or-allow-cookies">
+          <Link
+            target="_blank"
+            className="font-normal"
+            href="https://windows.microsoft.com/fr-FR/windows-vista/Block-or-allow-cookies"
+          >
             https://windows.microsoft.com/fr-FR/windows-vista/Block-or-allow-cookies
           </Link>
         </li>
         <li>
           <strong>Pour Safari™ :</strong>{" "}
-          <Link href="https://www.apple.com/fr/privacy/use-of-cookies/">
+          <Link
+            target="_blank"
+            className="font-normal"
+            href="https://www.apple.com/fr/privacy/use-of-cookies/"
+          >
             https://www.apple.com/fr/privacy/use-of-cookies/
           </Link>
         </li>
         <li>
           <strong>Pour Chrome™ :</strong>{" "}
-          <Link href="https://support.google.com/chrome/bin/answer.py?hl=fr&hlrm=en&answer=95647">
+          <Link
+            target="_blank"
+            className="font-normal"
+            href="https://support.google.com/chrome/bin/answer.py?hl=fr&hlrm=en&answer=95647"
+          >
             https://support.google.com/chrome/bin/answer.py?hl=fr&hlrm=en&answer=95647
           </Link>
         </li>
         <li>
-          <strong>Pour Firefox™ : :</strong>{" "}
-          <Link href="https://support.mozilla.org/fr/kb/Activer%20et%20d%C3%A9sactiver%20les%20cookies">
+          <strong>Pour Firefox™ : </strong>{" "}
+          <Link
+            target="_blank"
+            className="font-normal"
+            href="https://support.mozilla.org/fr/kb/Activer%20et%20d%C3%A9sactiver%20les%20cookies"
+          >
             https://support.mozilla.org/fr/kb/Activer%20et%20d%C3%A9sactiver%20les%20cookies
           </Link>
         </li>
         <li>
-          <strong>Pour Opéra™ : :</strong>{" "}
-          <Link href="https://help.opera.com/Windows/10.20/fr/cookies.html">
+          <strong>Pour Opéra™ : </strong>{" "}
+          <Link
+            target="_blank"
+            className="font-normal"
+            href="https://help.opera.com/Windows/10.20/fr/cookies.html"
+          >
             https://help.opera.com/Windows/10.20/fr/cookies.html
           </Link>
         </li>
       </ul>
 
-      <h4 className="pt-3 italic">
+      <h4 className="pb-1 pt-3 italic">
         2.3.2 Vos choix exprimés en ligne auprès de plateformes
         interprofessionnelles
       </h4>
@@ -287,8 +310,12 @@ const PersonalData: React.FC = () => {
         les cookies utilisés par ces entreprises pour adapter aux informations
         de navigation qu’elles traitent les publicités susceptibles d’être
         affichées lors de la consultation par votre terminal de services en
-        ligne sur lesquels elles émettent des cookies :
-        <Link href="https://www.youronlinechoices.com/fr/controler-ses-cookies/">
+        ligne sur lesquels elles émettent des cookies :&nbsp;
+        <Link
+          target="_blank"
+          className="font-normal"
+          href="https://www.youronlinechoices.com/fr/controler-ses-cookies/"
+        >
           https://www.youronlinechoices.com/fr/controler-ses-cookies/
         </Link>
         .
@@ -308,7 +335,7 @@ const PersonalData: React.FC = () => {
         votre terminal et à vos centres d’intérêts.
       </p>
 
-      <h2 className="pt-3 font-bold">ARTICLE 3. RÉSEAUX SOCIAUX</h2>
+      <h2 className="pb-2 pt-3 font-bold">ARTICLE 3. RÉSEAUX SOCIAUX</h2>
       <p>
         Le Site utilise des plug-in de réseaux sociaux, notamment Facebook,
         exploité par la société Facebook Inc., 1601 S. California Ave, Palo
@@ -333,6 +360,73 @@ const PersonalData: React.FC = () => {
         En tout état de cause, l’utilisation de ces plug-in ou boutons est
         opérée par ces Réseaux Sociaux et est exclusivement régie par les
         conditions vous liant au Réseau Social dont vous êtes membre.
+      </p>
+
+      <h3 className="pb-1 pt-3 italic">Politique de confidentialité</h3>
+
+      <h3 className="pb-1 pt-3 italic">
+        Utilisation des données personnelles collectées
+      </h3>
+
+      <h3 className="pb-1 pt-3 italic">Commentaires</h3>
+      <p>
+        Quand vous laissez un commentaire sur notre site web, les données
+        inscrites dans le formulaire de commentaire, mais aussi votre adresse IP
+        et l’agent utilisateur de votre navigateur sont collectés pour nous
+        aider à la détection des commentaires indésirables.
+      </p>
+
+      <h3 className="pb-1 pt-3 italic">Médias</h3>
+      <p>
+        Si vous êtes un utilisateur ou une utilisatrice enregistré·e et que vous
+        téléversez des images sur le site web, nous vous conseillons d’éviter de
+        téléverser des images contenant des données EXIF de coordonnées GPS. Les
+        visiteurs de votre site web peuvent télécharger et extraire des données
+        de localisation depuis ces images.
+      </p>
+
+      <h3 className="pb-1 pt-3 italic">Newsletter</h3>
+      <p>
+        Nous envoyons nos newsletters aux personnes qui en ont fait la demande
+        (Opt-in) depuis cette page :&nbsp;
+        <Link
+          target="_blank"
+          className="font-normal"
+          href="https://www.associationbilancarbone.fr/newsletter/"
+        >
+          https://www.associationbilancarbone.fr/newsletter/
+        </Link>
+      </p>
+      <p className="pt-2">
+        Nous considérons également que les utilisateurs qui ont ouvert et/ou
+        cliqués sur nos newsletters dans les 4 dernières années consentissent à
+        recevoir nos mailings. Nous mettons en avant un Opt-out sur tous nos
+        envois permettant à l’utilisateur de se désabonner très facilement et
+        rapidement.
+      </p>
+
+      <h3 className="pb-1 pt-3 italic">Informations supplémentaires</h3>
+
+      <h3 className="pb-1 pt-3 italic">Comment nous protégeons vos données</h3>
+      <p>
+        Pour encore plus protéger vos données, nous avons comme objectif de
+        mettre en place un système d’anonymisation des adresses IP de nos
+        visiteurs.
+      </p>
+
+      <h3 className="pb-1 pt-3 italic">
+        Procédures mises en œuvre en cas de fuite de données
+      </h3>
+      <p>
+        En cas d’anomalie constatée (fuite involontaire ou volontaire), nous
+        nous engageons dans les 3 jours maximum, à communiquer en toute
+        transparence sur la fuite. La loi nous oblige également à informer
+        l’autorité de contrôle compétente, la CNIL en France.
+      </p>
+      <p>
+        Nous avertirons très rapidement les personnes dont les données ont été
+        piratées, si la fuite peut engendrer un risque réel pour leurs droits et
+        libertés (données sensibles).
       </p>
     </div>
   );
