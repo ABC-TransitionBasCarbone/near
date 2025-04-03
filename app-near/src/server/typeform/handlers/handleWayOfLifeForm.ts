@@ -4,9 +4,10 @@ import { getSurveyInformations } from "./helpers";
 import { type BroadcastChannel, type WayOfLifeAnswer } from "@prisma/client";
 import { sendPhaseTwoFormNotification } from "~/server/surveys/email";
 import { createWayOfLifeAnswer } from "~/server/way-of-life/create";
+import { type ConvertedAnswer } from "~/types/Typeform";
 
 export const handleWayOfLifeForm = async (
-  answers: Record<string, string | boolean>,
+  answers: ConvertedAnswer,
   formId: string,
   neighborhood: string,
   broadcastChannel: BroadcastChannel,

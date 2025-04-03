@@ -13,9 +13,10 @@ import {
   isNotInPhase,
   notInPhaseSuSurveyResponse,
 } from "./helpers";
+import { type ConvertedAnswer } from "~/types/Typeform";
 
 export const handleSuForm = async (
-  answers: Record<string, string | boolean>,
+  answers: ConvertedAnswer,
   formId: string,
   neighborhood: string,
   broadcastChannel: BroadcastChannel,
@@ -60,12 +61,12 @@ export const handleSuForm = async (
 const okResponse = (message: string): NextResponse<{ message: string }> =>
   NextResponse.json({ message }, { status: 200 });
 
-const isUnder15 = (answers: Record<string, string | boolean>) => {
+const isUnder15 = (answers: ConvertedAnswer) => {
   return !Object.values(AgeCategory).includes(
     answers.ageCategory as AgeCategory,
   );
 };
 
-const isNotPartOfNeighborhood = (answers: Record<string, string | boolean>) => {
+const isNotPartOfNeighborhood = (answers: ConvertedAnswer) => {
   return answers.isNeighborhoodResident !== true;
 };

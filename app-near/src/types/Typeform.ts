@@ -33,6 +33,18 @@ export const AnswerSchema = z.discriminatedUnion("type", [
     }),
   }),
   z.object({
+    type: z.literal("choices"),
+    choices: z.object({
+      label: z.array(z.string()),
+      refs: z.array(z.string()),
+    }),
+    field: z.object({
+      id: z.string(),
+      type: z.string(),
+      ref: z.string(),
+    }),
+  }),
+  z.object({
     type: z.literal("boolean"),
     boolean: z.boolean(),
     field: z.object({
@@ -75,3 +87,8 @@ export const TypeformWebhookSchema = z.object({
 
 export type Answer = z.infer<typeof AnswerSchema>;
 export type TypeformWebhookPayload = z.infer<typeof TypeformWebhookSchema>;
+
+export type ConvertedAnswer = Record<
+  string,
+  string | boolean | (string | boolean | undefined)[]
+>;
