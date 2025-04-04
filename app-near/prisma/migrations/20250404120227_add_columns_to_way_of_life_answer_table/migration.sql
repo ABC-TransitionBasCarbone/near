@@ -30,6 +30,7 @@
   - Added the required column `how_many_people_can_I_help` to the `way_of_life_answer` table without a default value. This is not possible if the table is not empty.
   - Added the required column `hypermarket_frequency` to the `way_of_life_answer` table without a default value. This is not possible if the table is not empty.
   - Added the required column `idea_easy_talk` to the `way_of_life_answer` table without a default value. This is not possible if the table is not empty.
+  - Added the required column `is_neighborhood_resident` to the `way_of_life_answer` table without a default value. This is not possible if the table is not empty.
   - Added the required column `local_shops_to_meet_your_needs` to the `way_of_life_answer` table without a default value. This is not possible if the table is not empty.
   - Added the required column `neighborhood_life` to the `way_of_life_answer` table without a default value. This is not possible if the table is not empty.
   - Added the required column `neighborhood_organic_market_satisfaction` to the `way_of_life_answer` table without a default value. This is not possible if the table is not empty.
@@ -39,7 +40,6 @@
   - Added the required column `not_cold_house` to the `way_of_life_answer` table without a default value. This is not possible if the table is not empty.
   - Added the required column `not_too_much_traffic` to the `way_of_life_answer` table without a default value. This is not possible if the table is not empty.
   - Added the required column `organic_or_solidarity_food_store_frequency` to the `way_of_life_answer` table without a default value. This is not possible if the table is not empty.
-  - Added the required column `other_food_frequency_information` to the `way_of_life_answer` table without a default value. This is not possible if the table is not empty.
   - Added the required column `parks_usage_frequency` to the `way_of_life_answer` table without a default value. This is not possible if the table is not empty.
   - Added the required column `prefer_buy_french_and_season_food` to the `way_of_life_answer` table without a default value. This is not possible if the table is not empty.
   - Added the required column `prefer_second_and` to the `way_of_life_answer` table without a default value. This is not possible if the table is not empty.
@@ -67,6 +67,9 @@
   - Added the required column `work_zone` to the `way_of_life_answer` table without a default value. This is not possible if the table is not empty.
 
 */
+-- Delte way of life data
+DELETE FROM way_of_life_answer;
+
 -- CreateEnum
 CREATE TYPE "YesNo" AS ENUM ('YES', 'DONT_KNOW', 'NO');
 
@@ -130,8 +133,8 @@ CREATE TYPE "ZoneSelection" AS ENUM ('ZONE_A', 'ZONE_B', 'ZONE_C', 'ZONE_D', 'ZO
 -- AlterTable
 ALTER TABLE "way_of_life_answer" ADD COLUMN     "access_to_food_service_satisfaction" "YesNo" NOT NULL,
 ADD COLUMN     "access_to_short_food_circuit_satisfaction" "YesNo" NOT NULL,
-ADD COLUMN     "action_when_too_cold" "ActionWhenTooCold"[],
-ADD COLUMN     "action_when_too_hot" "ActionWhenTooHot"[],
+ADD COLUMN     "action_when_too_cold" TEXT[],
+ADD COLUMN     "action_when_too_hot" TEXT[],
 ADD COLUMN     "age_category" "AgeCategory" NOT NULL,
 ADD COLUMN     "air_travel_frequency" "AirTravelFrequency",
 ADD COLUMN     "associative_activity" "YesNo" NOT NULL,
@@ -149,7 +152,7 @@ ADD COLUMN     "easy_public_transports" "YesNo" NOT NULL,
 ADD COLUMN     "easy_to_leave_city_with_transports" "YesNo" NOT NULL,
 ADD COLUMN     "easy_walking" "YesNo" NOT NULL,
 ADD COLUMN     "electronic_repair_shop_satisfaction" "YesNo" NOT NULL,
-ADD COLUMN     "food_market_zone" "ZoneSelection" NOT NULL,
+ADD COLUMN     "food_market_zone" TEXT NOT NULL,
 ADD COLUMN     "gender" "Gender" NOT NULL,
 ADD COLUMN     "give_free_time_to_help" "GiveFreeTimeToHelp" NOT NULL,
 ADD COLUMN     "grocery_store_frequency" "FoodFrequency" NOT NULL,
@@ -157,12 +160,13 @@ ADD COLUMN     "hard_discount_frequency" "FoodFrequency" NOT NULL,
 ADD COLUMN     "has_su" BOOLEAN NOT NULL,
 ADD COLUMN     "heat_source" "HeatSource",
 ADD COLUMN     "hobbies_spaces" "YesNo" NOT NULL,
-ADD COLUMN     "hobby_zone" "ZoneSelection" NOT NULL,
+ADD COLUMN     "hobby_zone" TEXT NOT NULL,
 ADD COLUMN     "home_delivery_food_store_frequency" "FoodFrequency" NOT NULL,
 ADD COLUMN     "home_occupation_type" "HomeOccupationType" NOT NULL,
 ADD COLUMN     "how_many_people_can_I_help" "HowManyPeopleCanIHelp" NOT NULL,
 ADD COLUMN     "hypermarket_frequency" "FoodFrequency" NOT NULL,
 ADD COLUMN     "idea_easy_talk" "YesNo" NOT NULL,
+ADD COLUMN     "is_neighborhood_resident" BOOLEAN NOT NULL,
 ADD COLUMN     "local_shops_to_meet_your_needs" "YesNo" NOT NULL,
 ADD COLUMN     "meat_frequency" "MeatFrequency",
 ADD COLUMN     "neighborhood_life" "YesNo" NOT NULL,
@@ -174,7 +178,7 @@ ADD COLUMN     "no_information_on_cityzen_participation" "YesNo" NOT NULL,
 ADD COLUMN     "not_cold_house" "YesNo" NOT NULL,
 ADD COLUMN     "not_too_much_traffic" "YesNo" NOT NULL,
 ADD COLUMN     "organic_or_solidarity_food_store_frequency" "FoodFrequency" NOT NULL,
-ADD COLUMN     "other_food_frequency_information" "FoodFrequency" NOT NULL,
+ADD COLUMN     "other_food_frequency_information" TEXT,
 ADD COLUMN     "other_food_satisfaction_information" TEXT,
 ADD COLUMN     "other_housing_information" TEXT,
 ADD COLUMN     "other_local_politic_information" TEXT,
@@ -191,11 +195,11 @@ ADD COLUMN     "private_or_share_field_to_farm" "YesNo" NOT NULL,
 ADD COLUMN     "professional_category" "ProfessionalCategory" NOT NULL,
 ADD COLUMN     "public_service_presence" "YesNo" NOT NULL,
 ADD COLUMN     "purchasing_strategy" "PurchasingStrategy",
-ADD COLUMN     "reasons_to_continue_using_car" "ReasonsUsingCar"[],
+ADD COLUMN     "reasons_to_continue_using_car" TEXT[],
 ADD COLUMN     "reasons_to_eat_meat" TEXT[],
 ADD COLUMN     "reasons_to_not_buy_french_and_season_food" TEXT[],
 ADD COLUMN     "reasons_to_not_chose_second_hand" TEXT[],
-ADD COLUMN     "remote_working_weekly_frequency" INTEGER NOT NULL,
+ADD COLUMN     "remote_working_weekly_frequency" TEXT NOT NULL,
 ADD COLUMN     "second_hand_shop_satisfaction" "YesNo" NOT NULL,
 ADD COLUMN     "services_to_share_or_rent_objects" "YesNo" NOT NULL,
 ADD COLUMN     "specialized_food_store_frequency" "FoodFrequency" NOT NULL,
@@ -214,5 +218,5 @@ ADD COLUMN     "vegetal_parks_satisfaction" "YesNo" NOT NULL,
 ADD COLUMN     "want_to_participate_to_civic_initiatives" "YesNo" NOT NULL,
 ADD COLUMN     "want_to_reduce_car_usage" "WishesChoices" NOT NULL,
 ADD COLUMN     "want_to_reduce_meat_and_fish" "WishesChoices" NOT NULL,
-ADD COLUMN     "work_zone" "ZoneSelection" NOT NULL,
-ADD COLUMN     "your_engagment_domains" TEXT[];
+ADD COLUMN     "work_zone" TEXT NOT NULL,
+ADD COLUMN     "your_engagment_domains" TEXT[] DEFAULT ARRAY[]::TEXT[];

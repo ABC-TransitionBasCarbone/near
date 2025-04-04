@@ -80,9 +80,9 @@ export const surveySUReferencesMapping: Record<string, string | boolean> = {
   ["13c4b137-28c3-4cca-ae27-6b228fb52f37"]: PurchasingStrategy.MIXED,
   ["8166cf94-e353-4b46-a522-acd9530782c0"]: PurchasingStrategy.SECOND_HAND,
   // airTravelFrequency
-  ["22c056f4-21e7-4e63-8fb6-60b1f5569f8b"]: AirTravelFrequency.ZERO,
-  ["e9c48d61-16c8-41a4-a53e-e8d838c539be"]: AirTravelFrequency.FROM_1_TO_3,
-  ["04385aba-ae3e-4bda-b32b-1f0c03bec5b8"]: AirTravelFrequency.ABOVE_3,
+  ["3006b398-ff26-4824-a0cb-c89e848a32be"]: AirTravelFrequency.ZERO,
+  ["2709472e-6f1f-46f0-bbe1-5da9444457a0"]: AirTravelFrequency.FROM_1_TO_3,
+  ["af4d9f76-e4d2-4e3a-a73c-d826eca11559"]: AirTravelFrequency.ABOVE_3,
   // heatSource
   ["6a3d2558-6612-4cf1-90a6-e5e1bf3bbca8"]: HeatSource.ELECTRICITY,
   ["60220a76-eacb-435d-beb9-30c6e139827c"]: HeatSource.GAZ,
@@ -186,12 +186,12 @@ export const surveyWayOfLifeReferencesMapping: Record<
   ["aabd1c7d-98bb-4bc3-9d3f-359df372539c"]: YesNo.NO,
   ["99e72d0c-3f16-4fcc-a154-7bf13da0fcdc"]: YesNo.DONT_KNOW,
   ["9b4b1765-f96b-420e-a404-5989a3e7139c"]: YesNo.YES,
-  // parksUsageFrequency                                                  --> To verify + 1 question it seems
+  // parksUsageFrequency
   ["bf8cf662-91ec-495c-8c60-c48410530983"]: ParksUsageFrequency.RARELY,
   ["5e4f5142-8487-467c-8514-272f2fcb57fb"]: ParksUsageFrequency.SOMETIMES,
   ["09739816-a47f-420a-b863-7f50afa6ad6f"]: ParksUsageFrequency.OFTEN,
   // otherParksInformation -> (no option)
-  // easyPublicTransport
+  // easyPublicTransports
   ["e5d82eaa-be30-4de8-afa8-c5a154bc54dd"]: YesNo.NO,
   ["c63d67f6-f399-4230-98eb-943e2bd5806d"]: YesNo.DONT_KNOW,
   ["728f1475-4234-4674-92e5-0b14c0236e53"]: YesNo.YES,
@@ -421,7 +421,7 @@ export const surveyWayOfLifeReferencesMapping: Record<
   ["8aefac33-08c8-40a9-a399-9bad1f15ac35"]: WishesChoices.I_WISH_AND_IT_IS_PLAN,
   ["b3bd222a-d6ac-4eaf-9d48-fd1511d9ac0b"]: WishesChoices.YES_I_DO,
   ["5f30d09d-f9df-41f1-adcb-eddced3f5a73"]: WishesChoices.NOT_CONCERNED,
-  // ReasonsToNotBuyFrenchSeasonFood
+  // reasonsToNotBuyFrenchAndSeasonFood
   ["d602ad0c-8eff-41f0-be83-291c614e6674"]:
     ReasonsToNotBuyFrenchSeasonFood.PRICE,
   ["f2a474d1-51d6-4b55-b60b-8aaed457194b"]:

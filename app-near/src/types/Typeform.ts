@@ -23,8 +23,9 @@ export const AnswerSchema = z.discriminatedUnion("type", [
   z.object({
     type: z.literal("choice"),
     choice: z.object({
-      label: z.string(),
-      ref: z.string(),
+      label: z.string().optional(),
+      ref: z.string().optional(),
+      other: z.string().optional(),
     }),
     field: z.object({
       id: z.string(),
@@ -35,8 +36,9 @@ export const AnswerSchema = z.discriminatedUnion("type", [
   z.object({
     type: z.literal("choices"),
     choices: z.object({
-      label: z.array(z.string()),
-      refs: z.array(z.string()),
+      label: z.array(z.string()).optional(),
+      refs: z.array(z.string()).optional(),
+      other: z.string().optional(),
     }),
     field: z.object({
       id: z.string(),

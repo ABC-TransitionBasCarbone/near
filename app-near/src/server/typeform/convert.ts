@@ -11,9 +11,20 @@ export const convertFormToAnswer = (
   const getResponse = (answer: Answer) => {
     switch (answer.type) {
       case "choice":
-        return referencesMapping[answer.choice.ref];
+        if (answer.choice.other) {
+          return answer.choice.other;
+        }
+        if (answer.choice.ref) {
+          return referencesMapping[answer.choice.ref];
+        }
+        return "";
       case "choices":
-        return answer.choices.refs.map((ref) => referencesMapping[ref]);
+        const choices =
+          answer.choices.refs?.map((ref) => referencesMapping[ref]) ?? [];
+        if (answer.choices.other) {
+          choices.push(answer.choices.other);
+        }
+        return choices;
       case "text":
         return answer.text;
       case "email":
