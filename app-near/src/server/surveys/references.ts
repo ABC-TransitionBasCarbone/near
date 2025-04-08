@@ -138,7 +138,7 @@ export const surveyWayOfLifeReferencesMapping: Record<
   ["a476a1bd-5053-497f-a73d-2dec30b37871"]: PurchasingStrategy.MIXED,
   ["7fd72693-8836-48c3-a682-66f682ee820e"]: PurchasingStrategy.SECOND_HAND,
   // airTravelFrequency
-  ["122162a9-0b13-4be5-bcd6-2b505a272a80"]: AirTravelFrequency.ZERO,
+  ["3006b398-ff26-4824-a0cb-c89e848a32be"]: AirTravelFrequency.ZERO,
   ["2709472e-6f1f-46f0-bbe1-5da9444457a0"]: AirTravelFrequency.FROM_1_TO_3,
   ["af4d9f76-e4d2-4e3a-a73c-d826eca11559"]: AirTravelFrequency.ABOVE_3,
   // heatSource

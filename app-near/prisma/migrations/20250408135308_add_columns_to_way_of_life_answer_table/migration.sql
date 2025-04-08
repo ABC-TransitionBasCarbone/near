@@ -66,7 +66,7 @@
   - Added the required column `work_zone` to the `way_of_life_answer` table without a default value. This is not possible if the table is not empty.
 
 */
--- Delete existing data for way_of_life
+-- delete data
 DELETE FROM way_of_life_answer;
 
 -- CreateEnum
@@ -146,6 +146,7 @@ ADD COLUMN     "comment" TEXT,
 ADD COLUMN     "confort_house_when_hot" "YesNo" NOT NULL,
 ADD COLUMN     "cultural_activity" "YesNo" NOT NULL,
 ADD COLUMN     "digital_intensity" "DigitalIntensity",
+ADD COLUMN     "distance_to_barycenter" DOUBLE PRECISION,
 ADD COLUMN     "easy_bicycle" "YesNo" NOT NULL,
 ADD COLUMN     "easy_public_transports" "YesNo" NOT NULL,
 ADD COLUMN     "easy_to_leave_city_with_transports" "YesNo" NOT NULL,

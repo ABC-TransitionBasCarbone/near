@@ -22,12 +22,11 @@ import {
   okResponse,
 } from "./helpers";
 import { createSu } from "../su/answers/create";
-import { createWayOfLifeAnswer } from "../way-of-life/create";
-import { sendPhaseTwoFormNotification } from "../surveys/email";
 import { type SuAnswer, type WayOfLifeAnswer } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 import { ErrorCode } from "~/types/enums/error";
 import { getHTTPStatusCodeFromError } from "@trpc/server/unstable-core-do-not-import";
+import { handleWayOfLifeCreation } from "../way-of-life/create";
 
 export const handleTypeformAnswer = async (
   req: NextRequest,
@@ -90,14 +89,13 @@ export const handleTypeformAnswer = async (
         surveyName,
       );
     } else {
-      await createWayOfLifeAnswer(
-        { ...createQuery, broadcastChannel } as WayOfLifeAnswer,
-        surveyName,
+      await handleWayOfLifeCreation(
+        {
+          ...createQuery,
+          broadcastChannel,
+        } as WayOfLifeAnswer,
+        survey,
       );
-
-      if (createQuery?.email) {
-        await sendPhaseTwoFormNotification(createQuery.email);
-      }
     }
 
     return NextResponse.json({ message: "created" }, { status: 201 });

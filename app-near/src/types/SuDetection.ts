@@ -1,3 +1,21 @@
+import {
+  type AirTravelFrequency,
+  type DigitalIntensity,
+  type HeatSource,
+  type MeatFrequency,
+  type PurchasingStrategy,
+  type TransportationMode,
+} from "@prisma/client";
+
+export interface SuInformationToCompute {
+  meatFrequency: MeatFrequency;
+  transportationMode: TransportationMode;
+  digitalIntensity: DigitalIntensity;
+  purchasingStrategy: PurchasingStrategy;
+  airTravelFrequency: AirTravelFrequency;
+  heatSource: HeatSource;
+}
+
 export interface SuAnswerData {
   meatFrequency: number;
   transportationMode: number;

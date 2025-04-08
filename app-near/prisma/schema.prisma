@@ -328,11 +328,11 @@ enum ZoneSelection {
 }
 
 model WayOfLifeAnswer {
-  id                     Int                  @id @default(autoincrement())
-  email                  String?
-  ageCategory            AgeCategory          @map("age_category")
-  gender                 Gender
-  professionalCategory   ProfessionalCategory @map("professional_category")
+  id                   Int                  @id @default(autoincrement())
+  email                String?
+  ageCategory          AgeCategory          @map("age_category")
+  gender               Gender
+  professionalCategory ProfessionalCategory @map("professional_category")
 
   knowSu Boolean @map("has_su")
 
@@ -441,14 +441,15 @@ model WayOfLifeAnswer {
 
   comment String?
 
-  broadcastChannel BroadcastChannel @map("broadcast_channel")
-  emailApiCalled   Boolean?         @default(false) @map("email_api_called")
-  surveyId         Int
-  survey           Survey           @relation(fields: [surveyId], references: [id])
-  suId             Int?             @map("su_id")
-  su               SuData?          @relation(fields: [suId], references: [id])
-  createdAt        DateTime         @default(now()) @map("created_at")
-  updatedAt        DateTime         @default(now()) @updatedAt @map("updated_at")
+  broadcastChannel     BroadcastChannel @map("broadcast_channel")
+  emailApiCalled       Boolean?         @default(false) @map("email_api_called")
+  surveyId             Int
+  survey               Survey           @relation(fields: [surveyId], references: [id])
+  distanceToBarycenter Float?           @map("distance_to_barycenter")
+  suId                 Int?             @map("su_id")
+  su                   SuData?          @relation(fields: [suId], references: [id])
+  createdAt            DateTime         @default(now()) @map("created_at")
+  updatedAt            DateTime         @default(now()) @updatedAt @map("updated_at")
 
   @@map("way_of_life_answer")
 }
