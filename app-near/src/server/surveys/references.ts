@@ -30,7 +30,7 @@ import {
   YesNo,
   ZoneSelection,
 } from "@prisma/client";
-import { env } from "~/env";
+import { TypeformType } from "~/types/Typeform";
 
 export const surveySUReferencesMapping: Record<string, string | boolean> = {
   // isNeighborhoodResident
@@ -80,9 +80,9 @@ export const surveySUReferencesMapping: Record<string, string | boolean> = {
   ["13c4b137-28c3-4cca-ae27-6b228fb52f37"]: PurchasingStrategy.MIXED,
   ["8166cf94-e353-4b46-a522-acd9530782c0"]: PurchasingStrategy.SECOND_HAND,
   // airTravelFrequency
-  ["3006b398-ff26-4824-a0cb-c89e848a32be"]: AirTravelFrequency.ZERO,
-  ["2709472e-6f1f-46f0-bbe1-5da9444457a0"]: AirTravelFrequency.FROM_1_TO_3,
-  ["af4d9f76-e4d2-4e3a-a73c-d826eca11559"]: AirTravelFrequency.ABOVE_3,
+  ["22c056f4-21e7-4e63-8fb6-60b1f5569f8b"]: AirTravelFrequency.ZERO,
+  ["e9c48d61-16c8-41a4-a53e-e8d838c539be"]: AirTravelFrequency.FROM_1_TO_3,
+  ["04385aba-ae3e-4bda-b32b-1f0c03bec5b8"]: AirTravelFrequency.ABOVE_3,
   // heatSource
   ["6a3d2558-6612-4cf1-90a6-e5e1bf3bbca8"]: HeatSource.ELECTRICITY,
   ["60220a76-eacb-435d-beb9-30c6e139827c"]: HeatSource.GAZ,
@@ -94,7 +94,7 @@ export const surveyWayOfLifeReferencesMapping: Record<
   string,
   string | boolean
 > = {
-  // isNeighborhoodResident
+  // isNeighborhoodResident (not reccorded)
   ["1d182b4a-25d1-4ffe-85b9-9cb6ca4fc416"]: true,
   ["44fb5931-1325-485e-9955-c01ebd635c87"]: false,
   // ageCategory
@@ -103,7 +103,7 @@ export const surveyWayOfLifeReferencesMapping: Record<
   ["0daed174-6c35-41f1-9a62-53f0ccca27e6"]: AgeCategory.FROM_45_TO_59,
   ["6107dd89-54a1-4093-9966-13002f52d0e7"]: AgeCategory.FROM_60_TO_74,
   ["40f75668-d031-4433-b85e-0909f022b7c7"]: AgeCategory.ABOVE_75,
-  // neighborhoodPurpose -> (no options)
+  // neighborhoodPurpose -> (no options, not reccorded)
   // gender
   ["2af033b2-851f-436c-9abe-9d1bf252271e"]: Gender.WOMAN,
   ["4289748f-9d7b-4c62-879c-4331fdd79131"]: Gender.MAN,
@@ -540,16 +540,9 @@ export const surveyWayOfLifeReferencesMapping: Record<
 };
 
 export const getReferencesMapping = (
-  formId: string,
-): Record<string, string | boolean> | undefined => {
-  let referencesMapping: Record<string, string | boolean> | undefined;
-  if (formId === env.SU_FORM_ID) {
-    referencesMapping = surveySUReferencesMapping;
-  }
-
-  if (formId === env.WAY_OF_LIFE_FORM_ID) {
-    referencesMapping = surveyWayOfLifeReferencesMapping;
-  }
-
-  return referencesMapping;
+  typeformType: TypeformType,
+): Record<string, string | boolean> => {
+  return typeformType === TypeformType.SU
+    ? surveySUReferencesMapping
+    : surveyWayOfLifeReferencesMapping;
 };

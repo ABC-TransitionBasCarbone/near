@@ -28,7 +28,6 @@ export const convertedWayOfLifeAnswer = z.object({
   email: z.string().email().optional(),
   ageCategory: z.nativeEnum(AgeCategory),
   isNeighborhoodResident: z.boolean(),
-  neighborhoodPurpose: z.string().optional(),
   gender: z.nativeEnum(Gender),
   professionalCategory: z.nativeEnum(ProfessionalCategory),
   knowSu: z.boolean(),
@@ -139,6 +138,8 @@ export const convertedWayOfLifeAnswer = z.object({
   comment: z.string().optional(),
   suId: z.number().optional(),
 });
+
+export type ConvertedWayOfLifeAnswer = z.infer<typeof convertedWayOfLifeAnswer>;
 
 export type BuilderWayOfLifeAnswer = Omit<
   WayOfLifeAnswer,

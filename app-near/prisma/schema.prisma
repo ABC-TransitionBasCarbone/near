@@ -331,8 +331,6 @@ model WayOfLifeAnswer {
   id                     Int                  @id @default(autoincrement())
   email                  String?
   ageCategory            AgeCategory          @map("age_category")
-  isNeighborhoodResident Boolean              @map("is_neighborhood_resident")
-  neighborhoodPurpose    String?              @map("neighborhood_pupose")
   gender                 Gender
   professionalCategory   ProfessionalCategory @map("professional_category")
 

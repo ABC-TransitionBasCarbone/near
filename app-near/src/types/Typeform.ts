@@ -1,6 +1,11 @@
 import { z } from "zod";
 import { BroadcastChannel } from "@prisma/client";
 
+export enum TypeformType {
+  SU = "su",
+  WAY_OF_LIFE = "way_of_life",
+}
+
 export const AnswerSchema = z.discriminatedUnion("type", [
   z.object({
     type: z.literal("text"),

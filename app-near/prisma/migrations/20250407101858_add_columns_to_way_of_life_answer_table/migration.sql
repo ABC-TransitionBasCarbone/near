@@ -30,7 +30,6 @@
   - Added the required column `how_many_people_can_I_help` to the `way_of_life_answer` table without a default value. This is not possible if the table is not empty.
   - Added the required column `hypermarket_frequency` to the `way_of_life_answer` table without a default value. This is not possible if the table is not empty.
   - Added the required column `idea_easy_talk` to the `way_of_life_answer` table without a default value. This is not possible if the table is not empty.
-  - Added the required column `is_neighborhood_resident` to the `way_of_life_answer` table without a default value. This is not possible if the table is not empty.
   - Added the required column `local_shops_to_meet_your_needs` to the `way_of_life_answer` table without a default value. This is not possible if the table is not empty.
   - Added the required column `neighborhood_life` to the `way_of_life_answer` table without a default value. This is not possible if the table is not empty.
   - Added the required column `neighborhood_organic_market_satisfaction` to the `way_of_life_answer` table without a default value. This is not possible if the table is not empty.
@@ -67,7 +66,7 @@
   - Added the required column `work_zone` to the `way_of_life_answer` table without a default value. This is not possible if the table is not empty.
 
 */
--- Delte way of life data
+-- Delete existing data for way_of_life
 DELETE FROM way_of_life_answer;
 
 -- CreateEnum
@@ -166,13 +165,11 @@ ADD COLUMN     "home_occupation_type" "HomeOccupationType" NOT NULL,
 ADD COLUMN     "how_many_people_can_I_help" "HowManyPeopleCanIHelp" NOT NULL,
 ADD COLUMN     "hypermarket_frequency" "FoodFrequency" NOT NULL,
 ADD COLUMN     "idea_easy_talk" "YesNo" NOT NULL,
-ADD COLUMN     "is_neighborhood_resident" BOOLEAN NOT NULL,
 ADD COLUMN     "local_shops_to_meet_your_needs" "YesNo" NOT NULL,
 ADD COLUMN     "meat_frequency" "MeatFrequency",
 ADD COLUMN     "neighborhood_life" "YesNo" NOT NULL,
 ADD COLUMN     "neighborhood_organic_market_satisfaction" "YesNo" NOT NULL,
 ADD COLUMN     "neighborhood_organic_product_satisfaction" "YesNo" NOT NULL,
-ADD COLUMN     "neighborhood_pupose" TEXT,
 ADD COLUMN     "neighborhood_season_fruits_and_vegetables_satisfaction" "YesNo" NOT NULL,
 ADD COLUMN     "no_information_on_cityzen_participation" "YesNo" NOT NULL,
 ADD COLUMN     "not_cold_house" "YesNo" NOT NULL,
