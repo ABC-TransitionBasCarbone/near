@@ -31,6 +31,7 @@ export const convertedWayOfLifeAnswer = z.object({
   gender: z.nativeEnum(Gender),
   professionalCategory: z.nativeEnum(ProfessionalCategory),
   knowSu: z.boolean(),
+  su: z.number().optional(),
 
   meatFrequency: z.nativeEnum(MeatFrequency).optional(),
   transportationMode: z.nativeEnum(TransportationMode).optional(),
@@ -127,7 +128,7 @@ export const convertedWayOfLifeAnswer = z.object({
   transportTimeToHobby: z.nativeEnum(TransportTime),
   hobbyZone: z.string(),
 
-  remoteWorkingWeeklyFrequency: z.string(),
+  remoteWorkingWeeklyFrequency: z.number(),
   transportModeToWork: z.nativeEnum(TransportMode),
   transportTimeToWork: z.nativeEnum(TransportTime),
   workZone: z.string(),
@@ -145,4 +146,4 @@ export type BuilderWayOfLifeAnswer = Omit<
   WayOfLifeAnswer,
   "id" | "createdAt" | "updatedAt" | "su" | "suId"
 > &
-  Partial<Pick<WayOfLifeAnswer, "id" | "createdAt" | "updatedAt" | "suId">>;
+  Partial<Pick<WayOfLifeAnswer, "createdAt" | "updatedAt" | "suId">>;

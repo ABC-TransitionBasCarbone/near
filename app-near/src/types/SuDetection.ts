@@ -6,6 +6,7 @@ import {
   type PurchasingStrategy,
   type TransportationMode,
 } from "@prisma/client";
+import { z } from "zod";
 
 export interface SuInformationToCompute {
   meatFrequency: MeatFrequency;
@@ -16,14 +17,16 @@ export interface SuInformationToCompute {
   heatSource: HeatSource;
 }
 
-export interface SuAnswerData {
-  meatFrequency: number;
-  transportationMode: number;
-  digitalIntensity: number;
-  purchasingStrategy: number;
-  airTravelFrequency: number;
-  heatSource: number;
-}
+const suAnswerDataValidation = z.object({
+  meatFrequency: z.number(),
+  transportationMode: z.number(),
+  digitalIntensity: z.number(),
+  purchasingStrategy: z.number(),
+  airTravelFrequency: z.number(),
+  heatSource: z.number(),
+});
+
+export type SuAnswerData = z.infer<typeof suAnswerDataValidation>;
 
 export interface SuAnswerDataWithId extends SuAnswerData {
   id: number;
@@ -34,10 +37,13 @@ export interface SuComputationData {
   answerAttributedSu: AnswerAttributedSuWithId[];
 }
 
-export interface SuDataToAssign {
-  su: number;
-  barycenter: number[];
-}
+const suDataToAssignValidation = z.object({
+  su: z.number(),
+  barycenter: z.array(z.number()),
+});
+
+export type SuDataToAssign = z.infer<typeof suDataToAssignValidation>;
+
 export interface ComputedSu extends SuDataToAssign {
   popPercentage: number;
 }
@@ -51,7 +57,11 @@ export interface AnswerAttributedSuWithId extends AnswerAttributedSu {
   id: number;
 }
 
-export interface SuAssignementRequest {
-  sus: SuDataToAssign[];
-  userData: SuAnswerData;
-}
+export const suAssignementRequestValidation = z.object({
+  sus: z.array(suDataToAssignValidation),
+  userData: suAnswerDataValidation,
+});
+
+export type SuAssignementRequest = z.infer<
+  typeof suAssignementRequestValidation
+>;

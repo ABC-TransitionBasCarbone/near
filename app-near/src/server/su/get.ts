@@ -2,6 +2,7 @@ import { TRPCError } from "@trpc/server";
 import { db } from "../db";
 import { ErrorCode } from "~/types/enums/error";
 import { type SuDataToAssign } from "~/types/SuDetection";
+import { type SuData } from "@prisma/client";
 
 export const getNeighborhoodSuDataToAssign = async (
   surveyName: string,
@@ -28,6 +29,21 @@ export const getNeighborhoodSuDataToAssign = async (
 
     return { su, barycenter };
   });
+
+  return result;
+};
+
+export const getOneSuBySu = async (
+  surveyId: number,
+  su: number,
+): Promise<SuData> => {
+  const result = await db.suData.findUnique({
+    where: { surveyId_su: { surveyId, su } },
+  });
+
+  if (!result) {
+    throw new TRPCError({ code: "NOT_FOUND", message: ErrorCode.SU_NOT_FOUND });
+  }
 
   return result;
 };

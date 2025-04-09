@@ -431,7 +431,7 @@ model WayOfLifeAnswer {
   transportTimeToHobby TransportTime @map("transport_time_to_hobby")
   hobbyZone            String        @map("hobby_zone")
 
-  remoteWorkingWeeklyFrequency String        @map("remote_working_weekly_frequency")
+  remoteWorkingWeeklyFrequency Int        @map("remote_working_weekly_frequency")
   transportModeToWork          TransportMode @map("transport_mode_to_work")
   transportTimeToWork          TransportTime @map("transport_time_to_work")
   workZone                     String        @map("work_zone")

@@ -165,13 +165,7 @@ export const buildWayOfLifeAnswer = (
   reasonsToNotChoseSecondHand: faker.helpers.arrayElements(
     Object.values(ReasonsToNotChoseSecondHand),
   ),
-  remoteWorkingWeeklyFrequency: faker.helpers.arrayElement([
-    "1",
-    "2",
-    "3",
-    "4",
-    "5",
-  ]),
+  remoteWorkingWeeklyFrequency: faker.helpers.arrayElement([1, 2, 3, 4, 5]),
   secondHandShopSatisfaction: faker.helpers.arrayElement(Object.values(YesNo)),
   servicesToShareOrRentObjects: faker.helpers.arrayElement(
     Object.values(YesNo),
@@ -220,7 +214,7 @@ export const buildWayOfLifeAnswer = (
   yourEngagmentDomains: faker.helpers.arrayElements(
     Object.values(EngagmentDomains),
   ),
-
+  distanceToBarycenter: faker.number.float(),
   emailApiCalled: false,
   broadcastChannel: faker.helpers.arrayElement(Object.values(BroadcastChannel)),
   email: Date.now() + faker.internet.email(),

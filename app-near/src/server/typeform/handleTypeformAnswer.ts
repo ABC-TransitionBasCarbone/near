@@ -27,6 +27,7 @@ import { TRPCError } from "@trpc/server";
 import { ErrorCode } from "~/types/enums/error";
 import { getHTTPStatusCodeFromError } from "@trpc/server/unstable-core-do-not-import";
 import { handleWayOfLifeCreation } from "../way-of-life/create";
+import { getOneSuBySu } from "../su/get";
 
 export const handleTypeformAnswer = async (
   req: NextRequest,
@@ -68,8 +69,9 @@ export const handleTypeformAnswer = async (
       | ConvertedWayOfLifeAnswer;
 
     // remove isNeighborhoodResident property before save
+    // @ts-expect-error remove su name
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { isNeighborhoodResident, ...createQuery } = parsedAnswer;
+    const { isNeighborhoodResident, su, ...createQuery } = parsedAnswer;
 
     const { surveyName, survey } = await getSurveyInformations(
       parsedBody.form_response.hidden.neighborhood,
@@ -89,10 +91,20 @@ export const handleTypeformAnswer = async (
         surveyName,
       );
     } else {
+      let suId: number | undefined = undefined;
+      if ((parsedAnswer as ConvertedWayOfLifeAnswer).su) {
+        const su = await getOneSuBySu(
+          survey.id,
+          (parsedAnswer as ConvertedWayOfLifeAnswer).su!,
+        );
+        suId = su.id;
+      }
+
       await handleWayOfLifeCreation(
         {
           ...createQuery,
           broadcastChannel,
+          suId,
         } as WayOfLifeAnswer,
         survey,
       );

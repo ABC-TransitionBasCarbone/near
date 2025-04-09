@@ -2602,9 +2602,9 @@ export const valideWayOfLifeSurveyPayload = {
       {
         type: "choice",
         choice: {
-          id: "2JBTGmuPiA4G",
-          label: "Oui",
-          ref: "af1dfc18-9510-43f3-ba9e-feb1374098c8",
+          id: "70wibFlMq6vZ",
+          ref: "adac5c32-196e-47a5-9bdd-7e5e99060349",
+          label: "Non",
         },
         field: {
           id: "kiBUYNoAfhr7",

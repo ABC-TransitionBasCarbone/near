@@ -4,9 +4,13 @@ import { getNeighborhoodSuDataToAssign } from "../su/get";
 import apiSuService from "../external-api/api-su";
 import { convertToSuAnswerData } from "../external-api/convert";
 import { sendPhaseTwoFormNotification } from "../surveys/email";
+import { suAssignementRequestValidation } from "~/types/SuDetection";
+import { TRPCError } from "@trpc/server";
+import { ErrorCode } from "~/types/enums/error";
+import { type BuilderWayOfLifeAnswer } from "~/types/WayOfLifeAnswer";
 
 export const handleWayOfLifeCreation = async (
-  data: WayOfLifeAnswer,
+  data: BuilderWayOfLifeAnswer,
   survey: Survey,
 ) => {
   let calculatedSu = {};
@@ -14,7 +18,8 @@ export const handleWayOfLifeCreation = async (
   if (!data.knowSu) {
     const suData = await getNeighborhoodSuDataToAssign(survey.name);
 
-    const result = await apiSuService.assignSu({
+    // could throw error if schema is not valid
+    const payload = suAssignementRequestValidation.parse({
       sus: suData,
       userData: convertToSuAnswerData({
         airTravelFrequency: data.airTravelFrequency!,
@@ -26,12 +31,21 @@ export const handleWayOfLifeCreation = async (
       }),
     });
 
+    const result = await apiSuService.assignSu(payload);
+
     const su = await db.suData.findUnique({
       where: { surveyId_su: { surveyId: survey.id, su: result.su } },
     });
 
+    if (!su) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: ErrorCode.SU_NOT_FOUND,
+      });
+    }
+
     calculatedSu = {
-      suId: su?.id,
+      suId: su.id,
       distanceToBarycenter: result.distanceToBarycenter,
     };
   }

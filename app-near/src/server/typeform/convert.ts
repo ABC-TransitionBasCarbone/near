@@ -32,7 +32,7 @@ export const convertFormToAnswer = (
       case "boolean":
         return answer.boolean.toString();
       case "number":
-        return answer.number.toString();
+        return answer.number;
       default:
         return "No response";
     }

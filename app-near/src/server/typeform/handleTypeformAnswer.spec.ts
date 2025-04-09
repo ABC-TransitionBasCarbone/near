@@ -13,22 +13,40 @@ import { buildSuAnswer } from "../test-utils/create-data/suAnswer";
 import { buildWayOfLifeAnswer } from "../test-utils/create-data/wayOfLifeAnswer";
 import EmailService from "../email";
 import { TemplateId } from "~/types/enums/brevo";
+import apiSuService from "../external-api/api-su";
 
 describe("handleAnswer", () => {
   const neighborhoodName = "neighborhood_test";
+  const su = 3;
   let survey: Survey;
 
   let sendEmailMock: jest.SpyInstance;
+  let apiSuServiceMock: jest.SpyInstance;
 
   beforeEach(async () => {
     await clearAllSurveys();
     survey = await db.survey.create({
       data: { name: neighborhoodName },
     });
+    await db.suData.create({
+      data: {
+        barycenter: [1, 2, 3, 4],
+        popPercentage: 0.3,
+        su,
+        surveyId: survey.id,
+      },
+    });
 
     sendEmailMock = jest
       .spyOn(EmailService, "sendEmail")
       .mockReturnValue(Promise.resolve("send"));
+
+    apiSuServiceMock = jest.spyOn(apiSuService, "assignSu").mockReturnValue(
+      Promise.resolve({
+        distanceToBarycenter: 1234,
+        su: 3,
+      }),
+    );
   });
 
   afterEach(() => {
@@ -255,6 +273,29 @@ describe("handleAnswer", () => {
       return object;
     };
 
+    const replaceSu = (
+      object: TypeformWebhookPayload,
+      su: number,
+    ): TypeformWebhookPayload => {
+      if (
+        object?.form_response &&
+        Array.isArray(object.form_response.answers)
+      ) {
+        object.form_response.answers = object.form_response.answers.map(
+          (answer) => {
+            if (answer.field.ref === "su") {
+              return {
+                ...answer,
+                number: su,
+              };
+            }
+            return answer;
+          },
+        );
+      }
+      return object;
+    };
+
     const deleteEmail = (
       object: TypeformWebhookPayload,
     ): TypeformWebhookPayload => {
@@ -306,7 +347,7 @@ describe("handleAnswer", () => {
       });
 
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      const payload = JSON.parse(
+      let payload = JSON.parse(
         JSON.stringify(validSurveyPayload),
       ) as TypeformWebhookPayload;
 
@@ -314,6 +355,9 @@ describe("handleAnswer", () => {
         neighborhood: neighborhoodName,
         broadcast_channel: BroadcastChannel.mail_campaign,
       };
+
+      payload = replaceSu(payload, su);
+
       const signature = signPayload(
         JSON.stringify(payload),
         SignatureType.TYPEFORM,
@@ -326,6 +370,23 @@ describe("handleAnswer", () => {
       expect(await response.text()).toContain("created");
 
       if (typeformType === TypeformType.WAY_OF_LIFE) {
+        expect(apiSuServiceMock).toHaveBeenCalledWith({
+          sus: [
+            {
+              barycenter: [1, 2, 3, 4],
+              su: 3,
+            },
+          ],
+          userData: {
+            airTravelFrequency: 1,
+            digitalIntensity: 1,
+            heatSource: 1,
+            meatFrequency: 1,
+            purchasingStrategy: 3,
+            transportationMode: 3,
+          },
+        });
+
         expect(sendEmailMock).toHaveBeenCalledWith({
           params: { displayCarbonFootprint: "true", displayWayOfLife: "false" },
           templateId: TemplateId.PHASE_2_NOTIFICATION,
@@ -333,6 +394,7 @@ describe("handleAnswer", () => {
         });
       } else {
         expect(sendEmailMock).not.toHaveBeenCalled();
+        expect(apiSuServiceMock).not.toHaveBeenCalled();
       }
     });
 
@@ -358,6 +420,7 @@ describe("handleAnswer", () => {
       };
 
       payload = replaceEmail(payload, "test@mail.com");
+      payload = replaceSu(payload, su);
 
       const signature = signPayload(
         JSON.stringify(payload),
@@ -371,6 +434,23 @@ describe("handleAnswer", () => {
       expect(await response.text()).toContain("created");
 
       if (typeformType === TypeformType.WAY_OF_LIFE) {
+        expect(apiSuServiceMock).toHaveBeenCalledWith({
+          sus: [
+            {
+              barycenter: [1, 2, 3, 4],
+              su: 3,
+            },
+          ],
+          userData: {
+            airTravelFrequency: 1,
+            digitalIntensity: 1,
+            heatSource: 1,
+            meatFrequency: 1,
+            purchasingStrategy: 3,
+            transportationMode: 3,
+          },
+        });
+
         expect(sendEmailMock).toHaveBeenCalledWith({
           params: { displayCarbonFootprint: "true", displayWayOfLife: "false" },
           templateId: TemplateId.PHASE_2_NOTIFICATION,
@@ -378,6 +458,7 @@ describe("handleAnswer", () => {
         });
       } else {
         expect(sendEmailMock).not.toHaveBeenCalled();
+        expect(apiSuServiceMock).not.toHaveBeenCalled();
       }
     });
 
@@ -408,6 +489,7 @@ describe("handleAnswer", () => {
       };
 
       payload = deleteEmail(payload);
+      payload = replaceSu(payload, su);
 
       const signature = signPayload(
         JSON.stringify(payload),
@@ -419,6 +501,27 @@ describe("handleAnswer", () => {
       );
       expect(response.status).toBe(201);
       expect(await response.text()).toContain("created");
+
+      if (typeformType === TypeformType.WAY_OF_LIFE) {
+        expect(apiSuServiceMock).toHaveBeenCalledWith({
+          sus: [
+            {
+              barycenter: [1, 2, 3, 4],
+              su: 3,
+            },
+          ],
+          userData: {
+            airTravelFrequency: 1,
+            digitalIntensity: 1,
+            heatSource: 1,
+            meatFrequency: 1,
+            purchasingStrategy: 3,
+            transportationMode: 3,
+          },
+        });
+      } else {
+        expect(apiSuServiceMock).not.toHaveBeenCalled();
+      }
 
       expect(sendEmailMock).not.toHaveBeenCalled();
     });

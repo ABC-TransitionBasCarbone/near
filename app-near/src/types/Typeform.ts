@@ -97,5 +97,5 @@ export type TypeformWebhookPayload = z.infer<typeof TypeformWebhookSchema>;
 
 export type ConvertedAnswer = Record<
   string,
-  string | boolean | (string | boolean | undefined)[]
+  string | boolean | number | (string | boolean | number | undefined)[]
 >;
