@@ -211,7 +211,7 @@ export const buildWayOfLifeAnswer = (
     Object.values(WishesChoices),
   ),
   workZone: faker.lorem.word(),
-  yourEngagmentDomains: faker.helpers.arrayElements(
+  yourVoluntaryWork: faker.helpers.arrayElements(
     Object.values(EngagmentDomains),
   ),
   distanceToBarycenter: faker.number.float(),

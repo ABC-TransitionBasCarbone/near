@@ -22,9 +22,9 @@ export const errorCodeMapper: Partial<Record<ErrorCode, string>> = {
   [ErrorCode.SU_NOT_COMPUTED]:
     "Vous devez d'abord calculter les sphères d'usages.",
   [ErrorCode.SU_SEND_EMAIL]:
-    "Les emails n'ont pas été correctement envoyés, veuillez vous rapporcher du support pour déterminer l'impact.",
+    "Les emails n'ont pas été correctement envoyés, veuillez vous rapprocher du support pour déterminer l'impact.",
   [ErrorCode.WRONG_SURVEY_PHASE]:
     "Votre sondage n'est pas à une phase lui permettant de réaliser cette action.",
   [ErrorCode.UNEXPECTED_COMPUTE_SU_ERROR]:
-    "Une erreur inatentue pour computeSus s'est produite",
+    "Une erreur inattendue pour computeSus s'est produite",
 };

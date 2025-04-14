@@ -373,7 +373,7 @@ export const surveyWayOfLifeReferencesMapping: Record<
   ["7bc4944c-f2f7-4242-a570-b156efcddc55"]: GiveFreeTimeToHelp.YES_SOMETIMES,
   ["1cd31637-7811-44c4-8c6b-74c73a0a3c4f"]: GiveFreeTimeToHelp.NO_BUT_I_WISH,
   ["f1f6fc0e-6f68-4d5f-88e0-dab441456daf"]: GiveFreeTimeToHelp.NO_I_CANT,
-  // yourEngagmentDomains
+  // yourVoluntaryWork
   ["4bc12402-7298-46b0-a465-eec4b08afb06"]: EngagmentDomains.HUMAN_AND_SOCIAL,
   ["aed85813-9f42-448a-b84f-4b2a128bc854"]:
     EngagmentDomains.YOUTH_AND_EDUCATION,
@@ -407,7 +407,7 @@ export const surveyWayOfLifeReferencesMapping: Record<
   ["0c7d0555-99f4-4f0c-9d83-f4c06b67a950"]: WishesChoices.NOT_CONCERNED,
   // reasonsToEatMeat
   ["f8978189-874b-4601-9657-a06b4b159bbf"]:
-    ReasonsToEatMeat.WITHOUT_MEAT_IS_NOT_NOURISHING_ENOUGHT,
+    ReasonsToEatMeat.WITHOUT_MEAT_IS_NOT_NOURISHING_ENOUGH,
   ["b1dc4abf-d98e-469b-97fe-3a1d27654ca5"]: ReasonsToEatMeat.MY_FAMILY_EAT_MEAT,
   ["8bf01a9d-c798-45ed-9776-ce573106f057"]:
     ReasonsToEatMeat.I_DONT_KNOW_ALTERNATIVES,
@@ -520,7 +520,7 @@ export const surveyWayOfLifeReferencesMapping: Record<
   ["e2c7e519-90e8-4457-a3bf-0e6ac420bda2"]: TransportModeToTravel.TRAIN,
   ["57f82193-a47b-4e90-89b4-3292bd4faa84"]: TransportModeToTravel.PLANE,
   ["8c0c002c-facd-41dd-adf4-ec091adc5b13"]: TransportModeToTravel.CAR,
-  ["223cf0aa-8195-4813-aa20-2c90f67a80dc"]: TransportModeToTravel.ELETRIC_CAR,
+  ["223cf0aa-8195-4813-aa20-2c90f67a80dc"]: TransportModeToTravel.ELECTRIC_CAR,
   ["d9a0d0b2-2404-4a24-a95d-f8866a0d9efb"]: TransportModeToTravel.TAXI_VTC,
   ["cdac0e9b-2b45-462e-a61e-fc02c74a3123"]: TransportModeToTravel.BICYCLE,
   ["69604682-fbc8-446f-9090-cdeb244a63f7"]: TransportModeToTravel.WALKING,

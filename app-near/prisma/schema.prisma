@@ -226,7 +226,7 @@ enum GiveFreeTimeToHelp {
   NO_I_CANT
 }
 
-enum EngagmentDomains {
+enum VoluntaryWork {
   HUMAN_AND_SOCIAL
   YOUTH_AND_EDUCATION
   CULTURE
@@ -254,7 +254,7 @@ enum ReasonsUsingCar {
 }
 
 enum ReasonsToEatMeat {
-  WITHOUT_MEAT_IS_NOT_NOURISHING_ENOUGHT
+  WITHOUT_MEAT_IS_NOT_NOURISHING_ENOUGH
   MY_FAMILY_EAT_MEAT
   I_DONT_KNOW_ALTERNATIVES
   I_DONT_TRUST_ALTERNATIVES
@@ -294,7 +294,7 @@ enum TransportModeToTravel {
   TRAIN
   PLANE
   CAR
-  ELETRIC_CAR
+  ELECTRIC_CAR
   TAXI_VTC
   BICYCLE
   WALKING
@@ -409,7 +409,7 @@ model WayOfLifeAnswer {
   otherLocalPoliticInformation        String? @map("other_local_politic_information")
 
   giveFreeTimeToHelp   GiveFreeTimeToHelp @map("give_free_time_to_help")
-  yourEngagmentDomains String[]           @default([]) @map("your_engagment_domains")
+  yourVoluntaryWork String[]           @default([]) @map("your_volontary_work")
 
   wantToReduceCarUsage      WishesChoices @map("want_to_reduce_car_usage")
   reasonsToContinueUsingCar String[]      @map("reasons_to_continue_using_car")

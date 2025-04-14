@@ -106,7 +106,7 @@ export const convertedWayOfLifeAnswer = z.object({
   otherLocalPoliticInformation: z.string().optional(),
 
   giveFreeTimeToHelp: z.nativeEnum(GiveFreeTimeToHelp),
-  yourEngagmentDomains: z.array(z.string()),
+  yourVoluntaryWork: z.array(z.string()),
 
   wantToReduceCarUsage: z.nativeEnum(WishesChoices),
   reasonsToContinueUsingCar: z.array(z.string()),

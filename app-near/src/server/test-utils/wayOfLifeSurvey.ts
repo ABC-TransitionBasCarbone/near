@@ -1653,7 +1653,7 @@ export const valideWayOfLifeSurveyPayload = {
         },
         {
           id: "TOVvqOUYrRmB",
-          ref: "yourEngagmentDomains",
+          ref: "yourVoluntaryWork",
           type: "multiple_choice",
           title: "*✊ Dans quel(s) domaine(s) êtes-vous engagé·e ?*",
           properties: {},
@@ -3441,7 +3441,7 @@ export const valideWayOfLifeSurveyPayload = {
         field: {
           id: "TOVvqOUYrRmB",
           type: "multiple_choice",
-          ref: "yourEngagmentDomains",
+          ref: "yourVoluntaryWork",
         },
       },
       {
