@@ -47,12 +47,15 @@ export const handleTypeformAnswer = async (
   req: NextRequest,
 ): Promise<NextResponse> => {
   let formId: string | undefined = undefined;
+  let webhookId: string | undefined = undefined;
+
   try {
     const body = await req.text();
     const parsedBody: TypeformWebhookPayload = TypeformWebhookSchema.parse(
       JSON.parse(body),
     );
     formId = parsedBody.form_response.form_id;
+    webhookId = parsedBody.event_id;
     const typeformType = getFormIdType(formId);
 
     console.debug("[whebhook]", typeformType, body);
@@ -123,7 +126,13 @@ export const handleTypeformAnswer = async (
     return NextResponse.json({ message: "created" }, { status: 201 });
   } catch (error) {
     if (error instanceof z.ZodError) {
-      console.error("[whebhook]", formId, "ZOD ERROR :", error.errors);
+      console.error(
+        "[whebhook]",
+        formId,
+        webhookId,
+        "ZOD ERROR :",
+        error.errors,
+      );
       return NextResponse.json(
         { error: "Invalid payload", details: error.errors },
         { status: 400 },
@@ -142,11 +151,11 @@ export const handleTypeformAnswer = async (
     }
 
     if (error instanceof Error) {
-      console.error("[whebhook]", formId, "ERROR :", error.message);
+      console.error("[whebhook]", formId, webhookId, "ERROR :", error.message);
       return NextResponse.json({ error: error.message }, { status: 400 });
     }
 
-    console.error("[whebhook]", formId, "UNKNOWN ERROR:", error);
+    console.error("[whebhook]", formId, webhookId, "UNKNOWN ERROR:", error);
     return NextResponse.json(
       { error: "Internal Server Error" },
       { status: 500 },
