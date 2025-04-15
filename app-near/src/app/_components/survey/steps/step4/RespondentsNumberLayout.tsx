@@ -155,7 +155,7 @@ const RespondentsNumberLayout: React.FC<RespondentsNumberLayoutProps> = ({
             ))}
           </div>
           <div className="flex flex-col items-center gap-10">
-            <div className="text-xl">Rappel des Sphères d&apos;Usage</div>
+            <div className="text-xl">Rappel des Sphères d&apos;Usages</div>
             <SuDashboard phase={SurveyPhase.STEP_4_ADDITIONAL_SURVEY} />
           </div>
         </div>
