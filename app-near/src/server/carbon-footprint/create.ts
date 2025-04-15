@@ -1,8 +1,8 @@
-import { type CarbonFootprintAnswer } from "@prisma/client";
 import { db } from "../db";
+import { type ConvertedCarbonFootprintAnswer } from "~/types/CarbonFootprint";
 
 export const createCarbonFooprintAnswer = async (
-  answer: CarbonFootprintAnswer,
+  answer: ConvertedCarbonFootprintAnswer,
   surveyName: string,
 ) => {
   const survey = await db.survey.findFirst({ where: { name: surveyName } });
