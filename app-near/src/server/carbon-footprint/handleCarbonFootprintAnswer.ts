@@ -1,8 +1,9 @@
 import { NextResponse, type NextRequest } from "next/server";
-import { getSurveyInformations } from "../typeform/handlers/helpers";
+import { getSurveyInformations } from "../typeform/helpers";
 import { createCarbonFooprintAnswer } from "./create";
 import { sendPhaseTwoFormNotification } from "../surveys/email";
 import {
+  CarbonFootprintType,
   convertedCarbonFootprintAnswer,
   type NgcWebhookPayload,
   NgcWebhookSchema,
@@ -13,11 +14,9 @@ import { z } from "zod";
 import { TRPCError } from "@trpc/server";
 import { getHTTPStatusCodeFromError } from "@trpc/server/unstable-core-do-not-import";
 
-const formId = "ngc-form";
-
 const unauthorizedResponse = (): NextResponse =>
   NextResponse.json(
-    { error: "Not authorized", details: formId },
+    { error: "Not authorized", details: CarbonFootprintType.CARBON_FOOTPRINT },
     { status: 401 },
   );
 
@@ -36,7 +35,7 @@ export const handleCarbonFootprintAnswer = async (
 
     const { surveyName } = await getSurveyInformations(
       parsedBody.neighborhood,
-      formId,
+      CarbonFootprintType.CARBON_FOOTPRINT,
     );
 
     const carbonFootprintAnswer = convertCarbonFootprintBody(parsedBody);
@@ -55,7 +54,12 @@ export const handleCarbonFootprintAnswer = async (
     return NextResponse.json({ message: "created" }, { status: 201 });
   } catch (error) {
     if (error instanceof z.ZodError) {
-      console.error("[whebhook]", formId, "ZOD ERROR :", error.errors);
+      console.error(
+        "[whebhook]",
+        CarbonFootprintType.CARBON_FOOTPRINT,
+        "ZOD ERROR :",
+        error.errors,
+      );
       return NextResponse.json(
         { error: "Invalid payload", details: error.errors },
         { status: 400 },
@@ -74,11 +78,21 @@ export const handleCarbonFootprintAnswer = async (
     }
 
     if (error instanceof Error) {
-      console.error("[whebhook]", formId, "ERROR :", error.message);
+      console.error(
+        "[whebhook]",
+        CarbonFootprintType.CARBON_FOOTPRINT,
+        "ERROR :",
+        error.message,
+      );
       return NextResponse.json({ error: error.message }, { status: 400 });
     }
 
-    console.error("[whebhook]", formId, "UNKNOWN ERROR:", error);
+    console.error(
+      "[whebhook]",
+      CarbonFootprintType.CARBON_FOOTPRINT,
+      "UNKNOWN ERROR:",
+      error,
+    );
     return NextResponse.json(
       { error: "Internal Server Error" },
       { status: 500 },

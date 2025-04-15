@@ -1,6 +1,11 @@
 import { z } from "zod";
 import { BroadcastChannel } from "@prisma/client";
 
+export enum TypeformType {
+  SU = "su",
+  WAY_OF_LIFE = "way_of_life",
+}
+
 export const AnswerSchema = z.discriminatedUnion("type", [
   z.object({
     type: z.literal("text"),
@@ -23,8 +28,22 @@ export const AnswerSchema = z.discriminatedUnion("type", [
   z.object({
     type: z.literal("choice"),
     choice: z.object({
-      label: z.string(),
+      label: z.string().optional(),
+      ref: z.string().optional(),
+      other: z.string().optional(),
+    }),
+    field: z.object({
+      id: z.string(),
+      type: z.string(),
       ref: z.string(),
+    }),
+  }),
+  z.object({
+    type: z.literal("choices"),
+    choices: z.object({
+      label: z.array(z.string()).optional(),
+      refs: z.array(z.string()).optional(),
+      other: z.string().optional(),
     }),
     field: z.object({
       id: z.string(),
@@ -75,3 +94,8 @@ export const TypeformWebhookSchema = z.object({
 
 export type Answer = z.infer<typeof AnswerSchema>;
 export type TypeformWebhookPayload = z.infer<typeof TypeformWebhookSchema>;
+
+export type ConvertedAnswer = Record<
+  string,
+  string | boolean | number | (string | boolean | number | undefined)[]
+>;

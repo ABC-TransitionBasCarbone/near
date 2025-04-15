@@ -119,7 +119,7 @@ describe("handleCarbonFootprintAnswer", () => {
     const body = await response.json();
     expect(response.status).toBe(400);
     expect(body.code).toBe("BAD_REQUEST");
-    expect(body.message).toBe(ErrorCode.WRONG_SURVEY_NAME);
+    expect(body.message).toBe(ErrorCode.MISSING_SURVEY_NAME);
     expect(sendEmailMock).not.toHaveBeenCalled();
   });
 

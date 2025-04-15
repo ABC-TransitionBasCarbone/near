@@ -1,6 +1,10 @@
 import { BroadcastChannel, type CarbonFootprintAnswer } from "@prisma/client";
 import { z } from "zod";
 
+export enum CarbonFootprintType {
+  CARBON_FOOTPRINT = "carbon_footprint",
+}
+
 export const NgcWebhookSchema = z.object({
   id: z.string(),
   broadcastChannel: z.nativeEnum(BroadcastChannel),

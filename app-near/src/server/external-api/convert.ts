@@ -8,6 +8,7 @@ import {
   TransportationMode,
 } from ".prisma/client";
 import {
+  type SuInformationToCompute,
   type SuAnswerData,
   type SuAnswerDataWithId,
 } from "~/types/SuDetection";
@@ -48,7 +49,9 @@ const heatSourceMap: Record<HeatSource, number> = {
   [HeatSource.OIL]: 3,
 };
 
-export const convertToSuAnswerData = (suAnswer: SuAnswer): SuAnswerData => {
+export const convertToSuAnswerData = (
+  suAnswer: SuInformationToCompute,
+): SuAnswerData => {
   return {
     meatFrequency: meatFrequencyMap[suAnswer.meatFrequency],
     transportationMode: transportationModeMap[suAnswer.transportationMode],
