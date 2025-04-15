@@ -29,6 +29,20 @@ import { getHTTPStatusCodeFromError } from "@trpc/server/unstable-core-do-not-im
 import { handleWayOfLifeCreation } from "../way-of-life/create";
 import { getOneSuBySu } from "../su/get";
 
+const getSuIdFromSuNameOrThrow = async (
+  surveyId: number,
+  parsedAnswer: ConvertedWayOfLifeAnswer,
+): Promise<number | undefined> => {
+  let suId: number | undefined = undefined;
+
+  if (parsedAnswer.su) {
+    const su = await getOneSuBySu(surveyId, parsedAnswer.su);
+    suId = su.id;
+  }
+
+  return suId;
+};
+
 export const handleTypeformAnswer = async (
   req: NextRequest,
 ): Promise<NextResponse> => {
@@ -90,15 +104,11 @@ export const handleTypeformAnswer = async (
         { ...createQuery, broadcastChannel } as SuAnswer,
         surveyName,
       );
-    } else {
-      let suId: number | undefined = undefined;
-      if ((parsedAnswer as ConvertedWayOfLifeAnswer).su) {
-        const su = await getOneSuBySu(
-          survey.id,
-          (parsedAnswer as ConvertedWayOfLifeAnswer).su!,
-        );
-        suId = su.id;
-      }
+    } else if (typeformType === TypeformType.WAY_OF_LIFE) {
+      const suId = await getSuIdFromSuNameOrThrow(
+        survey.id,
+        parsedAnswer as ConvertedWayOfLifeAnswer,
+      );
 
       await handleWayOfLifeCreation(
         {
