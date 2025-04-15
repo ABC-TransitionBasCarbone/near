@@ -4,7 +4,7 @@ import { ErrorCode } from "~/types/enums/error";
 import { type SuDataToAssign } from "~/types/SuDetection";
 import { type SuData } from "@prisma/client";
 
-export const getNeighborhoodSuDataToAssign = async (
+export const getNeighborhoodSuDataToAssignOrThrows = async (
   surveyName: string,
 ): Promise<SuDataToAssign[]> => {
   const sus = await db.suData.findMany({
@@ -33,7 +33,7 @@ export const getNeighborhoodSuDataToAssign = async (
   return result;
 };
 
-export const getOneSuBySu = async (
+export const getOneSuBySuNameOrThrows = async (
   surveyId: number,
   su: number,
 ): Promise<SuData> => {

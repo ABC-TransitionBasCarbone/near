@@ -1,6 +1,6 @@
 import { type Survey, type WayOfLifeAnswer } from "@prisma/client";
 import { db } from "../db";
-import { getNeighborhoodSuDataToAssign } from "../su/get";
+import { getNeighborhoodSuDataToAssignOrThrows } from "../su/get";
 import apiSuService from "../external-api/api-su";
 import { convertToSuAnswerData } from "../external-api/convert";
 import { sendPhaseTwoFormNotification } from "../surveys/email";
@@ -16,7 +16,7 @@ export const handleWayOfLifeCreation = async (
   let calculatedSu = {};
 
   if (!data.knowSu) {
-    const suData = await getNeighborhoodSuDataToAssign(survey.name);
+    const suData = await getNeighborhoodSuDataToAssignOrThrows(survey.name);
 
     // could throw error if schema is not valid
     const payload = suAssignementRequestValidation.parse({

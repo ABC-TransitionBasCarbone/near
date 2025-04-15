@@ -27,7 +27,7 @@ import { TRPCError } from "@trpc/server";
 import { ErrorCode } from "~/types/enums/error";
 import { getHTTPStatusCodeFromError } from "@trpc/server/unstable-core-do-not-import";
 import { handleWayOfLifeCreation } from "../way-of-life/create";
-import { getOneSuBySu } from "../su/get";
+import { getOneSuBySuNameOrThrows } from "../su/get";
 
 const getSuIdFromSuNameOrThrow = async (
   surveyId: number,
@@ -36,7 +36,7 @@ const getSuIdFromSuNameOrThrow = async (
   let suId: number | undefined = undefined;
 
   if (parsedAnswer.su) {
-    const su = await getOneSuBySu(surveyId, parsedAnswer.su);
+    const su = await getOneSuBySuNameOrThrows(surveyId, parsedAnswer.su);
     suId = su.id;
   }
 
