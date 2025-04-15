@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { type Survey, type WayOfLifeAnswer } from "@prisma/client";
 import { db } from "../db";
 import { getNeighborhoodSuDataToAssignOrThrows } from "../su/get";
