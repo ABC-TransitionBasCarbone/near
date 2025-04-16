@@ -60,7 +60,6 @@ export const getSurveyInformations = async (
     noSurveyNameProvidedResponse(surveyType);
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const survey = await getOneSurveyByName(neighborhood!);
   if (!survey) {
     noSurveyFoundResponse(neighborhood);

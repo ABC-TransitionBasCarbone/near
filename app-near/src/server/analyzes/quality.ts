@@ -23,8 +23,6 @@ const getQualityStatistics = async (
   surveyId: number,
   populationSize: number,
 ): Promise<QualityStatistics> => {
-  // @ts-expect-error fix me
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const sampleSize = (await surveyTypeMapper[type].count({
     where: { surveyId },
   })) as number;

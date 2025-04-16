@@ -23,7 +23,6 @@ describe("computeSu", () => {
   beforeEach(async () => {
     await clearAllSurveys();
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     apiSuSpy = jest.spyOn(apiSuService, "computeSus");
   });
 
