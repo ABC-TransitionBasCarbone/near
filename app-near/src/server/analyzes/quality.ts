@@ -23,6 +23,7 @@ const getQualityStatistics = async (
   surveyId: number,
   populationSize: number,
 ): Promise<QualityStatistics> => {
+  // @ts-expect-error fix me
   const sampleSize = (await surveyTypeMapper[type].count({
     where: { surveyId },
   })) as number;
