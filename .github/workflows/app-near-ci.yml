@@ -66,6 +66,9 @@ jobs:
           npm run test:shared
           npm run test:components
 
+      - name: Install
+        run: npm run lint
+
       - name: Build
         run: npm run build
 
