@@ -66,7 +66,7 @@ describe("handleAnswer", () => {
     });
 
     it("should return 400 when formId is invalid", async () => {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      // eslint-disable-next-line
       const payload = JSON.parse(
         JSON.stringify(valideSuSurveyPayload),
       ) as TypeformWebhookPayload;
@@ -99,7 +99,6 @@ describe("handleAnswer", () => {
     });
 
     it("should return 400 when transformed data is invalid", async () => {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       const payload = JSON.parse(
         JSON.stringify(valideSuSurveyPayload),
       ) as TypeformWebhookPayload;
@@ -122,7 +121,7 @@ describe("handleAnswer", () => {
     });
 
     it("should return 400 when their is no survey name", async () => {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      // eslint-disable-next-line
       const payload = JSON.parse(
         JSON.stringify(valideSuSurveyPayload),
       ) as TypeformWebhookPayload;
@@ -145,7 +144,7 @@ describe("handleAnswer", () => {
     });
 
     it("should return 404 when no survey found by name", async () => {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      // eslint-disable-next-line
       const payload = JSON.parse(
         JSON.stringify(valideSuSurveyPayload),
       ) as TypeformWebhookPayload;
@@ -167,7 +166,7 @@ describe("handleAnswer", () => {
     });
 
     it("should throw zod exception when data is not valid", async () => {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      // eslint-disable-next-line
       const payload = JSON.parse(
         JSON.stringify(valideSuSurveyPayload),
       ) as TypeformWebhookPayload;
@@ -190,7 +189,7 @@ describe("handleAnswer", () => {
     });
 
     it("should return 200 when user as less than 15", async () => {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      // eslint-disable-next-line
       const payload = JSON.parse(
         JSON.stringify(valideSuSurveyPayload),
       ) as TypeformWebhookPayload;
@@ -213,7 +212,7 @@ describe("handleAnswer", () => {
     });
 
     it("should return 200 when user is not resident", async () => {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      // eslint-disable-next-line
       const payload = JSON.parse(
         JSON.stringify(valideSuSurveyPayload),
       ) as TypeformWebhookPayload;
@@ -346,7 +345,7 @@ describe("handleAnswer", () => {
         where: { name: neighborhoodName },
       });
 
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      // eslint-disable-next-line
       let payload = JSON.parse(
         JSON.stringify(validSurveyPayload),
       ) as TypeformWebhookPayload;
@@ -409,7 +408,7 @@ describe("handleAnswer", () => {
         where: { name: neighborhoodName },
       });
 
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      // eslint-disable-next-line
       let payload = JSON.parse(
         JSON.stringify(validSurveyPayload),
       ) as TypeformWebhookPayload;
@@ -478,7 +477,7 @@ describe("handleAnswer", () => {
         where: { name: neighborhoodName },
       });
 
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      // eslint-disable-next-line
       let payload = JSON.parse(
         JSON.stringify(validSurveyPayload),
       ) as TypeformWebhookPayload;

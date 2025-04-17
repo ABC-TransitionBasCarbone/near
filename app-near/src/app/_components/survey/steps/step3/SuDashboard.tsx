@@ -5,6 +5,7 @@ import { MetabaseIframeType } from "~/types/enums/metabase";
 import { env } from "~/env";
 import { useRef } from "react";
 import { type SurveyPhase } from "@prisma/client";
+import { type StoredComputedSu } from "../../../../../server/su/computeSu";
 
 interface SuDashboardProps {
   phase: SurveyPhase;
@@ -27,11 +28,11 @@ const SuDashboard: React.FC<SuDashboardProps> = ({ phase }) => {
     enabled: !!session?.user?.surveyId,
   });
 
-  const { data: suIdList } = api.suDetection.getList.useQuery(undefined, {
+  const { data: computedSuList } = api.suDetection.getList.useQuery(undefined, {
     enabled: !!survey?.id,
   });
 
-  if (!survey?.computedSu || !suIdList || suIdList.length === 0) {
+  if (!survey?.computedSu || !computedSuList || computedSuList.length === 0) {
     return;
   }
 
@@ -65,15 +66,15 @@ const SuDashboard: React.FC<SuDashboardProps> = ({ phase }) => {
             ref={scrollRef}
             onScroll={(e) => handleScroll(e, topScrollRef)}
           >
-            {suIdList.map((suId) => (
-              <div key={suId} className="flex flex-col">
-                <h2 className="text-lg font-semibold">Su n°{suId}</h2>
+            {computedSuList.map((su: StoredComputedSu) => (
+              <div key={su.id} className="flex flex-col">
+                <h2 className="text-lg font-semibold">Su n°{su.su}</h2>
                 <MetabaseIframe
                   iframeNumber={env.NEXT_PUBLIC_METABASE_SU}
                   iframeType={MetabaseIframeType.DASHBOARD}
                   width="450px"
                   height="3450px"
-                  params={{ su: suId, surveyname: survey?.name }}
+                  params={{ su: su.id, surveyname: survey?.name }}
                 />
               </div>
             ))}

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { type Survey, SurveyPhase } from "@prisma/client";
 import { db } from "~/server/db";
 import { ErrorCode } from "~/types/enums/error";
@@ -53,7 +54,6 @@ describe("handleCarbonFootprintAnswer", () => {
   });
 
   it("should return 400 when transformed data is invalid", async () => {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const payload = getValideCarbonFootprintPayload(
       neighborhoodName,
       "email@mail.com",
@@ -90,7 +90,6 @@ describe("handleCarbonFootprintAnswer", () => {
       buildRequest(payload, signature),
     );
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const body = await response.json();
     expect(response.status).toBe(404);
     expect(body.code).toBe("NOT_FOUND");
@@ -115,7 +114,6 @@ describe("handleCarbonFootprintAnswer", () => {
       buildRequest(payload, signature),
     );
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const body = await response.json();
     expect(response.status).toBe(400);
     expect(body.code).toBe("BAD_REQUEST");
