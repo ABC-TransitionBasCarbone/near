@@ -8,7 +8,7 @@ import {
 import { getReferencesMapping } from "../surveys/references";
 import { convertFormToAnswer } from "./convert";
 import { handleSuForm } from "./handlers/handleSuForm";
-import { verifySignature } from "./signature";
+import { isValidSignature } from "./signature";
 import { handleWayOfLifeForm } from "./handlers/handleWayOfLifeForm";
 
 export const handleTypeformAnswer = async (
@@ -74,11 +74,6 @@ export const handleTypeformAnswer = async (
       { status: 500 },
     );
   }
-};
-
-const isValidSignature = (req: NextRequest, body: string): boolean => {
-  const signature = req.headers.get("Typeform-Signature");
-  return verifySignature(signature, body);
 };
 
 const unknwonFormIdResponse = (formId?: string): NextResponse =>

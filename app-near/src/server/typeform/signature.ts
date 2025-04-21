@@ -1,4 +1,5 @@
 import crypto from "crypto";
+import { type NextRequest } from "next/server";
 import { env } from "~/env";
 
 export const signPayload = (payload: string) => {
@@ -12,4 +13,9 @@ export const signPayload = (payload: string) => {
 
 export const verifySignature = (sign: string | null, payload: string) => {
   return sign === signPayload(payload);
+};
+
+export const isValidSignature = (req: NextRequest, body: string): boolean => {
+  const signature = req.headers.get("Typeform-Signature");
+  return verifySignature(signature, body);
 };
