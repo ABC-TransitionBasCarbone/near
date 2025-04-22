@@ -162,27 +162,3 @@ export const handleTypeformAnswer = async (
     );
   }
 };
-
-const unknwonFormIdResponse = (formId?: string): NextResponse =>
-  NextResponse.json(
-    { error: "Unknown formid", details: formId },
-    { status: 404 },
-  );
-
-const unauthorizedResponse = (formId?: string): NextResponse =>
-  NextResponse.json(
-    { error: "Not authorized", details: formId },
-    { status: 401 },
-  );
-
-const referenceMappingNotFoundResponse = (formId?: string): NextResponse => {
-  console.error(
-    "[whebhook typeform]",
-    formId,
-    "ERROR: References mapping not found",
-  );
-  return NextResponse.json(
-    { error: "References mapping not found" },
-    { status: 400 },
-  );
-};

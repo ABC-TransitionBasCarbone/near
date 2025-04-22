@@ -40,8 +40,3 @@ export const isValidSignature = (
   );
   return signature === signPayload(body, signatureType);
 };
-
-export const isValidSignature = (req: NextRequest, body: string): boolean => {
-  const signature = req.headers.get("Typeform-Signature");
-  return verifySignature(signature, body);
-};

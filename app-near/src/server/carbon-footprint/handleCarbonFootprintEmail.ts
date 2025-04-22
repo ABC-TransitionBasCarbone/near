@@ -1,7 +1,7 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { type NgcContact } from "@prisma/client";
 import { db } from "../db";
-import { isValidSignature } from "../typeform/signature";
+import { isValidSignature, SignatureType } from "../typeform/signature";
 import { sendPhaseTwoFormNotification } from "../surveys/email";
 
 export const handleCarbonFootprintEmail = async (
@@ -9,7 +9,7 @@ export const handleCarbonFootprintEmail = async (
 ): Promise<NextResponse> => {
   const bodyText = await req.text();
 
-  if (!isValidSignature(req, bodyText)) {
+  if (!isValidSignature(req, bodyText, SignatureType.NGC_FORM)) {
     return NextResponse.json({ error: "Not authorized" }, { status: 401 });
   }
 
