@@ -3,15 +3,12 @@ import { db } from "../db";
 import { buildSuAnswer } from "../test-utils/create-data/suAnswer";
 import { sendUsersSu } from "./sendUsersSu";
 import { TRPCError } from "@trpc/server";
+import { clearAllSurveys } from "../test-utils/clear/survey";
 
 describe("sendUsersSu", () => {
   const surveyId = 654;
   beforeEach(async () => {
-    await db.suAnswer.deleteMany().catch(() => null);
-    await db.suData
-      .deleteMany({ where: { surveyId: surveyId } })
-      .catch(() => null);
-    await db.survey.delete({ where: { id: surveyId } }).catch(() => null);
+    await clearAllSurveys();
   });
 
   it.each(
