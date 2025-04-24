@@ -1,10 +1,17 @@
 import { TRPCError } from "@trpc/server";
 import { db } from "../db";
 import { ErrorCode } from "~/types/enums/error";
-import { type SuDataToAssign } from "~/types/SuDetection";
-import { type SuData } from "@prisma/client";
+import {
+  suAssignementRequestValidation,
+  type SuDataToAssign,
+} from "~/types/SuDetection";
+import { type Survey, type SuData } from "@prisma/client";
+import { convertToSuAnswerData } from "../external-api/convert";
+import apiSuService from "../external-api/api-su";
+import { type ConvertedWayOfLifeAnswer } from "~/types/WayOfLifeAnswer";
+import { type ConvertedCarbonFootprintAnswer } from "~/types/CarbonFootprint";
 
-export const getNeighborhoodSuDataToAssignOrThrows = async (
+const getNeighborhoodSuDataToAssignOrThrows = async (
   surveyName: string,
 ): Promise<SuDataToAssign[]> => {
   const sus = await db.suData.findMany({
@@ -33,7 +40,7 @@ export const getNeighborhoodSuDataToAssignOrThrows = async (
   return result;
 };
 
-export const getOneSuBySuNameOrThrows = async (
+const getOneSuBySuNameOrThrows = async (
   surveyId: number,
   su: number,
 ): Promise<SuData> => {
@@ -46,4 +53,55 @@ export const getOneSuBySuNameOrThrows = async (
   }
 
   return result;
+};
+
+export const getSuIdFromSuNameOrThrow = async (
+  surveyId: number,
+  parsedAnswer: ConvertedWayOfLifeAnswer | ConvertedCarbonFootprintAnswer,
+): Promise<number> => {
+  if (!parsedAnswer.su) {
+    throw new TRPCError({ code: "NOT_FOUND", message: ErrorCode.SU_NOT_FOUND });
+  }
+
+  const su = await getOneSuBySuNameOrThrows(surveyId, parsedAnswer.su);
+
+  return su.id;
+};
+
+export const getCalculatedSu = async (
+  survey: Survey,
+  data: ConvertedWayOfLifeAnswer | ConvertedCarbonFootprintAnswer,
+): Promise<{ suId: number; distanceToBarycenter: number }> => {
+  const suData = await getNeighborhoodSuDataToAssignOrThrows(survey.name);
+
+  // could throw error if schema is not valid
+  const payload = suAssignementRequestValidation.parse({
+    sus: suData,
+    userData: convertToSuAnswerData({
+      airTravelFrequency: data.airTravelFrequency!,
+      digitalIntensity: data.digitalIntensity!,
+      heatSource: data.heatSource!,
+      meatFrequency: data.meatFrequency!,
+      purchasingStrategy: data.purchasingStrategy!,
+      transportationMode: data.transportationMode!,
+    }),
+  });
+
+  const result = await apiSuService.assignSu(payload);
+
+  const su = await db.suData.findUnique({
+    where: { surveyId_su: { surveyId: survey.id, su: result.su } },
+  });
+
+  if (!su) {
+    throw new TRPCError({
+      code: "NOT_FOUND",
+      message: ErrorCode.SU_NOT_FOUND,
+    });
+  }
+
+  return {
+    suId: su.id,
+    distanceToBarycenter: result.distanceToBarycenter,
+  };
 };

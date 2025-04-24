@@ -27,21 +27,7 @@ import { TRPCError } from "@trpc/server";
 import { ErrorCode } from "~/types/enums/error";
 import { getHTTPStatusCodeFromError } from "@trpc/server/unstable-core-do-not-import";
 import { handleWayOfLifeCreation } from "../way-of-life/create";
-import { getOneSuBySuNameOrThrows } from "../su/get";
-
-const getSuIdFromSuNameOrThrow = async (
-  surveyId: number,
-  parsedAnswer: ConvertedWayOfLifeAnswer,
-): Promise<number | undefined> => {
-  let suId: number | undefined = undefined;
-
-  if (parsedAnswer.su) {
-    const su = await getOneSuBySuNameOrThrows(surveyId, parsedAnswer.su);
-    suId = su.id;
-  }
-
-  return suId;
-};
+import { getCalculatedSu, getSuIdFromSuNameOrThrow } from "../su/get";
 
 export const handleTypeformAnswer = async (
   req: NextRequest,
@@ -108,16 +94,23 @@ export const handleTypeformAnswer = async (
         surveyName,
       );
     } else if (typeformType === TypeformType.WAY_OF_LIFE) {
-      const suId = await getSuIdFromSuNameOrThrow(
-        survey.id,
-        parsedAnswer as ConvertedWayOfLifeAnswer,
-      );
+      const calculatedSu = (parsedAnswer as ConvertedWayOfLifeAnswer).knowSu
+        ? {
+            suId: await getSuIdFromSuNameOrThrow(
+              survey.id,
+              parsedAnswer as ConvertedWayOfLifeAnswer,
+            ),
+          }
+        : await getCalculatedSu(
+            survey,
+            parsedAnswer as ConvertedWayOfLifeAnswer,
+          );
 
       await handleWayOfLifeCreation(
         {
           ...createQuery,
           broadcastChannel,
-          suId,
+          ...calculatedSu,
         } as WayOfLifeAnswer,
         survey,
       );

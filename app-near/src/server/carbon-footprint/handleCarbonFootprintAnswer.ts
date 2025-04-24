@@ -1,7 +1,10 @@
 import { NextResponse, type NextRequest } from "next/server";
-import { getSurveyInformations } from "../typeform/helpers";
+import {
+  getSurveyInformations,
+  isNotInPhase,
+  notInPhaseSuSurveyResponse,
+} from "../typeform/helpers";
 import { createCarbonFooprintAnswer } from "./create";
-import { sendPhaseTwoFormNotification } from "../surveys/email";
 import {
   CarbonFootprintType,
   convertedCarbonFootprintAnswer,
@@ -13,6 +16,7 @@ import { isValidSignature, SignatureType } from "../typeform/signature";
 import { z } from "zod";
 import { TRPCError } from "@trpc/server";
 import { getHTTPStatusCodeFromError } from "@trpc/server/unstable-core-do-not-import";
+import { SurveyPhase } from "@prisma/client";
 
 const unauthorizedResponse = (): NextResponse =>
   NextResponse.json(
@@ -33,10 +37,15 @@ export const handleCarbonFootprintAnswer = async (
       return unauthorizedResponse();
     }
 
-    const { surveyName } = await getSurveyInformations(
-      parsedBody.neighborhood,
+    const { surveyName, survey } = await getSurveyInformations(
+      parsedBody.answers.neighborhood,
       CarbonFootprintType.CARBON_FOOTPRINT,
     );
+
+    const validPhase = SurveyPhase.STEP_4_ADDITIONAL_SURVEY;
+    if (isNotInPhase(survey, validPhase)) {
+      return notInPhaseSuSurveyResponse(surveyName, validPhase);
+    }
 
     const carbonFootprintAnswer = convertCarbonFootprintBody(parsedBody);
 
@@ -45,11 +54,7 @@ export const handleCarbonFootprintAnswer = async (
       carbonFootprintAnswer,
     );
 
-    await createCarbonFooprintAnswer(parsedAnswer, surveyName);
-
-    if (parsedAnswer.email) {
-      await sendPhaseTwoFormNotification(parsedAnswer.email);
-    }
+    await createCarbonFooprintAnswer(parsedAnswer, survey);
 
     return NextResponse.json({ message: "created" }, { status: 201 });
   } catch (error) {
