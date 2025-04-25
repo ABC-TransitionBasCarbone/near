@@ -295,15 +295,16 @@ describe("handleAnswer", () => {
       return object;
     };
 
-    const deleteEmail = (
+    const deleteRefAnswer = (
       object: TypeformWebhookPayload,
+      ref: string,
     ): TypeformWebhookPayload => {
       if (
         object?.form_response &&
         Array.isArray(object.form_response.answers)
       ) {
         object.form_response.answers = object.form_response.answers.filter(
-          (answer) => answer.type !== "email",
+          (answer) => answer.field.ref !== ref,
         );
       }
       return object;
@@ -487,7 +488,7 @@ describe("handleAnswer", () => {
         broadcast_channel: BroadcastChannel.mail_campaign,
       };
 
-      payload = deleteEmail(payload);
+      payload = deleteRefAnswer(payload, "email");
       payload = replaceSu(payload, su);
 
       const signature = signPayload(
@@ -524,5 +525,137 @@ describe("handleAnswer", () => {
 
       expect(sendEmailMock).not.toHaveBeenCalled();
     });
+
+    if (typeformType === TypeformType.WAY_OF_LIFE) {
+      it("should return 404 when su not found", async () => {
+        await db.survey.update({
+          data: { phase: validSurveyPhase },
+          where: { name: neighborhoodName },
+        });
+
+        await db.suData.deleteMany();
+
+        // eslint-disable-next-line
+        let payload = JSON.parse(
+          JSON.stringify(validSurveyPayload),
+        ) as TypeformWebhookPayload;
+
+        payload.form_response.hidden = {
+          neighborhood: neighborhoodName,
+          broadcast_channel: BroadcastChannel.mail_campaign,
+        };
+
+        payload = replaceSu(payload, su);
+
+        const signature = signPayload(
+          JSON.stringify(payload),
+          SignatureType.TYPEFORM,
+        );
+        const response = await handleTypeformAnswer(
+          // @ts-expect-error allow partial for test
+          buildRequest(payload, signature),
+        );
+
+        expect(response.status).toBe(404);
+        expect(await response.text()).toContain("SU_NOT_FOUND");
+      });
+
+      it("should return 404 when returned su is not found", async () => {
+        jest.spyOn(apiSuService, "assignSu").mockReturnValue(
+          Promise.resolve({
+            distanceToBarycenter: 1234,
+            su: 19,
+          }),
+        );
+
+        await db.survey.update({
+          data: { phase: validSurveyPhase },
+          where: { name: neighborhoodName },
+        });
+
+        // eslint-disable-next-line
+        let payload = JSON.parse(
+          JSON.stringify(validSurveyPayload),
+        ) as TypeformWebhookPayload;
+
+        payload.form_response.hidden = {
+          neighborhood: neighborhoodName,
+          broadcast_channel: BroadcastChannel.mail_campaign,
+        };
+
+        payload = replaceSu(payload, su);
+
+        const signature = signPayload(
+          JSON.stringify(payload),
+          SignatureType.TYPEFORM,
+        );
+        const response = await handleTypeformAnswer(
+          // @ts-expect-error allow partial for test
+          buildRequest(payload, signature),
+        );
+
+        expect(response.status).toBe(404);
+        expect(await response.text()).toContain("SU_NOT_FOUND");
+      });
+
+      it("should create data when unknown su", async () => {
+        const unknownSu = 456852;
+        const unknownSuData = await db.suData.create({
+          data: {
+            barycenter: [1, 2, 3, 4],
+            popPercentage: 0.3,
+            su: unknownSu,
+            surveyId: survey.id,
+          },
+        });
+
+        jest.spyOn(apiSuService, "assignSu").mockReturnValue(
+          Promise.resolve({
+            distanceToBarycenter: 1234,
+            su: unknownSu,
+          }),
+        );
+
+        await db.survey.update({
+          data: { phase: validSurveyPhase },
+          where: { name: neighborhoodName },
+        });
+
+        // eslint-disable-next-line
+        let payload = JSON.parse(
+          JSON.stringify(validSurveyPayload),
+        ) as TypeformWebhookPayload;
+
+        payload.form_response.hidden = {
+          neighborhood: neighborhoodName,
+          broadcast_channel: BroadcastChannel.mail_campaign,
+        };
+
+        payload = deleteRefAnswer(payload, "su");
+
+        const signature = signPayload(
+          JSON.stringify(payload),
+          SignatureType.TYPEFORM,
+        );
+        const response = await handleTypeformAnswer(
+          // @ts-expect-error allow partial for test
+          buildRequest(payload, signature),
+        );
+
+        expect(response.status).toBe(201);
+        expect(await response.text()).toContain("created");
+
+        expect(sendEmailMock).toHaveBeenCalledWith({
+          params: { displayCarbonFootprint: "true", displayWayOfLife: "false" },
+          templateId: TemplateId.PHASE_2_NOTIFICATION,
+          to: [{ email: "an_account@example.com" }],
+        });
+
+        const createdData = await db.wayOfLifeAnswer.findMany();
+
+        expect(createdData.length).toBe(1);
+        expect(createdData[0]?.suId).toBe(unknownSuData.id);
+      });
+    }
   });
 });
