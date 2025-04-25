@@ -55,7 +55,7 @@ const getOneSuBySuNameOrThrows = async (
   return result;
 };
 
-export const getSuIdFromSuNameOrThrow = async (
+const getSuIdFromSuNameOrThrow = async (
   surveyId: number,
   parsedAnswer: ConvertedWayOfLifeAnswer | ConvertedCarbonFootprintAnswer,
 ): Promise<number> => {
@@ -68,7 +68,7 @@ export const getSuIdFromSuNameOrThrow = async (
   return su.id;
 };
 
-export const getCalculatedSu = async (
+const getCalculatedSu = async (
   survey: Survey,
   data: ConvertedWayOfLifeAnswer | ConvertedCarbonFootprintAnswer,
 ): Promise<{ suId: number; distanceToBarycenter: number }> => {
@@ -105,3 +105,13 @@ export const getCalculatedSu = async (
     distanceToBarycenter: result.distanceToBarycenter,
   };
 };
+
+export const getCalculatedSuParams = async (
+  survey: Survey,
+  parsedAnswer: ConvertedWayOfLifeAnswer | ConvertedCarbonFootprintAnswer,
+) =>
+  parsedAnswer.knowSu
+    ? {
+        suId: await getSuIdFromSuNameOrThrow(survey.id, parsedAnswer),
+      }
+    : await getCalculatedSu(survey, parsedAnswer);

@@ -27,7 +27,7 @@ import { TRPCError } from "@trpc/server";
 import { ErrorCode } from "~/types/enums/error";
 import { getHTTPStatusCodeFromError } from "@trpc/server/unstable-core-do-not-import";
 import { handleWayOfLifeCreation } from "../way-of-life/create";
-import { getCalculatedSu, getSuIdFromSuNameOrThrow } from "../su/get";
+import { getCalculatedSuParams } from "../su/get";
 
 export const handleTypeformAnswer = async (
   req: NextRequest,
@@ -94,23 +94,16 @@ export const handleTypeformAnswer = async (
         surveyName,
       );
     } else if (typeformType === TypeformType.WAY_OF_LIFE) {
-      const calculatedSu = (parsedAnswer as ConvertedWayOfLifeAnswer).knowSu
-        ? {
-            suId: await getSuIdFromSuNameOrThrow(
-              survey.id,
-              parsedAnswer as ConvertedWayOfLifeAnswer,
-            ),
-          }
-        : await getCalculatedSu(
-            survey,
-            parsedAnswer as ConvertedWayOfLifeAnswer,
-          );
+      const calculatedSuParams = await getCalculatedSuParams(
+        survey,
+        parsedAnswer as ConvertedWayOfLifeAnswer,
+      );
 
       await handleWayOfLifeCreation(
         {
           ...createQuery,
           broadcastChannel,
-          ...calculatedSu,
+          ...calculatedSuParams,
         } as WayOfLifeAnswer,
         survey,
       );
