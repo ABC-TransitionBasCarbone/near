@@ -4,7 +4,6 @@ import { type BuilderCarbonFootprintAnswer } from "~/types/CarbonFootprint";
 
 export const buildCarbonFootprintAnswer = (
   surveyId: number,
-  suId: number,
   data?: Partial<CarbonFootprintAnswer>,
 ): BuilderCarbonFootprintAnswer => ({
   broadcastChannel: faker.helpers.arrayElement(Object.values(BroadcastChannel)),
@@ -93,5 +92,4 @@ export const buildCarbonFootprintAnswer = (
 
   ...data,
   surveyId,
-  suId,
 });

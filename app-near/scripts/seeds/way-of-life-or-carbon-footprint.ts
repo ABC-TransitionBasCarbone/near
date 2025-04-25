@@ -2,6 +2,7 @@ import { faker } from "@faker-js/faker";
 import { db } from "~/server/db";
 import { buildWayOfLifeAnswer } from "~/server/test-utils/create-data/wayOfLifeAnswer";
 import { SeedScope } from ".";
+import { buildCarbonFootprintAnswer } from "~/server/test-utils/create-data/carbonFootprintAnswer";
 
 export const seedWayOfLifeOrCarbonFootprintSurvey = async (
   surveyName: string | undefined,
@@ -12,6 +13,11 @@ export const seedWayOfLifeOrCarbonFootprintSurvey = async (
     type === SeedScope.CARBON_FOOTPRINT_ANSWER
       ? db.carbonFootprintAnswer
       : db.wayOfLifeAnswer;
+
+  const builder =
+    type === SeedScope.CARBON_FOOTPRINT_ANSWER
+      ? buildCarbonFootprintAnswer
+      : buildWayOfLifeAnswer;
 
   if (!surveyName || !quantity) {
     throw new Error(`
@@ -64,7 +70,7 @@ You should first generate su data using user interface.
   for (let index = 0; index < quantity; index++) {
     //@ts-expect-error typescript detection
     await dbObject.create({
-      data: buildWayOfLifeAnswer(survey.id, {
+      data: builder(survey.id, {
         suId: faker.helpers.arrayElement(suIds),
       }),
     });

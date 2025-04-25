@@ -41,10 +41,9 @@ describe("quality", () => {
         // @ts-expect-error unexpecte typescript error for answers
         data: Array.from(Array(30).keys()).map(
           () =>
-            buildCarbonFootprintAnswer(
-              survey.id,
+            buildCarbonFootprintAnswer(survey.id, {
               suId,
-            ) as CarbonFootprintAnswer,
+            }) as CarbonFootprintAnswer,
         ),
       });
     });
