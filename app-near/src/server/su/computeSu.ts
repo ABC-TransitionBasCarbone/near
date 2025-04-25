@@ -54,6 +54,7 @@ export const computeSu = async (surveyId: number): Promise<number[]> => {
       return suNames;
     });
   } catch (error) {
+    console.error(error);
     if (error instanceof TypeError) {
       throw new TRPCError({
         code: "INTERNAL_SERVER_ERROR",
