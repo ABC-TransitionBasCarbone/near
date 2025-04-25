@@ -8,12 +8,9 @@ export const updateSuAnswerWithSu = async (
   surveyId: number,
   answers: AnswerAttributedSuWithId[],
 ) => {
-  const uniqueSus = [...new Set(answers.map((item) => item.su))];
-
   const suDataList = await db.suData.findMany({
     where: {
       surveyId,
-      su: { in: uniqueSus },
     },
   });
 
@@ -27,7 +24,7 @@ export const updateSuAnswerWithSu = async (
     });
   }
 
-  const chunks = chunkArray(answers, 25);
+  const chunks = chunkArray(answers, 20);
 
   for (const group of chunks) {
     await Promise.all(
