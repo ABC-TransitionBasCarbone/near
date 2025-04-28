@@ -23,6 +23,7 @@ export const env = createEnv({
     NGC_SECRET: z.string(),
     SU_FORM_ID: z.string(),
     WAY_OF_LIFE_FORM_ID: z.string(),
+    EMAIL_SERVICE: z.enum(["local", "brevo"]).default("local"),
     BREVO_API_KEY: z.string(),
     API_SU_URL: z.string().url(),
     API_SU_KEY: z.string(),
@@ -81,6 +82,7 @@ export const env = createEnv({
     API_SU_KEY: process.env.API_SU_KEY,
     NEXT_PUBLIC_TARGET_PERCENTAGE_WARNING:
       process.env.NEXT_PUBLIC_TARGET_PERCENTAGE_WARNING,
+    EMAIL_SERVICE: process.env.EMAIL_SERVICE,
     BREVO_API_KEY: process.env.BREVO_API_KEY,
     NEXT_PUBLIC_CONTACT_EMAIL: process.env.NEXT_PUBLIC_CONTACT_EMAIL,
     NEXT_PUBLIC_METABASE_POPULATION_STATISTICS: Number(
