@@ -5,22 +5,16 @@ export const saveSuData = async (
   surveyId: number,
   computedSus: ComputedSu[],
 ): Promise<number[]> => {
-  const suNames: number[] = [];
-
   await db.suData.deleteMany({ where: { surveyId } });
 
-  for (const suData of computedSus) {
-    await db.suData.create({
-      data: {
-        surveyId: surveyId,
-        su: suData.su,
-        popPercentage: suData.popPercentage,
-        barycenter: suData.barycenter,
-      },
-    });
+  await db.suData.createMany({
+    data: computedSus.map((suData) => ({
+      surveyId: surveyId,
+      su: suData.su,
+      popPercentage: suData.popPercentage,
+      barycenter: suData.barycenter,
+    })),
+  });
 
-    suNames.push(suData.su);
-  }
-
-  return suNames;
+  return computedSus.map((suData) => suData.su);
 };

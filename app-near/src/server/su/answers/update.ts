@@ -1,23 +1,42 @@
+import { TRPCError } from "@trpc/server";
 import { db } from "~/server/db";
+import { chunkArray } from "~/server/utils/arrays";
+import { ErrorCode } from "~/types/enums/error";
 import { type AnswerAttributedSuWithId } from "~/types/SuDetection";
 
 export const updateSuAnswerWithSu = async (
   surveyId: number,
   answers: AnswerAttributedSuWithId[],
 ) => {
-  for (const answer of answers) {
-    const { id, su, distanceToBarycenter } = answer;
+  const suDataList = await db.suData.findMany({
+    where: {
+      surveyId,
+    },
+  });
 
-    const suData = await db.suData.findUnique({
-      where: { surveyId_su: { surveyId, su } },
+  const suSuIdMapper = new Map(suDataList.map((s) => [s.su, s.id]));
+
+  const missingSuInDatabase = answers.some((a) => !suSuIdMapper.has(a.su));
+  if (missingSuInDatabase) {
+    throw new TRPCError({
+      code: "NOT_FOUND",
+      message: ErrorCode.SU_NOT_FOUND,
     });
-    if (!suData)
-      throw new Error(
-        "Trying to add su to suAnswer without suData being created.",
-      );
-    await db.suAnswer.update({
-      where: { id },
-      data: { suId: suData.id, distanceToBarycenter },
-    });
+  }
+
+  const chunks = chunkArray(answers, 20);
+
+  for (const group of chunks) {
+    await Promise.all(
+      group.map(({ id, su, distanceToBarycenter }) =>
+        db.suAnswer.update({
+          where: { id },
+          data: {
+            suId: suSuIdMapper.get(su),
+            distanceToBarycenter,
+          },
+        }),
+      ),
+    );
   }
 };

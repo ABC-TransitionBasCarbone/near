@@ -14,13 +14,10 @@ export interface StoredComputedSu {
 
 export const getSuList = async (
   surveyId: number,
-): Promise<StoredComputedSu[]> => {
+): Promise<StoredComputedSu[] | null> => {
   const survey = await db.survey.findUnique({ where: { id: surveyId } });
   if (!survey?.computedSu) {
-    throw new TRPCError({
-      code: "FORBIDDEN",
-      message: ErrorCode.SU_NOT_COMPUTED,
-    });
+    return null;
   }
 
   const su = await db.suData.findMany({ where: { surveyId: survey.id } });
@@ -44,16 +41,22 @@ export const computeSu = async (surveyId: number): Promise<number[]> => {
 
   try {
     const response = await apiSuService.computeSus(request);
-    return await db.$transaction(async () => {
-      const suNames = await saveSuData(surveyId, response.computedSus);
+    return await db.$transaction(
+      async () => {
+        const suNames = await saveSuData(surveyId, response.computedSus);
 
-      await updateSuAnswerWithSu(surveyId, response.answerAttributedSu);
+        await updateSuAnswerWithSu(surveyId, response.answerAttributedSu);
 
-      await updateSurvey(surveyId, { computedSu: true });
+        await updateSurvey(surveyId, { computedSu: true });
 
-      return suNames;
-    });
+        return suNames;
+      },
+      {
+        timeout: 30000,
+      },
+    );
   } catch (error) {
+    console.error(error);
     if (error instanceof TypeError) {
       throw new TRPCError({
         code: "INTERNAL_SERVER_ERROR",
