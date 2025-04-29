@@ -451,8 +451,8 @@ export const surveyWayOfLifeReferencesMapping: Record<
     ReasonsToNotChoseSecondHand.NO_OFFER_AT_PROXIMITY,
   // transportModeToBuyFood
   ["9ac918ba-9f5b-4992-9f5f-cd9e791d7867"]: TransportMode.WALKING,
-  ["d8a8f6a9-b323-45d5-90f3-f67a370aced9"]: TransportMode.PERSONAL_BICYCLE,
-  ["81e888bf-3491-4459-9bd5-e3d2086a7fc0"]: TransportMode.SHARED_BICYCLE,
+  ["e521a754-65d0-48c8-bb01-8d61e9c04281"]: TransportMode.PERSONAL_BICYCLE,
+  ["866a876c-d3dc-455a-aef9-a69e82cc6ed5"]: TransportMode.SHARED_BICYCLE,
   ["1f6c99d8-ff8c-4b1e-8bfd-09f3b0335661"]: TransportMode.PUBLIC_TRANSPORT,
   ["357a082c-b948-4d59-a442-c31c210ccb8b"]: TransportMode.CAR,
   ["7dd17d00-e81f-4e97-8731-84ffa05a30ee"]: TransportMode.ELECTRIC_CAR,
