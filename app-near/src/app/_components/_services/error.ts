@@ -5,7 +5,7 @@ import { type ErrorCode, errorCodeMapper } from "~/types/enums/error";
 export const getErrorValue = (e: any): string => {
   let value = "Une erreur s'est produite veuillez ré-essayer plus tard";
   if (e instanceof TRPCClientError) {
-    value = errorCodeMapper[e.message as ErrorCode];
+    value = errorCodeMapper[e.message as ErrorCode] ?? value;
   }
 
   return value;
