@@ -8,9 +8,10 @@ export enum ErrorCode {
   WRONG_SURVEY_NAME = "WRONG_SURVEY_NAME",
   UNEXPECTED_NGCFORM = "UNEXPECTED_NGCFORM",
   NEIGHBORHOOD_NOT_FOUND = "NEIGHBORHOOD_NOT_FOUND",
+  SU_NOT_FOUND = "SU_NOT_FOUND",
 }
 
-export const errorCodeMapper: Record<ErrorCode, string> = {
+export const errorCodeMapper: Partial<Record<ErrorCode, string>> = {
   [ErrorCode.MISSING_SURVEY_PHASE]:
     "Vous n'êtes pas dans la bonne étape pour valider cette phase.",
   [ErrorCode.SU_NOT_COMPUTED]:
