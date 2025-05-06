@@ -9,24 +9,30 @@ export const handleCarbonFootprintEmail = async (
 ): Promise<NextResponse> => {
   try {
     const bodyText = await req.text();
+    const bodySchema = z.object({ email: z.string().email() });
+    const body = bodySchema.parse(JSON.parse(bodyText));
 
     if (!isValidSignature(req, bodyText, SignatureType.NGC_FORM)) {
       return NextResponse.json({ error: "Not authorized" }, { status: 401 });
     }
 
-    const bodySchema = z.object({ email: z.string().email() });
-    const body = bodySchema.parse(JSON.parse(bodyText));
     const { email } = body;
 
-    await db.ngcContact.upsert({
+    const contact = await db.ngcContact.upsert({
       where: { email },
       update: {},
       create: { email },
     });
 
+    const status =
+      contact.createdAt.getTime() === contact.updatedAt.getTime() ? 201 : 200;
+
     await sendPhaseTwoFormNotification(email);
 
-    return NextResponse.json({ message: "Email processed" }, { status: 200 });
+    return NextResponse.json(
+      { message: "Email processed" },
+      { status: status },
+    );
   } catch (error) {
     if (error instanceof z.ZodError) {
       console.error("ZOD ERROR:", error.errors);
