@@ -6,7 +6,7 @@ import { handleCarbonFootprintEmail } from "~/server/carbon-footprint/handleCarb
 import { getHTTPStatusCodeFromError } from "@trpc/server/http";
 import { ErrorCode } from "~/types/enums/error";
 
-const anonymize = (data: Record<string, any>) => ({ ...data, email: "" });
+const anonymize = (data: Record<string, any>) => ({ ...data, email: "***" });
 
 export async function POST(req: NextRequest) {
   try {
@@ -23,23 +23,21 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const body = await req.json();
-    let message = body;
-
+    let body = await req.json();
     if (typeof body === "object" && !Array.isArray(body)) {
-      message = JSON.stringify(anonymize(body as Record<string, any>));
+      body = JSON.stringify(anonymize(body as Record<string, any>));
     }
 
     console.error(
-      "[whebhook ngcform]",
+      "[whebhook ngcform email]",
       `unexpected error:`,
       error,
       "BODY:",
-      message,
+      body,
     );
 
     return new Response(
-      JSON.stringify({ error: ErrorCode.UNEXPECTED_NGCFORM }),
+      JSON.stringify({ error: ErrorCode.UNEXPECTED_NGCFORM_EMAIL }),
       {
         status: 500,
       },

@@ -1,5 +1,5 @@
 import { NextResponse, type NextRequest } from "next/server";
-import { type NgcContact } from "@prisma/client";
+import { z } from "zod";
 import { db } from "../db";
 import { isValidSignature, SignatureType } from "../typeform/signature";
 import { sendPhaseTwoFormNotification } from "../surveys/email";
@@ -7,37 +7,44 @@ import { sendPhaseTwoFormNotification } from "../surveys/email";
 export const handleCarbonFootprintEmail = async (
   req: NextRequest,
 ): Promise<NextResponse> => {
-  const bodyText = await req.text();
+  try {
+    const bodyText = await req.text();
 
-  if (!isValidSignature(req, bodyText, SignatureType.NGC_FORM)) {
-    return NextResponse.json({ error: "Not authorized" }, { status: 401 });
+    if (!isValidSignature(req, bodyText, SignatureType.NGC_FORM)) {
+      return NextResponse.json({ error: "Not authorized" }, { status: 401 });
+    }
+
+    const bodySchema = z.object({ email: z.string().email() });
+    const body = bodySchema.parse(JSON.parse(bodyText));
+    const { email } = body;
+
+    await db.ngcContact.upsert({
+      where: { email },
+      update: {},
+      create: { email },
+    });
+
+    await sendPhaseTwoFormNotification(email);
+
+    return NextResponse.json({ message: "Email processed" }, { status: 200 });
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      console.error("ZOD ERROR:", error.errors);
+      return NextResponse.json(
+        { error: "Invalid request body", details: error.errors },
+        { status: 400 },
+      );
+    }
+
+    if (error instanceof Error) {
+      console.error("ERROR:", error.message);
+      return NextResponse.json({ error: error.message }, { status: 400 });
+    }
+
+    console.error("UNHANDLED ERROR:", error);
+    return NextResponse.json(
+      { error: "Internal Server Error" },
+      { status: 500 },
+    );
   }
-
-  const body = JSON.parse(bodyText) as NgcContact;
-  const { email } = body;
-
-  if (!email) {
-    throw new Error("Email is required");
-  }
-
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (!emailRegex.test(email)) {
-    throw new Error("Invalid email format");
-  }
-
-  const existingContact = await db.ngcContact.findFirst({
-    where: { email },
-  });
-
-  if (existingContact) {
-    return NextResponse.json({ error: "Email already saved" }, { status: 409 });
-  }
-
-  await sendPhaseTwoFormNotification(email);
-
-  await db.ngcContact.create({
-    data: { email },
-  });
-
-  return NextResponse.json({ message: "Email saved" }, { status: 201 });
 };
