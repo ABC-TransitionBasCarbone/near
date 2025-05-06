@@ -24,7 +24,7 @@ export const updateSuAnswerWithSu = async (
     });
   }
 
-  const chunks = chunkArray(answers, 20);
+  const chunks = chunkArray(answers, 5);
 
   for (const group of chunks) {
     await Promise.all(
