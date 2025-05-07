@@ -1,5 +1,5 @@
-CLUSTER_MIN_SIZE = 0.12  # Pourcentage minimal d'une sphère d'usage
-CLUSTER_MAX_SIZE = 0.7  # Pourcentage maximal d'une sphère d'usage
+CLUSTER_MIN_SIZE = 0.11  # Pourcentage minimal d'une sphère d'usage
+CLUSTER_MAX_SIZE = 0.70  # Pourcentage maximal d'une sphère d'usage
 CLUSTER_NB_MIN = 3  # Nombre minimal de sphères d'usage
 
 # Ratio d'équivalent CO2 pour les réponses au questionnaire SU
