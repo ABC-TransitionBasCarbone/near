@@ -1,4 +1,4 @@
-CLUSTER_MIN_SIZE = 0.11  # Pourcentage minimal d'une sphère d'usage
+CLUSTER_MIN_SIZE = 0.40  # Pourcentage minimal d'une sphère d'usage
 CLUSTER_MAX_SIZE = 0.78  # Pourcentage maximal d'une sphère d'usage
 CLUSTER_NB_MIN = 3  # Nombre minimal de sphères d'usage
 
