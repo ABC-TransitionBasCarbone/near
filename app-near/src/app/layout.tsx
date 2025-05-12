@@ -26,7 +26,7 @@ export default function RootLayout({
       <body>
         <TRPCReactProvider>
           <HydrateClient>
-            <SessionProvider>
+            <SessionProvider refetchOnWindowFocus={false}>
               <NotificationProvider>{children}</NotificationProvider>
             </SessionProvider>
           </HydrateClient>

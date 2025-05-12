@@ -1,7 +1,9 @@
-import { type WayOfLifeAnswer } from "@prisma/client";
+import { type Survey, type WayOfLifeAnswer } from "@prisma/client";
 import { db } from "../db";
+import { sendPhaseTwoFormNotification } from "../surveys/email";
+import { type BuilderWayOfLifeAnswer } from "~/types/WayOfLifeAnswer";
 
-export const createWayOfLifeAnswer = async (
+const createWayOfLifeAnswer = async (
   answer: WayOfLifeAnswer,
   surveyName: string,
 ) => {
@@ -13,4 +15,20 @@ export const createWayOfLifeAnswer = async (
   return db.wayOfLifeAnswer.create({
     data: { ...answer, surveyId: survey.id },
   });
+};
+
+export const handleWayOfLifeCreation = async (
+  data: BuilderWayOfLifeAnswer,
+  survey: Survey,
+) => {
+  await createWayOfLifeAnswer(
+    {
+      ...data,
+    } as WayOfLifeAnswer,
+    survey.name,
+  );
+
+  if (data.email) {
+    await sendPhaseTwoFormNotification(data.email);
+  }
 };

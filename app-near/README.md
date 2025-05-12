@@ -118,18 +118,44 @@ voir le [README du dossier scripts](./scritps/README.md)
 ## Comment tester le webhook
 
 ```bash
-./scripts/webhooks/query.sh
+./scripts/webhooks/query.sh <url> <secret> <json_file>
 
-# PROMPT (exemple):
+# Exemple pour les su:
+#
+# Without Prompt
+# ./scripts/webhooks/query.sh localhost:3000/api/typeform typeform-secret ./scripts/webhooks/su.json
+#
+# With Prompt
 # Entrez l'URL de destination : localhost:3000/api/typeform
-# Entrez la clé secrète Typeform : secret
+# Entrez la clé secrète Typeform : typeform-secret
 # Entrez le nom du fichier JSON (ex: su.json) : ./scripts/webhooks/su.json
+
+# Exemple pour way of life:
+#
+# Without Prompt
+# ./scripts/webhooks/query.sh localhost:3000/api/typeform typeform-secret ./scripts/webhooks/way-of-life.json
+#
+# With Prompt
+# Entrez l'URL de destination : localhost:3000/api/typeform
+# Entrez la clé secrète Typeform : typeform-secret
+# Entrez le nom du fichier JSON (ex: su.json) : ./scripts/webhooks/way-of-life.json
+
+# PROMPT (exemple pour les ngc):
+#
+# Without Prompt
+# ./scripts/webhooks/query.sh localhost:3000/api/ngcform ngc-secret ./scripts/webhooks/ngc.json
+#
+# With Prompt
+# Entrez l'URL de destination : localhost:3000/api/ngcform
+# Entrez la clé secrète Typeform : ngc-secret
+# Entrez le nom du fichier JSON (ex: su.json) : ./scripts/webhooks/ngc.json
+# /!\ pour enregistrer un ngc, il faut une su valide. Donc d'abord jouer les su, puis dans le ngc.json saisir un suId valide
 ```
 
 Note :
 
 - su.json > exemple de payload pour le webhook sphère d'usage
-- Autres payload à créer pour les formulaires suivants
+- ngc.json > exemple de payload pour le webhook ngcform
 
 ## Comment jouer les seeds
 

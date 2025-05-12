@@ -16,6 +16,7 @@ const config = {
     "@typescript-eslint/no-unsafe-member-access": "off",
     "prettier/prettier": "error",
     "prefer-template": "error",
+    "@typescript-eslint/no-unsafe-argument": "error",
     "@typescript-eslint/array-type": "off",
     "@typescript-eslint/consistent-type-definitions": "off",
     "@typescript-eslint/consistent-type-imports": [

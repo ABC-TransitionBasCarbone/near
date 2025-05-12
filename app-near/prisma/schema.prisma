@@ -164,17 +164,292 @@ model SuData {
   @@map("su_data")
 }
 
+enum YesNo {
+  YES
+  DONT_KNOW
+  NO
+}
+
+enum HomeOccupationType {
+  HOUSING_TENANT
+  SOCIAL_HOUSING_TENANT
+  HOME_OWNER
+}
+
+enum ActionWhenTooCold {
+  USE_THE_HEATING
+  USE_A_SWEATER
+  USE_THICK_CURTAINS
+  CHANGE_LOCATION
+}
+
+enum ActionWhenTooHot {
+  OPEN_WINDOWS
+  CLOSE_STORES
+  USE_A_FAN
+  USE_AIR_CONDITIONER
+  CHANGE_LOCATION
+  ENDURE_THE_HEAT
+  USE_SPRAYER
+}
+
+enum ParksUsageFrequency {
+  RARELY
+  SOMETIMES
+  OFTEN
+}
+
+enum FoodFrequency {
+  RARELY
+  LESS_THAN_ONCE_A_MONTH
+  BETWEEN_ONE_AND_THREE_BY_MONTH
+  MORE_THAN_ONCE_A_WEEK
+}
+
+enum TypeOfFood {
+  OWN_PREPARATION
+  INDUSTRIAL_PREPARATION
+  MIXED
+}
+
+enum HowManyPeopleCanIHelp {
+  ZERO
+  ONE_TO_TWO
+  THREE_TO_FOUR
+  ABOVE_FIVE
+}
+
+enum GiveFreeTimeToHelp {
+  YES_OFTEN
+  YES_SOMETIMES
+  NO_BUT_I_WISH
+  NO_I_CANT
+}
+
+enum VoluntaryWork {
+  HUMAN_AND_SOCIAL
+  YOUTH_AND_EDUCATION
+  CULTURE
+  SPORTS
+  ENVIRONMENT
+  POLITIC
+}
+
+enum WishesChoices {
+  NO
+  I_WISH_BUT_CANT
+  I_WISH_AND_IT_IS_PLAN
+  YES_I_DO
+  NOT_CONCERNED
+}
+
+enum ReasonsUsingCar {
+  HANDICAP_REASONS
+  I_NEED_CAR_FOR_SOME_ACTIONS
+  SECURITY_REASONS
+  MY_WORK
+  PROFESSIONAL_OR_PERSONAL_IMAGE
+  CONFORT_OR_INDEPENDANCE
+  NO_PUBLIC_TRANSPORT_AT_PROXIMITY
+}
+
+enum ReasonsToEatMeat {
+  WITHOUT_MEAT_IS_NOT_NOURISHING_ENOUGH
+  MY_FAMILY_EAT_MEAT
+  I_DONT_KNOW_ALTERNATIVES
+  I_DONT_TRUST_ALTERNATIVES
+  RESTAURANTS_DOES_NOT_OFFER_ALTERNATIVES
+}
+
+enum ReasonsToNotBuyFrenchSeasonFood {
+  PRICE
+  COMPLICATED_LABELS
+  I_DONT_KNOW_MARKET
+  I_PREFER_INDUSTRIAL_FOOD
+  I_DONT_KNOW_SEASON_PRODUCTS
+  I_PREFER_EAT_OTHER_PRODUCTS
+}
+
+enum ReasonsToNotChoseSecondHand {
+  TRUST
+  TIME_CONSUMING
+  PROFESSIONAL_OR_PERSONAL_IMAGE
+  COMPETENCIES
+  NO_OFFER_AT_PROXIMITY
+}
+
+enum TransportMode {
+  WALKING
+  PERSONAL_BICYCLE
+  SHARED_BICYCLE
+  PUBLIC_TRANSPORT
+  CAR
+  ELECTRIC_CAR
+  TAXI_VTC
+  NONE_I_DONT_MOVE
+}
+
+enum TransportModeToTravel {
+  PUBLIC_TRANSPORT
+  TRAIN
+  PLANE
+  CAR
+  ELECTRIC_CAR
+  TAXI_VTC
+  BICYCLE
+  WALKING
+  BUS
+}
+
+enum TransportModeToStation {
+  PUBLIC_TRANSPORT
+  CAR
+  ELECTRIC_CAR
+  TAXI_VTC
+  BICYCLE
+  WALKING
+  DONT_USE_STATION
+}
+
+enum TransportTime {
+  LESS_THAN_10_MIN
+  BETWEEN_10_AND_20_MIN
+  BETWEEN_20_AND_30_MIN
+  BETWEEN_30_AND_45_MIN
+  ABOVE_45_MIN
+}
+
+enum ZoneSelection {
+  ZONE_A
+  ZONE_B
+  ZONE_C
+  ZONE_D
+  ZONE_PORTE_ORLEANS
+}
+
 model WayOfLifeAnswer {
-  id               Int              @id @default(autoincrement())
-  email            String?
-  broadcastChannel BroadcastChannel @map("broadcast_channel")
-  emailApiCalled   Boolean?         @default(false) @map("email_api_called")
-  surveyId         Int
-  survey           Survey           @relation(fields: [surveyId], references: [id])
-  suId             Int?             @map("su_id")
-  su               SuData?          @relation(fields: [suId], references: [id])
-  createdAt        DateTime         @default(now()) @map("created_at")
-  updatedAt        DateTime         @default(now()) @updatedAt @map("updated_at")
+  id                   Int                  @id @default(autoincrement())
+  email                String?
+  ageCategory          AgeCategory          @map("age_category")
+  gender               Gender
+  professionalCategory ProfessionalCategory @map("professional_category")
+
+  knowSu Boolean @map("know_su")
+
+  meatFrequency      MeatFrequency?      @map("meat_frequency")
+  transportationMode TransportationMode? @map("transportation_mode")
+  purchasingStrategy PurchasingStrategy? @map("purchasing_strategy")
+  airTravelFrequency AirTravelFrequency? @map("air_travel_frequency")
+  heatSource         HeatSource?         @map("heat_source")
+  digitalIntensity   DigitalIntensity?   @map("digital_intensity")
+
+  notColdHouse            YesNo              @map("not_cold_house")
+  confortHouseWhenHot     YesNo              @map("confort_house_when_hot")
+  ideaEasyTalk            YesNo              @map("idea_easy_talk")
+  homeOccupationType      HomeOccupationType @map("home_occupation_type")
+  otherHousingInformation String?            @map("other_housing_information")
+  actionWhenTooCold       String[]           @map("action_when_too_cold")
+  actionWhenTooHot        String[]           @map("action_when_too_hot")
+
+  vegetalParksSatisfaction YesNo               @map("vegetal_parks_satisfaction")
+  parksUsageFrequency      ParksUsageFrequency @map("parks_usage_frequency")
+  otherParksInformation    String?             @map("other_parks_information")
+
+  easyPublicTransports           YesNo   @map("easy_public_transports")
+  easyWalking                    YesNo   @map("easy_walking")
+  easyBicycle                    YesNo   @map("easy_bicycle")
+  notTooMuchTraffic              YesNo   @map("not_too_much_traffic")
+  carAnPedestriansRespect        YesNo   @map("car_and_pedestrians_respect")
+  easyToLeaveCityWithTranports   YesNo   @map("easy_to_leave_city_with_transports")
+  otherTransportationInformation String? @map("other_transportation_information")
+
+  hardDiscountFrequency                 FoodFrequency @map("hard_discount_frequency")
+  supermarketFrequency                  FoodFrequency @map("supermarket_frequency")
+  hypermarketFrequency                  FoodFrequency @map("hypermarket_frequency")
+  groceryStoreFrequency                 FoodFrequency @map("grocery_store_frequency")
+  specializedFoodStoreFrequency         FoodFrequency @map("specialized_food_store_frequency")
+  organicOrSolidarityFoodStoreFrequency FoodFrequency @map("organic_or_solidarity_food_store_frequency")
+  homeDeliveryFoodStoreFrequency        FoodFrequency @map("home_delivery_food_store_frequency")
+  classicFoodMarketFrequency            FoodFrequency @map("classic_food_market_frequency")
+  otherFoodFrequencyInformation         String?       @map("other_food_frequency_information")
+
+  typeOfFood TypeOfFood @map("type_of_food")
+
+  neighborhoodOrganicMarketSatisfaction            YesNo   @map("neighborhood_organic_market_satisfaction")
+  neighborhoodSeasonFruitAndVegetablesSatisfaction YesNo   @map("neighborhood_season_fruits_and_vegetables_satisfaction")
+  neighborhoodOrganicProductsSatisfaction          YesNo   @map("neighborhood_organic_product_satisfaction")
+  privateOrShareFieldToFarm                        YesNo   @map("private_or_share_field_to_farm")
+  accessToFoodServiceSatisfaction                  YesNo   @map("access_to_food_service_satisfaction")
+  accessToShortFoodCircuitSatisfaction             YesNo   @map("access_to_short_food_circuit_satisfaction")
+  otherFoodSatisfactionInformation                 String? @map("other_food_satisfaction_information")
+
+  electronicRepairShopSatisfaction       YesNo   @map("electronic_repair_shop_satisfaction")
+  clothesRepairShopSatisfaction          YesNo   @map("clothes_repair_shop_satisfaction")
+  bicycleRepairShopSatisfaction          YesNo   @map("bicycle_repair_shop_satisfaction")
+  secondHandShopSatisfaction             YesNo   @map("second_hand_shop_satisfaction")
+  otherRepairShopSatisfactionInformation String? @map("other_repair_shop_satisfaction_information")
+
+  localShopsToMeetYourNeeds    YesNo   @map("local_shops_to_meet_your_needs")
+  servicesToShareOrRentObjects YesNo   @map("services_to_share_or_rent_objects")
+  publicServicesPresence       YesNo   @map("public_service_presence")
+  otherServicesInformation     String? @map("other_services_information")
+
+  associativeActivity              YesNo   @map("associative_activity")
+  culturalActivity                 YesNo   @map("cultural_activity")
+  hobbiesSpaces                    YesNo   @map("hobbies_spaces")
+  neighborhoodLife                 YesNo   @map("neighborhood_life")
+  otherNeighborhoodLifeInformation String? @map("other_neighborhood_life_information")
+
+  howManyPeopleCanIHelp     HowManyPeopleCanIHelp @map("how_many_people_can_I_help")
+  otherMutualAidInformation String?               @map("other_mutual_aid_information")
+
+  capacityToShareIdeaToTownHall       YesNo   @map("capacity_to_share_idea_to_town_all")
+  noInformationOnCitizenParticipation YesNo   @map("no_information_on_cityzen_participation")
+  wantToParticipateToCivicInitiatives YesNo   @map("want_to_participate_to_civic_initiatives")
+  otherLocalPoliticInformation        String? @map("other_local_politic_information")
+
+  giveFreeTimeToHelp   GiveFreeTimeToHelp @map("give_free_time_to_help")
+  yourVoluntaryWork String[]           @default([]) @map("your_volontary_work")
+
+  wantToReduceCarUsage      WishesChoices @map("want_to_reduce_car_usage")
+  reasonsToContinueUsingCar String[]      @map("reasons_to_continue_using_car")
+
+  wantToReduceMeatAndFish WishesChoices @map("want_to_reduce_meat_and_fish")
+  reasonsToEatMeat        String[]      @map("reasons_to_eat_meat")
+
+  preferBuyFrenchAndSeasonFood       WishesChoices @map("prefer_buy_french_and_season_food")
+  reasonsToNotBuyFrenchAndSeasonFood String[]      @map("reasons_to_not_buy_french_and_season_food")
+
+  preferSecondHand            WishesChoices @map("prefer_second_and")
+  reasonsToNotChoseSecondHand String[]      @map("reasons_to_not_chose_second_hand")
+
+  transportModeToBuyFood TransportMode @map("transport_mode_to_buy_food")
+  transportTimeToBuyFood TransportTime @map("transport_time_to_buy_food")
+  foodMarketZone         String        @map("food_market_zone")
+
+  transportModeToHobby TransportMode @map("transport_mode_to_hobby")
+  transportTimeToHobby TransportTime @map("transport_time_to_hobby")
+  hobbyZone            String        @map("hobby_zone")
+
+  remoteWorkingWeeklyFrequency Int        @map("remote_working_weekly_frequency")
+  transportModeToWork          TransportMode @map("transport_mode_to_work")
+  transportTimeToWork          TransportTime @map("transport_time_to_work")
+  workZone                     String        @map("work_zone")
+
+  transportModeToTravel      TransportModeToTravel  @map("transport_mode_to_travel")
+  transportModeToGoToStation TransportModeToStation @map("transport_mode_to_go_to_station")
+
+  comment String?
+
+  broadcastChannel     BroadcastChannel @map("broadcast_channel")
+  emailApiCalled       Boolean?         @default(false) @map("email_api_called")
+  surveyId             Int
+  survey               Survey           @relation(fields: [surveyId], references: [id])
+  distanceToBarycenter Float?           @map("distance_to_barycenter")
+  suId                 Int?             @map("su_id")
+  su                   SuData?          @relation(fields: [suId], references: [id])
+  createdAt            DateTime         @default(now()) @map("created_at")
+  updatedAt            DateTime         @default(now()) @updatedAt @map("updated_at")
 
   @@map("way_of_life_answer")
 }
@@ -183,13 +458,101 @@ model CarbonFootprintAnswer {
   id               Int              @id @default(autoincrement())
   email            String?
   broadcastChannel BroadcastChannel @map("broadcast_channel")
-  emailApiCalled   Boolean?         @default(false) @map("email_api_called")
-  surveyId         Int
-  survey           Survey           @relation(fields: [surveyId], references: [id])
-  suId             Int?             @map("su_id")
-  su               SuData?          @relation(fields: [suId], references: [id])
-  createdAt        DateTime         @default(now()) @map("created_at")
-  updatedAt        DateTime         @default(now()) @updatedAt @map("updated_at")
+
+  knowSu Boolean @map("know_su")
+
+  meatFrequency      MeatFrequency?      @map("meat_frequency")
+  transportationMode TransportationMode? @map("transportation_mode")
+  purchasingStrategy PurchasingStrategy? @map("purchasing_strategy")
+  airTravelFrequency AirTravelFrequency? @map("air_travel_frequency")
+  heatSource         HeatSource?         @map("heat_source")
+  digitalIntensity   DigitalIntensity?   @map("digital_intensity")
+
+  globalNote Float @map("global_note")
+
+  transportation                          Float
+  transportationCar                       Float   @map("transportation_car")
+  transportationCarKm2                    Float   @map("transportation_car_km2")
+  transportationCarOilConsumption100      Float   @map("transportation_car_oil_consumption_100")
+  transportationCarOilType                Float   @map("transportation_car_oil_type")
+  transportationCarElectricConsumption100 Float   @map("transportation_car_electric_consumption_100")
+  transportationPlane                     Float   @map("transportation_plane")
+  transportationBicycle                   Float   @map("transportation_bicycle")
+  transportationSoftMobility              Float   @map("transportation_soft_mobility")
+  transportationTrain                     Float   @map("transportation_train")
+  transportationPublicTransport           Float   @map("transportation_public_transport")
+  transportationCarLongDistance           Float   @map("transportation_car_long_distance")
+  transportationHollidays                 Float   @map("transportation_hollidays")
+  transportationHollidaysCaravan          Float   @map("transportation_hollidays_caravan")
+  transportationHollidaysCampingCar       Float   @map("transportation_hollidays_camping_car")
+  transportationHollidaysVan              Float   @map("transportation_hollidays_van")
+  transportationHollidaysRentalVehicle    Float   @map("transportation_hollidays_rental_vehicle")
+  transportationHollidaysCruise           Float   @map("transportation_hollidays_cruise")
+  transportationFerry                     Float   @map("transportation_ferry")
+
+  alimentation                 Float
+  alimentationMeals            Float   @map("alimentation_meals")
+  alimentationLunchDinner      Float   @map("alimentation_lunch_dinner")
+  alimentationBonus            Float   @map("alimentation_bonus")
+  alimentationLocalImpact      Float   @map("alimentation_local_impact")
+  alimentationLocalConsumption Float   @map("alimentation_local_consumption")
+  alimentationSeasonalImpact   Float   @map("alimentation_seasonal_impact")
+  alimentationAnnualBreakfast  Float   @map("alimentation_annual_breakfast")
+  alimentationDeforestation    Float   @map("alimentation_deforestation")
+  alimentationDrinks           Float   @map("alimentation_drinks")
+  alimentationHotDrinks        Float   @map("alimentation_hot_drinks")
+  alimentationColdDrinks       Float   @map("alimentation_col_drinks")
+  alimentationWaste            Float   @map("alimentation_waste")
+  alimentationWasteHabits      Float   @map("alimentation_waste_habits")
+
+  logement                                  Float
+  logementConstruction                      Float   @map("logement_construcion")
+  logementConstructionBase                  Float   @map("logement_construcion_base")
+  logementConstructionCooling               Float   @map("logement_construcion_cooling")
+  logementConstructionRenovation            Float   @map("logement_renovation")
+  logementConstructionDeforestation         Float   @map("logement_deforestation")
+  logementConstructionSoilArtificialization Float   @map("logement_construcion_soil_artificialization")
+  logementElectricity                       Float   @map("logement_electricity")
+  logementElectricityTotalConsumption       Float   @map("logement_total_consumption")
+  logementElectricitySolarAutoconsumption   Float   @map("logement_electricity_solar_auto_consumption")
+  logementElectricityCarbonIntensity        Float   @map("logement_electricity_carbon_intensity")
+  logementHeating                           Float   @map("logement_heating")
+  logementAirConditioning                   Float   @map("logement_air_conditioning")
+  logementSwimmingPool                      Float   @map("logement_swimming_pool")
+  logementOutdor                            Float   @map("logement_outdor")
+  logementHollidays                         Float   @map("logement_hollidays")
+  logementHollidaysHotelImpact              Float   @map("logement_hollidays_hotel_impact")
+  logementHollidaysCampingImpact            Float   @map("logement_hollidays_camping_impact")
+  logementHollidaysYouthHostelImpact        Float   @map("logement_hollidays_youth_hostel_impact")
+  logementHollidaysRentalImpact             Float   @map("logement_hollidays_tental_impact")
+  logementHollidaysHomeExchangeImpact       Float   @map("logement_hollidays_home_exchange_impact")
+  logementHollidaysSecondaryHomeImpact      Float   @map("logement_hollidays_second_home_impact")
+
+  divers                           Float
+  diversHouseholdAppliances        Float   @map("divers_household_applicances")
+  diversHouseholdAppliancesDevices Float   @map("divers_household_applicances_devices")
+  diversFurniture                  Float   @map("divers_furniture")
+  diversFurnitureItems             Float   @map("divers_furniture_items")
+  diversFurnitureDeforestation     Float   @map("divers_furniture_deforestation")
+  diversFurniturePreservation      Float   @map("divers_preservation")
+  diversDigital                    Float   @map("divers_digital")
+  diversDigitalInternet            Float   @map("divers_digital_internet")
+  diversDigitalDevices             Float   @map("divers_digital_devices")
+  diversTextile                    Float   @map("divers_textile")
+
+  servicesSocietal Float   @map("services_societal")
+  servicesPublics  Float   @map("services_publics")
+  servicesMarket   Float   @map("services_market")
+
+  distanceToBarycenter Float?    @map("distance_to_barycenter")
+  surveyId              Int
+  survey                Survey   @relation(fields: [surveyId], references: [id])
+  suId                  Int      @map("su_id")
+  su                    SuData?  @relation(fields: [suId], references: [id])
+  createdAt             DateTime @default(now()) @map("created_at")
+  updatedAt             DateTime @default(now()) @updatedAt @map("updated_at")
+
+  answers Json
 
   @@map("carbon_footprint_answer")
 }

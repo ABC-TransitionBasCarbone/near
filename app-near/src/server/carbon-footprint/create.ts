@@ -1,16 +1,18 @@
-import { type CarbonFootprintAnswer } from "@prisma/client";
+import { type Survey } from "@prisma/client";
 import { db } from "../db";
+import { type ConvertedCarbonFootprintAnswer } from "~/types/CarbonFootprint";
+import { getCalculatedSuParams } from "../su/get";
 
 export const createCarbonFooprintAnswer = async (
-  answer: CarbonFootprintAnswer,
-  surveyName: string,
+  answer: ConvertedCarbonFootprintAnswer,
+  survey: Survey,
 ) => {
-  const survey = await db.survey.findFirst({ where: { name: surveyName } });
-  if (!survey) {
-    throw new Error("survey not found");
-  }
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { su, neighborhood, ...createQuery } = answer;
+
+  const calculatedSuParams = await getCalculatedSuParams(survey, answer);
 
   return db.carbonFootprintAnswer.create({
-    data: { ...answer, surveyId: survey.id },
+    data: { ...createQuery, surveyId: survey.id, ...calculatedSuParams },
   });
 };

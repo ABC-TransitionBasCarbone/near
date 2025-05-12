@@ -7,7 +7,14 @@ import { saveSuData } from "~/server/su/data/save";
 import { updateSurvey } from "~/server/surveys/put";
 import { ErrorCode } from "~/types/enums/error";
 
-export const getSuList = async (surveyId: number): Promise<number[] | null> => {
+export interface StoredComputedSu {
+  id: number;
+  su: number;
+}
+
+export const getSuList = async (
+  surveyId: number,
+): Promise<StoredComputedSu[] | null> => {
   const survey = await db.survey.findUnique({ where: { id: surveyId } });
   if (!survey?.computedSu) {
     return null;
@@ -15,7 +22,7 @@ export const getSuList = async (surveyId: number): Promise<number[] | null> => {
 
   const su = await db.suData.findMany({ where: { surveyId: survey.id } });
 
-  return su.map((item) => item.id);
+  return su.map((item) => ({ id: item.id, su: item.su }));
 };
 
 export const computeSu = async (surveyId: number): Promise<number[]> => {
@@ -49,6 +56,7 @@ export const computeSu = async (surveyId: number): Promise<number[]> => {
       },
     );
   } catch (error) {
+    console.error(error);
     if (error instanceof TypeError) {
       throw new TRPCError({
         code: "INTERNAL_SERVER_ERROR",

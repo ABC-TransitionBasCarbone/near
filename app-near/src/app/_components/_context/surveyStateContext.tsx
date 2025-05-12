@@ -29,7 +29,6 @@ export function SurveyStateProvider({ children }: { children: ReactNode }) {
 
   const { data: survey } = api.surveys.getOne.useQuery(undefined, {
     enabled: step === undefined,
-    refetchOnWindowFocus: false,
     refetchOnReconnect: false,
     refetchOnMount: false,
   });

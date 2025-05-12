@@ -4,21 +4,30 @@ import { ErrorCode } from "~/types/enums/error";
 import { db } from "../db";
 import { createNeighborhood } from "../test-utils/create-data/neighborhood";
 import { buildSuAnswer } from "../test-utils/create-data/suAnswer";
-import { type Survey } from "@prisma/client";
+import { type CarbonFootprintAnswer, type Survey } from "@prisma/client";
 import { buildWayOfLifeAnswer } from "../test-utils/create-data/wayOfLifeAnswer";
 import { buildCarbonFootprintAnswer } from "../test-utils/create-data/carbonFootprintAnswer";
+import { clearAllSurveys } from "../test-utils/clear/survey";
 
 describe("quality", () => {
   describe("getAllQualityStatistics", () => {
     let survey: Survey;
     const surveyName = "test-getAllQualityStatistics";
+    const suId = 2;
+
     beforeEach(async () => {
-      await db.suAnswer.deleteMany().catch(() => null);
-      await db.carbonFootprintAnswer.deleteMany().catch(() => null);
-      await db.wayOfLifeAnswer.deleteMany().catch(() => null);
-      await db.survey.delete({ where: { name: surveyName } }).catch(() => null);
+      await clearAllSurveys();
 
       survey = await createNeighborhood(surveyName);
+      await db.suData.create({
+        data: {
+          id: suId,
+          barycenter: 0.1,
+          popPercentage: 0.11,
+          su: 11,
+          surveyId: survey.id,
+        },
+      });
 
       await db.suAnswer.createMany({
         data: Array.from(Array(10).keys()).map(() => buildSuAnswer(survey.id)),
@@ -29,8 +38,12 @@ describe("quality", () => {
         ),
       });
       await db.carbonFootprintAnswer.createMany({
-        data: Array.from(Array(30).keys()).map(() =>
-          buildCarbonFootprintAnswer(survey.id),
+        // @ts-expect-error unexpecte typescript error for answers
+        data: Array.from(Array(30).keys()).map(
+          () =>
+            buildCarbonFootprintAnswer(survey.id, {
+              suId,
+            }) as CarbonFootprintAnswer,
         ),
       });
     });
