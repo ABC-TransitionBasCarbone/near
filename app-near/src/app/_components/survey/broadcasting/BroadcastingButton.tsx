@@ -7,7 +7,7 @@ import {
 import Button from "../../_ui/Button";
 import QRCodeModal from "./QRCodeModal";
 import { useSession } from "next-auth/react";
-import { type SurveyType } from "~/types/enums/survey";
+import { SurveyType } from "~/types/enums/survey";
 
 interface BroadcastingButtonProps {
   surveyType: SurveyType;
@@ -57,7 +57,7 @@ const BroadcastingButton: React.FC<BroadcastingButtonProps> = ({
     if (!session?.user.surveyName) {
       return "error";
     }
-    return `${surveyTypeMapper[surveyType].baseUrl}#broadcast_channel=${
+    return `${surveyTypeMapper[surveyType].baseUrl}${surveyType == SurveyType.CARBON_FOOTPRINT ? "?" : "#"}broadcast_channel=${
       type
     }&broadcast_id=${crypto.randomUUID()}&date=${encodeURIComponent(new Date().toISOString())}&neighborhood=${encodeURI(session.user.surveyName)}`;
   };
