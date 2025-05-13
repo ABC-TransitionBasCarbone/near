@@ -6,7 +6,7 @@ import { db } from "../db";
 import EmailService from "../email";
 import { clearAllSurveys } from "../test-utils/clear/survey";
 
-describe.only("handleCarbonFootprintEmail", () => {
+describe("handleCarbonFootprintEmail", () => {
   const email = "email@mail.com";
 
   let sendEmailMock: jest.SpyInstance;
