@@ -557,6 +557,15 @@ model CarbonFootprintAnswer {
   @@map("carbon_footprint_answer")
 }
 
+model NgcContact {
+  id               Int              @id @default(autoincrement())
+  email            String           @unique
+  createdAt        DateTime         @default(now()) @map("created_at")
+  updatedAt        DateTime         @default(now()) @updatedAt @map("updated_at")
+
+  @@map("ngc_contact")
+}
+
 model InseeIris2021 {
   iris           String @unique @db.VarChar(255)
   com            String @db.VarChar(255)
