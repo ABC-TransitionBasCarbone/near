@@ -127,8 +127,8 @@ export const surveyWayOfLifeReferencesMapping: Record<
   // su -> (no options)
   // meatFrequency
   ["d6d4cb14-aecc-4e0d-ab19-891ce89437fc"]: MeatFrequency.MINOR,
-  ["f3d254c4-0b61-4aa4-9df4-a631475787d6"]: MeatFrequency.REGULAR,
-  ["6884a62e-bc9f-47af-8e28-7ea4a27f0230"]: MeatFrequency.MAJOR,
+  ["e16992fa-d02f-438f-bd38-67b0e69b3cdc"]: MeatFrequency.REGULAR,
+  ["c758748c-3c76-42dd-9e6c-cef30181d12b"]: MeatFrequency.MAJOR,
   // transportationMode
   ["b397b2de-2526-4cf6-910c-129a2f236545"]: TransportationMode.CAR,
   ["27b785c9-7c30-4cbe-941a-ebaaa2f5b928"]: TransportationMode.PUBLIC,
