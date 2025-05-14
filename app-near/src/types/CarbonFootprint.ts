@@ -200,8 +200,8 @@ export const convertedCarbonFootprintAnswer = z.object({
   servicesPublics: z.number(),
   servicesMarket: z.number(),
 
-  broadcastChannel: z.string().optional(),
-  neighborhood: z.string().optional(),
+  broadcastChannel: z.nativeEnum(BroadcastChannel),
+  neighborhood: z.string(),
   knowSu: z.boolean(),
   su: z.number().optional(),
   meatFrequency: z.nativeEnum(MeatFrequency).optional(),
