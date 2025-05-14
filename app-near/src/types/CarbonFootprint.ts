@@ -10,16 +10,10 @@ import {
 } from "@prisma/client";
 import { z } from "zod";
 import {
-  AirTravelFrequencyEnum,
-  DigitalIntensityEnum,
   GradationEnumInput,
-  HeatSourceEnum,
   HeatSourceEnumInput,
   MeatFrequencyEnumInput,
-  MeatFrequencyKey,
-  PurchasingStrategyEnum,
   PurchasingStrategyEnumInput,
-  TransportationModeEnum,
   TransportationModeEnumInput,
 } from "../server/carbon-footprint/convert";
 

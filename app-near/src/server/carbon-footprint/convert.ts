@@ -202,7 +202,7 @@ export const MeatFrequencyEnumInput = {
   "'beaucoup'": "'beaucoup'",
 };
 
-export const MeatFrequencyEnum = {
+const MeatFrequencyEnum = {
   "'moyen'": MeatFrequency.REGULAR,
   "'faible'": MeatFrequency.MINOR,
   "'beaucoup'": MeatFrequency.MAJOR,
@@ -221,7 +221,7 @@ export const TransportationModeEnumInput = {
   "'marche vélo trottinette'": "'marche vélo trottinette'",
 };
 
-export const TransportationModeEnum = {
+const TransportationModeEnum = {
   "'voiture'": TransportationMode.CAR,
   "'transports en commun'": TransportationMode.PUBLIC,
   "'marche vélo trottinette'": TransportationMode.LIGHT,
@@ -241,7 +241,7 @@ export const GradationEnumInput = {
   "'beaucoup'": "'beaucoup'",
 };
 
-export const DigitalIntensityEnum = {
+const DigitalIntensityEnum = {
   "'moyen'": DigitalIntensity.REGULAR,
   "'faible'": DigitalIntensity.LIGHT,
   "'beaucoup'": DigitalIntensity.INTENSE,
@@ -261,7 +261,7 @@ export const PurchasingStrategyEnumInput = {
   "'priorité neuf'": "'priorité neuf'",
 };
 
-export const PurchasingStrategyEnum = {
+const PurchasingStrategyEnum = {
   "'mélange'": PurchasingStrategy.MIXED,
   "'priorité occasion'": PurchasingStrategy.SECOND_HAND,
   "'priorité neuf'": PurchasingStrategy.NEW,
@@ -275,7 +275,7 @@ const mapPurchasingStrategy = (
   return key ? PurchasingStrategyEnum[key as PurchasingStrategyKey] : undefined;
 };
 
-export const AirTravelFrequencyEnum = {
+const AirTravelFrequencyEnum = {
   "'beaucoup'": AirTravelFrequency.ABOVE_3,
   "'moyen'": AirTravelFrequency.FROM_1_TO_3,
   "'faible'": AirTravelFrequency.ZERO,
@@ -295,7 +295,7 @@ export const HeatSourceEnumInput = {
   "'fioul'": "'fioul'",
 };
 
-export const HeatSourceEnum = {
+const HeatSourceEnum = {
   "'écologique'": HeatSource.ELECTRICITY,
   "'gaz'": HeatSource.GAZ,
   "'fioul'": HeatSource.OIL,
