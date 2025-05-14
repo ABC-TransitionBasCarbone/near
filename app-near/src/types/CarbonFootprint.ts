@@ -28,7 +28,7 @@ export const NgcWebhookSchema = z.object({
     "transport . voiture": z.number(),
     "transport . voiture . km2": z.number(),
     "transport . voiture . thermique . consommation aux 100": z.number(),
-    "transport . voiture . thermique . carburant": z.string().optional(),
+    "transport . voiture . thermique . carburant": z.any().optional(), // peut-être une string ou un number
     "transport . voiture . électrique . consommation aux 100": z.number(),
     "transport . avion": z.number(),
     "transport . deux roues": z.number(),

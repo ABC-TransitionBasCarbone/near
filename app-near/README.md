@@ -155,7 +155,8 @@ voir le [README du dossier scripts](./scritps/README.md)
 Note :
 
 - su.json > exemple de payload pour le webhook sphère d'usage
-- ngc.json > exemple de payload pour le webhook ngcform
+- ngc*.json > exemples de payload pour le webhook ngcform
+- way-of-life.json > exemples de payload pour le webhook mode de vie
 
 ## Comment jouer les seeds
 

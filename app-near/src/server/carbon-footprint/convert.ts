@@ -121,9 +121,13 @@ export const convertCarbonFootprintBody = (
       body.calculatedResults[
         "transport . voiture . thermique . consommation aux 100"
       ],
-    transportationCarOilType:
-      body.calculatedResults["transport . voiture . thermique . carburant"] ??
-      "",
+    transportationCarOilType: body.calculatedResults[
+      "transport . voiture . thermique . carburant"
+    ]
+      ? String(
+          body.calculatedResults["transport . voiture . thermique . carburant"],
+        )
+      : "",
     transportationFerry: body.calculatedResults["transport . ferry"],
     transportationHollidays: body.calculatedResults["transport . vacances"],
     transportationHollidaysCampingCar:
