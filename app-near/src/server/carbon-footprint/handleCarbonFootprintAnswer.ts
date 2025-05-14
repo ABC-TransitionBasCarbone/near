@@ -65,7 +65,7 @@ export const handleCarbonFootprintAnswer = async (
         "[whebhook]",
         CarbonFootprintType.CARBON_FOOTPRINT,
         "ZOD ERROR :",
-        error.errors,
+        error,
       );
       return NextResponse.json(
         { error: "Invalid payload", details: error.errors },

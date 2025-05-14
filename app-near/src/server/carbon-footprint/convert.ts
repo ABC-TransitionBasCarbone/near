@@ -150,9 +150,9 @@ export const convertCarbonFootprintBody = (
     neighborhood: body.neighborhoodId,
     broadcastChannel: body.broadcastChannel,
 
-    knowSu:
-      body.answers.userAnswers["services sociétaux . connaissance . su"] ??
-      false,
+    knowSu: mapConnaissanceSu(
+      body.answers.userAnswers["services sociétaux . connaissance su"],
+    ),
     su: mapSu(body.answers.userAnswers["services sociétaux . su . choix"]),
 
     airTravelFrequency: mapAirTravelFrequency(
@@ -188,6 +188,19 @@ export const convertCarbonFootprintBody = (
       ],
     ),
   };
+};
+
+export const ConnaissanceSuEnumInput = {
+  oui: true,
+  non: false,
+};
+
+export type ConnaissanceSuEnumKey = keyof typeof ConnaissanceSuEnumInput;
+
+const mapConnaissanceSu = (key: string | undefined): boolean => {
+  return !!key && key in ConnaissanceSuEnumInput
+    ? ConnaissanceSuEnumInput[key as keyof typeof ConnaissanceSuEnumInput]
+    : false;
 };
 
 export const SuMapEnum = {

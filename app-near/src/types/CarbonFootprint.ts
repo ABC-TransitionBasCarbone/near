@@ -99,7 +99,7 @@ export const NgcWebhookSchema = z.object({
   answers: z.object({
     userAnswers: z
       .object({
-        "services sociétaux . connaissance . su": z.boolean().optional(),
+        "services sociétaux . connaissance su": z.string().optional(),
         "services sociétaux . su . choix": z.string().optional(),
 
         // Su questions

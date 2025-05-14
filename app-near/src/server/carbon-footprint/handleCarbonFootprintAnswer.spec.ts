@@ -5,10 +5,7 @@ import { ErrorCode } from "~/types/enums/error";
 import { handleCarbonFootprintAnswer } from "./handleCarbonFootprintAnswer";
 import { buildRequest } from "../test-utils/request/buildRequest";
 import { clearAllSurveys } from "../test-utils/clear/survey";
-import {
-  getValideCarbonFootprintPayloadknownSu as getValideCarbonFootprintPayloadKnownSu,
-  getValideCarbonFootprintPayloadUnknownSu,
-} from "../test-utils/carbonFootprint";
+import { getValideCarbonFootprintPayload } from "../test-utils/carbonFootprint";
 import { SignatureType, signPayload } from "../typeform/signature";
 import apiSuService from "../external-api/api-su";
 
@@ -58,7 +55,7 @@ describe("handleCarbonFootprintAnswer", () => {
     const response = await handleCarbonFootprintAnswer(
       // @ts-expect-error allow partial for test
       buildRequest(
-        getValideCarbonFootprintPayloadUnknownSu(neighborhoodName),
+        getValideCarbonFootprintPayload(neighborhoodName),
         "wrong-signature",
       ),
     );
@@ -67,7 +64,7 @@ describe("handleCarbonFootprintAnswer", () => {
   });
 
   it("should return 400 when transformed data is invalid", async () => {
-    const payload = getValideCarbonFootprintPayloadUnknownSu(neighborhoodName);
+    const payload = getValideCarbonFootprintPayload(neighborhoodName);
 
     // @ts-expect-error pas string rather than number for test purpose
     payload.calculatedResults.alimentation = "should be number";
@@ -85,7 +82,7 @@ describe("handleCarbonFootprintAnswer", () => {
   });
 
   it("should return 404 when no survey found by name", async () => {
-    const payload = getValideCarbonFootprintPayloadUnknownSu(neighborhoodName);
+    const payload = getValideCarbonFootprintPayload(neighborhoodName);
 
     payload.neighborhoodId = "unknown";
     const signature = signPayload(
@@ -110,7 +107,7 @@ describe("handleCarbonFootprintAnswer", () => {
       where: { name: neighborhoodName },
     });
 
-    const payload = getValideCarbonFootprintPayloadUnknownSu(neighborhoodName);
+    const payload = getValideCarbonFootprintPayload(neighborhoodName);
     const signature = signPayload(
       JSON.stringify(payload),
       SignatureType.NGC_FORM,
@@ -138,17 +135,21 @@ describe("handleCarbonFootprintAnswer", () => {
       where: { name: neighborhoodName },
     });
 
-    const suName = 11;
+    const suId = 1;
+    const suNameFromNGC = "SU 1";
     await db.suData.create({
       data: {
         barycenter: [0, 1, 3, 6],
         popPercentage: 0.11,
-        su: suName,
+        su: suId,
         surveyId: survey.id,
       },
     });
 
-    const payload = getValideCarbonFootprintPayloadKnownSu(neighborhoodName);
+    const payload = getValideCarbonFootprintPayload(
+      neighborhoodName,
+      suNameFromNGC,
+    );
     const signature = signPayload(
       JSON.stringify(payload),
       SignatureType.NGC_FORM,
@@ -167,7 +168,7 @@ describe("handleCarbonFootprintAnswer", () => {
     });
 
     expect(data.length).toBe(1);
-    expect(data[0]?.su?.su).toBe(suName);
+    expect(data[0]?.su?.su).toBe(suId);
   });
 
   it("should return 404 when calculated su is not found", async () => {
@@ -183,7 +184,7 @@ describe("handleCarbonFootprintAnswer", () => {
       where: { name: neighborhoodName },
     });
 
-    const payload = getValideCarbonFootprintPayloadUnknownSu(neighborhoodName);
+    const payload = getValideCarbonFootprintPayload(neighborhoodName);
     const signature = signPayload(
       JSON.stringify(payload),
       SignatureType.NGC_FORM,

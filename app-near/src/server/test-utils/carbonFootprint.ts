@@ -1,6 +1,13 @@
-export const getValideCarbonFootprintPayloadUnknownSu = (
+export const getValideCarbonFootprintPayload = (
   surveyName: string,
-) => ({
+  suName?: string,
+) => {
+  return suName
+    ? getValideCarbonFootprintPayloadKnownSu(surveyName, suName)
+    : getValideCarbonFootprintPayloadUnknownSu(surveyName);
+};
+
+const getValideCarbonFootprintPayloadUnknownSu = (surveyName: string) => ({
   broadcastChannel: "street_survey",
   broadcastId: "2f416d05-875d-41a7-b4f0-19570859213f",
   neighborhoodId: surveyName,
@@ -208,7 +215,10 @@ export const getValideCarbonFootprintPayloadUnknownSu = (
   },
 });
 
-export const getValideCarbonFootprintPayloadknownSu = (surveyName: string) => ({
+export const getValideCarbonFootprintPayloadKnownSu = (
+  surveyName: string,
+  suName: string,
+) => ({
   broadcastChannel: "street_survey",
   broadcastId: "2f416d05-875d-41a7-b4f0-19570859213f",
   neighborhoodId: surveyName,
@@ -401,7 +411,7 @@ export const getValideCarbonFootprintPayloadknownSu = (surveyName: string) => ({
       "divers . produits consommables . consommation": "'normale'",
       "divers . autres produits . niveau de dépenses": "'faible'",
       "services sociétaux . connaissance su": "oui",
-      "services sociétaux . su . choix": "'SU 2'",
+      "services sociétaux . su . choix": `'${suName}'`,
     },
     voitures: [
       {
