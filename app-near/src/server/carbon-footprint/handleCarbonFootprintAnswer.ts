@@ -29,6 +29,8 @@ export const handleCarbonFootprintAnswer = async (
 ): Promise<NextResponse> => {
   try {
     const body = await req.text();
+
+    // could throw zod exception from zod parsing
     const parsedBody: NgcWebhookPayload = NgcWebhookSchema.parse(
       JSON.parse(body),
     );
@@ -38,7 +40,7 @@ export const handleCarbonFootprintAnswer = async (
     }
 
     const { surveyName, survey } = await getSurveyInformations(
-      parsedBody.answers.neighborhood,
+      parsedBody.neighborhoodId,
       CarbonFootprintType.CARBON_FOOTPRINT,
     );
 

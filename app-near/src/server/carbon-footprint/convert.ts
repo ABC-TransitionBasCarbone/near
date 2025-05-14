@@ -1,4 +1,12 @@
 import {
+  AirTravelFrequency,
+  DigitalIntensity,
+  HeatSource,
+  MeatFrequency,
+  PurchasingStrategy,
+  TransportationMode,
+} from "@prisma/client";
+import {
   type ConvertedCarbonFootprintAnswer,
   type NgcWebhookPayload,
 } from "~/types/CarbonFootprint";
@@ -30,7 +38,7 @@ export const convertCarbonFootprintBody = (
     alimentationWaste: body.calculatedResults["alimentation . déchets"],
     alimentationWasteHabits:
       body.calculatedResults["alimentation . déchets . gestes"],
-    answers: body.answers,
+    answers: body.answers.userAnswers,
     divers: body.calculatedResults.divers,
     diversDigital: body.calculatedResults["divers . numérique"],
     diversDigitalDevices:
@@ -135,15 +143,166 @@ export const convertCarbonFootprintBody = (
       body.calculatedResults["transport . mobilité douce"],
     transportationTrain: body.calculatedResults["transport . train"],
 
-    broadcastChannel: body.answers.broadcastChannel,
-    knowSu: body.answers.knowSu,
-    su: body.answers.su, // near-47 to confirm we can get it from body
-    neighborhood: body.answers.neighborhood,
-    airTravelFrequency: body.answers.airTravelFrequency,
-    digitalIntensity: body.answers.digitalIntensity,
-    heatSource: body.answers.heatSource,
-    meatFrequency: body.answers.meatFrequency,
-    purchasingStrategy: body.answers.purchasingStrategy,
-    transportationMode: body.answers.transportationMode,
+    neighborhood: body.neighborhoodId,
+    broadcastChannel: body.broadcastChannel,
+
+    knowSu:
+      body.answers.userAnswers["services sociétaux . connaissance . su"] ??
+      false,
+    su: mapSu(body.answers.userAnswers["services sociétaux . su . choix"]),
+
+    airTravelFrequency: mapAirTravelFrequency(
+      body.answers.userAnswers[
+        "services sociétaux . su . calcul su . question 5"
+      ],
+    ),
+
+    heatSource: mapHeatSource(
+      body.answers.userAnswers[
+        "services sociétaux . su . calcul su . question 6"
+      ],
+    ),
+    meatFrequency: mapMeatFrequency(
+      body.answers.userAnswers[
+        "services sociétaux . su . calcul su . question 1"
+      ],
+    ),
+
+    transportationMode: mapTransportationMode(
+      body.answers.userAnswers[
+        "services sociétaux . su . calcul su . question 2"
+      ],
+    ),
+    digitalIntensity: mapDigitalIntensity(
+      body.answers.userAnswers[
+        "services sociétaux . su . calcul su . question 3"
+      ],
+    ),
+    purchasingStrategy: mapPurchasingStrategy(
+      body.answers.userAnswers[
+        "services sociétaux . su . calcul su . question 4"
+      ],
+    ),
   };
+};
+
+export const SuMapEnum = {
+  "'SU 1'": 1,
+  "'SU 2'": 2,
+  "'SU 3'": 3,
+};
+
+const mapSu = (key: string | undefined): number | undefined => {
+  return key ? SuMapEnum[key as keyof typeof SuMapEnum] : undefined;
+};
+
+export const MeatFrequencyEnumInput = {
+  "'moyen'": "'moyen'",
+  "'faible'": "'faible'",
+  "'beaucoup'": "'beaucoup'",
+};
+
+export const MeatFrequencyEnum = {
+  "'moyen'": MeatFrequency.REGULAR,
+  "'faible'": MeatFrequency.MINOR,
+  "'beaucoup'": MeatFrequency.MAJOR,
+};
+export type MeatFrequencyKey = keyof typeof MeatFrequencyEnum;
+
+const mapMeatFrequency = (
+  key: string | undefined,
+): MeatFrequency | undefined => {
+  return key ? MeatFrequencyEnum[key as MeatFrequencyKey] : undefined;
+};
+
+export const TransportationModeEnumInput = {
+  "'voiture'": "'voiture'",
+  "'transports en commun'": "'transports en commun",
+  "'marche vélo trottinette'": "'marche vélo trottinette'",
+};
+
+export const TransportationModeEnum = {
+  "'voiture'": TransportationMode.CAR,
+  "'transports en commun'": TransportationMode.PUBLIC,
+  "'marche vélo trottinette'": TransportationMode.LIGHT,
+};
+
+type TransportationModeKey = keyof typeof TransportationModeEnum;
+
+const mapTransportationMode = (
+  key: string | undefined,
+): TransportationMode | undefined => {
+  return key ? TransportationModeEnum[key as TransportationModeKey] : undefined;
+};
+
+export const GradationEnumInput = {
+  "'moyen'": "'moyen'",
+  "'faible'": "'faible'",
+  "'beaucoup'": "'beaucoup'",
+};
+
+export const DigitalIntensityEnum = {
+  "'moyen'": DigitalIntensity.REGULAR,
+  "'faible'": DigitalIntensity.LIGHT,
+  "'beaucoup'": DigitalIntensity.INTENSE,
+};
+
+type DigitalIntensityKey = keyof typeof DigitalIntensityEnum;
+
+const mapDigitalIntensity = (
+  key: string | undefined,
+): DigitalIntensity | undefined => {
+  return key ? DigitalIntensityEnum[key as DigitalIntensityKey] : undefined;
+};
+
+export const PurchasingStrategyEnumInput = {
+  "'mélange'": "'mélange'",
+  "'priorité occasion'": "'priorité occasion'",
+  "'priorité neuf'": "'priorité neuf'",
+};
+
+export const PurchasingStrategyEnum = {
+  "'mélange'": PurchasingStrategy.MIXED,
+  "'priorité occasion'": PurchasingStrategy.SECOND_HAND,
+  "'priorité neuf'": PurchasingStrategy.NEW,
+};
+
+type PurchasingStrategyKey = keyof typeof PurchasingStrategyEnum;
+
+const mapPurchasingStrategy = (
+  key: string | undefined,
+): PurchasingStrategy | undefined => {
+  return key ? PurchasingStrategyEnum[key as PurchasingStrategyKey] : undefined;
+};
+
+export const AirTravelFrequencyEnum = {
+  "'beaucoup'": AirTravelFrequency.ABOVE_3,
+  "'moyen'": AirTravelFrequency.FROM_1_TO_3,
+  "'faible'": AirTravelFrequency.ZERO,
+};
+
+type AirTravelFrequencyKey = keyof typeof AirTravelFrequencyEnum;
+
+const mapAirTravelFrequency = (
+  key: string | undefined,
+): AirTravelFrequency | undefined => {
+  return key ? AirTravelFrequencyEnum[key as AirTravelFrequencyKey] : undefined;
+};
+
+export const HeatSourceEnumInput = {
+  "'écologique'": "'écologique'",
+  "'gaz'": "'gaz'",
+  "'fioul'": "'fioul'",
+};
+
+export const HeatSourceEnum = {
+  "'écologique'": HeatSource.ELECTRICITY,
+  "'gaz'": HeatSource.GAZ,
+  "'fioul'": HeatSource.OIL,
+};
+
+type HeatSourceKey = keyof typeof HeatSourceEnum;
+
+const mapHeatSource = (key: string | undefined): HeatSource | undefined => {
+  return key ? HeatSourceEnum[key as HeatSourceKey] : undefined;
 };
