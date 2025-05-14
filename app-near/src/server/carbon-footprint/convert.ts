@@ -228,9 +228,8 @@ export type MeatFrequencyKey = keyof typeof MeatFrequencyEnum;
 
 const mapMeatFrequency = (
   key: string | undefined,
-): MeatFrequency | undefined => {
-  return key ? MeatFrequencyEnum[key as MeatFrequencyKey] : undefined;
-};
+): MeatFrequency | undefined =>
+  key ? MeatFrequencyEnum[key as MeatFrequencyKey] : undefined;
 
 export const TransportationModeEnumInput = {
   "'voiture'": "'voiture'",
@@ -248,9 +247,8 @@ type TransportationModeKey = keyof typeof TransportationModeEnum;
 
 const mapTransportationMode = (
   key: string | undefined,
-): TransportationMode | undefined => {
-  return key ? TransportationModeEnum[key as TransportationModeKey] : undefined;
-};
+): TransportationMode | undefined =>
+  key ? TransportationModeEnum[key as TransportationModeKey] : undefined;
 
 export const GradationEnumInput = {
   "'moyen'": "'moyen'",
@@ -268,9 +266,8 @@ type DigitalIntensityKey = keyof typeof DigitalIntensityEnum;
 
 const mapDigitalIntensity = (
   key: string | undefined,
-): DigitalIntensity | undefined => {
-  return key ? DigitalIntensityEnum[key as DigitalIntensityKey] : undefined;
-};
+): DigitalIntensity | undefined =>
+  key ? DigitalIntensityEnum[key as DigitalIntensityKey] : undefined;
 
 export const PurchasingStrategyEnumInput = {
   "'mélange'": "'mélange'",
@@ -288,9 +285,8 @@ type PurchasingStrategyKey = keyof typeof PurchasingStrategyEnum;
 
 const mapPurchasingStrategy = (
   key: string | undefined,
-): PurchasingStrategy | undefined => {
-  return key ? PurchasingStrategyEnum[key as PurchasingStrategyKey] : undefined;
-};
+): PurchasingStrategy | undefined =>
+  key ? PurchasingStrategyEnum[key as PurchasingStrategyKey] : undefined;
 
 const AirTravelFrequencyEnum = {
   "'beaucoup'": AirTravelFrequency.ABOVE_3,
@@ -302,9 +298,8 @@ type AirTravelFrequencyKey = keyof typeof AirTravelFrequencyEnum;
 
 const mapAirTravelFrequency = (
   key: string | undefined,
-): AirTravelFrequency | undefined => {
-  return key ? AirTravelFrequencyEnum[key as AirTravelFrequencyKey] : undefined;
-};
+): AirTravelFrequency | undefined =>
+  key ? AirTravelFrequencyEnum[key as AirTravelFrequencyKey] : undefined;
 
 export const HeatSourceEnumInput = {
   "'écologique'": "'écologique'",
@@ -320,6 +315,5 @@ const HeatSourceEnum = {
 
 type HeatSourceKey = keyof typeof HeatSourceEnum;
 
-const mapHeatSource = (key: string | undefined): HeatSource | undefined => {
-  return key ? HeatSourceEnum[key as HeatSourceKey] : undefined;
-};
+const mapHeatSource = (key: string | undefined): HeatSource | undefined =>
+  key ? HeatSourceEnum[key as HeatSourceKey] : undefined;
