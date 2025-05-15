@@ -55,7 +55,7 @@ describe("handleCarbonFootprintAnswer", () => {
     const response = await handleCarbonFootprintAnswer(
       // @ts-expect-error allow partial for test
       buildRequest(
-        getValideCarbonFootprintPayload(survey.name),
+        getValideCarbonFootprintPayload(neighborhoodName),
         "wrong-signature",
       ),
     );
@@ -67,7 +67,7 @@ describe("handleCarbonFootprintAnswer", () => {
     const payload = getValideCarbonFootprintPayload(neighborhoodName);
 
     // @ts-expect-error pas string rather than number for test purpose
-    payload.calculatedResults.alimentation = "should be nuumber";
+    payload.calculatedResults.alimentation = "should be number";
     const signature = signPayload(
       JSON.stringify(payload),
       SignatureType.NGC_FORM,
@@ -84,7 +84,7 @@ describe("handleCarbonFootprintAnswer", () => {
   it("should return 404 when no survey found by name", async () => {
     const payload = getValideCarbonFootprintPayload(neighborhoodName);
 
-    payload.answers.neighborhood = "unknown";
+    payload.neighborhoodId = "unknown";
     const signature = signPayload(
       JSON.stringify(payload),
       SignatureType.NGC_FORM,
@@ -101,27 +101,7 @@ describe("handleCarbonFootprintAnswer", () => {
     expect(body.message).toBe(ErrorCode.WRONG_SURVEY_NAME);
   });
 
-  it("should return 400 when neighborhood is not defined", async () => {
-    const payload = getValideCarbonFootprintPayload(neighborhoodName);
-
-    payload.answers.neighborhood = "";
-    const signature = signPayload(
-      JSON.stringify(payload),
-      SignatureType.NGC_FORM,
-    );
-
-    const response = await handleCarbonFootprintAnswer(
-      // @ts-expect-error allow partial for test
-      buildRequest(payload, signature),
-    );
-
-    const body = await response.json();
-    expect(response.status).toBe(400);
-    expect(body.code).toBe("BAD_REQUEST");
-    expect(body.message).toBe(ErrorCode.MISSING_SURVEY_NAME);
-  });
-
-  it("should return 201 when know su is false", async () => {
+  it("should return 201 when su is unkown", async () => {
     await db.survey.update({
       data: { phase: SurveyPhase.STEP_4_ADDITIONAL_SURVEY },
       where: { name: neighborhoodName },
@@ -149,26 +129,26 @@ describe("handleCarbonFootprintAnswer", () => {
     expect(data[0]?.su?.su).toBe(su);
   });
 
-  it("should return 201 when know su is true", async () => {
+  it("should return 201 when su is known", async () => {
     await db.survey.update({
       data: { phase: SurveyPhase.STEP_4_ADDITIONAL_SURVEY },
       where: { name: neighborhoodName },
     });
 
-    const suName = 11;
+    const suId = 1;
+    const suNameFromNGC = "SU 1";
     await db.suData.create({
       data: {
         barycenter: [0, 1, 3, 6],
         popPercentage: 0.11,
-        su: suName,
+        su: suId,
         surveyId: survey.id,
       },
     });
 
     const payload = getValideCarbonFootprintPayload(
       neighborhoodName,
-      suName,
-      true,
+      suNameFromNGC,
     );
     const signature = signPayload(
       JSON.stringify(payload),
@@ -188,30 +168,13 @@ describe("handleCarbonFootprintAnswer", () => {
     });
 
     expect(data.length).toBe(1);
-    expect(data[0]?.su?.su).toBe(suName);
+    expect(data[0]?.su?.su).toBe(suId);
   });
 
-  it("should return 404 when input su is not found", async () => {
-    await db.survey.update({
-      data: { phase: SurveyPhase.STEP_4_ADDITIONAL_SURVEY },
-      where: { name: neighborhoodName },
-    });
+  it("should return 400 when neighborhood is not defined", async () => {
+    const payload = getValideCarbonFootprintPayload(neighborhoodName);
 
-    const suName = 11;
-    await db.suData.create({
-      data: {
-        barycenter: [0, 1, 3, 6],
-        popPercentage: 0.11,
-        su: suName,
-        surveyId: survey.id,
-      },
-    });
-
-    const payload = getValideCarbonFootprintPayload(
-      neighborhoodName,
-      1111, // not existing su
-      true,
-    );
+    payload.neighborhoodId = "";
     const signature = signPayload(
       JSON.stringify(payload),
       SignatureType.NGC_FORM,
@@ -222,14 +185,10 @@ describe("handleCarbonFootprintAnswer", () => {
       buildRequest(payload, signature),
     );
 
-    expect(response.status).toBe(404);
-    expect(await response.text()).toContain("SU_NOT_FOUND");
-
-    const data = await db.carbonFootprintAnswer.findMany({
-      include: { su: true },
-    });
-
-    expect(data.length).toBe(0);
+    const body = await response.json();
+    expect(response.status).toBe(400);
+    expect(body.code).toBe("BAD_REQUEST");
+    expect(body.message).toBe(ErrorCode.MISSING_SURVEY_NAME);
   });
 
   it("should return 404 when calculated su is not found", async () => {

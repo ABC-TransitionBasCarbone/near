@@ -9,20 +9,26 @@ import {
   type CarbonFootprintAnswer,
 } from "@prisma/client";
 import { z } from "zod";
+import {
+  GradationEnumInput,
+  HeatSourceEnumInput,
+  MeatFrequencyEnumInput,
+  PurchasingStrategyEnumInput,
+  TransportationModeEnumInput,
+} from "../server/carbon-footprint/convert";
 
 export enum CarbonFootprintType {
   CARBON_FOOTPRINT = "carbon_footprint",
 }
 
 export const NgcWebhookSchema = z.object({
-  id: z.string(),
   calculatedResults: z.object({
     bilan: z.number(),
     transport: z.number(),
     "transport . voiture": z.number(),
     "transport . voiture . km2": z.number(),
     "transport . voiture . thermique . consommation aux 100": z.number(),
-    "transport . voiture . thermique . carburant": z.number(),
+    "transport . voiture . thermique . carburant": z.any().optional(), // peut-être une string ou un number
     "transport . voiture . électrique . consommation aux 100": z.number(),
     "transport . avion": z.number(),
     "transport . deux roues": z.number(),
@@ -42,7 +48,7 @@ export const NgcWebhookSchema = z.object({
     "alimentation . déjeuner et dîner": z.number(),
     "alimentation . bonus": z.number(),
     "alimentation . local . empreinte": z.number(),
-    "alimentation . local . consommation": z.number(),
+    "alimentation . local . consommation": z.string(),
     "alimentation . de saison . empreinte": z.number(),
     "alimentation . petit déjeuner annuel": z.number(),
     "alimentation . déforestation": z.number(),
@@ -79,7 +85,7 @@ export const NgcWebhookSchema = z.object({
     "divers . ameublement": z.number(),
     "divers . ameublement . meubles": z.number(),
     "divers . ameublement . déforestation": z.number(),
-    "divers . ameublement . préservation": z.number(),
+    "divers . ameublement . préservation": z.string(),
     "divers . numérique": z.number(),
     "divers . numérique . internet": z.number(),
     "divers . numérique . appareils": z.number(),
@@ -88,20 +94,37 @@ export const NgcWebhookSchema = z.object({
     "services publics": z.number(),
     "services marchands": z.number(),
   }),
-  answers: z
-    .object({
-      broadcastChannel: z.nativeEnum(BroadcastChannel), // near-47 to confirm it is in answers
-      neighborhood: z.string(), // near-47 to confirm it is in answers
-      knowSu: z.boolean(), // near-47 to confirm it is in answers
-      su: z.number().optional(), // near-47 to confirm it is in answers
-      meatFrequency: z.nativeEnum(MeatFrequency).optional(), // near-47 to confirm it is in answers
-      transportationMode: z.nativeEnum(TransportationMode).optional(), // near-47 to confirm it is in answers
-      purchasingStrategy: z.nativeEnum(PurchasingStrategy).optional(), // near-47 to confirm it is in answers
-      airTravelFrequency: z.nativeEnum(AirTravelFrequency).optional(), // near-47 to confirm it is in answers
-      heatSource: z.nativeEnum(HeatSource).optional(), // near-47 to confirm it is in answers
-      digitalIntensity: z.nativeEnum(DigitalIntensity).optional(), // near-47 to confirm it is in answers
-    })
-    .catchall(z.any()),
+  broadcastChannel: z.nativeEnum(BroadcastChannel),
+  neighborhoodId: z.string(),
+  answers: z.object({
+    userAnswers: z
+      .object({
+        "services sociétaux . connaissance su": z.string().optional(),
+        "services sociétaux . su . choix": z.string().optional(),
+
+        // Su questions
+        "services sociétaux . su . calcul su . question 1": z
+          .nativeEnum(MeatFrequencyEnumInput)
+          .optional(),
+        "services sociétaux . su . calcul su . question 2": z
+          .nativeEnum(TransportationModeEnumInput)
+          .optional(),
+        "services sociétaux . su . calcul su . question 4": z
+          .nativeEnum(PurchasingStrategyEnumInput)
+          .optional(),
+        "services sociétaux . su . calcul su . question 5": z
+          .nativeEnum(GradationEnumInput)
+          .optional(),
+        "services sociétaux . su . calcul su . question 6": z
+          .nativeEnum(HeatSourceEnumInput)
+          .optional(),
+        "services sociétaux . su . calcul su . question 3": z
+          .nativeEnum(GradationEnumInput)
+          .optional(),
+      })
+      .catchall(z.any()),
+    voitures: z.array(z.object({}).passthrough()),
+  }),
 });
 
 export type NgcWebhookPayload = z.infer<typeof NgcWebhookSchema>;
@@ -112,7 +135,7 @@ export const convertedCarbonFootprintAnswer = z.object({
   transportationCar: z.number(),
   transportationCarKm2: z.number(),
   transportationCarOilConsumption100: z.number(),
-  transportationCarOilType: z.number(),
+  transportationCarOilType: z.string(),
   transportationCarElectricConsumption100: z.number(),
   transportationPlane: z.number(),
   transportationBicycle: z.number(),
@@ -132,7 +155,7 @@ export const convertedCarbonFootprintAnswer = z.object({
   alimentationLunchDinner: z.number(),
   alimentationBonus: z.number(),
   alimentationLocalImpact: z.number(),
-  alimentationLocalConsumption: z.number(),
+  alimentationLocalConsumption: z.string(),
   alimentationSeasonalImpact: z.number(),
   alimentationAnnualBreakfast: z.number(),
   alimentationDeforestation: z.number(),
@@ -169,7 +192,7 @@ export const convertedCarbonFootprintAnswer = z.object({
   diversFurniture: z.number(),
   diversFurnitureItems: z.number(),
   diversFurnitureDeforestation: z.number(),
-  diversFurniturePreservation: z.number(),
+  diversFurniturePreservation: z.string(),
   diversDigital: z.number(),
   diversDigitalInternet: z.number(),
   diversDigitalDevices: z.number(),
@@ -178,10 +201,10 @@ export const convertedCarbonFootprintAnswer = z.object({
   servicesPublics: z.number(),
   servicesMarket: z.number(),
 
-  broadcastChannel: z.nativeEnum(BroadcastChannel), // near-47 to confirm it is in answers
-  neighborhood: z.string(), // near-47 to confirm it is in answers
-  knowSu: z.boolean(), // near-47 to confirm it is in answers
-  su: z.number().optional(), // near-47 to confirm it is in answers
+  broadcastChannel: z.nativeEnum(BroadcastChannel),
+  neighborhood: z.string(),
+  knowSu: z.boolean(),
+  su: z.number().optional(),
   meatFrequency: z.nativeEnum(MeatFrequency).optional(),
   transportationMode: z.nativeEnum(TransportationMode).optional(),
   purchasingStrategy: z.nativeEnum(PurchasingStrategy).optional(),
