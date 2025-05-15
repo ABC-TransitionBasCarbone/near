@@ -123,6 +123,7 @@ export const NgcWebhookSchema = z.object({
           .optional(),
       })
       .catchall(z.any()),
+    voitures: z.object({}).catchall(z.any()),
   }),
 });
 

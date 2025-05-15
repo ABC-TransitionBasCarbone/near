@@ -38,7 +38,7 @@ export const convertCarbonFootprintBody = (
     alimentationWaste: body.calculatedResults["alimentation . déchets"],
     alimentationWasteHabits:
       body.calculatedResults["alimentation . déchets . gestes"],
-    answers: body.answers.userAnswers,
+    answers: { ...body.answers.userAnswers, ...body.answers.voitures },
     divers: body.calculatedResults.divers,
     diversDigital: body.calculatedResults["divers . numérique"],
     diversDigitalDevices:
