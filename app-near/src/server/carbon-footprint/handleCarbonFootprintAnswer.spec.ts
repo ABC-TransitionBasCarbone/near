@@ -171,6 +171,26 @@ describe("handleCarbonFootprintAnswer", () => {
     expect(data[0]?.su?.su).toBe(suId);
   });
 
+  it("should return 400 when neighborhood is not defined", async () => {
+    const payload = getValideCarbonFootprintPayload(neighborhoodName);
+
+    payload.neighborhoodId = "";
+    const signature = signPayload(
+      JSON.stringify(payload),
+      SignatureType.NGC_FORM,
+    );
+
+    const response = await handleCarbonFootprintAnswer(
+      // @ts-expect-error allow partial for test
+      buildRequest(payload, signature),
+    );
+
+    const body = await response.json();
+    expect(response.status).toBe(400);
+    expect(body.code).toBe("BAD_REQUEST");
+    expect(body.message).toBe(ErrorCode.MISSING_SURVEY_NAME);
+  });
+
   it("should return 404 when calculated su is not found", async () => {
     jest.spyOn(apiSuService, "assignSu").mockReturnValue(
       Promise.resolve({
