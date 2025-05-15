@@ -203,10 +203,14 @@ const mapConnaissanceSu = (key: string | undefined): boolean => {
     : false;
 };
 
+// manually map ngc su names to su ids
 export const SuMapEnum = {
   "'SU 1'": 1,
   "'SU 2'": 2,
   "'SU 3'": 3,
+  "'SU 4'": 4,
+  "'SU 5'": 5,
+  "'SU 6'": 6,
 };
 
 const mapSu = (key: string | undefined): number | undefined => {
