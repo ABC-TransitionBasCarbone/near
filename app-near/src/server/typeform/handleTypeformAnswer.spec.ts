@@ -23,6 +23,9 @@ describe("handleAnswer", () => {
   let sendEmailMock: jest.SpyInstance;
   let apiSuServiceMock: jest.SpyInstance;
 
+  const fixedDate = new Date("2025-05-16T11:30:36.145Z");
+  const fixedUUID = "mocked-uuid-1234";
+
   beforeEach(async () => {
     await clearAllSurveys();
     survey = await db.survey.create({
@@ -47,6 +50,12 @@ describe("handleAnswer", () => {
         su: 3,
       }),
     );
+
+    const OriginalDate = Date;
+    jest.spyOn(global, "Date").mockImplementation(() => fixedDate);
+    Date.now = OriginalDate.now;
+
+    jest.spyOn(global.crypto, "randomUUID").mockReturnValue(fixedUUID);
   });
 
   afterEach(() => {
@@ -388,7 +397,13 @@ describe("handleAnswer", () => {
         });
 
         expect(sendEmailMock).toHaveBeenCalledWith({
-          params: { displayCarbonFootprint: "true", displayWayOfLife: "false" },
+          params: {
+            displayCarbonFootprint: "true",
+            displayWayOfLife: "false",
+            ngcUrl: `https://carbon-footprint.12345.com?broadcast_channel=mail_campaign&broadcast_id=${fixedUUID}&date=${encodeURIComponent(fixedDate.toISOString())}&neighborhood=neighborhood_test`,
+            suName: "3",
+            wayOfLifeUrl: `https://typeform-url.com/way-of-life/survey#broadcast_channel=mail_campaign&broadcast_id=${fixedUUID}&date=${encodeURIComponent(fixedDate.toISOString())}&neighborhood=neighborhood_test`,
+          },
           templateId: TemplateId.PHASE_2_NOTIFICATION,
           to: [{ email: "an_account@example.com" }],
         });
@@ -452,7 +467,13 @@ describe("handleAnswer", () => {
         });
 
         expect(sendEmailMock).toHaveBeenCalledWith({
-          params: { displayCarbonFootprint: "true", displayWayOfLife: "false" },
+          params: {
+            displayCarbonFootprint: "true",
+            displayWayOfLife: "false",
+            ngcUrl: `https://carbon-footprint.12345.com?broadcast_channel=mail_campaign&broadcast_id=${fixedUUID}&date=${encodeURIComponent(fixedDate.toISOString())}&neighborhood=neighborhood_test`,
+            suName: "3",
+            wayOfLifeUrl: `https://typeform-url.com/way-of-life/survey#broadcast_channel=mail_campaign&broadcast_id=${fixedUUID}&date=${encodeURIComponent(fixedDate.toISOString())}&neighborhood=neighborhood_test`,
+          },
           templateId: TemplateId.PHASE_2_NOTIFICATION,
           to: [{ email: "test@mail.com" }],
         });
@@ -646,7 +667,13 @@ describe("handleAnswer", () => {
         expect(await response.text()).toContain("created");
 
         expect(sendEmailMock).toHaveBeenCalledWith({
-          params: { displayCarbonFootprint: "true", displayWayOfLife: "false" },
+          params: {
+            displayCarbonFootprint: "true",
+            displayWayOfLife: "false",
+            ngcUrl: `https://carbon-footprint.12345.com?broadcast_channel=mail_campaign&broadcast_id=${fixedUUID}&date=${encodeURIComponent(fixedDate.toISOString())}&neighborhood=neighborhood_test`,
+            suName: "",
+            wayOfLifeUrl: `https://typeform-url.com/way-of-life/survey#broadcast_channel=mail_campaign&broadcast_id=${fixedUUID}&date=${encodeURIComponent(fixedDate.toISOString())}&neighborhood=neighborhood_test`,
+          },
           templateId: TemplateId.PHASE_2_NOTIFICATION,
           to: [{ email: "an_account@example.com" }],
         });
