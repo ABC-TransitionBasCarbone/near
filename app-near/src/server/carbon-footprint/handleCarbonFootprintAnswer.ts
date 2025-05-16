@@ -1,22 +1,17 @@
+import { TRPCError } from "@trpc/server";
+import { getHTTPStatusCodeFromError } from "@trpc/server/unstable-core-do-not-import";
 import { NextResponse, type NextRequest } from "next/server";
-import {
-  getSurveyInformations,
-  isNotInPhase,
-  notInPhaseSuSurveyResponse,
-} from "../typeform/helpers";
-import { createCarbonFooprintAnswer } from "./create";
+import { z } from "zod";
 import {
   CarbonFootprintType,
   convertedCarbonFootprintAnswer,
-  type NgcWebhookPayload,
   NgcWebhookSchema,
+  type NgcWebhookPayload,
 } from "~/types/CarbonFootprint";
-import { convertCarbonFootprintBody } from "./convert";
+import { getSurveyInformations } from "../typeform/helpers";
 import { isValidSignature, SignatureType } from "../typeform/signature";
-import { z } from "zod";
-import { TRPCError } from "@trpc/server";
-import { getHTTPStatusCodeFromError } from "@trpc/server/unstable-core-do-not-import";
-import { SurveyPhase } from "@prisma/client";
+import { convertCarbonFootprintBody } from "./convert";
+import { createCarbonFooprintAnswer } from "./create";
 
 const unauthorizedResponse = (): NextResponse =>
   NextResponse.json(
@@ -43,11 +38,6 @@ export const handleCarbonFootprintAnswer = async (
       parsedBody.neighborhoodId,
       CarbonFootprintType.CARBON_FOOTPRINT,
     );
-
-    const validPhase = SurveyPhase.STEP_4_ADDITIONAL_SURVEY;
-    if (isNotInPhase(survey, validPhase)) {
-      return notInPhaseSuSurveyResponse(surveyName, validPhase);
-    }
 
     const carbonFootprintAnswer = convertCarbonFootprintBody(parsedBody);
 

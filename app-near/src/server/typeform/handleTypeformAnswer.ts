@@ -1,33 +1,36 @@
+import {
+  type SuAnswer,
+  SurveyPhase,
+  type WayOfLifeAnswer,
+} from "@prisma/client";
+import { TRPCError } from "@trpc/server";
+import { getHTTPStatusCodeFromError } from "@trpc/server/unstable-core-do-not-import";
 import { type NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
+import { ErrorCode } from "~/types/enums/error";
+import { type ConvertedSuAnswer } from "~/types/SuAnswer";
 import {
   TypeformType,
   type TypeformWebhookPayload,
   TypeformWebhookSchema,
 } from "~/types/Typeform";
-import { getReferencesMapping } from "../surveys/references";
-import { convertFormToAnswer } from "./convert";
-import { isValidSignature, SignatureType } from "./signature";
-import { typeformSchemaMapper } from "./schema";
-import { type ConvertedSuAnswer } from "~/types/SuAnswer";
 import { type ConvertedWayOfLifeAnswer } from "~/types/WayOfLifeAnswer";
+import { createSu } from "../su/answers/create";
+import { getCalculatedSuParams } from "../su/get";
+import { getReferencesMapping } from "../surveys/references";
+import { handleWayOfLifeCreation } from "../way-of-life/create";
+import { convertFormToAnswer } from "./convert";
 import {
   getFormIdType,
   getSurveyInformations,
-  getValidSurveyPhase,
   isNotInPhase,
   isNotPartOfNeighborhood,
   isUnder15,
   notInPhaseSuSurveyResponse,
   okResponse,
 } from "./helpers";
-import { createSu } from "../su/answers/create";
-import { type SuAnswer, type WayOfLifeAnswer } from "@prisma/client";
-import { TRPCError } from "@trpc/server";
-import { ErrorCode } from "~/types/enums/error";
-import { getHTTPStatusCodeFromError } from "@trpc/server/unstable-core-do-not-import";
-import { handleWayOfLifeCreation } from "../way-of-life/create";
-import { getCalculatedSuParams } from "../su/get";
+import { typeformSchemaMapper } from "./schema";
+import { isValidSignature, SignatureType } from "./signature";
 
 export const handleTypeformAnswer = async (
   req: NextRequest,
@@ -81,9 +84,14 @@ export const handleTypeformAnswer = async (
       typeformType,
     );
 
-    const validPhase = getValidSurveyPhase(typeformType);
-    if (isNotInPhase(survey, validPhase)) {
-      return notInPhaseSuSurveyResponse(surveyName, validPhase);
+    if (
+      typeformType === TypeformType.SU &&
+      isNotInPhase(survey, SurveyPhase.STEP_2_SU_SURVERY)
+    ) {
+      return notInPhaseSuSurveyResponse(
+        surveyName,
+        SurveyPhase.STEP_2_SU_SURVERY,
+      );
     }
 
     const broadcastChannel = parsedBody.form_response.hidden.broadcast_channel;

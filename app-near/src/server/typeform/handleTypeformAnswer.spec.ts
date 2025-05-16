@@ -310,36 +310,6 @@ describe("handleAnswer", () => {
       return object;
     };
 
-    it(`should return 200 when not in ${validSurveyPhase}`, async () => {
-      await db.survey.update({
-        data: { phase: SurveyPhase.STEP_5_RESULTS },
-        where: { name: neighborhoodName },
-      });
-
-      const payload = JSON.parse(
-        JSON.stringify(validSurveyPayload),
-      ) as TypeformWebhookPayload;
-
-      payload.form_response.hidden = {
-        neighborhood: neighborhoodName,
-        broadcast_channel: BroadcastChannel.mail_campaign,
-      };
-      const signature = signPayload(
-        JSON.stringify(payload),
-        SignatureType.TYPEFORM,
-      );
-      const response = await handleTypeformAnswer(
-        // @ts-expect-error allow partial for test
-        buildRequest(payload, signature),
-      );
-      expect(response.status).toBe(200);
-      expect(await response.text()).toContain(
-        `step ${validSurveyPhase} is over for ${neighborhoodName}`,
-      );
-
-      expect(sendEmailMock).not.toHaveBeenCalled();
-    });
-
     it("should return 201", async () => {
       await db.survey.update({
         data: { phase: validSurveyPhase },
