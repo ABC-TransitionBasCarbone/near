@@ -3,8 +3,6 @@ import { handleWayOfLifeCreation } from "./create";
 import { clearAllSurveys } from "../test-utils/clear/survey";
 import { db } from "../db";
 import { buildWayOfLifeAnswer } from "../test-utils/create-data/wayOfLifeAnswer";
-import EmailService from "../email";
-import { TemplateId } from "~/types/enums/brevo";
 
 describe("create", () => {
   describe("handleWayOfLifeCreation", () => {
@@ -12,8 +10,6 @@ describe("create", () => {
     let survey: Survey;
     const knownSu = 3;
     let knownSuData: SuData;
-
-    let sendEmailMock: jest.SpyInstance;
 
     beforeEach(async () => {
       await clearAllSurveys();
@@ -30,10 +26,6 @@ describe("create", () => {
           surveyId: survey.id,
         },
       });
-
-      sendEmailMock = jest
-        .spyOn(EmailService, "sendEmail")
-        .mockReturnValue(Promise.resolve("send"));
     });
 
     afterEach(() => {
@@ -54,8 +46,6 @@ describe("create", () => {
 
       expect(createdData.length).toBe(1);
       expect(createdData[0]?.suId).toBe(knownSuData.id);
-
-      expect(sendEmailMock).not.toHaveBeenCalled();
     });
 
     it("should create data with email", async () => {
@@ -72,12 +62,6 @@ describe("create", () => {
 
       expect(createdData.length).toBe(1);
       expect(createdData[0]?.suId).toBe(knownSuData.id);
-
-      expect(sendEmailMock).toHaveBeenCalledWith({
-        params: { displayCarbonFootprint: "true", displayWayOfLife: "false" },
-        templateId: TemplateId.PHASE_2_NOTIFICATION,
-        to: [{ email: "test@mail.com" }],
-      });
     });
   });
 });

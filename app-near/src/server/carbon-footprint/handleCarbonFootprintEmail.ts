@@ -27,7 +27,7 @@ export const handleCarbonFootprintEmail = async (
     const status =
       contact.createdAt.getTime() === contact.updatedAt.getTime() ? 201 : 200;
 
-    await sendPhaseTwoFormNotification(email);
+    await sendPhaseTwoFormNotification(email, "Porte d'Orléans", undefined);
 
     return NextResponse.json(
       { message: "Email processed" },
