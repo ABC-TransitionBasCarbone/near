@@ -237,7 +237,7 @@ const mapMeatFrequency = (
 
 export const TransportationModeEnumInput = {
   "'voiture'": "'voiture'",
-  "'transports en commun'": "'transports en commun",
+  "'transports en commun'": "'transports en commun'",
   "'marche vélo trottinette'": "'marche vélo trottinette'",
 };
 
