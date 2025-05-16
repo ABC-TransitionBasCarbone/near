@@ -34,7 +34,7 @@ export const handleCarbonFootprintAnswer = async (
       return unauthorizedResponse();
     }
 
-    const { surveyName, survey } = await getSurveyInformations(
+    const { survey } = await getSurveyInformations(
       parsedBody.neighborhoodId,
       CarbonFootprintType.CARBON_FOOTPRINT,
     );
