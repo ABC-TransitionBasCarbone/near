@@ -28,6 +28,7 @@ import { ErrorCode } from "~/types/enums/error";
 import { getHTTPStatusCodeFromError } from "@trpc/server/unstable-core-do-not-import";
 import { handleWayOfLifeCreation } from "../way-of-life/create";
 import { getCalculatedSuParams } from "../su/get";
+import { sendPhaseTwoFormNotification } from "../surveys/email";
 
 export const handleTypeformAnswer = async (
   req: NextRequest,
@@ -107,6 +108,14 @@ export const handleTypeformAnswer = async (
         } as WayOfLifeAnswer,
         survey,
       );
+
+      if (createQuery.email) {
+        await sendPhaseTwoFormNotification(
+          createQuery.email,
+          surveyName,
+          (parsedAnswer as ConvertedWayOfLifeAnswer).su,
+        );
+      }
     }
 
     return NextResponse.json({ message: "created" }, { status: 201 });
