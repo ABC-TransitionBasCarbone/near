@@ -121,7 +121,7 @@ export const handleTypeformAnswer = async (
         await sendPhaseTwoFormNotification(
           createQuery.email,
           surveyName,
-          (parsedAnswer as ConvertedWayOfLifeAnswer).su,
+          (parsedAnswer as ConvertedWayOfLifeAnswer).su?.toString(),
         );
       }
     }

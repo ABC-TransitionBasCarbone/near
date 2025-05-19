@@ -4,11 +4,33 @@ import { buildSuAnswer } from "../test-utils/create-data/suAnswer";
 import { sendUsersSu } from "./sendUsersSu";
 import { TRPCError } from "@trpc/server";
 import { clearAllSurveys } from "../test-utils/clear/survey";
+import EmailService from "../email";
 
 describe("sendUsersSu", () => {
   const surveyId = 654;
+  const surveyName = "test-send-user-su";
+
+  const fixedDate = new Date("2025-05-16T11:30:36.145Z");
+  const fixedUUID = "mocked-uuid-1234";
+
+  let sendEmailMock: jest.SpyInstance;
+
   beforeEach(async () => {
+    sendEmailMock = jest
+      .spyOn(EmailService, "sendEmail")
+      .mockReturnValue(Promise.resolve("send"));
+
+    const OriginalDate = Date;
+    jest.spyOn(global, "Date").mockImplementation(() => fixedDate);
+    Date.now = OriginalDate.now;
+
+    jest.spyOn(global.crypto, "randomUUID").mockReturnValue(fixedUUID);
+
     await clearAllSurveys();
+  });
+
+  afterEach(() => {
+    jest.restoreAllMocks();
   });
 
   it.each(
@@ -16,11 +38,11 @@ describe("sendUsersSu", () => {
       (phase) => phase !== SurveyPhase.STEP_3_SU_EXPLORATION,
     ),
   )(`should not send su email to users when phase is %s`, async (phase) => {
-    expect.assertions(1);
+    expect.assertions(2);
     await db.survey.create({
       data: {
         id: surveyId,
-        name: "test-send-user-su",
+        name: surveyName,
         phase,
         computedSu: true,
       },
@@ -31,16 +53,17 @@ describe("sendUsersSu", () => {
     } catch (error) {
       if (error instanceof TRPCError) {
         expect(error.code).toBe("FORBIDDEN");
+        expect(sendEmailMock).not.toHaveBeenCalled();
       }
     }
   });
 
   it(`should not send su email to users when su are not computed`, async () => {
-    expect.assertions(1);
+    expect.assertions(2);
     await db.survey.create({
       data: {
         id: surveyId,
-        name: "test-send-user-su",
+        name: surveyName,
         phase: SurveyPhase.STEP_3_SU_EXPLORATION,
         computedSu: false,
       },
@@ -51,6 +74,7 @@ describe("sendUsersSu", () => {
     } catch (error) {
       if (error instanceof TRPCError) {
         expect(error.code).toBe("FORBIDDEN");
+        expect(sendEmailMock).not.toHaveBeenCalled();
       }
     }
   });
@@ -59,7 +83,7 @@ describe("sendUsersSu", () => {
     await db.survey.create({
       data: {
         id: surveyId,
-        name: "test-send-user-su",
+        name: surveyName,
         phase: SurveyPhase.STEP_3_SU_EXPLORATION,
         computedSu: true,
       },
@@ -102,6 +126,37 @@ describe("sendUsersSu", () => {
 
     const result = await sendUsersSu(surveyId);
     expect(result.every((item) => item.status === "fulfilled")).toBe(true);
+
+    expect(sendEmailMock).toHaveBeenCalledTimes(1);
+    expect(sendEmailMock).toHaveBeenCalledWith({
+      messageVersions: [
+        {
+          params: {
+            neighborhood: surveyName,
+            ngcUrl: `https://carbon-footprint.12345.com?broadcast_channel=mail_campaign&broadcast_id=${fixedUUID}&date=${encodeURIComponent(fixedDate.toISOString())}&neighborhood=test-send-user-su`,
+            numberOfResponses: "2",
+            suName: "11",
+            wayOfLifeUrl: `https://typeform-url.com/way-of-life/survey#broadcast_channel=mail_campaign&broadcast_id=${fixedUUID}&date=${encodeURIComponent(fixedDate.toISOString())}&neighborhood=test-send-user-su`,
+          },
+          subject:
+            "Petite enquête test-send-user-su : merci d'avoir répondu ! Et la suite ?",
+          to: [{ email: "email1@mail.com" }],
+        },
+        {
+          params: {
+            neighborhood: surveyName,
+            ngcUrl: `https://carbon-footprint.12345.com?broadcast_channel=mail_campaign&broadcast_id=${fixedUUID}&date=${encodeURIComponent(fixedDate.toISOString())}&neighborhood=test-send-user-su`,
+            numberOfResponses: "2",
+            suName: "22",
+            wayOfLifeUrl: `https://typeform-url.com/way-of-life/survey#broadcast_channel=mail_campaign&broadcast_id=${fixedUUID}&date=${encodeURIComponent(fixedDate.toISOString())}&neighborhood=test-send-user-su`,
+          },
+          subject:
+            "Petite enquête test-send-user-su : merci d'avoir répondu ! Et la suite ?",
+          to: [{ email: "email2@mail.com" }],
+        },
+      ],
+      templateId: 1,
+    });
 
     const suAnswers = await db.suAnswer.findMany();
     const updatedAnswers = suAnswers
