@@ -8,7 +8,7 @@ import { SurveyType } from "~/types/enums/survey";
 export const sendPhaseTwoFormNotification = async (
   email: string,
   surveyName: string,
-  suName?: number,
+  suName = 0, // near-52 to remove when we have solution to get suName with email endpoint
 ) => {
   const wayOfLifeAnswer = await getWayOfLifeAnswerByEmail(email);
   const carbonFootprintAnswer = await getCarbonFootprintAnswerByEmail(email);
@@ -18,7 +18,8 @@ export const sendPhaseTwoFormNotification = async (
     params: {
       displayWayOfLife: wayOfLifeAnswer ? "false" : "true",
       displayCarbonFootprint: carbonFootprintAnswer ? "false" : "true",
-      suName: suName?.toString() ?? "",
+      neighborhood: surveyName,
+      suName: suName.toString(),
       wayOfLifeUrl: buildSurveyLink(
         "mail_campaign",
         SurveyType.WAY_OF_LIFE,
