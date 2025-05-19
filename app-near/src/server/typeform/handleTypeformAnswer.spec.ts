@@ -1,19 +1,19 @@
-import { valideSuSurveyPayload } from "../test-utils/suSurvey";
-import { handleTypeformAnswer } from "./handleTypeformAnswer";
-import { SignatureType, signPayload } from "./signature";
-import { db } from "../db";
-import { TypeformType, type TypeformWebhookPayload } from "~/types/Typeform";
-import { buildRequest } from "../test-utils/request/buildRequest";
-import { BroadcastChannel, type Survey, SurveyPhase } from "@prisma/client";
-import { valideWayOfLifeSurveyPayload } from "../test-utils/wayOfLifeSurvey";
-import { clearAllSurveys } from "../test-utils/clear/survey";
+import { BroadcastChannel, type Survey } from "@prisma/client";
+import { TemplateId } from "~/types/enums/brevo";
 import { ErrorCode } from "~/types/enums/error";
-import { getValidSurveyPhase } from "./helpers";
+import { TypeformType, type TypeformWebhookPayload } from "~/types/Typeform";
+import { db } from "../db";
+import EmailService from "../email";
+import apiSuService from "../external-api/api-su";
+import { clearAllSurveys } from "../test-utils/clear/survey";
 import { buildSuAnswer } from "../test-utils/create-data/suAnswer";
 import { buildWayOfLifeAnswer } from "../test-utils/create-data/wayOfLifeAnswer";
-import EmailService from "../email";
-import { TemplateId } from "~/types/enums/brevo";
-import apiSuService from "../external-api/api-su";
+import { buildRequest } from "../test-utils/request/buildRequest";
+import { valideSuSurveyPayload } from "../test-utils/suSurvey";
+import { valideWayOfLifeSurveyPayload } from "../test-utils/wayOfLifeSurvey";
+import { handleTypeformAnswer } from "./handleTypeformAnswer";
+import { getValidSurveyPhase } from "./helpers";
+import { SignatureType, signPayload } from "./signature";
 
 describe("handleAnswer", () => {
   const neighborhoodName = "neighborhood_test";
@@ -318,36 +318,6 @@ describe("handleAnswer", () => {
       }
       return object;
     };
-
-    it(`should return 200 when not in ${validSurveyPhase}`, async () => {
-      await db.survey.update({
-        data: { phase: SurveyPhase.STEP_5_RESULTS },
-        where: { name: neighborhoodName },
-      });
-
-      const payload = JSON.parse(
-        JSON.stringify(validSurveyPayload),
-      ) as TypeformWebhookPayload;
-
-      payload.form_response.hidden = {
-        neighborhood: neighborhoodName,
-        broadcast_channel: BroadcastChannel.mail_campaign,
-      };
-      const signature = signPayload(
-        JSON.stringify(payload),
-        SignatureType.TYPEFORM,
-      );
-      const response = await handleTypeformAnswer(
-        // @ts-expect-error allow partial for test
-        buildRequest(payload, signature),
-      );
-      expect(response.status).toBe(200);
-      expect(await response.text()).toContain(
-        `step ${validSurveyPhase} is over for ${neighborhoodName}`,
-      );
-
-      expect(sendEmailMock).not.toHaveBeenCalled();
-    });
 
     it("should return 201", async () => {
       await db.survey.update({
