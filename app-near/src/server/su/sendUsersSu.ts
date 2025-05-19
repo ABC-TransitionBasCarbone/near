@@ -5,6 +5,8 @@ import { SurveyPhase } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 import { ErrorCode } from "~/types/enums/error";
 import { chunkArray } from "../utils/arrays";
+import { buildSurveyLink } from "~/shared/services/survey-links/build";
+import { SurveyType } from "~/types/enums/survey";
 
 interface Result {
   status: "fulfilled" | "rejected";
@@ -42,8 +44,23 @@ export const sendUsersSu = async (surveyId: number): Promise<Result[]> => {
       const result = await EmailService.sendEmail({
         templateId: TemplateId.SU_RESULT,
         messageVersions: chunk.map((item) => ({
-          params: { suName: `${item.su!.su}` },
+          params: {
+            suName: `${item.su!.su}`,
+            neighborhood: survey.name,
+            numberOfResponses: answers.length.toString(),
+            wayOfLifeUrl: buildSurveyLink(
+              "mail_campaign",
+              SurveyType.WAY_OF_LIFE,
+              survey.name,
+            ),
+            ngcUrl: buildSurveyLink(
+              "mail_campaign",
+              SurveyType.CARBON_FOOTPRINT,
+              survey.name,
+            ),
+          },
           to: [{ email: item.email! }],
+          subject: `Petite enquête ${survey.name} : merci d'avoir répondu ! Et la suite ?`,
         })),
       });
 
