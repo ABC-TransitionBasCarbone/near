@@ -29,6 +29,7 @@ import {
   notInPhaseSuSurveyResponse,
   okResponse,
 } from "./helpers";
+import { sendPhaseTwoFormNotification } from "../surveys/email";
 import { typeformSchemaMapper } from "./schema";
 import { isValidSignature, SignatureType } from "./signature";
 
@@ -115,6 +116,14 @@ export const handleTypeformAnswer = async (
         } as WayOfLifeAnswer,
         survey,
       );
+
+      if (createQuery.email) {
+        await sendPhaseTwoFormNotification(
+          createQuery.email,
+          surveyName,
+          (parsedAnswer as ConvertedWayOfLifeAnswer).su,
+        );
+      }
     }
 
     return NextResponse.json({ message: "created" }, { status: 201 });
