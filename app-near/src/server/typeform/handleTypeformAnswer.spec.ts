@@ -370,6 +370,7 @@ describe("handleAnswer", () => {
           params: {
             displayCarbonFootprint: "true",
             displayWayOfLife: "false",
+            neighborhood: neighborhoodName,
             ngcUrl: `https://carbon-footprint.12345.com?broadcast_channel=mail_campaign&broadcast_id=${fixedUUID}&date=${encodeURIComponent(fixedDate.toISOString())}&neighborhood=neighborhood_test`,
             suName: "3",
             wayOfLifeUrl: `https://typeform-url.com/way-of-life/survey#broadcast_channel=mail_campaign&broadcast_id=${fixedUUID}&date=${encodeURIComponent(fixedDate.toISOString())}&neighborhood=neighborhood_test`,
@@ -440,6 +441,7 @@ describe("handleAnswer", () => {
           params: {
             displayCarbonFootprint: "true",
             displayWayOfLife: "false",
+            neighborhood: neighborhoodName,
             ngcUrl: `https://carbon-footprint.12345.com?broadcast_channel=mail_campaign&broadcast_id=${fixedUUID}&date=${encodeURIComponent(fixedDate.toISOString())}&neighborhood=neighborhood_test`,
             suName: "3",
             wayOfLifeUrl: `https://typeform-url.com/way-of-life/survey#broadcast_channel=mail_campaign&broadcast_id=${fixedUUID}&date=${encodeURIComponent(fixedDate.toISOString())}&neighborhood=neighborhood_test`,
@@ -640,6 +642,7 @@ describe("handleAnswer", () => {
           params: {
             displayCarbonFootprint: "true",
             displayWayOfLife: "false",
+            neighborhood: neighborhoodName,
             ngcUrl: `https://carbon-footprint.12345.com?broadcast_channel=mail_campaign&broadcast_id=${fixedUUID}&date=${encodeURIComponent(fixedDate.toISOString())}&neighborhood=neighborhood_test`,
             suName: "",
             wayOfLifeUrl: `https://typeform-url.com/way-of-life/survey#broadcast_channel=mail_campaign&broadcast_id=${fixedUUID}&date=${encodeURIComponent(fixedDate.toISOString())}&neighborhood=neighborhood_test`,
