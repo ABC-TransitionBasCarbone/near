@@ -106,21 +106,21 @@ export const convertedWayOfLifeAnswer = z.object({
   otherLocalPoliticInformation: z.string().optional(),
 
   giveFreeTimeToHelp: z.nativeEnum(GiveFreeTimeToHelp),
-  yourVoluntaryWork: z.array(z.string()),
+  yourVoluntaryWork: z.array(z.string()).optional(),
 
   wantToReduceCarUsage: z.nativeEnum(WishesChoices),
-  reasonsToContinueUsingCar: z.array(z.string()),
+  reasonsToContinueUsingCar: z.array(z.string()).optional(),
 
   wantToReduceMeatAndFish: z.nativeEnum(WishesChoices),
-  reasonsToEatMeat: z.array(z.string()),
+  reasonsToEatMeat: z.array(z.string()).optional(),
 
   preferBuyFrenchAndSeasonFood: z.nativeEnum(WishesChoices),
-  reasonsToNotBuyFrenchAndSeasonFood: z.array(z.string()),
+  reasonsToNotBuyFrenchAndSeasonFood: z.array(z.string()).optional(),
 
   preferSecondHand: z.nativeEnum(WishesChoices),
-  reasonsToNotChoseSecondHand: z.array(z.string()),
+  reasonsToNotChoseSecondHand: z.array(z.string()).optional(),
 
-  transportModeToBuyFood: z.nativeEnum(TransportMode),
+  transportModeToBuyFood: z.nativeEnum(TransportMode).optional(),
   transportTimeToBuyFood: z.nativeEnum(TransportTime),
   foodMarketZone: z.string(),
 
