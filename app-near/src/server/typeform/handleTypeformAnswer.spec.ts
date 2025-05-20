@@ -14,6 +14,10 @@ import { valideWayOfLifeSurveyPayload } from "../test-utils/wayOfLifeSurvey";
 import { handleTypeformAnswer } from "./handleTypeformAnswer";
 import { getValidSurveyPhase } from "./helpers";
 import { SignatureType, signPayload } from "./signature";
+import {
+  expectFailedPayloadIsNotSaved,
+  expectFailedPayloadIsSaved,
+} from "../test-utils/expects/answerError";
 
 describe("handleAnswer", () => {
   const neighborhoodName = "neighborhood_test";
@@ -72,6 +76,7 @@ describe("handleAnswer", () => {
       expect(await response.text()).toContain("Invalid payload");
 
       expect(sendEmailMock).not.toHaveBeenCalled();
+      await expectFailedPayloadIsSaved({ body: "wrong-body" });
     });
 
     it("should return 400 when formId is invalid", async () => {
@@ -94,6 +99,7 @@ describe("handleAnswer", () => {
       expect(await response.text()).toContain(ErrorCode.WRONG_FORM_ID);
 
       expect(sendEmailMock).not.toHaveBeenCalled();
+      await expectFailedPayloadIsSaved(payload);
     });
 
     it("should return 401 when signature is invalid", async () => {
@@ -105,6 +111,7 @@ describe("handleAnswer", () => {
       expect(await response.text()).toContain("UNAUTHORIZED");
 
       expect(sendEmailMock).not.toHaveBeenCalled();
+      await expectFailedPayloadIsSaved(valideSuSurveyPayload);
     });
 
     it("should return 400 when transformed data is invalid", async () => {
@@ -127,6 +134,7 @@ describe("handleAnswer", () => {
       expect(await response.text()).toContain("Invalid payload");
 
       expect(sendEmailMock).not.toHaveBeenCalled();
+      await expectFailedPayloadIsSaved(payload);
     });
 
     it("should return 400 when their is no survey name", async () => {
@@ -150,6 +158,7 @@ describe("handleAnswer", () => {
       expect(await response.text()).toContain(ErrorCode.MISSING_SURVEY_NAME);
 
       expect(sendEmailMock).not.toHaveBeenCalled();
+      await expectFailedPayloadIsSaved(payload);
     });
 
     it("should return 404 when no survey found by name", async () => {
@@ -172,6 +181,7 @@ describe("handleAnswer", () => {
       expect(await response.text()).toContain(ErrorCode.WRONG_SURVEY_NAME);
 
       expect(sendEmailMock).not.toHaveBeenCalled();
+      await expectFailedPayloadIsSaved(payload);
     });
 
     it("should throw zod exception when data is not valid", async () => {
@@ -195,6 +205,7 @@ describe("handleAnswer", () => {
       expect(await response.text()).toContain("Invalid email");
 
       expect(sendEmailMock).not.toHaveBeenCalled();
+      await expectFailedPayloadIsSaved(payload);
     });
 
     it("should return 200 when user as less than 15", async () => {
@@ -218,6 +229,7 @@ describe("handleAnswer", () => {
       expect(await response.text()).toContain("user should be under 15");
 
       expect(sendEmailMock).not.toHaveBeenCalled();
+      await expectFailedPayloadIsNotSaved();
     });
 
     it("should return 200 when user is not resident", async () => {
@@ -244,6 +256,7 @@ describe("handleAnswer", () => {
       );
 
       expect(sendEmailMock).not.toHaveBeenCalled();
+      await expectFailedPayloadIsNotSaved();
     });
   });
 
@@ -347,6 +360,7 @@ describe("handleAnswer", () => {
       );
       expect(response.status).toBe(201);
       expect(await response.text()).toContain("created");
+      await expectFailedPayloadIsNotSaved();
 
       if (typeformType === TypeformType.WAY_OF_LIFE) {
         expect(apiSuServiceMock).toHaveBeenCalledWith({
@@ -371,9 +385,9 @@ describe("handleAnswer", () => {
             displayCarbonFootprint: "true",
             displayWayOfLife: "false",
             neighborhood: neighborhoodName,
-            ngcUrl: `https://carbon-footprint.12345.com?broadcast_channel=mail_campaign&broadcast_id=${fixedUUID}&date=${encodeURIComponent(fixedDate.toISOString())}&neighborhood=neighborhood_test`,
+            ngcUrl: `${process.env.NEXT_PUBLIC_TYPEFORM_CARBON_FOOTPRINT_LINK}?broadcast_channel=mail_campaign&broadcast_id=${fixedUUID}&date=${encodeURIComponent(fixedDate.toISOString())}&neighborhood=neighborhood_test`,
             suName: "3",
-            wayOfLifeUrl: `https://typeform-url.com/way-of-life/survey#broadcast_channel=mail_campaign&broadcast_id=${fixedUUID}&date=${encodeURIComponent(fixedDate.toISOString())}&neighborhood=neighborhood_test`,
+            wayOfLifeUrl: `${process.env.NEXT_PUBLIC_TYPEFORM_WAY_OF_LIFE_LINK}#broadcast_channel=mail_campaign&broadcast_id=${fixedUUID}&date=${encodeURIComponent(fixedDate.toISOString())}&neighborhood=neighborhood_test`,
           },
           templateId: TemplateId.PHASE_2_NOTIFICATION,
           to: [{ email: "an_account@example.com" }],
@@ -442,9 +456,9 @@ describe("handleAnswer", () => {
             displayCarbonFootprint: "true",
             displayWayOfLife: "false",
             neighborhood: neighborhoodName,
-            ngcUrl: `https://carbon-footprint.12345.com?broadcast_channel=mail_campaign&broadcast_id=${fixedUUID}&date=${encodeURIComponent(fixedDate.toISOString())}&neighborhood=neighborhood_test`,
+            ngcUrl: `${process.env.NEXT_PUBLIC_TYPEFORM_CARBON_FOOTPRINT_LINK}?broadcast_channel=mail_campaign&broadcast_id=${fixedUUID}&date=${encodeURIComponent(fixedDate.toISOString())}&neighborhood=neighborhood_test`,
             suName: "3",
-            wayOfLifeUrl: `https://typeform-url.com/way-of-life/survey#broadcast_channel=mail_campaign&broadcast_id=${fixedUUID}&date=${encodeURIComponent(fixedDate.toISOString())}&neighborhood=neighborhood_test`,
+            wayOfLifeUrl: `${process.env.NEXT_PUBLIC_TYPEFORM_WAY_OF_LIFE_LINK}#broadcast_channel=mail_campaign&broadcast_id=${fixedUUID}&date=${encodeURIComponent(fixedDate.toISOString())}&neighborhood=neighborhood_test`,
           },
           templateId: TemplateId.PHASE_2_NOTIFICATION,
           to: [{ email: "test@mail.com" }],
@@ -517,6 +531,7 @@ describe("handleAnswer", () => {
       }
 
       expect(sendEmailMock).not.toHaveBeenCalled();
+      await expectFailedPayloadIsNotSaved();
     });
 
     if (typeformType === TypeformType.WAY_OF_LIFE) {
@@ -589,6 +604,7 @@ describe("handleAnswer", () => {
 
         expect(response.status).toBe(404);
         expect(await response.text()).toContain("SU_NOT_FOUND");
+        await expectFailedPayloadIsSaved(payload);
       });
 
       it("should create data when unknown su", async () => {
@@ -643,9 +659,9 @@ describe("handleAnswer", () => {
             displayCarbonFootprint: "true",
             displayWayOfLife: "false",
             neighborhood: neighborhoodName,
-            ngcUrl: `https://carbon-footprint.12345.com?broadcast_channel=mail_campaign&broadcast_id=${fixedUUID}&date=${encodeURIComponent(fixedDate.toISOString())}&neighborhood=neighborhood_test`,
+            ngcUrl: `${process.env.NEXT_PUBLIC_TYPEFORM_CARBON_FOOTPRINT_LINK}?broadcast_channel=mail_campaign&broadcast_id=${fixedUUID}&date=${encodeURIComponent(fixedDate.toISOString())}&neighborhood=neighborhood_test`,
             suName: "",
-            wayOfLifeUrl: `https://typeform-url.com/way-of-life/survey#broadcast_channel=mail_campaign&broadcast_id=${fixedUUID}&date=${encodeURIComponent(fixedDate.toISOString())}&neighborhood=neighborhood_test`,
+            wayOfLifeUrl: `${process.env.NEXT_PUBLIC_TYPEFORM_WAY_OF_LIFE_LINK}#broadcast_channel=mail_campaign&broadcast_id=${fixedUUID}&date=${encodeURIComponent(fixedDate.toISOString())}&neighborhood=neighborhood_test`,
           },
           templateId: TemplateId.PHASE_2_NOTIFICATION,
           to: [{ email: "an_account@example.com" }],
@@ -655,6 +671,7 @@ describe("handleAnswer", () => {
 
         expect(createdData.length).toBe(1);
         expect(createdData[0]?.suId).toBe(unknownSuData.id);
+        // TODO : should not saved failed
       });
     }
   });

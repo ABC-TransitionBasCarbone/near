@@ -133,10 +133,10 @@ describe("sendUsersSu", () => {
         {
           params: {
             neighborhood: surveyName,
-            ngcUrl: `https://carbon-footprint.12345.com?broadcast_channel=mail_campaign&broadcast_id=${fixedUUID}&date=${encodeURIComponent(fixedDate.toISOString())}&neighborhood=test-send-user-su`,
+            ngcUrl: `${process.env.NEXT_PUBLIC_TYPEFORM_CARBON_FOOTPRINT_LINK}?broadcast_channel=mail_campaign&broadcast_id=${fixedUUID}&date=${encodeURIComponent(fixedDate.toISOString())}&neighborhood=test-send-user-su`,
             numberOfResponses: "2",
             suName: "11",
-            wayOfLifeUrl: `https://typeform-url.com/way-of-life/survey#broadcast_channel=mail_campaign&broadcast_id=${fixedUUID}&date=${encodeURIComponent(fixedDate.toISOString())}&neighborhood=test-send-user-su`,
+            wayOfLifeUrl: `${process.env.NEXT_PUBLIC_TYPEFORM_WAY_OF_LIFE_LINK}#broadcast_channel=mail_campaign&broadcast_id=${fixedUUID}&date=${encodeURIComponent(fixedDate.toISOString())}&neighborhood=test-send-user-su`,
           },
           subject:
             "Petite enquête test-send-user-su : merci d'avoir répondu ! Et la suite ?",
@@ -145,10 +145,10 @@ describe("sendUsersSu", () => {
         {
           params: {
             neighborhood: surveyName,
-            ngcUrl: `https://carbon-footprint.12345.com?broadcast_channel=mail_campaign&broadcast_id=${fixedUUID}&date=${encodeURIComponent(fixedDate.toISOString())}&neighborhood=test-send-user-su`,
+            ngcUrl: `${process.env.NEXT_PUBLIC_TYPEFORM_CARBON_FOOTPRINT_LINK}?broadcast_channel=mail_campaign&broadcast_id=${fixedUUID}&date=${encodeURIComponent(fixedDate.toISOString())}&neighborhood=test-send-user-su`,
             numberOfResponses: "2",
             suName: "22",
-            wayOfLifeUrl: `https://typeform-url.com/way-of-life/survey#broadcast_channel=mail_campaign&broadcast_id=${fixedUUID}&date=${encodeURIComponent(fixedDate.toISOString())}&neighborhood=test-send-user-su`,
+            wayOfLifeUrl: `${process.env.NEXT_PUBLIC_TYPEFORM_WAY_OF_LIFE_LINK}#broadcast_channel=mail_campaign&broadcast_id=${fixedUUID}&date=${encodeURIComponent(fixedDate.toISOString())}&neighborhood=test-send-user-su`,
           },
           subject:
             "Petite enquête test-send-user-su : merci d'avoir répondu ! Et la suite ?",

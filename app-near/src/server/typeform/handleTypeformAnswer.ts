@@ -17,10 +17,12 @@ import {
 import { type ConvertedWayOfLifeAnswer } from "~/types/WayOfLifeAnswer";
 import { createSu } from "../su/answers/create";
 import { getCalculatedSuParams } from "../su/get";
+import { sendPhaseTwoFormNotification } from "../surveys/email";
 import { getReferencesMapping } from "../surveys/references";
 import { handleWayOfLifeCreation } from "../way-of-life/create";
 import { convertFormToAnswer } from "./convert";
 import {
+  getAnswerType,
   getFormIdType,
   getSurveyInformations,
   isNotInPhase,
@@ -29,9 +31,9 @@ import {
   notInPhaseSuSurveyResponse,
   okResponse,
 } from "./helpers";
-import { sendPhaseTwoFormNotification } from "../surveys/email";
 import { typeformSchemaMapper } from "./schema";
 import { isValidSignature, SignatureType } from "./signature";
+import { createAnswerError } from "../anwser-error/create";
 
 export const handleTypeformAnswer = async (
   req: NextRequest,
@@ -128,6 +130,8 @@ export const handleTypeformAnswer = async (
 
     return NextResponse.json({ message: "created" }, { status: 201 });
   } catch (error) {
+    await createAnswerError(await req.json(), getAnswerType(formId));
+
     if (error instanceof z.ZodError) {
       console.error(
         "[whebhook]",

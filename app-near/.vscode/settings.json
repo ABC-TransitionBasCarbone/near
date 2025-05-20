@@ -15,4 +15,7 @@
         "editor.defaultFormatter": "numso.prettier-standard-vscode"
     },
     "typescript.tsdk": "node_modules/typescript/lib",
+    "[prisma]": {
+        "editor.defaultFormatter": "Prisma.prisma"
+    },
 }

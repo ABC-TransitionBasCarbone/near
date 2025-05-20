@@ -5,7 +5,7 @@ export const clearAllSurveys = async () => {
   await db.wayOfLifeAnswer.deleteMany();
   await db.suAnswer.deleteMany();
   await db.suData.deleteMany();
-  await db.ngcContact.deleteMany({});
-
+  await db.ngcContact.deleteMany();
+  await db.rawAnswerError.deleteMany();
   await db.survey.deleteMany();
 };
