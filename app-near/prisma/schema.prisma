@@ -458,6 +458,8 @@ model CarbonFootprintAnswer {
   id               Int              @id @default(autoincrement())
   email            String?
   broadcastChannel BroadcastChannel @map("broadcast_channel")
+  broadcastId      String           @map("broadcast_id")
+  externalId       String           @unique @map("external_id")
 
   knowSu Boolean @map("know_su")
 
@@ -555,15 +557,6 @@ model CarbonFootprintAnswer {
   answers Json
 
   @@map("carbon_footprint_answer")
-}
-
-model NgcContact {
-  id        Int      @id @default(autoincrement())
-  email     String   @unique
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
-
-  @@map("ngc_contact")
 }
 
 model InseeIris2021 {

@@ -644,7 +644,7 @@ describe("handleAnswer", () => {
             displayWayOfLife: "false",
             neighborhood: neighborhoodName,
             ngcUrl: `https://carbon-footprint.12345.com?broadcast_channel=mail_campaign&broadcast_id=${fixedUUID}&date=${encodeURIComponent(fixedDate.toISOString())}&neighborhood=neighborhood_test`,
-            suName: "",
+            suName: "456852",
             wayOfLifeUrl: `https://typeform-url.com/way-of-life/survey#broadcast_channel=mail_campaign&broadcast_id=${fixedUUID}&date=${encodeURIComponent(fixedDate.toISOString())}&neighborhood=neighborhood_test`,
           },
           templateId: TemplateId.PHASE_2_NOTIFICATION,

@@ -103,7 +103,7 @@ export const handleTypeformAnswer = async (
         surveyName,
       );
     } else if (typeformType === TypeformType.WAY_OF_LIFE) {
-      const calculatedSuParams = await getCalculatedSuParams(
+      const { suName, ...calculatedSuParams } = await getCalculatedSuParams(
         survey,
         parsedAnswer as ConvertedWayOfLifeAnswer,
       );
@@ -121,7 +121,7 @@ export const handleTypeformAnswer = async (
         await sendPhaseTwoFormNotification(
           createQuery.email,
           surveyName,
-          (parsedAnswer as ConvertedWayOfLifeAnswer).su?.toString(),
+          suName,
         );
       }
     }
