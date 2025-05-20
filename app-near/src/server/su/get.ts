@@ -71,7 +71,7 @@ const getSuIdFromSuNameOrThrow = async (
 const getCalculatedSu = async (
   survey: Survey,
   data: ConvertedWayOfLifeAnswer | ConvertedCarbonFootprintAnswer,
-): Promise<{ suId: number; distanceToBarycenter: number }> => {
+): Promise<{ suId: number; distanceToBarycenter: number; suName: number }> => {
   const suData = await getNeighborhoodSuDataToAssignOrThrows(survey.name);
 
   // could throw error if schema is not valid
@@ -103,15 +103,17 @@ const getCalculatedSu = async (
   return {
     suId: su.id,
     distanceToBarycenter: result.distanceToBarycenter,
+    suName: su.su,
   };
 };
 
 export const getCalculatedSuParams = async (
   survey: Survey,
   parsedAnswer: ConvertedWayOfLifeAnswer | ConvertedCarbonFootprintAnswer,
-) =>
+): Promise<{ suId: number; distanceToBarycenter?: number; suName?: number }> =>
   parsedAnswer.knowSu
     ? {
         suId: await getSuIdFromSuNameOrThrow(survey.id, parsedAnswer),
+        suName: parsedAnswer.su,
       }
     : await getCalculatedSu(survey, parsedAnswer);

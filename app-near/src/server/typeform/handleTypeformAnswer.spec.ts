@@ -18,6 +18,7 @@ import {
   expectFailedPayloadIsNotSaved,
   expectFailedPayloadIsSaved,
 } from "../test-utils/expects/answerError";
+import { env } from "~/env";
 
 describe("handleAnswer", () => {
   const neighborhoodName = "neighborhood_test";
@@ -385,9 +386,9 @@ describe("handleAnswer", () => {
             displayCarbonFootprint: "true",
             displayWayOfLife: "false",
             neighborhood: neighborhoodName,
-            ngcUrl: `${process.env.NEXT_PUBLIC_TYPEFORM_CARBON_FOOTPRINT_LINK}?broadcast_channel=mail_campaign&broadcast_id=${fixedUUID}&date=${encodeURIComponent(fixedDate.toISOString())}&neighborhood=neighborhood_test`,
+            ngcUrl: `${env.NEXT_PUBLIC_TYPEFORM_CARBON_FOOTPRINT_LINK}?broadcast_channel=mail_campaign&broadcast_id=${fixedUUID}&date=${encodeURIComponent(fixedDate.toISOString())}&neighborhood=${neighborhoodName}`,
             suName: "3",
-            wayOfLifeUrl: `${process.env.NEXT_PUBLIC_TYPEFORM_WAY_OF_LIFE_LINK}#broadcast_channel=mail_campaign&broadcast_id=${fixedUUID}&date=${encodeURIComponent(fixedDate.toISOString())}&neighborhood=neighborhood_test`,
+            wayOfLifeUrl: `${env.NEXT_PUBLIC_TYPEFORM_WAY_OF_LIFE_LINK}#broadcast_channel=mail_campaign&broadcast_id=${fixedUUID}&date=${encodeURIComponent(fixedDate.toISOString())}&neighborhood=${neighborhoodName}`,
           },
           templateId: TemplateId.PHASE_2_NOTIFICATION,
           to: [{ email: "an_account@example.com" }],
@@ -456,9 +457,9 @@ describe("handleAnswer", () => {
             displayCarbonFootprint: "true",
             displayWayOfLife: "false",
             neighborhood: neighborhoodName,
-            ngcUrl: `${process.env.NEXT_PUBLIC_TYPEFORM_CARBON_FOOTPRINT_LINK}?broadcast_channel=mail_campaign&broadcast_id=${fixedUUID}&date=${encodeURIComponent(fixedDate.toISOString())}&neighborhood=neighborhood_test`,
+            ngcUrl: `${env.NEXT_PUBLIC_TYPEFORM_CARBON_FOOTPRINT_LINK}?broadcast_channel=mail_campaign&broadcast_id=${fixedUUID}&date=${encodeURIComponent(fixedDate.toISOString())}&neighborhood=${neighborhoodName}`,
             suName: "3",
-            wayOfLifeUrl: `${process.env.NEXT_PUBLIC_TYPEFORM_WAY_OF_LIFE_LINK}#broadcast_channel=mail_campaign&broadcast_id=${fixedUUID}&date=${encodeURIComponent(fixedDate.toISOString())}&neighborhood=neighborhood_test`,
+            wayOfLifeUrl: `${env.NEXT_PUBLIC_TYPEFORM_WAY_OF_LIFE_LINK}#broadcast_channel=mail_campaign&broadcast_id=${fixedUUID}&date=${encodeURIComponent(fixedDate.toISOString())}&neighborhood=${neighborhoodName}`,
           },
           templateId: TemplateId.PHASE_2_NOTIFICATION,
           to: [{ email: "test@mail.com" }],
@@ -659,9 +660,9 @@ describe("handleAnswer", () => {
             displayCarbonFootprint: "true",
             displayWayOfLife: "false",
             neighborhood: neighborhoodName,
-            ngcUrl: `${process.env.NEXT_PUBLIC_TYPEFORM_CARBON_FOOTPRINT_LINK}?broadcast_channel=mail_campaign&broadcast_id=${fixedUUID}&date=${encodeURIComponent(fixedDate.toISOString())}&neighborhood=neighborhood_test`,
-            suName: "",
-            wayOfLifeUrl: `${process.env.NEXT_PUBLIC_TYPEFORM_WAY_OF_LIFE_LINK}#broadcast_channel=mail_campaign&broadcast_id=${fixedUUID}&date=${encodeURIComponent(fixedDate.toISOString())}&neighborhood=neighborhood_test`,
+            ngcUrl: `${env.NEXT_PUBLIC_TYPEFORM_CARBON_FOOTPRINT_LINK}?broadcast_channel=mail_campaign&broadcast_id=${fixedUUID}&date=${encodeURIComponent(fixedDate.toISOString())}&neighborhood=${neighborhoodName}`,
+            suName: "456852",
+            wayOfLifeUrl: `${env.NEXT_PUBLIC_TYPEFORM_WAY_OF_LIFE_LINK}#broadcast_channel=mail_campaign&broadcast_id=${fixedUUID}&date=${encodeURIComponent(fixedDate.toISOString())}&neighborhood=${neighborhoodName}`,
           },
           templateId: TemplateId.PHASE_2_NOTIFICATION,
           to: [{ email: "an_account@example.com" }],
