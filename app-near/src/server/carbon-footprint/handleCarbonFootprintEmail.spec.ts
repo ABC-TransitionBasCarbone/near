@@ -124,6 +124,7 @@ describe("handleCarbonFootprintEmail", () => {
         suName: "1",
         wayOfLifeUrl: `${env.NEXT_PUBLIC_TYPEFORM_WAY_OF_LIFE_LINK}#broadcast_channel=mail_campaign&broadcast_id=${fixedUUID}&date=${encodeURIComponent(fixedDate.toISOString())}&neighborhood=${surveyName}`,
       },
+      subject: `Petite enquête ${surveyName} : merci d'avoir répondu ! Et la suite ?`,
       templateId: TemplateId.PHASE_2_NOTIFICATION,
       to: [{ email }],
     });
@@ -164,6 +165,7 @@ describe("handleCarbonFootprintEmail", () => {
         suName: "1",
         wayOfLifeUrl: `${env.NEXT_PUBLIC_TYPEFORM_WAY_OF_LIFE_LINK}#broadcast_channel=mail_campaign&broadcast_id=${fixedUUID}&date=${encodeURIComponent(fixedDate.toISOString())}&neighborhood=${surveyName}`,
       },
+      subject: `Petite enquête ${surveyName} : merci d'avoir répondu ! Et la suite ?`,
       templateId: TemplateId.PHASE_2_NOTIFICATION,
       to: [{ email }],
     });

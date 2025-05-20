@@ -390,6 +390,7 @@ describe("handleAnswer", () => {
             suName: "3",
             wayOfLifeUrl: `${env.NEXT_PUBLIC_TYPEFORM_WAY_OF_LIFE_LINK}#broadcast_channel=mail_campaign&broadcast_id=${fixedUUID}&date=${encodeURIComponent(fixedDate.toISOString())}&neighborhood=${neighborhoodName}`,
           },
+          subject: `Petite enquête ${neighborhoodName} : merci d'avoir répondu ! Et la suite ?`,
           templateId: TemplateId.PHASE_2_NOTIFICATION,
           to: [{ email: "an_account@example.com" }],
         });
@@ -461,6 +462,7 @@ describe("handleAnswer", () => {
             suName: "3",
             wayOfLifeUrl: `${env.NEXT_PUBLIC_TYPEFORM_WAY_OF_LIFE_LINK}#broadcast_channel=mail_campaign&broadcast_id=${fixedUUID}&date=${encodeURIComponent(fixedDate.toISOString())}&neighborhood=${neighborhoodName}`,
           },
+          subject: `Petite enquête ${neighborhoodName} : merci d'avoir répondu ! Et la suite ?`,
           templateId: TemplateId.PHASE_2_NOTIFICATION,
           to: [{ email: "test@mail.com" }],
         });
@@ -664,6 +666,7 @@ describe("handleAnswer", () => {
             suName: "456852",
             wayOfLifeUrl: `${env.NEXT_PUBLIC_TYPEFORM_WAY_OF_LIFE_LINK}#broadcast_channel=mail_campaign&broadcast_id=${fixedUUID}&date=${encodeURIComponent(fixedDate.toISOString())}&neighborhood=${neighborhoodName}`,
           },
+          subject: `Petite enquête ${neighborhoodName} : merci d'avoir répondu ! Et la suite ?`,
           templateId: TemplateId.PHASE_2_NOTIFICATION,
           to: [{ email: "an_account@example.com" }],
         });

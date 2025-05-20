@@ -41,5 +41,6 @@ export const sendPhaseTwoFormNotification = async (
       ),
     },
     templateId: TemplateId.PHASE_2_NOTIFICATION,
+    subject: `Petite enquête ${surveyName} : merci d'avoir répondu ! Et la suite ?`,
   });
 };
