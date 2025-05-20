@@ -10,6 +10,7 @@ import { buildCarbonFootprintAnswer } from "../test-utils/create-data/carbonFoot
 import { createNeighborhood } from "../test-utils/create-data/neighborhood";
 import { type Survey } from "@prisma/client";
 import { TemplateId } from "~/types/enums/brevo";
+import { env } from "~/env";
 
 describe("handleCarbonFootprintEmail", () => {
   const email = "email@mail.com";
@@ -119,9 +120,9 @@ describe("handleCarbonFootprintEmail", () => {
         displayCarbonFootprint: "false",
         displayWayOfLife: "true",
         neighborhood: surveyName,
-        ngcUrl: `https://carbon-footprint.12345.com?broadcast_channel=mail_campaign&broadcast_id=${fixedUUID}&date=${encodeURIComponent(fixedDate.toISOString())}&neighborhood=${surveyName}`,
+        ngcUrl: `${env.NEXT_PUBLIC_TYPEFORM_CARBON_FOOTPRINT_LINK}?broadcast_channel=mail_campaign&broadcast_id=${fixedUUID}&date=${encodeURIComponent(fixedDate.toISOString())}&neighborhood=${surveyName}`,
         suName: "1",
-        wayOfLifeUrl: `https://typeform-url.com/way-of-life/survey#broadcast_channel=mail_campaign&broadcast_id=${fixedUUID}&date=${encodeURIComponent(fixedDate.toISOString())}&neighborhood=${surveyName}`,
+        wayOfLifeUrl: `${env.NEXT_PUBLIC_TYPEFORM_WAY_OF_LIFE_LINK}#broadcast_channel=mail_campaign&broadcast_id=${fixedUUID}&date=${encodeURIComponent(fixedDate.toISOString())}&neighborhood=${surveyName}`,
       },
       templateId: TemplateId.PHASE_2_NOTIFICATION,
       to: [{ email }],
@@ -159,9 +160,9 @@ describe("handleCarbonFootprintEmail", () => {
         displayCarbonFootprint: "false",
         displayWayOfLife: "true",
         neighborhood: surveyName,
-        ngcUrl: `https://carbon-footprint.12345.com?broadcast_channel=mail_campaign&broadcast_id=${fixedUUID}&date=${encodeURIComponent(fixedDate.toISOString())}&neighborhood=${surveyName}`,
+        ngcUrl: `${env.NEXT_PUBLIC_TYPEFORM_CARBON_FOOTPRINT_LINK}?broadcast_channel=mail_campaign&broadcast_id=${fixedUUID}&date=${encodeURIComponent(fixedDate.toISOString())}&neighborhood=${surveyName}`,
         suName: "1",
-        wayOfLifeUrl: `https://typeform-url.com/way-of-life/survey#broadcast_channel=mail_campaign&broadcast_id=${fixedUUID}&date=${encodeURIComponent(fixedDate.toISOString())}&neighborhood=${surveyName}`,
+        wayOfLifeUrl: `${env.NEXT_PUBLIC_TYPEFORM_WAY_OF_LIFE_LINK}#broadcast_channel=mail_campaign&broadcast_id=${fixedUUID}&date=${encodeURIComponent(fixedDate.toISOString())}&neighborhood=${surveyName}`,
       },
       templateId: TemplateId.PHASE_2_NOTIFICATION,
       to: [{ email }],

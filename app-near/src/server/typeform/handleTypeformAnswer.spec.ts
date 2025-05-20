@@ -14,6 +14,7 @@ import { valideWayOfLifeSurveyPayload } from "../test-utils/wayOfLifeSurvey";
 import { handleTypeformAnswer } from "./handleTypeformAnswer";
 import { getValidSurveyPhase } from "./helpers";
 import { SignatureType, signPayload } from "./signature";
+import { env } from "~/env";
 
 describe("handleAnswer", () => {
   const neighborhoodName = "neighborhood_test";
@@ -371,9 +372,9 @@ describe("handleAnswer", () => {
             displayCarbonFootprint: "true",
             displayWayOfLife: "false",
             neighborhood: neighborhoodName,
-            ngcUrl: `https://carbon-footprint.12345.com?broadcast_channel=mail_campaign&broadcast_id=${fixedUUID}&date=${encodeURIComponent(fixedDate.toISOString())}&neighborhood=neighborhood_test`,
+            ngcUrl: `${env.NEXT_PUBLIC_TYPEFORM_CARBON_FOOTPRINT_LINK}?broadcast_channel=mail_campaign&broadcast_id=${fixedUUID}&date=${encodeURIComponent(fixedDate.toISOString())}&neighborhood=${neighborhoodName}`,
             suName: "3",
-            wayOfLifeUrl: `https://typeform-url.com/way-of-life/survey#broadcast_channel=mail_campaign&broadcast_id=${fixedUUID}&date=${encodeURIComponent(fixedDate.toISOString())}&neighborhood=neighborhood_test`,
+            wayOfLifeUrl: `${env.NEXT_PUBLIC_TYPEFORM_WAY_OF_LIFE_LINK}#broadcast_channel=mail_campaign&broadcast_id=${fixedUUID}&date=${encodeURIComponent(fixedDate.toISOString())}&neighborhood=${neighborhoodName}`,
           },
           templateId: TemplateId.PHASE_2_NOTIFICATION,
           to: [{ email: "an_account@example.com" }],
@@ -442,9 +443,9 @@ describe("handleAnswer", () => {
             displayCarbonFootprint: "true",
             displayWayOfLife: "false",
             neighborhood: neighborhoodName,
-            ngcUrl: `https://carbon-footprint.12345.com?broadcast_channel=mail_campaign&broadcast_id=${fixedUUID}&date=${encodeURIComponent(fixedDate.toISOString())}&neighborhood=neighborhood_test`,
+            ngcUrl: `${env.NEXT_PUBLIC_TYPEFORM_CARBON_FOOTPRINT_LINK}?broadcast_channel=mail_campaign&broadcast_id=${fixedUUID}&date=${encodeURIComponent(fixedDate.toISOString())}&neighborhood=${neighborhoodName}`,
             suName: "3",
-            wayOfLifeUrl: `https://typeform-url.com/way-of-life/survey#broadcast_channel=mail_campaign&broadcast_id=${fixedUUID}&date=${encodeURIComponent(fixedDate.toISOString())}&neighborhood=neighborhood_test`,
+            wayOfLifeUrl: `${env.NEXT_PUBLIC_TYPEFORM_WAY_OF_LIFE_LINK}#broadcast_channel=mail_campaign&broadcast_id=${fixedUUID}&date=${encodeURIComponent(fixedDate.toISOString())}&neighborhood=${neighborhoodName}`,
           },
           templateId: TemplateId.PHASE_2_NOTIFICATION,
           to: [{ email: "test@mail.com" }],
@@ -643,9 +644,9 @@ describe("handleAnswer", () => {
             displayCarbonFootprint: "true",
             displayWayOfLife: "false",
             neighborhood: neighborhoodName,
-            ngcUrl: `https://carbon-footprint.12345.com?broadcast_channel=mail_campaign&broadcast_id=${fixedUUID}&date=${encodeURIComponent(fixedDate.toISOString())}&neighborhood=neighborhood_test`,
+            ngcUrl: `${env.NEXT_PUBLIC_TYPEFORM_CARBON_FOOTPRINT_LINK}?broadcast_channel=mail_campaign&broadcast_id=${fixedUUID}&date=${encodeURIComponent(fixedDate.toISOString())}&neighborhood=${neighborhoodName}`,
             suName: "456852",
-            wayOfLifeUrl: `https://typeform-url.com/way-of-life/survey#broadcast_channel=mail_campaign&broadcast_id=${fixedUUID}&date=${encodeURIComponent(fixedDate.toISOString())}&neighborhood=neighborhood_test`,
+            wayOfLifeUrl: `${env.NEXT_PUBLIC_TYPEFORM_WAY_OF_LIFE_LINK}#broadcast_channel=mail_campaign&broadcast_id=${fixedUUID}&date=${encodeURIComponent(fixedDate.toISOString())}&neighborhood=${neighborhoodName}`,
           },
           templateId: TemplateId.PHASE_2_NOTIFICATION,
           to: [{ email: "an_account@example.com" }],
