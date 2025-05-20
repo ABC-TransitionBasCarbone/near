@@ -559,6 +559,21 @@ model CarbonFootprintAnswer {
   @@map("carbon_footprint_answer")
 }
 
+enum AnswerType {
+  SU
+  WAY_OF_LIFE
+  CARBON_FOOTPRINT
+  UNKNWON
+}
+
+model RawAnswerError {
+  id         Int        @id @default(autoincrement())
+  rawPayload Json       @map("raw_payload")
+  answerType AnswerType @map("answer_type")
+
+  @@map("raw_answer_error")
+}
+
 model InseeIris2021 {
   iris           String @unique @db.VarChar(255)
   com            String @db.VarChar(255)

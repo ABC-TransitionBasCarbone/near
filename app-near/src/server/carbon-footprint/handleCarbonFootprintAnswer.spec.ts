@@ -2,12 +2,13 @@
 import { type Survey, SurveyPhase } from "@prisma/client";
 import { db } from "~/server/db";
 import { ErrorCode } from "~/types/enums/error";
-import { handleCarbonFootprintAnswer } from "./handleCarbonFootprintAnswer";
-import { buildRequest } from "../test-utils/request/buildRequest";
-import { clearAllSurveys } from "../test-utils/clear/survey";
-import { getValideCarbonFootprintPayload } from "../test-utils/carbonFootprint";
-import { SignatureType, signPayload } from "../typeform/signature";
 import apiSuService from "../external-api/api-su";
+import { getValideCarbonFootprintPayload } from "../test-utils/carbonFootprint";
+import { clearAllSurveys } from "../test-utils/clear/survey";
+import { expectFailedPayloadIsSaved } from "../test-utils/expects/answerError";
+import { buildRequest } from "../test-utils/request/buildRequest";
+import { SignatureType, signPayload } from "../typeform/signature";
+import { handleCarbonFootprintAnswer } from "./handleCarbonFootprintAnswer";
 
 describe("handleCarbonFootprintAnswer", () => {
   const neighborhoodName = "neighborhood_test";
@@ -49,18 +50,20 @@ describe("handleCarbonFootprintAnswer", () => {
     );
     expect(response.status).toBe(400);
     expect(await response.text()).toContain("Invalid payload");
+    await expectFailedPayloadIsSaved({ body: "wrong-body" });
   });
 
   it("should return 401 when signature is invalid", async () => {
+    const payload = getValideCarbonFootprintPayload(neighborhoodName);
+
     const response = await handleCarbonFootprintAnswer(
       // @ts-expect-error allow partial for test
-      buildRequest(
-        getValideCarbonFootprintPayload(neighborhoodName),
-        "wrong-signature",
-      ),
+      buildRequest(payload, "wrong-signature"),
     );
     expect(await response.text()).toContain("Not authorized");
     expect(response.status).toBe(401);
+    const data = await db.rawAnswerError.findMany();
+    expect(data.length).toBe(0);
   });
 
   it("should return 400 when transformed data is invalid", async () => {
@@ -79,6 +82,7 @@ describe("handleCarbonFootprintAnswer", () => {
     );
     expect(response.status).toBe(400);
     expect(await response.text()).toContain("Invalid payload");
+    await expectFailedPayloadIsSaved(payload);
   });
 
   it("should return 404 when no survey found by name", async () => {
@@ -99,6 +103,7 @@ describe("handleCarbonFootprintAnswer", () => {
     expect(response.status).toBe(404);
     expect(body.code).toBe("NOT_FOUND");
     expect(body.message).toBe(ErrorCode.WRONG_SURVEY_NAME);
+    await expectFailedPayloadIsSaved(payload);
   });
 
   it("should return 201 when su is unkown", async () => {
@@ -189,6 +194,7 @@ describe("handleCarbonFootprintAnswer", () => {
     expect(response.status).toBe(400);
     expect(body.code).toBe("BAD_REQUEST");
     expect(body.message).toBe(ErrorCode.MISSING_SURVEY_NAME);
+    await expectFailedPayloadIsSaved(payload);
   });
 
   it("should return 404 when calculated su is not found", async () => {
@@ -223,5 +229,7 @@ describe("handleCarbonFootprintAnswer", () => {
     });
 
     expect(data.length).toBe(0);
+
+    await expectFailedPayloadIsSaved(payload);
   });
 });

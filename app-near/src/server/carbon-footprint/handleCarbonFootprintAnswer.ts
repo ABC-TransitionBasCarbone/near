@@ -1,3 +1,4 @@
+import { AnswerType } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 import { getHTTPStatusCodeFromError } from "@trpc/server/unstable-core-do-not-import";
 import { NextResponse, type NextRequest } from "next/server";
@@ -8,6 +9,7 @@ import {
   NgcWebhookSchema,
   type NgcWebhookPayload,
 } from "~/types/CarbonFootprint";
+import { createAnswerError } from "../anwser-error/create";
 import { getSurveyInformations } from "../typeform/helpers";
 import { isValidSignature, SignatureType } from "../typeform/signature";
 import { convertCarbonFootprintBody } from "./convert";
@@ -24,7 +26,6 @@ export const handleCarbonFootprintAnswer = async (
 ): Promise<NextResponse> => {
   try {
     const body = await req.text();
-
     // could throw zod exception from zod parsing
     const parsedBody: NgcWebhookPayload = NgcWebhookSchema.parse(
       JSON.parse(body),
@@ -50,6 +51,7 @@ export const handleCarbonFootprintAnswer = async (
 
     return NextResponse.json({ message: "created" }, { status: 201 });
   } catch (error) {
+    await createAnswerError(await req.json(), AnswerType.CARBON_FOOTPRINT);
     if (error instanceof z.ZodError) {
       console.error(
         "[whebhook]",
