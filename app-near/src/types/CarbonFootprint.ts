@@ -96,6 +96,8 @@ export const NgcWebhookSchema = z.object({
   }),
   broadcastChannel: z.nativeEnum(BroadcastChannel),
   neighborhoodId: z.string(),
+  broadcastId: z.string(),
+  id: z.string(),
   answers: z.object({
     userAnswers: z
       .object({
@@ -202,6 +204,8 @@ export const convertedCarbonFootprintAnswer = z.object({
   servicesMarket: z.number(),
 
   broadcastChannel: z.nativeEnum(BroadcastChannel),
+  broadcastId: z.string(),
+  externalId: z.string(),
   neighborhood: z.string(),
   knowSu: z.boolean(),
   su: z.number().optional(),

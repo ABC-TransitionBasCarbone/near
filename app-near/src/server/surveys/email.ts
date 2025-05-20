@@ -4,12 +4,21 @@ import { getWayOfLifeAnswerByEmail } from "../way-of-life/get";
 import { getCarbonFootprintAnswerByEmail } from "../carbon-footprint/get";
 import { buildSurveyLink } from "~/shared/services/survey-links/build";
 import { SurveyType } from "~/types/enums/survey";
+import { TRPCError } from "@trpc/server";
+import { ErrorCode } from "~/types/enums/error";
 
 export const sendPhaseTwoFormNotification = async (
   email: string,
   surveyName: string,
-  suName = "", // near-52 to remove when we have solution to get suName with email endpoint
+  suName?: number,
 ) => {
+  if (!suName) {
+    throw new TRPCError({
+      code: "NOT_FOUND",
+      message: ErrorCode.SU_NOT_FOUND,
+    });
+  }
+
   const wayOfLifeAnswer = await getWayOfLifeAnswerByEmail(email);
   const carbonFootprintAnswer = await getCarbonFootprintAnswerByEmail(email);
 
@@ -19,7 +28,7 @@ export const sendPhaseTwoFormNotification = async (
       displayWayOfLife: wayOfLifeAnswer ? "false" : "true",
       displayCarbonFootprint: carbonFootprintAnswer ? "false" : "true",
       neighborhood: surveyName,
-      suName: suName,
+      suName: suName.toString(),
       wayOfLifeUrl: buildSurveyLink(
         "mail_campaign",
         SurveyType.WAY_OF_LIFE,

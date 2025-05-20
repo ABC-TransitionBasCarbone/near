@@ -5,6 +5,7 @@ import { sendUsersSu } from "./sendUsersSu";
 import { TRPCError } from "@trpc/server";
 import { clearAllSurveys } from "../test-utils/clear/survey";
 import EmailService from "../email";
+import { env } from "~/env";
 
 describe("sendUsersSu", () => {
   const surveyId = 654;
@@ -133,10 +134,10 @@ describe("sendUsersSu", () => {
         {
           params: {
             neighborhood: surveyName,
-            ngcUrl: `https://carbon-footprint.12345.com?broadcast_channel=mail_campaign&broadcast_id=${fixedUUID}&date=${encodeURIComponent(fixedDate.toISOString())}&neighborhood=test-send-user-su`,
+            ngcUrl: `${env.NEXT_PUBLIC_TYPEFORM_CARBON_FOOTPRINT_LINK}?broadcast_channel=mail_campaign&broadcast_id=${fixedUUID}&date=${encodeURIComponent(fixedDate.toISOString())}&neighborhood=${surveyName}`,
             numberOfResponses: "2",
             suName: "11",
-            wayOfLifeUrl: `https://typeform-url.com/way-of-life/survey#broadcast_channel=mail_campaign&broadcast_id=${fixedUUID}&date=${encodeURIComponent(fixedDate.toISOString())}&neighborhood=test-send-user-su`,
+            wayOfLifeUrl: `${env.NEXT_PUBLIC_TYPEFORM_WAY_OF_LIFE_LINK}#broadcast_channel=mail_campaign&broadcast_id=${fixedUUID}&date=${encodeURIComponent(fixedDate.toISOString())}&neighborhood=${surveyName}`,
           },
           subject:
             "Petite enquête test-send-user-su : merci d'avoir répondu ! Et la suite ?",
@@ -145,10 +146,10 @@ describe("sendUsersSu", () => {
         {
           params: {
             neighborhood: surveyName,
-            ngcUrl: `https://carbon-footprint.12345.com?broadcast_channel=mail_campaign&broadcast_id=${fixedUUID}&date=${encodeURIComponent(fixedDate.toISOString())}&neighborhood=test-send-user-su`,
+            ngcUrl: `${env.NEXT_PUBLIC_TYPEFORM_CARBON_FOOTPRINT_LINK}?broadcast_channel=mail_campaign&broadcast_id=${fixedUUID}&date=${encodeURIComponent(fixedDate.toISOString())}&neighborhood=${surveyName}`,
             numberOfResponses: "2",
             suName: "22",
-            wayOfLifeUrl: `https://typeform-url.com/way-of-life/survey#broadcast_channel=mail_campaign&broadcast_id=${fixedUUID}&date=${encodeURIComponent(fixedDate.toISOString())}&neighborhood=test-send-user-su`,
+            wayOfLifeUrl: `${env.NEXT_PUBLIC_TYPEFORM_WAY_OF_LIFE_LINK}#broadcast_channel=mail_campaign&broadcast_id=${fixedUUID}&date=${encodeURIComponent(fixedDate.toISOString())}&neighborhood=${surveyName}`,
           },
           subject:
             "Petite enquête test-send-user-su : merci d'avoir répondu ! Et la suite ?",

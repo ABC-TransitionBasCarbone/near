@@ -10,6 +10,7 @@ export const getValideCarbonFootprintPayload = (
 const getValideCarbonFootprintPayloadUnknownSu = (surveyName: string) => ({
   broadcastChannel: "street_survey",
   broadcastId: "2f416d05-875d-41a7-b4f0-19570859213f",
+  id: "fbe4ab91-fe39-4a08-80ce-0601d7cdcaf4",
   neighborhoodId: surveyName,
   calculatedResults: {
     bilan: 6820.373429453229,
@@ -222,6 +223,7 @@ const getValideCarbonFootprintPayloadKnownSu = (
   broadcastChannel: "street_survey",
   broadcastId: "2f416d05-875d-41a7-b4f0-19570859213f",
   neighborhoodId: surveyName,
+  id: "fbe4ab91-fe39-4a08-80ce-0601d7cdcaf4",
   calculatedResults: {
     bilan: 8078.568077572028,
     transport: 733.076651775687,

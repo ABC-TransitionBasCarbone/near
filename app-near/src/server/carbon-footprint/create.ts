@@ -10,7 +10,11 @@ export const createCarbonFooprintAnswer = async (
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { su, neighborhood, ...createQuery } = answer;
 
-  const calculatedSuParams = await getCalculatedSuParams(survey, answer);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { suName, ...calculatedSuParams } = await getCalculatedSuParams(
+    survey,
+    answer,
+  );
 
   return db.carbonFootprintAnswer.create({
     data: { ...createQuery, surveyId: survey.id, ...calculatedSuParams },

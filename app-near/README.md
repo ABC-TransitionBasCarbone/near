@@ -143,7 +143,8 @@ voir le [README du dossier scripts](./scritps/README.md)
 # PROMPT (exemple pour les ngc):
 #
 # Without Prompt
-# ./scripts/webhooks/query.sh localhost:3000/api/ngcform ngc-secret ./scripts/webhooks/ngc.json
+# ./scripts/webhooks/query.sh localhost:3000/api/ngcform ngc-secret ./scripts/webhooks/ngc-known-su.json
+# ./scripts/webhooks/query.sh localhost:3000/api/ngcform ngc-secret ./scripts/webhooks/ngc-unknown-su.json
 #
 # With Prompt
 # Entrez l'URL de destination : localhost:3000/api/ngcform

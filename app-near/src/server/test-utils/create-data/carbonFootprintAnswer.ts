@@ -7,6 +7,8 @@ export const buildCarbonFootprintAnswer = (
   data?: Partial<CarbonFootprintAnswer>,
 ): BuilderCarbonFootprintAnswer => ({
   broadcastChannel: faker.helpers.arrayElement(Object.values(BroadcastChannel)),
+  broadcastId: faker.string.uuid(),
+  externalId: faker.string.uuid(),
   email: Date.now() + faker.internet.email(),
   globalNote: faker.number.float(),
   transportation: faker.number.float(),

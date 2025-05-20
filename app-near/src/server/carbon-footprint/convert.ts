@@ -149,6 +149,8 @@ export const convertCarbonFootprintBody = (
 
     neighborhood: body.neighborhoodId,
     broadcastChannel: body.broadcastChannel,
+    broadcastId: body.broadcastId,
+    externalId: body.id,
 
     knowSu: mapConnaissanceSu(
       body.answers.userAnswers["services sociétaux . connaissance su"],
