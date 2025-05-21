@@ -35,6 +35,10 @@ export const sendUsersSu = async (surveyId: number): Promise<Result[]> => {
     select: { id: true, email: true, su: true },
   });
 
+  const count = await db.suAnswer.count({
+    where: { surveyId },
+  });
+
   const results: Result[] = [];
 
   const chunkedAnswers = chunkArray(answers, 800);
@@ -47,7 +51,7 @@ export const sendUsersSu = async (surveyId: number): Promise<Result[]> => {
           params: {
             suName: `${item.su!.su}`,
             neighborhood: survey.name,
-            numberOfResponses: answers.length.toString(),
+            numberOfResponses: count.toString(),
             wayOfLifeUrl: buildSurveyLink(
               "mail_campaign",
               SurveyType.WAY_OF_LIFE,

@@ -124,6 +124,7 @@ export const handleTypeformAnswer = async (
           createQuery.email,
           surveyName,
           suName,
+          { displayCarbonFootprint: "true", displayWayOfLife: "false" },
         );
       }
     }
