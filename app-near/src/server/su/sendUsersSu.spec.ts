@@ -135,7 +135,7 @@ describe("sendUsersSu", () => {
           params: {
             neighborhood: surveyName,
             ngcUrl: `${env.NEXT_PUBLIC_TYPEFORM_CARBON_FOOTPRINT_LINK}?broadcast_channel=mail_campaign&broadcast_id=${fixedUUID}&date=${encodeURIComponent(fixedDate.toISOString())}&neighborhood=${surveyName}`,
-            numberOfResponses: "2",
+            numberOfResponses: "4",
             suName: "11",
             wayOfLifeUrl: `${env.NEXT_PUBLIC_TYPEFORM_WAY_OF_LIFE_LINK}#broadcast_channel=mail_campaign&broadcast_id=${fixedUUID}&date=${encodeURIComponent(fixedDate.toISOString())}&neighborhood=${surveyName}`,
           },
@@ -147,7 +147,7 @@ describe("sendUsersSu", () => {
           params: {
             neighborhood: surveyName,
             ngcUrl: `${env.NEXT_PUBLIC_TYPEFORM_CARBON_FOOTPRINT_LINK}?broadcast_channel=mail_campaign&broadcast_id=${fixedUUID}&date=${encodeURIComponent(fixedDate.toISOString())}&neighborhood=${surveyName}`,
-            numberOfResponses: "2",
+            numberOfResponses: "4",
             suName: "22",
             wayOfLifeUrl: `${env.NEXT_PUBLIC_TYPEFORM_WAY_OF_LIFE_LINK}#broadcast_channel=mail_campaign&broadcast_id=${fixedUUID}&date=${encodeURIComponent(fixedDate.toISOString())}&neighborhood=${surveyName}`,
           },

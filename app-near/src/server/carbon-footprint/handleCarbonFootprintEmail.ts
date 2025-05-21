@@ -28,6 +28,7 @@ export const handleCarbonFootprintEmail = async (
       email,
       result.survey.name,
       result.su?.su,
+      { displayCarbonFootprint: "false", displayWayOfLife: "true" },
     );
 
     return NextResponse.json({ message: "Email processed" }, { status: 200 });

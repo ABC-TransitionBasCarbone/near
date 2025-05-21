@@ -1,7 +1,5 @@
 import { TemplateId } from "~/types/enums/brevo";
 import EmailService from "../email";
-import { getWayOfLifeAnswerByEmail } from "../way-of-life/get";
-import { getCarbonFootprintAnswerByEmail } from "../carbon-footprint/get";
 import { buildSurveyLink } from "~/shared/services/survey-links/build";
 import { SurveyType } from "~/types/enums/survey";
 import { TRPCError } from "@trpc/server";
@@ -10,7 +8,11 @@ import { ErrorCode } from "~/types/enums/error";
 export const sendPhaseTwoFormNotification = async (
   email: string,
   surveyName: string,
-  suName?: number,
+  suName: number | undefined,
+  options: {
+    displayWayOfLife: "true" | "false";
+    displayCarbonFootprint: "true" | "false";
+  },
 ) => {
   if (!suName) {
     throw new TRPCError({
@@ -19,14 +21,10 @@ export const sendPhaseTwoFormNotification = async (
     });
   }
 
-  const wayOfLifeAnswer = await getWayOfLifeAnswerByEmail(email);
-  const carbonFootprintAnswer = await getCarbonFootprintAnswerByEmail(email);
-
   return EmailService.sendEmail({
     to: [{ email }],
     params: {
-      displayWayOfLife: wayOfLifeAnswer ? "false" : "true",
-      displayCarbonFootprint: carbonFootprintAnswer ? "false" : "true",
+      ...options,
       neighborhood: surveyName,
       suName: suName.toString(),
       wayOfLifeUrl: buildSurveyLink(
