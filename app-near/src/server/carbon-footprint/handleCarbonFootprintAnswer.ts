@@ -24,8 +24,9 @@ const unauthorizedResponse = (): NextResponse =>
 export const handleCarbonFootprintAnswer = async (
   req: NextRequest,
 ): Promise<NextResponse> => {
+  const body = await req.text();
+
   try {
-    const body = await req.text();
     // could throw zod exception from zod parsing
     const parsedBody: NgcWebhookPayload = NgcWebhookSchema.parse(
       JSON.parse(body),
@@ -51,7 +52,7 @@ export const handleCarbonFootprintAnswer = async (
 
     return NextResponse.json({ message: "created" }, { status: 201 });
   } catch (error) {
-    await createAnswerError(await req.json(), AnswerType.CARBON_FOOTPRINT);
+    await createAnswerError(JSON.parse(body), AnswerType.CARBON_FOOTPRINT);
     if (error instanceof z.ZodError) {
       console.error(
         "[whebhook]",
