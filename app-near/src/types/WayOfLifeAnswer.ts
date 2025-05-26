@@ -128,10 +128,10 @@ export const convertedWayOfLifeAnswer = z.object({
   transportTimeToHobby: z.nativeEnum(TransportTime),
   hobbyZone: z.string(),
 
-  remoteWorkingWeeklyFrequency: z.number(),
-  transportModeToWork: z.nativeEnum(TransportMode),
-  transportTimeToWork: z.nativeEnum(TransportTime),
-  workZone: z.string(),
+  remoteWorkingWeeklyFrequency: z.number().optional(),
+  transportModeToWork: z.nativeEnum(TransportMode).optional(),
+  transportTimeToWork: z.nativeEnum(TransportTime).optional(),
+  workZone: z.string().optional(),
 
   transportModeToTravel: z.nativeEnum(TransportModeToTravel),
   transportModeToGoToStation: z.nativeEnum(TransportModeToStation),
