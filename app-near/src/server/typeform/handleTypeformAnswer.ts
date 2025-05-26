@@ -41,8 +41,8 @@ export const handleTypeformAnswer = async (
   let formId: string | undefined = undefined;
   let webhookId: string | undefined = undefined;
 
+  const body = await req.text();
   try {
-    const body = await req.text();
     const parsedBody: TypeformWebhookPayload = TypeformWebhookSchema.parse(
       JSON.parse(body),
     );
@@ -131,7 +131,7 @@ export const handleTypeformAnswer = async (
 
     return NextResponse.json({ message: "created" }, { status: 201 });
   } catch (error) {
-    await createAnswerError(await req.json(), getAnswerType(formId));
+    await createAnswerError(JSON.parse(body), getAnswerType(formId));
 
     if (error instanceof z.ZodError) {
       console.error(
