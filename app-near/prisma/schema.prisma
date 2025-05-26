@@ -431,10 +431,10 @@ model WayOfLifeAnswer {
   transportTimeToHobby TransportTime @map("transport_time_to_hobby")
   hobbyZone            String        @map("hobby_zone")
 
-  remoteWorkingWeeklyFrequency Int           @map("remote_working_weekly_frequency")
-  transportModeToWork          TransportMode @map("transport_mode_to_work")
-  transportTimeToWork          TransportTime @map("transport_time_to_work")
-  workZone                     String        @map("work_zone")
+  remoteWorkingWeeklyFrequency Int?           @map("remote_working_weekly_frequency")
+  transportModeToWork          TransportMode? @map("transport_mode_to_work")
+  transportTimeToWork          TransportTime? @map("transport_time_to_work")
+  workZone                     String?        @map("work_zone")
 
   transportModeToTravel      TransportModeToTravel  @map("transport_mode_to_travel")
   transportModeToGoToStation TransportModeToStation @map("transport_mode_to_go_to_station")
