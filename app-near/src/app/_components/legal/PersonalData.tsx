@@ -39,8 +39,7 @@ const PersonalData: React.FC = () => {
       <ul>
         <li>lorsque vous naviguez sur le Site,</li>
         <li>
-          lorsque vous partagez une page ou une offre avec un ami par envoi d’un
-          e-mail,
+          lorsque vous partagez une page avec un ami par envoi d’un e-mail,
         </li>
         <li>
           lorsque vous partagez une page ou une offre par l’intermédiaire d’un
@@ -51,24 +50,21 @@ const PersonalData: React.FC = () => {
       <p className="pt-2">
         Les données collectées sont destinées à l’usage de l’Association pour la
         transition Bas Carbone et du Réseau des Quartiers en Transition, afin de
-        gérer la relation commerciale avec vous et vous tenir informés de leurs
-        ses offres et actualités. En vous inscrivant vous pouvez également être
-        informé des offres et actualités de l’Association pour la transition Bas
-        Carbone et du Réseau des Quartiers en Transition, sous forme de
-        newsletters, emails événementiels ou emails d’offres personnalisées de
-        produits et services fournis par l’Association pour la transition Bas
-        Carbone et le Réseau des Quartiers en Transition. Si vous ne souhaitez
-        plus recevoir ces propositions, vous pouvez nous en informer à tout
-        moment par courrier ou par e-mail (coordonnées indiquées dans la
-        rubrique « Contact » du Site) ou via le lien de désabonnement contenu
-        dans chacun des emails commerciaux que nous vous envoyons ou dans votre
-        compte client.
+        gérer la relation commerciale avec vous et vous tenir informés des
+        actualités. En vous inscrivant vous pouvez également être informés des
+        actualités de l’Association pour la transition Bas Carbone et du Réseau
+        des Quartiers en Transition, sous forme de newsletters, emails
+        événementiels. Si vous ne souhaitez plus recevoir ces propositions, vous
+        pouvez nous en informer à tout moment par courrier ou par e-mail
+        (coordonnées indiquées dans la rubrique « Contact » du Site) ou via le
+        lien de désabonnement contenu dans chacun des emails que nous vous
+        envoyons.
       </p>
 
       <p>
         L’Association pour la transition Bas Carbone et le Réseau des Quartiers
         en Transition, sont responsables du traitement de vos données. Elles
-        peuvent être transmises aux sociétés et sous-traitants et a ses
+        peuvent être transmises aux sociétés et sous-traitants et à ses
         prestataires, situés dans et hors de l’Union européenne, auxquels
         l’Association pour la transition Bas Carbone et le Réseau des Quartiers
         en Transition, font appel.
@@ -92,8 +88,7 @@ const PersonalData: React.FC = () => {
 
       <p>
         Dans le cas d’une demande d’accès à vos données personnelles, une copie
-        de votre pièce d’identité recto/verso est nécessaire. Ou par le
-        formulaire de contact présent sur le Site.
+        de votre pièce d’identité recto/verso est nécessaire.
       </p>
 
       <h2 className="pb-2 pt-3 font-bold">
@@ -151,9 +146,9 @@ const PersonalData: React.FC = () => {
         </li>
         <li>
           {">"} de mémoriser des informations relatives à un formulaire que vous
-          avez rempli sur le Site (inscription ou accès au compte) ou à des
-          produits, services ou informations que vous avez choisis sur le Site
-          (service souscrit, contenu d’un panier de commande, etc.),
+          auriez rempli sur le Site (inscription ou accès au compte) ou à
+          d’éventuels services ou informations que vous avez choisis sur le
+          Site,
         </li>
         <li>
           {">"} de vous permettre d’accéder à des espaces réservés et personnels
@@ -181,13 +176,13 @@ const PersonalData: React.FC = () => {
       </h3>
       <p>
         Si votre terminal est utilisé par plusieurs personnes et lorsqu’un même
-        terminal dispose de plusieurs logiciels de navigation, la société
-        l’Association pour la transition Bas Carbone et le Réseau des Quartiers
-        en Transition ne sauraient s’assurer de manière certaine que les
-        services et publicités destinés à ce terminal correspondent bien à votre
-        utilisation propre et non a celle d’un autre utilisateur de ce terminal.
-        Le cas échéant, le partage avec d’autres personnes de l’utilisation de
-        ce terminal et la configuration des paramètres du navigateur utilisé à
+        terminal dispose de plusieurs logiciels de navigation, l’Association
+        pour la transition Bas Carbone et le Réseau des Quartiers en Transition
+        ne sauraient s’assurer de manière certaine que les services et
+        publicités destinés à ce terminal correspondent bien à votre utilisation
+        propre et non à celle d’un autre utilisateur de ce terminal. Le cas
+        échéant, le partage avec d’autres personnes de l’utilisation de ce
+        terminal et la configuration des paramètres du navigateur utilisé à
         l’égard des cookies, relèvent de votre libre choix et de votre
         responsabilité.
       </p>
@@ -199,7 +194,7 @@ const PersonalData: React.FC = () => {
         réserve des choix que vous avez pu exercer antérieurement ou à tout
         moment, notamment au travers de la configuration des paramètres de votre
         logiciel de navigation, dans les conditions décrites à l’Article 2.3
-        ci-dessous. Ces cookies ont pour finalité d’identifier les Produits
+        ci-dessous. Ces cookies ont pour finalité d’identifier les contenus
         consultés sur le Site et de collecter des données de navigation afin de
         personnaliser l’offre publicitaire qui pourrait vous être présentée en
         dehors du Site. Les données recueillies par le biais de ces cookies sont
@@ -209,7 +204,7 @@ const PersonalData: React.FC = () => {
         Dans le cadre de ce type de partenariat publicitaire, l’Association pour
         la transition Bas Carbone et le Réseau des Quartiers en Transition
         peuvent donc être amenés à transmettre au partenaire concerné des
-        données de navigation anonymes concernant les Produits consultés avec
+        données de navigation anonymes concernant les contenus consultés avec
         votre terminal lors de votre navigation sur le Site.
       </p>
       <p>
@@ -230,9 +225,9 @@ const PersonalData: React.FC = () => {
       </h4>
       <p>
         Vous pouvez également autoriser ou refuser l’enregistrement de cookies
-        dans votre terminal (mais dans ce dernier cas, vous ne pourrez plus
-        passer de commande sur le Site), en configurant votre navigateur à cette
-        fin.
+        dans votre terminal (mais dans ce dernier cas, il est possible que
+        certaines fonctionnalités du site s’en trouvent affectées), en
+        configurant votre navigateur à cette fin.
       </p>
       <p>
         Attention, la configuration de chaque navigateur est différente. Elle
@@ -337,11 +332,6 @@ const PersonalData: React.FC = () => {
 
       <h2 className="pb-2 pt-3 font-bold">ARTICLE 3. RÉSEAUX SOCIAUX</h2>
       <p>
-        Le Site utilise des plug-in de réseaux sociaux, notamment Facebook,
-        exploité par la société Facebook Inc., 1601 S. California Ave, Palo
-        Alto, CA 94304, USA (ci-après et ensemble les « Réseaux Sociaux »).
-      </p>
-      <p>
         Si vous interagissez au moyen des plug-ins, par exemple en cliquant sur
         le bouton « J’aime » ou « Partager », les informations liées à votre
         navigation sur le Site et à votre adhésion à ces réseaux seront
@@ -362,10 +352,8 @@ const PersonalData: React.FC = () => {
         conditions vous liant au Réseau Social dont vous êtes membre.
       </p>
 
-      <h3 className="pb-1 pt-3 italic">Politique de confidentialité</h3>
-
       <h3 className="pb-1 pt-3 italic">
-        Utilisation des données personnelles collectées
+        Politique de confidentialité des fonctionnalités du Site
       </h3>
 
       <h3 className="pb-1 pt-3 italic">Commentaires</h3>
@@ -376,27 +364,7 @@ const PersonalData: React.FC = () => {
         aider à la détection des commentaires indésirables.
       </p>
 
-      <h3 className="pb-1 pt-3 italic">Médias</h3>
-      <p>
-        Si vous êtes un utilisateur ou une utilisatrice enregistré·e et que vous
-        téléversez des images sur le site web, nous vous conseillons d’éviter de
-        téléverser des images contenant des données EXIF de coordonnées GPS. Les
-        visiteurs de votre site web peuvent télécharger et extraire des données
-        de localisation depuis ces images.
-      </p>
-
       <h3 className="pb-1 pt-3 italic">Newsletter</h3>
-      <p>
-        Nous envoyons nos newsletters aux personnes qui en ont fait la demande
-        (Opt-in) depuis cette page :&nbsp;
-        <Link
-          target="_blank"
-          className="font-normal"
-          href="https://www.associationbilancarbone.fr/newsletter/"
-        >
-          https://www.associationbilancarbone.fr/newsletter/
-        </Link>
-      </p>
       <p className="pt-2">
         Nous considérons également que les utilisateurs qui ont ouvert et/ou
         cliqués sur nos newsletters dans les 4 dernières années consentissent à
