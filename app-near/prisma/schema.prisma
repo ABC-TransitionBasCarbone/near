@@ -176,23 +176,6 @@ enum HomeOccupationType {
   HOME_OWNER
 }
 
-enum ActionWhenTooCold {
-  USE_THE_HEATING
-  USE_A_SWEATER
-  USE_THICK_CURTAINS
-  CHANGE_LOCATION
-}
-
-enum ActionWhenTooHot {
-  OPEN_WINDOWS
-  CLOSE_STORES
-  USE_A_FAN
-  USE_AIR_CONDITIONER
-  CHANGE_LOCATION
-  ENDURE_THE_HEAT
-  USE_SPRAYER
-}
-
 enum ParksUsageFrequency {
   RARELY
   SOMETIMES
@@ -240,7 +223,6 @@ enum WishesChoices {
   I_WISH_BUT_CANT
   I_WISH_AND_IT_IS_PLAN
   YES_I_DO
-  NOT_CONCERNED
 }
 
 enum ReasonsUsingCar {
@@ -249,8 +231,8 @@ enum ReasonsUsingCar {
   SECURITY_REASONS
   MY_WORK
   PROFESSIONAL_OR_PERSONAL_IMAGE
-  CONFORT_OR_INDEPENDANCE
   NO_PUBLIC_TRANSPORT_AT_PROXIMITY
+  NOT_CONCERNED
 }
 
 enum ReasonsToEatMeat {
@@ -259,13 +241,13 @@ enum ReasonsToEatMeat {
   I_DONT_KNOW_ALTERNATIVES
   I_DONT_TRUST_ALTERNATIVES
   RESTAURANTS_DOES_NOT_OFFER_ALTERNATIVES
+  NOT_CONCERNED
 }
 
 enum ReasonsToNotBuyFrenchSeasonFood {
   PRICE
   COMPLICATED_LABELS
   I_DONT_KNOW_MARKET
-  I_PREFER_INDUSTRIAL_FOOD
   I_DONT_KNOW_SEASON_PRODUCTS
   I_PREFER_EAT_OTHER_PRODUCTS
 }
@@ -276,6 +258,7 @@ enum ReasonsToNotChoseSecondHand {
   PROFESSIONAL_OR_PERSONAL_IMAGE
   COMPETENCIES
   NO_OFFER_AT_PROXIMITY
+  NOT_CONCERNED
 }
 
 enum TransportMode {
@@ -332,7 +315,6 @@ model WayOfLifeAnswer {
   email                String?
   ageCategory          AgeCategory          @map("age_category")
   gender               Gender
-  professionalCategory ProfessionalCategory @map("professional_category")
 
   knowSu Boolean @map("know_su")
 
@@ -345,11 +327,8 @@ model WayOfLifeAnswer {
 
   notColdHouse            YesNo              @map("not_cold_house")
   confortHouseWhenHot     YesNo              @map("confort_house_when_hot")
-  ideaEasyTalk            YesNo              @map("idea_easy_talk")
   homeOccupationType      HomeOccupationType @map("home_occupation_type")
   otherHousingInformation String?            @map("other_housing_information")
-  actionWhenTooCold       String[]           @map("action_when_too_cold")
-  actionWhenTooHot        String[]           @map("action_when_too_hot")
 
   vegetalParksSatisfaction YesNo               @map("vegetal_parks_satisfaction")
   parksUsageFrequency      ParksUsageFrequency @map("parks_usage_frequency")
@@ -379,7 +358,6 @@ model WayOfLifeAnswer {
   neighborhoodSeasonFruitAndVegetablesSatisfaction YesNo   @map("neighborhood_season_fruits_and_vegetables_satisfaction")
   neighborhoodOrganicProductsSatisfaction          YesNo   @map("neighborhood_organic_product_satisfaction")
   privateOrShareFieldToFarm                        YesNo   @map("private_or_share_field_to_farm")
-  accessToFoodServiceSatisfaction                  YesNo   @map("access_to_food_service_satisfaction")
   accessToShortFoodCircuitSatisfaction             YesNo   @map("access_to_short_food_circuit_satisfaction")
   otherFoodSatisfactionInformation                 String? @map("other_food_satisfaction_information")
 
@@ -403,7 +381,6 @@ model WayOfLifeAnswer {
   howManyPeopleCanIHelp     HowManyPeopleCanIHelp @map("how_many_people_can_I_help")
   otherMutualAidInformation String?               @map("other_mutual_aid_information")
 
-  capacityToShareIdeaToTownHall       YesNo   @map("capacity_to_share_idea_to_town_all")
   noInformationOnCitizenParticipation YesNo   @map("no_information_on_cityzen_participation")
   wantToParticipateToCivicInitiatives YesNo   @map("want_to_participate_to_civic_initiatives")
   otherLocalPoliticInformation        String? @map("other_local_politic_information")
@@ -423,16 +400,16 @@ model WayOfLifeAnswer {
   preferSecondHand            WishesChoices @map("prefer_second_and")
   reasonsToNotChoseSecondHand String[]      @default([]) @map("reasons_to_not_chose_second_hand")
 
-  transportModeToBuyFood TransportMode? @map("transport_mode_to_buy_food")
-  transportTimeToBuyFood TransportTime  @map("transport_time_to_buy_food")
-  foodMarketZone         String         @map("food_market_zone")
+  transportModeToBuyFood TransportMode  @map("transport_mode_to_buy_food")
+  transportTimeToBuyFood TransportTime? @map("transport_time_to_buy_food")
+  foodMarketZone         String?        @map("food_market_zone")
 
-  transportModeToHobby TransportMode @map("transport_mode_to_hobby")
-  transportTimeToHobby TransportTime @map("transport_time_to_hobby")
-  hobbyZone            String        @map("hobby_zone")
+  transportModeToHobby TransportMode  @map("transport_mode_to_hobby")
+  transportTimeToHobby TransportTime? @map("transport_time_to_hobby")
+  hobbyZone            String?        @map("hobby_zone")
 
+  transportModeToWork          TransportMode  @map("transport_mode_to_work")
   remoteWorkingWeeklyFrequency Int?           @map("remote_working_weekly_frequency")
-  transportModeToWork          TransportMode? @map("transport_mode_to_work")
   transportTimeToWork          TransportTime? @map("transport_time_to_work")
   workZone                     String?        @map("work_zone")
 
