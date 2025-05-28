@@ -1,6 +1,4 @@
 import {
-  ActionWhenTooCold,
-  ActionWhenTooHot,
   AgeCategory,
   AirTravelFrequency,
   DigitalIntensity,
@@ -108,27 +106,14 @@ export const surveyWayOfLifeReferencesMapping: Record<
   ["2af033b2-851f-436c-9abe-9d1bf252271e"]: Gender.WOMAN,
   ["4289748f-9d7b-4c62-879c-4331fdd79131"]: Gender.MAN,
   ["23039959-dab5-44bf-ad44-635bab0b3be7"]: Gender.OTHER,
-  // professionalCategory
-  ["0231a148-0377-48c2-bafe-9ad093ff9770"]: ProfessionalCategory.CS1,
-  ["aa8f785a-c21f-4eb5-99af-6dc5f0aca46c"]:
-    ProfessionalCategory.CS2_platform_entrepreneurship,
-  ["7167c411-3fdd-4a86-a5c3-615b3c6a2e6e"]: ProfessionalCategory.CS2,
-  ["9bb7ca97-8ff5-4216-92d9-3f88a1b8a19e"]: ProfessionalCategory.CS3,
-  ["523b70b5-7dac-4be8-afc5-903bb779dc91"]: ProfessionalCategory.CS4,
-  ["b553128c-29d6-4279-b8db-c6be7a95ca42"]: ProfessionalCategory.CS5,
-  ["e6186c8b-cc31-415b-b959-7f7a923e66bd"]: ProfessionalCategory.CS6,
-  ["527c3197-ea65-4678-865b-dbb8497b90bc"]: ProfessionalCategory.CS7,
-  ["d999eafd-db05-4c90-bad2-fcaab1b80f65"]: ProfessionalCategory.CS8_unemployed,
-  ["edbad6b2-3a21-410c-8f5e-d247bdc694ff"]: ProfessionalCategory.CS8_student,
-  ["21871fa1-d863-414f-a701-a565e5088221"]: ProfessionalCategory.CS8_home,
   // knowSu
   ["af1dfc18-9510-43f3-ba9e-feb1374098c8"]: true,
   ["adac5c32-196e-47a5-9bdd-7e5e99060349"]: false,
   // su -> (no options)
   // meatFrequency
   ["d6d4cb14-aecc-4e0d-ab19-891ce89437fc"]: MeatFrequency.MINOR,
-  ["f3d254c4-0b61-4aa4-9df4-a631475787d6"]: MeatFrequency.REGULAR,
-  ["6884a62e-bc9f-47af-8e28-7ea4a27f0230"]: MeatFrequency.MAJOR,
+  ["e16992fa-d02f-438f-bd38-67b0e69b3cdc"]: MeatFrequency.REGULAR,
+  ["c758748c-3c76-42dd-9e6c-cef30181d12b"]: MeatFrequency.MAJOR,
   // transportationMode
   ["b397b2de-2526-4cf6-910c-129a2f236545"]: TransportationMode.CAR,
   ["27b785c9-7c30-4cbe-941a-ebaaa2f5b928"]: TransportationMode.PUBLIC,
@@ -157,31 +142,12 @@ export const surveyWayOfLifeReferencesMapping: Record<
   ["6d65704b-741d-43ea-95eb-de368d19b6e9"]: YesNo.NO,
   ["50c6eb94-c810-4b4e-a2f4-626216660854"]: YesNo.DONT_KNOW,
   ["40decbdf-e652-4e5b-be4e-e8d185a6808e"]: YesNo.YES,
-  // ideaEasyTalk
-  ["42ac7451-b383-4e78-bdb1-0820134a571a"]: YesNo.NO,
-  ["c7fbc9b0-461d-4891-9f1b-de4357ddb042"]: YesNo.DONT_KNOW,
-  ["5f8484ed-2fbb-41e3-b56e-504b784d1c37"]: YesNo.YES,
   // homeOccupationType
   ["e54f5fd9-fa07-41da-be7f-2ec8a9ed8e9b"]:
     HomeOccupationType.SOCIAL_HOUSING_TENANT,
   ["fe17aff4-25df-4b62-9603-482f35ff32c6"]: HomeOccupationType.HOME_OWNER,
   ["e9174667-744e-4fc7-9431-cef5f5580632"]: HomeOccupationType.HOUSING_TENANT,
   // otherHousingInformation -> (no option)
-  // actionWhenTooCold
-  ["93449e3b-6f5b-4e9e-ad2b-07dbb0815d79"]: ActionWhenTooCold.USE_THE_HEATING,
-  ["a6320101-d3a4-4b8c-9cbc-3fa2c29faced"]: ActionWhenTooCold.USE_A_SWEATER,
-  ["4a96c956-18c2-4725-9370-6246fbe1da77"]:
-    ActionWhenTooCold.USE_THICK_CURTAINS,
-  ["52d0b9ab-5378-4915-80d8-e08aea12801b"]: ActionWhenTooCold.CHANGE_LOCATION,
-  // actionWhenTooHot
-  ["3ce2e356-0042-4dd2-9007-a6be946d5df8"]: ActionWhenTooHot.OPEN_WINDOWS,
-  ["e047a523-395d-487c-947b-b079ca29d097"]: ActionWhenTooHot.CLOSE_STORES,
-  ["f6467ebd-4594-44d6-9fb8-bcd136284e59"]: ActionWhenTooHot.USE_A_FAN,
-  ["e3daf2d3-d94c-4314-9f51-b67dde9a9639"]:
-    ActionWhenTooHot.USE_AIR_CONDITIONER,
-  ["15143bbd-1a91-436f-865e-6b29a8c1da65"]: ActionWhenTooHot.CHANGE_LOCATION,
-  ["d5a7d207-06dc-4996-97f4-2dfebaaf2304"]: ActionWhenTooHot.ENDURE_THE_HEAT,
-  ["fb59e708-92a2-47d2-aab8-4a2550bee954"]: ActionWhenTooHot.USE_SPRAYER,
   // vegetalParksSatisfaction
   ["aabd1c7d-98bb-4bc3-9d3f-359df372539c"]: YesNo.NO,
   ["99e72d0c-3f16-4fcc-a154-7bf13da0fcdc"]: YesNo.DONT_KNOW,
@@ -293,10 +259,6 @@ export const surveyWayOfLifeReferencesMapping: Record<
   ["2efcff2f-ec5f-49a5-94f8-aeb26c4be5d0"]: YesNo.NO,
   ["69c810da-4ffb-48dd-8697-3faaa20abbde"]: YesNo.DONT_KNOW,
   ["631080b8-d077-40d9-85a0-264c034b352a"]: YesNo.YES,
-  // accessToFoodServiceSatisfaction
-  ["ab14cf81-4314-421d-a1d5-93d6dcea2803"]: YesNo.NO,
-  ["8e67c5e4-b3bc-4fd3-9cce-0ce0860189ea"]: YesNo.DONT_KNOW,
-  ["f833fa78-64d5-48b1-bf29-eb55ba5d5c44"]: YesNo.YES,
   // accessToShortFoodCircuitSatisfaction
   ["089134ab-fb5e-472e-8eeb-686278c97fe7"]: YesNo.NO,
   ["4684c230-a57f-4229-b5c3-d9dfb9d362a4"]: YesNo.DONT_KNOW,
@@ -355,10 +317,6 @@ export const surveyWayOfLifeReferencesMapping: Record<
   ["64683c9e-6a39-4be7-9c43-d69571dbb198"]: HowManyPeopleCanIHelp.THREE_TO_FOUR,
   ["f40043d2-ad1b-49c2-8193-62888f97d1ad"]: HowManyPeopleCanIHelp.ABOVE_FIVE,
   // otherMutualAidInformation -> (no option)
-  // capacityToShareIdeaToTownHall
-  ["cbdcb28c-9b4c-402e-86e5-97de27357ba7"]: YesNo.NO,
-  ["79c8574f-9e22-45f2-8f73-db86688a40a2"]: YesNo.DONT_KNOW,
-  ["8c25942f-57ac-4f09-ae90-c9046c74db59"]: YesNo.YES,
   // noInformationOnCitizenParticipation
   ["9fc44585-bbe9-4644-b412-b3293bec22c9"]: YesNo.NO,
   ["bb87ceb7-6396-4a2f-ab7a-06c559ad3779"]: YesNo.DONT_KNOW,
@@ -385,7 +343,6 @@ export const surveyWayOfLifeReferencesMapping: Record<
   ["592b24c7-cb1c-45da-967c-adc2a04954de"]: WishesChoices.I_WISH_BUT_CANT,
   ["7fcb5511-7a9c-465c-bc41-3851dad25c2d"]: WishesChoices.I_WISH_AND_IT_IS_PLAN,
   ["a5e521a8-7d84-4c9e-a575-75821de6e961"]: WishesChoices.YES_I_DO,
-  ["74f7bdf7-378b-47c5-8c60-0fdd34799f1a"]: WishesChoices.NOT_CONCERNED,
   // reasonsToContinueUsingCar
   ["0aafc218-3b2d-43e5-9c37-628fe8e9e4bb"]: ReasonsUsingCar.HANDICAP_REASONS,
   ["24e32b3a-d36b-456b-9cdf-dd7c5daa1923"]:
@@ -394,16 +351,14 @@ export const surveyWayOfLifeReferencesMapping: Record<
   ["111b33e8-2fd5-4b70-ad79-8b351fa081e2"]: ReasonsUsingCar.MY_WORK,
   ["51112c7c-d014-4966-8113-22e756602bf1"]:
     ReasonsUsingCar.PROFESSIONAL_OR_PERSONAL_IMAGE,
-  ["d80e21f5-3b05-4ad0-ac44-52b7ecdb6729"]:
-    ReasonsUsingCar.CONFORT_OR_INDEPENDANCE,
   ["5782344a-1bdf-48b0-adc8-aff1b7aefe77"]:
     ReasonsUsingCar.NO_PUBLIC_TRANSPORT_AT_PROXIMITY,
+  ["5a7ed5a9-e92b-47cc-93bf-21696aab3b3b"]: ReasonsUsingCar.NOT_CONCERNED,
   // wantToReduceMeatAndFish
   ["2519df27-2512-47d6-af4a-cae7b69b5942"]: WishesChoices.NO,
   ["94e6f94d-6f69-4577-ad94-a22dbe1c710d"]: WishesChoices.I_WISH_BUT_CANT,
   ["5512113f-55ac-4539-9f97-2d944ca2b05b"]: WishesChoices.I_WISH_AND_IT_IS_PLAN,
   ["8f1d0428-46ec-4471-84a4-abb277b43777"]: WishesChoices.YES_I_DO,
-  ["0c7d0555-99f4-4f0c-9d83-f4c06b67a950"]: WishesChoices.NOT_CONCERNED,
   // reasonsToEatMeat
   ["f8978189-874b-4601-9657-a06b4b159bbf"]:
     ReasonsToEatMeat.WITHOUT_MEAT_IS_NOT_NOURISHING_ENOUGH,
@@ -414,12 +369,12 @@ export const surveyWayOfLifeReferencesMapping: Record<
     ReasonsToEatMeat.I_DONT_TRUST_ALTERNATIVES,
   ["d6b7adf7-f3dc-43c2-8d3f-d43db195e405"]:
     ReasonsToEatMeat.RESTAURANTS_DOES_NOT_OFFER_ALTERNATIVES,
+  ["3bd78e6f-852b-40f6-be61-e06a0793358c"]: ReasonsToEatMeat.NOT_CONCERNED,
   // preferBuyFrenchAndSeasonFood
   ["1762c8bc-820a-4216-a1fa-39c93738dd24"]: WishesChoices.NO,
   ["09dc5f65-e732-45ba-9a21-906c2a03653d"]: WishesChoices.I_WISH_BUT_CANT,
   ["8aefac33-08c8-40a9-a399-9bad1f15ac35"]: WishesChoices.I_WISH_AND_IT_IS_PLAN,
   ["b3bd222a-d6ac-4eaf-9d48-fd1511d9ac0b"]: WishesChoices.YES_I_DO,
-  ["5f30d09d-f9df-41f1-adcb-eddced3f5a73"]: WishesChoices.NOT_CONCERNED,
   // reasonsToNotBuyFrenchAndSeasonFood
   ["d602ad0c-8eff-41f0-be83-291c614e6674"]:
     ReasonsToNotBuyFrenchSeasonFood.PRICE,
@@ -427,8 +382,6 @@ export const surveyWayOfLifeReferencesMapping: Record<
     ReasonsToNotBuyFrenchSeasonFood.COMPLICATED_LABELS,
   ["0f931014-f4a6-4c1c-89c1-e3f4bb8c9452"]:
     ReasonsToNotBuyFrenchSeasonFood.I_DONT_KNOW_MARKET,
-  ["dca6d912-d32b-486d-8096-0ac5acdbcfd5"]:
-    ReasonsToNotBuyFrenchSeasonFood.I_PREFER_INDUSTRIAL_FOOD,
   ["ae140548-ab4d-4cd0-9a1b-13c1a0afa3bf"]:
     ReasonsToNotBuyFrenchSeasonFood.I_DONT_KNOW_SEASON_PRODUCTS,
   ["5df09cde-db7a-4651-bbec-a09f08019762"]:
@@ -438,7 +391,6 @@ export const surveyWayOfLifeReferencesMapping: Record<
   ["4703fcda-3826-4792-9249-e1e18fa0a24a"]: WishesChoices.I_WISH_BUT_CANT,
   ["132aedf3-42de-4ef1-ab6b-883607d3b99a"]: WishesChoices.I_WISH_AND_IT_IS_PLAN,
   ["bd581dcd-4155-40b5-9344-494ad83e1d10"]: WishesChoices.YES_I_DO,
-  ["3661c111-299a-4d64-a2aa-a685507e6e69"]: WishesChoices.NOT_CONCERNED,
   // reasonsToNotChoseSecondHand
   ["18b7b150-6cee-4e33-b395-e2ed2ca97869"]: ReasonsToNotChoseSecondHand.TRUST,
   ["1c5592a2-5436-4c8d-b2bd-7ba5a1b81e17"]:
@@ -449,6 +401,8 @@ export const surveyWayOfLifeReferencesMapping: Record<
     ReasonsToNotChoseSecondHand.COMPETENCIES,
   ["40958a9a-44f0-488e-ad5e-0c5174a7cd0f"]:
     ReasonsToNotChoseSecondHand.NO_OFFER_AT_PROXIMITY,
+  ["b6b51b97-40dd-4945-8935-e0beca6c8f23"]:
+    ReasonsToNotChoseSecondHand.NOT_CONCERNED,
   // transportModeToBuyFood
   ["9ac918ba-9f5b-4992-9f5f-cd9e791d7867"]: TransportMode.WALKING,
   ["e521a754-65d0-48c8-bb01-8d61e9c04281"]: TransportMode.PERSONAL_BICYCLE,

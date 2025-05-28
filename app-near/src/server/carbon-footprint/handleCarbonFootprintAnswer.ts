@@ -1,22 +1,19 @@
+import { AnswerType } from "@prisma/client";
+import { TRPCError } from "@trpc/server";
+import { getHTTPStatusCodeFromError } from "@trpc/server/unstable-core-do-not-import";
 import { NextResponse, type NextRequest } from "next/server";
-import {
-  getSurveyInformations,
-  isNotInPhase,
-  notInPhaseSuSurveyResponse,
-} from "../typeform/helpers";
-import { createCarbonFooprintAnswer } from "./create";
+import { z } from "zod";
 import {
   CarbonFootprintType,
   convertedCarbonFootprintAnswer,
-  type NgcWebhookPayload,
   NgcWebhookSchema,
+  type NgcWebhookPayload,
 } from "~/types/CarbonFootprint";
-import { convertCarbonFootprintBody } from "./convert";
+import { createAnswerError } from "../anwser-error/create";
+import { getSurveyInformations } from "../typeform/helpers";
 import { isValidSignature, SignatureType } from "../typeform/signature";
-import { z } from "zod";
-import { TRPCError } from "@trpc/server";
-import { getHTTPStatusCodeFromError } from "@trpc/server/unstable-core-do-not-import";
-import { SurveyPhase } from "@prisma/client";
+import { convertCarbonFootprintBody } from "./convert";
+import { createCarbonFooprintAnswer } from "./create";
 
 const unauthorizedResponse = (): NextResponse =>
   NextResponse.json(
@@ -27,8 +24,10 @@ const unauthorizedResponse = (): NextResponse =>
 export const handleCarbonFootprintAnswer = async (
   req: NextRequest,
 ): Promise<NextResponse> => {
+  const body = await req.text();
+
   try {
-    const body = await req.text();
+    // could throw zod exception from zod parsing
     const parsedBody: NgcWebhookPayload = NgcWebhookSchema.parse(
       JSON.parse(body),
     );
@@ -37,15 +36,10 @@ export const handleCarbonFootprintAnswer = async (
       return unauthorizedResponse();
     }
 
-    const { surveyName, survey } = await getSurveyInformations(
-      parsedBody.answers.neighborhood,
+    const { survey } = await getSurveyInformations(
+      parsedBody.neighborhoodId,
       CarbonFootprintType.CARBON_FOOTPRINT,
     );
-
-    const validPhase = SurveyPhase.STEP_4_ADDITIONAL_SURVEY;
-    if (isNotInPhase(survey, validPhase)) {
-      return notInPhaseSuSurveyResponse(surveyName, validPhase);
-    }
 
     const carbonFootprintAnswer = convertCarbonFootprintBody(parsedBody);
 
@@ -58,12 +52,13 @@ export const handleCarbonFootprintAnswer = async (
 
     return NextResponse.json({ message: "created" }, { status: 201 });
   } catch (error) {
+    await createAnswerError(JSON.parse(body), AnswerType.CARBON_FOOTPRINT);
     if (error instanceof z.ZodError) {
       console.error(
         "[whebhook]",
         CarbonFootprintType.CARBON_FOOTPRINT,
         "ZOD ERROR :",
-        error.errors,
+        error,
       );
       return NextResponse.json(
         { error: "Invalid payload", details: error.errors },

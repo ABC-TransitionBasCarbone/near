@@ -10,7 +10,6 @@ import {
   HowManyPeopleCanIHelp,
   MeatFrequency,
   ParksUsageFrequency,
-  ProfessionalCategory,
   PurchasingStrategy,
   TransportationMode,
   TransportMode,
@@ -29,7 +28,6 @@ export const convertedWayOfLifeAnswer = z.object({
   ageCategory: z.nativeEnum(AgeCategory),
   isNeighborhoodResident: z.boolean(),
   gender: z.nativeEnum(Gender),
-  professionalCategory: z.nativeEnum(ProfessionalCategory),
   knowSu: z.boolean(),
   su: z.number().optional(),
 
@@ -42,11 +40,8 @@ export const convertedWayOfLifeAnswer = z.object({
 
   notColdHouse: z.nativeEnum(YesNo),
   confortHouseWhenHot: z.nativeEnum(YesNo),
-  ideaEasyTalk: z.nativeEnum(YesNo),
   homeOccupationType: z.nativeEnum(HomeOccupationType),
   otherHousingInformation: z.string().optional(),
-  actionWhenTooCold: z.array(z.string()),
-  actionWhenTooHot: z.array(z.string()),
 
   vegetalParksSatisfaction: z.nativeEnum(YesNo),
   parksUsageFrequency: z.nativeEnum(ParksUsageFrequency),
@@ -76,7 +71,6 @@ export const convertedWayOfLifeAnswer = z.object({
   neighborhoodSeasonFruitAndVegetablesSatisfaction: z.nativeEnum(YesNo),
   neighborhoodOrganicProductsSatisfaction: z.nativeEnum(YesNo),
   privateOrShareFieldToFarm: z.nativeEnum(YesNo),
-  accessToFoodServiceSatisfaction: z.nativeEnum(YesNo),
   accessToShortFoodCircuitSatisfaction: z.nativeEnum(YesNo),
   otherFoodSatisfactionInformation: z.string().optional(),
 
@@ -100,38 +94,37 @@ export const convertedWayOfLifeAnswer = z.object({
   howManyPeopleCanIHelp: z.nativeEnum(HowManyPeopleCanIHelp),
   otherMutualAidInformation: z.string().optional(),
 
-  capacityToShareIdeaToTownHall: z.nativeEnum(YesNo),
   noInformationOnCitizenParticipation: z.nativeEnum(YesNo),
   wantToParticipateToCivicInitiatives: z.nativeEnum(YesNo),
   otherLocalPoliticInformation: z.string().optional(),
 
   giveFreeTimeToHelp: z.nativeEnum(GiveFreeTimeToHelp),
-  yourVoluntaryWork: z.array(z.string()),
+  yourVoluntaryWork: z.array(z.string()).optional(),
 
   wantToReduceCarUsage: z.nativeEnum(WishesChoices),
-  reasonsToContinueUsingCar: z.array(z.string()),
+  reasonsToContinueUsingCar: z.array(z.string()).optional(),
 
   wantToReduceMeatAndFish: z.nativeEnum(WishesChoices),
-  reasonsToEatMeat: z.array(z.string()),
+  reasonsToEatMeat: z.array(z.string()).optional(),
 
   preferBuyFrenchAndSeasonFood: z.nativeEnum(WishesChoices),
-  reasonsToNotBuyFrenchAndSeasonFood: z.array(z.string()),
+  reasonsToNotBuyFrenchAndSeasonFood: z.array(z.string()).optional(),
 
   preferSecondHand: z.nativeEnum(WishesChoices),
-  reasonsToNotChoseSecondHand: z.array(z.string()),
+  reasonsToNotChoseSecondHand: z.array(z.string()).optional(),
 
   transportModeToBuyFood: z.nativeEnum(TransportMode),
-  transportTimeToBuyFood: z.nativeEnum(TransportTime),
-  foodMarketZone: z.string(),
+  transportTimeToBuyFood: z.nativeEnum(TransportTime).optional(),
+  foodMarketZone: z.string().optional(),
 
   transportModeToHobby: z.nativeEnum(TransportMode),
-  transportTimeToHobby: z.nativeEnum(TransportTime),
-  hobbyZone: z.string(),
+  transportTimeToHobby: z.nativeEnum(TransportTime).optional(),
+  hobbyZone: z.string().optional(),
 
-  remoteWorkingWeeklyFrequency: z.number(),
   transportModeToWork: z.nativeEnum(TransportMode),
-  transportTimeToWork: z.nativeEnum(TransportTime),
-  workZone: z.string(),
+  remoteWorkingWeeklyFrequency: z.number().optional(),
+  transportTimeToWork: z.nativeEnum(TransportTime).optional(),
+  workZone: z.string().optional(),
 
   transportModeToTravel: z.nativeEnum(TransportModeToTravel),
   transportModeToGoToStation: z.nativeEnum(TransportModeToStation),

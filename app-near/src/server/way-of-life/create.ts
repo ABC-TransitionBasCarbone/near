@@ -1,6 +1,5 @@
 import { type Survey, type WayOfLifeAnswer } from "@prisma/client";
 import { db } from "../db";
-import { sendPhaseTwoFormNotification } from "../surveys/email";
 import { type BuilderWayOfLifeAnswer } from "~/types/WayOfLifeAnswer";
 
 const createWayOfLifeAnswer = async (
@@ -27,8 +26,4 @@ export const handleWayOfLifeCreation = async (
     } as WayOfLifeAnswer,
     survey.name,
   );
-
-  if (data.email) {
-    await sendPhaseTwoFormNotification(data.email);
-  }
 };

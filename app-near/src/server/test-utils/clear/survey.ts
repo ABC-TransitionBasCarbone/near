@@ -5,6 +5,6 @@ export const clearAllSurveys = async () => {
   await db.wayOfLifeAnswer.deleteMany();
   await db.suAnswer.deleteMany();
   await db.suData.deleteMany();
-
+  await db.rawAnswerError.deleteMany();
   await db.survey.deleteMany();
 };
