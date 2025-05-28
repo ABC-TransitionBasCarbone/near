@@ -1,6 +1,4 @@
 import {
-  ActionWhenTooCold,
-  ActionWhenTooHot,
   AgeCategory,
   AirTravelFrequency,
   BroadcastChannel,
@@ -13,7 +11,6 @@ import {
   HowManyPeopleCanIHelp,
   MeatFrequency,
   ParksUsageFrequency,
-  ProfessionalCategory,
   PurchasingStrategy,
   ReasonsToEatMeat,
   ReasonsToNotBuyFrenchSeasonFood,
@@ -37,17 +34,8 @@ export const buildWayOfLifeAnswer = (
   surveyId: number,
   data?: Partial<WayOfLifeAnswer>,
 ): BuilderWayOfLifeAnswer => ({
-  accessToFoodServiceSatisfaction: faker.helpers.arrayElement(
-    Object.values(YesNo),
-  ),
   accessToShortFoodCircuitSatisfaction: faker.helpers.arrayElement(
     Object.values(YesNo),
-  ),
-  actionWhenTooCold: faker.helpers.arrayElements(
-    Object.values(ActionWhenTooCold),
-  ),
-  actionWhenTooHot: faker.helpers.arrayElements(
-    Object.values(ActionWhenTooHot),
   ),
   ageCategory: faker.helpers.arrayElement(Object.values(AgeCategory)),
   airTravelFrequency: faker.helpers.arrayElement(
@@ -55,9 +43,6 @@ export const buildWayOfLifeAnswer = (
   ),
   associativeActivity: faker.helpers.arrayElement(Object.values(YesNo)),
   bicycleRepairShopSatisfaction: faker.helpers.arrayElement(
-    Object.values(YesNo),
-  ),
-  capacityToShareIdeaToTownHall: faker.helpers.arrayElement(
     Object.values(YesNo),
   ),
   carAnPedestriansRespect: faker.helpers.arrayElement(Object.values(YesNo)),
@@ -106,7 +91,6 @@ export const buildWayOfLifeAnswer = (
   hypermarketFrequency: faker.helpers.arrayElement(
     Object.values(FoodFrequency),
   ),
-  ideaEasyTalk: faker.helpers.arrayElement(Object.values(YesNo)),
   knowSu: faker.helpers.arrayElement([true, false]),
   localShopsToMeetYourNeeds: faker.helpers.arrayElement(Object.values(YesNo)),
   meatFrequency: faker.helpers.arrayElement(Object.values(MeatFrequency)),
@@ -146,9 +130,6 @@ export const buildWayOfLifeAnswer = (
   ),
   preferSecondHand: faker.helpers.arrayElement(Object.values(WishesChoices)),
   privateOrShareFieldToFarm: faker.helpers.arrayElement(Object.values(YesNo)),
-  professionalCategory: faker.helpers.arrayElement(
-    Object.values(ProfessionalCategory),
-  ),
   publicServicesPresence: faker.helpers.arrayElement(Object.values(YesNo)),
   purchasingStrategy: faker.helpers.arrayElement(
     Object.values(PurchasingStrategy),

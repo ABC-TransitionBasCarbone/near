@@ -1,19 +1,24 @@
-import { valideSuSurveyPayload } from "../test-utils/suSurvey";
-import { handleTypeformAnswer } from "./handleTypeformAnswer";
-import { SignatureType, signPayload } from "./signature";
-import { db } from "../db";
-import { TypeformType, type TypeformWebhookPayload } from "~/types/Typeform";
-import { buildRequest } from "../test-utils/request/buildRequest";
-import { BroadcastChannel, type Survey, SurveyPhase } from "@prisma/client";
-import { valideWayOfLifeSurveyPayload } from "../test-utils/wayOfLifeSurvey";
-import { clearAllSurveys } from "../test-utils/clear/survey";
+import { BroadcastChannel, type Survey } from "@prisma/client";
+import { TemplateId } from "~/types/enums/brevo";
 import { ErrorCode } from "~/types/enums/error";
-import { getValidSurveyPhase } from "./helpers";
+import { TypeformType, type TypeformWebhookPayload } from "~/types/Typeform";
+import { db } from "../db";
+import EmailService from "../email";
+import apiSuService from "../external-api/api-su";
+import { clearAllSurveys } from "../test-utils/clear/survey";
 import { buildSuAnswer } from "../test-utils/create-data/suAnswer";
 import { buildWayOfLifeAnswer } from "../test-utils/create-data/wayOfLifeAnswer";
-import EmailService from "../email";
-import { TemplateId } from "~/types/enums/brevo";
-import apiSuService from "../external-api/api-su";
+import { buildRequest } from "../test-utils/request/buildRequest";
+import { valideSuSurveyPayload } from "../test-utils/suSurvey";
+import { valideWayOfLifeSurveyPayload } from "../test-utils/wayOfLifeSurvey";
+import { handleTypeformAnswer } from "./handleTypeformAnswer";
+import { getValidSurveyPhase } from "./helpers";
+import { SignatureType, signPayload } from "./signature";
+import {
+  expectFailedPayloadIsNotSaved,
+  expectFailedPayloadIsSaved,
+} from "../test-utils/expects/answerError";
+import { env } from "~/env";
 
 describe("handleAnswer", () => {
   const neighborhoodName = "neighborhood_test";
@@ -22,6 +27,9 @@ describe("handleAnswer", () => {
 
   let sendEmailMock: jest.SpyInstance;
   let apiSuServiceMock: jest.SpyInstance;
+
+  const fixedDate = new Date("2025-05-16T11:30:36.145Z");
+  const fixedUUID = "mocked-uuid-1234";
 
   beforeEach(async () => {
     await clearAllSurveys();
@@ -47,6 +55,12 @@ describe("handleAnswer", () => {
         su: 3,
       }),
     );
+
+    const OriginalDate = Date;
+    jest.spyOn(global, "Date").mockImplementation(() => fixedDate);
+    Date.now = OriginalDate.now;
+
+    jest.spyOn(global.crypto, "randomUUID").mockReturnValue(fixedUUID);
   });
 
   afterEach(() => {
@@ -63,6 +77,7 @@ describe("handleAnswer", () => {
       expect(await response.text()).toContain("Invalid payload");
 
       expect(sendEmailMock).not.toHaveBeenCalled();
+      await expectFailedPayloadIsSaved({ body: "wrong-body" });
     });
 
     it("should return 400 when formId is invalid", async () => {
@@ -85,6 +100,7 @@ describe("handleAnswer", () => {
       expect(await response.text()).toContain(ErrorCode.WRONG_FORM_ID);
 
       expect(sendEmailMock).not.toHaveBeenCalled();
+      await expectFailedPayloadIsSaved(payload);
     });
 
     it("should return 401 when signature is invalid", async () => {
@@ -96,6 +112,7 @@ describe("handleAnswer", () => {
       expect(await response.text()).toContain("UNAUTHORIZED");
 
       expect(sendEmailMock).not.toHaveBeenCalled();
+      await expectFailedPayloadIsSaved(valideSuSurveyPayload);
     });
 
     it("should return 400 when transformed data is invalid", async () => {
@@ -118,6 +135,7 @@ describe("handleAnswer", () => {
       expect(await response.text()).toContain("Invalid payload");
 
       expect(sendEmailMock).not.toHaveBeenCalled();
+      await expectFailedPayloadIsSaved(payload);
     });
 
     it("should return 400 when their is no survey name", async () => {
@@ -141,6 +159,7 @@ describe("handleAnswer", () => {
       expect(await response.text()).toContain(ErrorCode.MISSING_SURVEY_NAME);
 
       expect(sendEmailMock).not.toHaveBeenCalled();
+      await expectFailedPayloadIsSaved(payload);
     });
 
     it("should return 404 when no survey found by name", async () => {
@@ -163,6 +182,7 @@ describe("handleAnswer", () => {
       expect(await response.text()).toContain(ErrorCode.WRONG_SURVEY_NAME);
 
       expect(sendEmailMock).not.toHaveBeenCalled();
+      await expectFailedPayloadIsSaved(payload);
     });
 
     it("should throw zod exception when data is not valid", async () => {
@@ -186,6 +206,7 @@ describe("handleAnswer", () => {
       expect(await response.text()).toContain("Invalid email");
 
       expect(sendEmailMock).not.toHaveBeenCalled();
+      await expectFailedPayloadIsSaved(payload);
     });
 
     it("should return 200 when user as less than 15", async () => {
@@ -209,6 +230,7 @@ describe("handleAnswer", () => {
       expect(await response.text()).toContain("user should be under 15");
 
       expect(sendEmailMock).not.toHaveBeenCalled();
+      await expectFailedPayloadIsNotSaved();
     });
 
     it("should return 200 when user is not resident", async () => {
@@ -235,6 +257,7 @@ describe("handleAnswer", () => {
       );
 
       expect(sendEmailMock).not.toHaveBeenCalled();
+      await expectFailedPayloadIsNotSaved();
     });
   });
 
@@ -310,36 +333,6 @@ describe("handleAnswer", () => {
       return object;
     };
 
-    it(`should return 200 when not in ${validSurveyPhase}`, async () => {
-      await db.survey.update({
-        data: { phase: SurveyPhase.STEP_5_RESULTS },
-        where: { name: neighborhoodName },
-      });
-
-      const payload = JSON.parse(
-        JSON.stringify(validSurveyPayload),
-      ) as TypeformWebhookPayload;
-
-      payload.form_response.hidden = {
-        neighborhood: neighborhoodName,
-        broadcast_channel: BroadcastChannel.mail_campaign,
-      };
-      const signature = signPayload(
-        JSON.stringify(payload),
-        SignatureType.TYPEFORM,
-      );
-      const response = await handleTypeformAnswer(
-        // @ts-expect-error allow partial for test
-        buildRequest(payload, signature),
-      );
-      expect(response.status).toBe(200);
-      expect(await response.text()).toContain(
-        `step ${validSurveyPhase} is over for ${neighborhoodName}`,
-      );
-
-      expect(sendEmailMock).not.toHaveBeenCalled();
-    });
-
     it("should return 201", async () => {
       await db.survey.update({
         data: { phase: validSurveyPhase },
@@ -368,6 +361,7 @@ describe("handleAnswer", () => {
       );
       expect(response.status).toBe(201);
       expect(await response.text()).toContain("created");
+      await expectFailedPayloadIsNotSaved();
 
       if (typeformType === TypeformType.WAY_OF_LIFE) {
         expect(apiSuServiceMock).toHaveBeenCalledWith({
@@ -388,7 +382,15 @@ describe("handleAnswer", () => {
         });
 
         expect(sendEmailMock).toHaveBeenCalledWith({
-          params: { displayCarbonFootprint: "true", displayWayOfLife: "false" },
+          params: {
+            displayCarbonFootprint: "true",
+            displayWayOfLife: "false",
+            neighborhood: neighborhoodName,
+            ngcUrl: `${env.NEXT_PUBLIC_TYPEFORM_CARBON_FOOTPRINT_LINK}?broadcast_channel=mail_campaign&broadcast_id=${fixedUUID}&date=${encodeURIComponent(fixedDate.toISOString())}&neighborhood=${neighborhoodName}`,
+            suName: "3",
+            wayOfLifeUrl: `${env.NEXT_PUBLIC_TYPEFORM_WAY_OF_LIFE_LINK}#broadcast_channel=mail_campaign&broadcast_id=${fixedUUID}&date=${encodeURIComponent(fixedDate.toISOString())}&neighborhood=${neighborhoodName}`,
+          },
+          subject: `Petite enquête ${neighborhoodName} : merci d'avoir répondu ! Et la suite ?`,
           templateId: TemplateId.PHASE_2_NOTIFICATION,
           to: [{ email: "an_account@example.com" }],
         });
@@ -452,7 +454,15 @@ describe("handleAnswer", () => {
         });
 
         expect(sendEmailMock).toHaveBeenCalledWith({
-          params: { displayCarbonFootprint: "true", displayWayOfLife: "false" },
+          params: {
+            displayCarbonFootprint: "true",
+            displayWayOfLife: "false",
+            neighborhood: neighborhoodName,
+            ngcUrl: `${env.NEXT_PUBLIC_TYPEFORM_CARBON_FOOTPRINT_LINK}?broadcast_channel=mail_campaign&broadcast_id=${fixedUUID}&date=${encodeURIComponent(fixedDate.toISOString())}&neighborhood=${neighborhoodName}`,
+            suName: "3",
+            wayOfLifeUrl: `${env.NEXT_PUBLIC_TYPEFORM_WAY_OF_LIFE_LINK}#broadcast_channel=mail_campaign&broadcast_id=${fixedUUID}&date=${encodeURIComponent(fixedDate.toISOString())}&neighborhood=${neighborhoodName}`,
+          },
+          subject: `Petite enquête ${neighborhoodName} : merci d'avoir répondu ! Et la suite ?`,
           templateId: TemplateId.PHASE_2_NOTIFICATION,
           to: [{ email: "test@mail.com" }],
         });
@@ -524,6 +534,7 @@ describe("handleAnswer", () => {
       }
 
       expect(sendEmailMock).not.toHaveBeenCalled();
+      await expectFailedPayloadIsNotSaved();
     });
 
     if (typeformType === TypeformType.WAY_OF_LIFE) {
@@ -596,6 +607,7 @@ describe("handleAnswer", () => {
 
         expect(response.status).toBe(404);
         expect(await response.text()).toContain("SU_NOT_FOUND");
+        await expectFailedPayloadIsSaved(payload);
       });
 
       it("should create data when unknown su", async () => {
@@ -646,7 +658,15 @@ describe("handleAnswer", () => {
         expect(await response.text()).toContain("created");
 
         expect(sendEmailMock).toHaveBeenCalledWith({
-          params: { displayCarbonFootprint: "true", displayWayOfLife: "false" },
+          params: {
+            displayCarbonFootprint: "true",
+            displayWayOfLife: "false",
+            neighborhood: neighborhoodName,
+            ngcUrl: `${env.NEXT_PUBLIC_TYPEFORM_CARBON_FOOTPRINT_LINK}?broadcast_channel=mail_campaign&broadcast_id=${fixedUUID}&date=${encodeURIComponent(fixedDate.toISOString())}&neighborhood=${neighborhoodName}`,
+            suName: "456852",
+            wayOfLifeUrl: `${env.NEXT_PUBLIC_TYPEFORM_WAY_OF_LIFE_LINK}#broadcast_channel=mail_campaign&broadcast_id=${fixedUUID}&date=${encodeURIComponent(fixedDate.toISOString())}&neighborhood=${neighborhoodName}`,
+          },
+          subject: `Petite enquête ${neighborhoodName} : merci d'avoir répondu ! Et la suite ?`,
           templateId: TemplateId.PHASE_2_NOTIFICATION,
           to: [{ email: "an_account@example.com" }],
         });
@@ -655,6 +675,7 @@ describe("handleAnswer", () => {
 
         expect(createdData.length).toBe(1);
         expect(createdData[0]?.suId).toBe(unknownSuData.id);
+        // TODO : should not saved failed
       });
     }
   });

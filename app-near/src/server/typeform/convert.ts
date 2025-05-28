@@ -24,7 +24,7 @@ export const convertFormToAnswer = (
         if (answer.choices.other) {
           choices.push(answer.choices.other);
         }
-        return choices;
+        return choices.filter((item) => item);
       case "text":
         return answer.text;
       case "email":

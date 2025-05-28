@@ -1,13 +1,11 @@
 "use client";
 import { useState } from "react";
-import {
-  type BroadcastType,
-  surveyTypeMapper,
-} from "../../../../types/enums/broadcasting";
+import { type BroadcastType } from "../../../../types/enums/broadcasting";
 import Button from "../../_ui/Button";
 import QRCodeModal from "./QRCodeModal";
 import { useSession } from "next-auth/react";
 import { type SurveyType } from "~/types/enums/survey";
+import { buildSurveyLink } from "~/shared/services/survey-links/build";
 
 interface BroadcastingButtonProps {
   surveyType: SurveyType;
@@ -53,17 +51,12 @@ const BroadcastingButton: React.FC<BroadcastingButtonProps> = ({
     },
   };
 
-  const buildLink = (type: BroadcastType): string => {
-    if (!session?.user.surveyName) {
-      return "error";
-    }
-    return `${surveyTypeMapper[surveyType].baseUrl}#broadcast_channel=${
-      type
-    }&broadcast_id=${crypto.randomUUID()}&date=${encodeURIComponent(new Date().toISOString())}&neighborhood=${encodeURI(session.user.surveyName)}`;
-  };
-
-  const onGenerateClick = async (type: BroadcastType) => {
-    const link = buildLink(type);
+  const onGenerateClick = async (broadcastType: BroadcastType) => {
+    const link = buildSurveyLink(
+      broadcastType,
+      surveyType,
+      session?.user.surveyName,
+    );
     await navigator.clipboard.writeText(link);
     setCopiedMessage(
       link === "error" ? "Veuillez réessayer plus tard" : "Lien copié !",
@@ -97,7 +90,11 @@ const BroadcastingButton: React.FC<BroadcastingButtonProps> = ({
               setShowQRCode(false);
               document.body.classList.remove("overflow-hidden");
             }}
-            link={buildLink(broadcastType)}
+            link={buildSurveyLink(
+              broadcastType,
+              surveyType,
+              session?.user.surveyName,
+            )}
           ></QRCodeModal>
         )}
       </div>

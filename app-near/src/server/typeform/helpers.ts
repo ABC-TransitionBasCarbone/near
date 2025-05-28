@@ -1,4 +1,9 @@
-import { type Survey, AgeCategory, SurveyPhase } from "@prisma/client";
+import {
+  type Survey,
+  AgeCategory,
+  AnswerType,
+  SurveyPhase,
+} from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 import { NextResponse } from "next/server";
 import { env } from "~/env";
@@ -27,6 +32,28 @@ export const getFormIdType = (formId?: string): TypeformType => {
       code: "BAD_REQUEST",
       message: ErrorCode.WRONG_FORM_ID,
     });
+  }
+
+  return result;
+};
+
+const mapper: Record<string, AnswerType> = {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  [env.SU_FORM_ID]: AnswerType.SU,
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  [env.WAY_OF_LIFE_FORM_ID]: AnswerType.WAY_OF_LIFE,
+};
+
+export const getAnswerType = (formId?: string): AnswerType => {
+  if (!formId) {
+    return AnswerType.UNKNWON;
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  const result = mapper[formId];
+
+  if (!result) {
+    return AnswerType.UNKNWON;
   }
 
   return result;

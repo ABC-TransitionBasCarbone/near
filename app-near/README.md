@@ -143,7 +143,8 @@ voir le [README du dossier scripts](./scritps/README.md)
 # PROMPT (exemple pour les ngc):
 #
 # Without Prompt
-# ./scripts/webhooks/query.sh localhost:3000/api/ngcform ngc-secret ./scripts/webhooks/ngc.json
+# ./scripts/webhooks/query.sh localhost:3000/api/ngcform ngc-secret ./scripts/webhooks/ngc-known-su.json
+# ./scripts/webhooks/query.sh localhost:3000/api/ngcform ngc-secret ./scripts/webhooks/ngc-unknown-su.json
 #
 # With Prompt
 # Entrez l'URL de destination : localhost:3000/api/ngcform
@@ -155,7 +156,8 @@ voir le [README du dossier scripts](./scritps/README.md)
 Note :
 
 - su.json > exemple de payload pour le webhook sphère d'usage
-- ngc.json > exemple de payload pour le webhook ngcform
+- ngc*.json > exemples de payload pour le webhook ngcform
+- way-of-life.json > exemples de payload pour le webhook mode de vie
 
 ## Comment jouer les seeds
 
