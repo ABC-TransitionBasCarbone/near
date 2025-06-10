@@ -181,9 +181,9 @@ const LegalNotes: React.FC = () => {
           https://projetnear.org
         </Link>
         des informations aussi précises que possible. Toutefois, ils ne pourront
-        pas être tenue responsable des omissions, des inexactitudes des carences
-        dans la mise à jour ou de tout autres manquements qu’ils soient de son
-        fait ou du fait des tiers partenaires qui lui fournissent ces
+        pas être tenus responsables des omissions, des inexactitudes des
+        carences dans la mise à jour ou de tout autres manquements qu’ils soient
+        de son fait ou du fait des tiers partenaires qui lui fournissent ces
         informations.
       </p>
       <p className="pt-2">
@@ -229,7 +229,7 @@ const LegalNotes: React.FC = () => {
         une partie des services, à tout moment sans préavis, le tout sans droit
         à indemnités. L’utilisateur reconnaît et accepte que l&apos;Association
         pour la transition Bas Carbone et le Réseau des Quartiers en Transition
-        ne soient pas responsable des interruptions, et des conséquences qui
+        ne soient pas responsables des interruptions, et des conséquences qui
         peuvent en découler pour l’utilisateur ou tout tiers.
       </p>
 
@@ -286,7 +286,7 @@ const LegalNotes: React.FC = () => {
       <h2 className="pb-2 pt-3 font-bold">Droits d’accès</h2>
       <p>
         Conformément au Règlement (UE) 2016/679 relatif à la protection des
-        données à caractère personnel, vous disposez sur vos données des droit
+        données à caractère personnel, vous disposez sur vos données des droits
         d’accès, droit de rectification et du droit d’opposition. Pour en savoir
         plus, vous pouvez consulter notre{" "}
         <Link className="font-normal" href="/mentions-legales#personal-data">

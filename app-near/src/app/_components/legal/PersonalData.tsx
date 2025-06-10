@@ -122,7 +122,7 @@ const PersonalData: React.FC = () => {
         smartphone, etc.) sont susceptibles d’être enregistrées dans des
         fichiers « cookies » installés sur ce terminal, sous réserve des choix
         exprimés concernant les cookies, par l’un des moyens décrit à l’Article
-        2.5 ci-dessous et que vous pouvez modifier a tout moment. Seul
+        2.5 ci-dessous et que vous pouvez modifier à tout moment. Seul
         l’émetteur d’un cookie est susceptible de lire ou de modifier des
         informations qui y sont contenues.
       </p>
@@ -272,9 +272,9 @@ const PersonalData: React.FC = () => {
           <Link
             target="_blank"
             className="font-normal"
-            href="https://support.mozilla.org/fr/kb/Activer%20et%20d%C3%A9sactiver%20les%20cookies"
+            href="https://support.mozilla.org/fr/kb/cookies-informations-sites-enregistrent#w_parametres-des-cookies"
           >
-            https://support.mozilla.org/fr/kb/Activer%20et%20d%C3%A9sactiver%20les%20cookies
+            https://support.mozilla.org/fr/kb/cookies-informations-sites-enregistrent#w_parametres-des-cookies
           </Link>
         </li>
         <li>
@@ -326,7 +326,7 @@ const PersonalData: React.FC = () => {
       <p>
         Notez que cette procédure n’empêchera pas l’affichage de publicités sur
         les sites Internet que vous visitez. Elle ne bloquera que les
-        technologies qui permettent d’adapter des publicités a la navigation de
+        technologies qui permettent d’adapter des publicités à la navigation de
         votre terminal et à vos centres d’intérêts.
       </p>
 
@@ -367,7 +367,7 @@ const PersonalData: React.FC = () => {
       <h3 className="pb-1 pt-3 italic">Newsletter</h3>
       <p className="pt-2">
         Nous considérons également que les utilisateurs qui ont ouvert et/ou
-        cliqués sur nos newsletters dans les 4 dernières années consentissent à
+        cliqué sur nos newsletters dans les 4 dernières années consentissent à
         recevoir nos mailings. Nous mettons en avant un Opt-out sur tous nos
         envois permettant à l’utilisateur de se désabonner très facilement et
         rapidement.
