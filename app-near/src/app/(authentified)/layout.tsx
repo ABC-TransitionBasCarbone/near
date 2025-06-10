@@ -5,7 +5,7 @@ import { SurveyStateProvider } from "../_components/_context/surveyStateContext"
 interface LayoutProps {
   children: ReactNode;
 }
-const BackOfficeLayoutWithNav: React.FC<LayoutProps> = ({ children }) => {
+const LayoutPublicContainer: React.FC<LayoutProps> = ({ children }) => {
   return (
     <SurveyStateProvider>
       <LayoutAuthentified>{children}</LayoutAuthentified>
@@ -13,4 +13,4 @@ const BackOfficeLayoutWithNav: React.FC<LayoutProps> = ({ children }) => {
   );
 };
 
-export default BackOfficeLayoutWithNav;
+export default LayoutPublicContainer;
