@@ -8,12 +8,13 @@ export const valideWayOfLifeSurveyPayload = {
   event_type: "form_response",
   form_response: {
     form_id: env.WAY_OF_LIFE_FORM_ID,
-    token: "01JRA355K2YJEEQQ310F0PC0KT",
+    token: "gleti7pkz8gj5ez0gleupepebwmypwe5",
     landed_at: "2025-04-08T06:59:42Z",
     submitted_at: "2025-04-08T06:59:42Z",
     hidden: {
       neighborhood: "name",
       broadcast_channel: BroadcastChannel.mail_campaign,
+      broadcast_id: "de68a7fa-35a8-441d-97ee-05f0c64d634b",
     },
     calculated: {
       score: 0,

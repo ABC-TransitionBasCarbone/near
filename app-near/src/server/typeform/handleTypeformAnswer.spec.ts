@@ -22,6 +22,7 @@ import { env } from "~/env";
 
 describe("handleAnswer", () => {
   const neighborhoodName = "neighborhood_test";
+  const broadcastId = "54a325c3-7a07-4b17-8eaf-c8fd1683b78e";
   const su = 3;
   let survey: Survey;
 
@@ -227,7 +228,7 @@ describe("handleAnswer", () => {
         buildRequest(payload, signature),
       );
       expect(response.status).toBe(200);
-      expect(await response.text()).toContain("user should be under 15");
+      expect(await response.text()).toContain("user should not be under 15");
 
       expect(sendEmailMock).not.toHaveBeenCalled();
       await expectFailedPayloadIsNotSaved();
@@ -347,6 +348,7 @@ describe("handleAnswer", () => {
       payload.form_response.hidden = {
         neighborhood: neighborhoodName,
         broadcast_channel: BroadcastChannel.mail_campaign,
+        broadcast_id: broadcastId,
       };
 
       payload = replaceSu(payload, su);
@@ -419,6 +421,7 @@ describe("handleAnswer", () => {
       payload.form_response.hidden = {
         neighborhood: neighborhoodName,
         broadcast_channel: BroadcastChannel.mail_campaign,
+        broadcast_id: broadcastId,
       };
 
       payload = replaceEmail(payload, "test@mail.com");
@@ -496,6 +499,7 @@ describe("handleAnswer", () => {
       payload.form_response.hidden = {
         neighborhood: neighborhoodName,
         broadcast_channel: BroadcastChannel.mail_campaign,
+        broadcast_id: broadcastId,
       };
 
       payload = deleteRefAnswer(payload, "email");
@@ -554,6 +558,7 @@ describe("handleAnswer", () => {
         payload.form_response.hidden = {
           neighborhood: neighborhoodName,
           broadcast_channel: BroadcastChannel.mail_campaign,
+          broadcast_id: broadcastId,
         };
 
         payload = replaceSu(payload, su);
@@ -592,6 +597,7 @@ describe("handleAnswer", () => {
         payload.form_response.hidden = {
           neighborhood: neighborhoodName,
           broadcast_channel: BroadcastChannel.mail_campaign,
+          broadcast_id: broadcastId,
         };
 
         payload = replaceSu(payload, su);
@@ -641,6 +647,7 @@ describe("handleAnswer", () => {
         payload.form_response.hidden = {
           neighborhood: neighborhoodName,
           broadcast_channel: BroadcastChannel.mail_campaign,
+          broadcast_id: broadcastId,
         };
 
         payload = deleteRefAnswer(payload, "su");

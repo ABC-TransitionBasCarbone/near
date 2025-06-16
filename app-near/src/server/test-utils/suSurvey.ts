@@ -7,12 +7,13 @@ export const valideSuSurveyPayload = {
   event_type: "form_response",
   form_response: {
     form_id: env.SU_FORM_ID,
-    token: "01JKAV3QZY91SNR0X3A7MNE77D",
+    token: "gleti7pkz8gj5ez0gleupepebwmypwe5",
     landed_at: "2025-02-05T10:39:52Z",
     submitted_at: "2025-02-05T10:39:52Z",
     hidden: {
       neighborhood: "name",
       broadcast_channel: BroadcastChannel.mail_campaign,
+      broadcast_id: "de68a7fa-35a8-441d-97ee-05f0c64d634b",
     },
     definition: {
       id: env.SU_FORM_ID,

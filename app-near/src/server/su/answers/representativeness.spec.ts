@@ -63,6 +63,8 @@ describe("representativeness", () => {
           professionalCategory: ProfessionalCategory.CS1,
           purchasingStrategy: PurchasingStrategy.MIXED,
           transportationMode: TransportationMode.CAR,
+          broadcastId: "broadcast_id_1",
+          typeformId: "typeform_id_1",
           surveyId: survey.id,
         },
         {
@@ -77,6 +79,8 @@ describe("representativeness", () => {
           professionalCategory: ProfessionalCategory.CS1,
           purchasingStrategy: PurchasingStrategy.MIXED,
           transportationMode: TransportationMode.CAR,
+          broadcastId: "broadcast_id_2",
+          typeformId: "typeform_id_2",
           surveyId: survey.id,
         },
       ],
@@ -104,6 +108,8 @@ describe("representativeness", () => {
           professionalCategory: ProfessionalCategory.CS1,
           purchasingStrategy: PurchasingStrategy.MIXED,
           transportationMode: TransportationMode.CAR,
+          broadcastId: "broadcast_id_1",
+          typeformId: "typeform_id_1",
           surveyId: survey.id,
         },
         {
@@ -118,6 +124,8 @@ describe("representativeness", () => {
           professionalCategory: ProfessionalCategory.CS1,
           purchasingStrategy: PurchasingStrategy.MIXED,
           transportationMode: TransportationMode.CAR,
+          broadcastId: "broadcast_id_2",
+          typeformId: "typeform_id_2",
           surveyId: survey.id,
         },
         {
@@ -132,6 +140,8 @@ describe("representativeness", () => {
           professionalCategory: ProfessionalCategory.CS1,
           purchasingStrategy: PurchasingStrategy.MIXED,
           transportationMode: TransportationMode.CAR,
+          broadcastId: "broadcast_id_3",
+          typeformId: "typeform_id_3",
           surveyId: survey.id,
         },
         {
@@ -146,6 +156,8 @@ describe("representativeness", () => {
           professionalCategory: ProfessionalCategory.CS1,
           purchasingStrategy: PurchasingStrategy.MIXED,
           transportationMode: TransportationMode.CAR,
+          broadcastId: "broadcast_id_4",
+          typeformId: "typeform_id_4",
           surveyId: survey.id,
         },
       ],

@@ -197,6 +197,8 @@ export const buildWayOfLifeAnswer = (
   emailApiCalled: false,
   broadcastChannel: faker.helpers.arrayElement(Object.values(BroadcastChannel)),
   email: Date.now() + faker.internet.email(),
+  broadcastId: faker.string.uuid(),
+  typeformId: faker.string.uuid(),
   ...data,
   surveyId,
 });
