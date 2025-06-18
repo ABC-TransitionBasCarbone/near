@@ -135,8 +135,8 @@ model SuAnswer {
   heatSource           HeatSource           @map("heat_source")
   email                String?
   broadcastChannel     BroadcastChannel     @map("broadcast_channel")
-  broadcastId          String               @map("broadcast_id")
-  typeformId           String               @map("typeform_id")
+  broadcastId          String               @map("broadcast_id") @default("unknown")
+  typeformId           String               @map("typeform_id")  @default("unknown")
   emailApiCalled       Boolean?             @default(false) @map("email_api_called")
   suId                 Int?                 @map("su_id")
   su                   SuData?              @relation(fields: [suId], references: [id])
@@ -421,8 +421,8 @@ model WayOfLifeAnswer {
   comment String?
 
   broadcastChannel     BroadcastChannel @map("broadcast_channel")
-  broadcastId          String           @map("broadcast_id")
-  typeformId           String           @map("typeform_id")
+  broadcastId          String           @map("broadcast_id") @default("unknown")
+  typeformId           String           @map("typeform_id") @default("unknown")
   emailApiCalled       Boolean?         @default(false) @map("email_api_called")
   surveyId             Int
   survey               Survey           @relation(fields: [surveyId], references: [id])
