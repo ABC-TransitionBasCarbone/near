@@ -69,7 +69,7 @@ export const handleTypeformAnswer = async (
     }
 
     if (isUnder15(answers)) {
-      return okResponse("user should be under 15");
+      return okResponse("user should not be under 15");
     }
 
     // could throw zod exception from zod parsing
@@ -98,10 +98,17 @@ export const handleTypeformAnswer = async (
     }
 
     const broadcastChannel = parsedBody.form_response.hidden.broadcast_channel;
+    const broadcastId = parsedBody.form_response.hidden.broadcast_id;
+    const typeformId = parsedBody.form_response.token;
 
     if (typeformType === TypeformType.SU) {
       await createSu(
-        { ...createQuery, broadcastChannel } as SuAnswer,
+        {
+          ...createQuery,
+          broadcastChannel,
+          broadcastId,
+          typeformId,
+        } as SuAnswer,
         surveyName,
       );
     } else if (typeformType === TypeformType.WAY_OF_LIFE) {
@@ -114,6 +121,8 @@ export const handleTypeformAnswer = async (
         {
           ...createQuery,
           broadcastChannel,
+          broadcastId,
+          typeformId,
           ...calculatedSuParams,
         } as WayOfLifeAnswer,
         survey,

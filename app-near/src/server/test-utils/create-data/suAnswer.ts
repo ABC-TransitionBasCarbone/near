@@ -41,6 +41,8 @@ export const buildSuAnswer = (
   transportationMode: faker.helpers.arrayElement(
     Object.values(TransportationMode),
   ),
+  broadcastId: faker.string.uuid(),
+  typeformId: faker.string.uuid(),
   ...data,
   surveyId,
 });

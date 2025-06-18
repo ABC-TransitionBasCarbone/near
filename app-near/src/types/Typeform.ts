@@ -76,10 +76,12 @@ export const TypeformWebhookSchema = z.object({
   event_type: z.literal("form_response"),
   form_response: z.object({
     form_id: z.string(),
+    token: z.string(),
     answers: z.array(AnswerSchema),
     hidden: z.object({
       neighborhood: z.string(),
       broadcast_channel: z.nativeEnum(BroadcastChannel),
+      broadcast_id: z.string(),
     }),
     definition: z.object({
       fields: z.array(

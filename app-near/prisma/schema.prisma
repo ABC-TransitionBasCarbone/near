@@ -135,6 +135,8 @@ model SuAnswer {
   heatSource           HeatSource           @map("heat_source")
   email                String?
   broadcastChannel     BroadcastChannel     @map("broadcast_channel")
+  broadcastId          String               @map("broadcast_id")
+  typeformId           String               @map("typeform_id")
   emailApiCalled       Boolean?             @default(false) @map("email_api_called")
   suId                 Int?                 @map("su_id")
   su                   SuData?              @relation(fields: [suId], references: [id])
@@ -311,10 +313,10 @@ enum ZoneSelection {
 }
 
 model WayOfLifeAnswer {
-  id                   Int                  @id @default(autoincrement())
-  email                String?
-  ageCategory          AgeCategory          @map("age_category")
-  gender               Gender
+  id          Int         @id @default(autoincrement())
+  email       String?
+  ageCategory AgeCategory @map("age_category")
+  gender      Gender
 
   knowSu Boolean @map("know_su")
 
@@ -419,6 +421,8 @@ model WayOfLifeAnswer {
   comment String?
 
   broadcastChannel     BroadcastChannel @map("broadcast_channel")
+  broadcastId          String           @map("broadcast_id")
+  typeformId           String           @map("typeform_id")
   emailApiCalled       Boolean?         @default(false) @map("email_api_called")
   surveyId             Int
   survey               Survey           @relation(fields: [surveyId], references: [id])
