@@ -1,12 +1,12 @@
 import Link from "next/link";
 
 const SurveyFooter: React.FC = () => {
-  const logoStyle = "h-[35px] p-2 md:h-[61px]";
+  const logoStyle = "p-2 h-[61px]";
   const logosWrapper =
-    "my-auto flex flex-wrap justify-center gap-8 rounded-lg bg-white";
+    "flex flex-wrap justify-center gap-8 rounded-lg bg-white";
   return (
     <div className="mt-5 flex min-h-[166px] flex-col gap-5 bg-[url(/images/pattern_vert.webp)]">
-      <div className="items-center justify-between px-10 pt-14 md:flex md:flex-wrap">
+      <div className="mx-10 flex flex-col items-center gap-4 pt-14 sm:mx-0 md:flex-row md:flex-wrap md:justify-between md:px-10">
         <div className={logosWrapper}>
           <img className={logoStyle} src="/logos/abc.webp" alt="" />
           <img className={logoStyle} src="/logos/reseau-qet.webp" alt="" />
