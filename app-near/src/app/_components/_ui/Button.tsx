@@ -24,7 +24,7 @@ const Button = ({
   buttonType = "button",
   icon = undefined,
   children,
-  color = "blue",
+  color = "green",
   textColor = undefined,
   onClick = undefined,
   style = ButtonStyle.LIGHT,
@@ -41,8 +41,8 @@ const Button = ({
   > = {
     [ButtonStyle.LIGHT]: {
       blue: "border-blue text-blue disabled:bg-violetMedium",
-      blueLight: "border-blueLight text-blueLight disabled:bg-violetMedium",
       black: "border-black text-black disabled:bg-violetMedium",
+      green: "border-green text-blue disabled:border-greenLight",
       gradient: `
         button-gradient-border bg-clip-text text-transparent bg-gradient-to-br from-[#E01D48] via-[#9B18C9] to-[#313192] 
         border-2 border-transparent border-image-gradient-to-br from-[#E01D48] via-[#9B18C9] to-[#313192]
@@ -51,9 +51,8 @@ const Button = ({
     },
     [ButtonStyle.FILLED]: {
       blue: "border-blue bg-blue text-white disabled:bg-violetMedium disabled:bg-violetMedium",
-      blueLight:
-        "border-blueLight bg-blueLight text-white disabled:bg-violetMedium",
       black: "border-black bg-black text-white disabled:bg-violetMedium",
+      green: "border-green bg-green text-blue",
       gradient: `
       button-gradient-border
       bg-gradient-to-br from-[#E01D48] via-[#9B18C9] to-[#313192] 
@@ -64,7 +63,6 @@ const Button = ({
 
   const textColorVariant: Partial<Record<keyof typeof colors, string>> = {
     blue: "text-blue",
-    blueLight: "text-blueLight",
     black: "text-black",
     grayLight: "text-grayLight",
     white: "text-white",
