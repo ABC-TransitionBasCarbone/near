@@ -3,6 +3,20 @@ import MetabaseIframe from "~/app/_components/_ui/MetabaseIframe";
 import { env } from "~/env";
 import { api } from "~/trpc/react";
 import { MetabaseIframeType } from "~/types/enums/metabase";
+import { SurveyType } from "~/types/enums/survey";
+
+const getSurveyTitle = (type: SurveyType) => {
+  switch (type) {
+    case SurveyType.WAY_OF_LIFE:
+      return "Enquête EMdV";
+    case SurveyType.CARBON_FOOTPRINT:
+      return "Enquête Empreinte Carbone";
+    case SurveyType.SU:
+      return "Enquête Sphères d'Usages";
+    default:
+      return "Enquête";
+  }
+};
 
 const StatQuality: React.FC = () => {
   const { data: session } = useSession();
@@ -16,9 +30,7 @@ const StatQuality: React.FC = () => {
       <div className="flex flex-col gap-5 md:w-[350px]">
         {qualityStatisticsWithPopulation?.qualityStatistics.map((item) => (
           <div key={item.type}>
-            <div className="text-lg font-bold">
-              Enquêtes Sphères d&apos;Usages
-            </div>
+            <div className="text-lg font-bold">{getSurveyTitle(item.type)}</div>
             <div className="mt-2 text-xs">Vous avez interrogé</div>
             <div className="text-xl font-bold">
               {`${new Intl.NumberFormat("fr-FR").format(item.sampleSize)} `}
