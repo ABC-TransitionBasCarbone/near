@@ -10,7 +10,7 @@ const AuthentificationLayout: React.FC<AuthentificationLayoutProps> = ({
     <div className="flex flex-1 flex-col items-center justify-center p-3">
       <div className="flex w-full max-w-[450px] flex-col">{children}</div>
     </div>
-    <div className="relative hidden h-screen flex-1 bg-brownLight bg-cover lg:flex">
+    <div className="relative hidden h-screen flex-1 bg-[url(/images/pattern_vert.webp)] lg:flex">
       <div className="flex h-full w-full flex-col items-center justify-center gap-8 p-24">
         <img src="/logos/abc.webp" width={158} height={76} alt="" />
         <img src="/logos/reseau-qet.webp" width={98} height={98} alt="" />

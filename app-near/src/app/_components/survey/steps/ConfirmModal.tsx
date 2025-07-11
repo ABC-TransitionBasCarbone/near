@@ -73,7 +73,7 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({
             Revenir à l&apos;étape précédente
           </Button>
           <Button
-            icon="/icons/arrow-right-blue.svg"
+            icon="/icons/arrow-right.svg"
             color="blue"
             border={false}
             onClick={() => updateSurveyStep(nextStep)}

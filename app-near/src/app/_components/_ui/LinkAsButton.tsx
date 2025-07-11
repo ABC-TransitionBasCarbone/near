@@ -22,7 +22,7 @@ interface LinkAsButtonProps {
 const LinkAsButton = ({
   icon = undefined,
   children,
-  color = "blue",
+  color = "green",
   textColor = undefined,
   href = "",
   style = ButtonStyle.LIGHT,
@@ -40,23 +40,22 @@ const LinkAsButton = ({
   > = {
     [ButtonStyle.LIGHT]: {
       blue: "border-blue text-blue",
-      blueLight: "border-blueLight text-blueLight",
       black: "border-black text-black",
       grayLight: "border-grayLight text-grayLight",
+      green: "border-green text-blue",
       white: "border-white text-blue",
     },
     [ButtonStyle.FILLED]: {
       blue: "border-blue bg-blue text-white",
-      blueLight: "border-blueLight bg-blueLight text-white",
       black: "border-black bg-black text-white",
       grayLight: "border-grayLight bg-grayLight text-white",
+      green: "border-green bg-green text-blue",
       white: "border-black bg-black text-white",
     },
   };
 
   const textColorVariant: Partial<Record<keyof typeof colors, string>> = {
     blue: "text-blue",
-    blueLight: "text-blueLight",
     black: "text-black",
     grayLight: "text-grayLight",
     white: "text-white",
