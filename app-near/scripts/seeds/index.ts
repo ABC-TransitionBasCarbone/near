@@ -2,26 +2,13 @@ import "dotenv/config";
 import { env } from "~/env";
 import { seedSuSurvey, type SurveyCase } from "./su";
 import { seedWayOfLifeOrCarbonFootprintSurvey } from "./way-of-life-or-carbon-footprint";
+import { parseArgs } from "scripts/utils";
 
 export enum SeedScope {
   SU_ANSWER = "su_answer",
   WAY_OF_LIFE_ANSWER = "way_of_life_answer",
   CARBON_FOOTPRINT_ANSWER = "carbon_footprint_answer",
 }
-
-const parseArgs = () => {
-  const rawArgs = process.argv.slice(2);
-  const args: Record<string, string | boolean> = {};
-
-  rawArgs.forEach((arg) => {
-    if (arg.includes("=")) {
-      const [key, value] = arg.split("=");
-      if (key && value !== undefined) args[key] = value;
-    }
-  });
-
-  return args;
-};
 
 const args = parseArgs();
 
