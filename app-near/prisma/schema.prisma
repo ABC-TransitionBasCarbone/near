@@ -23,7 +23,7 @@ model User {
   createdAt    DateTime @default(now()) @map("created_at")
   updatedAt    DateTime @default(now()) @updatedAt @map("updated_at")
 
-  roles UserRole[]
+  roles Role[]
 
   survey   Survey? @relation(fields: [surveyId], references: [id])
   surveyId Int
@@ -40,19 +40,9 @@ model Role {
   id   Int      @id @default(autoincrement())
   name RoleName @unique
 
-  users UserRole[]
+  users User[]
 
   @@map("role")
-}
-
-model UserRole {
-  user   User @relation(fields: [userId], references: [id])
-  userId Int  @map("user_id")
-
-  role   Role @relation(fields: [roleId], references: [id])
-  roleId Int
-
-  @@id([userId, roleId])
 }
 
 enum SurveyPhase {

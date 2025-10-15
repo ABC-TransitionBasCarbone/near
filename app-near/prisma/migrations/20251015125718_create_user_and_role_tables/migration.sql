@@ -22,11 +22,11 @@ CREATE TABLE "role" (
 );
 
 -- CreateTable
-CREATE TABLE "UserRole" (
-    "user_id" INTEGER NOT NULL,
-    "roleId" INTEGER NOT NULL,
+CREATE TABLE "_RoleToUser" (
+    "A" INTEGER NOT NULL,
+    "B" INTEGER NOT NULL,
 
-    CONSTRAINT "UserRole_pkey" PRIMARY KEY ("user_id","roleId")
+    CONSTRAINT "_RoleToUser_AB_pkey" PRIMARY KEY ("A","B")
 );
 
 -- CreateIndex
@@ -35,11 +35,14 @@ CREATE UNIQUE INDEX "user_email_key" ON "user"("email");
 -- CreateIndex
 CREATE UNIQUE INDEX "role_name_key" ON "role"("name");
 
+-- CreateIndex
+CREATE INDEX "_RoleToUser_B_index" ON "_RoleToUser"("B");
+
 -- AddForeignKey
 ALTER TABLE "user" ADD CONSTRAINT "user_surveyId_fkey" FOREIGN KEY ("surveyId") REFERENCES "surveys"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "UserRole" ADD CONSTRAINT "UserRole_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "user"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "_RoleToUser" ADD CONSTRAINT "_RoleToUser_A_fkey" FOREIGN KEY ("A") REFERENCES "role"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "UserRole" ADD CONSTRAINT "UserRole_roleId_fkey" FOREIGN KEY ("roleId") REFERENCES "role"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "_RoleToUser" ADD CONSTRAINT "_RoleToUser_B_fkey" FOREIGN KEY ("B") REFERENCES "user"("id") ON DELETE CASCADE ON UPDATE CASCADE;
