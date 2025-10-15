@@ -23,6 +23,8 @@ declare module "next/server" {
   }
 }
 
+const tokenMaxAge = 60 * 60; // 1h
+
 /**
  * Options for NextAuth.js used to configure adapters, providers, callbacks, etc.
  *
@@ -56,13 +58,8 @@ export const authConfig = {
       },
     }),
   ],
-  session: {
-    strategy: "jwt",
-    maxAge: 60 * 60, // 1h
-  },
-  jwt: {
-    maxAge: 60 * 60, // 1h
-  },
+  session: { strategy: "jwt", maxAge: tokenMaxAge },
+  jwt: { maxAge: tokenMaxAge },
   callbacks: {
     async redirect({ url, baseUrl }) {
       if (url === `${baseUrl}/connexion`) {
@@ -84,7 +81,7 @@ export const authConfig = {
           userId: user.id,
           email: currentUser.email,
           survey: currentUser.survey,
-          accessTokenExpires: now + 60 * 60 * 1000, // 1h
+          accessTokenExpires: now + tokenMaxAge * 1000, // 1h
         };
       }
 
