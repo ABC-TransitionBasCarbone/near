@@ -16,6 +16,45 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model User {
+  id           Int      @id @default(autoincrement())
+  email        String   @unique
+  passwordHash String   @map("password_hash")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @default(now()) @updatedAt @map("updated_at")
+
+  roles UserRole[]
+
+  survey   Survey? @relation(fields: [surveyId], references: [id])
+  surveyId Int
+
+  @@map("user")
+}
+
+enum RoleName {
+  ADMIN
+  PILOTE
+}
+
+model Role {
+  id   Int      @id @default(autoincrement())
+  name RoleName @unique
+
+  users UserRole[]
+
+  @@map("role")
+}
+
+model UserRole {
+  user   User @relation(fields: [userId], references: [id])
+  userId Int  @map("user_id")
+
+  role   Role @relation(fields: [roleId], references: [id])
+  roleId Int
+
+  @@id([userId, roleId])
+}
+
 enum SurveyPhase {
   STEP_1_NEIGHBORHOOD_INFORMATION
   STEP_2_SU_SURVERY
@@ -38,6 +77,8 @@ model Survey {
   carbonFootprintAnswer CarbonFootprintAnswer[]
   suData                SuData[]
   computedSu            Boolean                 @default(false)
+
+  users User[]
 
   @@map("surveys")
 }
@@ -135,8 +176,8 @@ model SuAnswer {
   heatSource           HeatSource           @map("heat_source")
   email                String?
   broadcastChannel     BroadcastChannel     @map("broadcast_channel")
-  broadcastId          String               @map("broadcast_id") @default("unknown")
-  typeformId           String               @map("typeform_id")  @default("unknown")
+  broadcastId          String               @default("unknown") @map("broadcast_id")
+  typeformId           String               @default("unknown") @map("typeform_id")
   emailApiCalled       Boolean?             @default(false) @map("email_api_called")
   suId                 Int?                 @map("su_id")
   su                   SuData?              @relation(fields: [suId], references: [id])
@@ -421,8 +462,8 @@ model WayOfLifeAnswer {
   comment String?
 
   broadcastChannel     BroadcastChannel @map("broadcast_channel")
-  broadcastId          String           @map("broadcast_id") @default("unknown")
-  typeformId           String           @map("typeform_id") @default("unknown")
+  broadcastId          String           @default("unknown") @map("broadcast_id")
+  typeformId           String           @default("unknown") @map("typeform_id")
   emailApiCalled       Boolean?         @default(false) @map("email_api_called")
   surveyId             Int
   survey               Survey           @relation(fields: [surveyId], references: [id])
