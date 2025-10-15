@@ -3,6 +3,7 @@ import CredentialsProvider from "next-auth/providers/credentials";
 
 import { type NextAuthUser } from "~/types/NextAuth";
 import { login } from "../users/connection";
+import { db } from "../db";
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
@@ -35,10 +36,12 @@ export const authConfig = {
   providers: [
     CredentialsProvider({
       name: "Credentials",
+      credentials: {
+        email: { label: "email", type: "email" },
+        password: { label: "Password", type: "password" },
+      },
       async authorize(credentials) {
-        if (!credentials) {
-          return null;
-        }
+        if (!credentials?.password || !credentials.email) return null;
 
         const connexion = await login(
           credentials.email as string,
@@ -53,6 +56,13 @@ export const authConfig = {
       },
     }),
   ],
+  session: {
+    strategy: "jwt",
+    maxAge: 60 * 60, // 1h
+  },
+  jwt: {
+    maxAge: 60 * 60, // 1h
+  },
   callbacks: {
     async redirect({ url, baseUrl }) {
       if (url === `${baseUrl}/connexion`) {
@@ -64,20 +74,47 @@ export const authConfig = {
       return true;
     },
     async jwt({ token, user }) {
+      const now = Date.now();
+
+      // when user is just loged in: generate token
       if (user) {
         const currentUser = user as NextAuthUser;
         return {
           ...token,
           userId: user.id,
           email: currentUser.email,
-          surveyId: currentUser.surveyId,
-          surveyName: currentUser.surveyName,
+          survey: currentUser.survey,
+          accessTokenExpires: now + 60 * 60 * 1000, // 1h
         };
       }
-      return token;
+
+      // when token is still valid
+      if (now < (token.accessTokenExpires as number)) {
+        return token;
+      }
+
+      // when token is not valid : refresh token if user still existing
+      try {
+        const refreshedUser = await db.user.findUnique({
+          where: { email: token.email ?? undefined },
+        });
+
+        if (!refreshedUser) {
+          console.warn("User not found during refresh, invalidating session.");
+          return {};
+        }
+
+        return {
+          ...token,
+          accessTokenExpires: now + 60 * 60 * 1000,
+        };
+      } catch (err) {
+        console.error("Error refreshing token:", err);
+        return {};
+      }
     },
     session: ({ session, token }) => {
-      if (token) {
+      if (token.userId) {
         return {
           ...session,
           user: {
@@ -86,7 +123,10 @@ export const authConfig = {
           },
         };
       }
-      return session;
+      return {
+        ...session,
+        user: undefined,
+      };
     },
   },
 } satisfies NextAuthConfig;

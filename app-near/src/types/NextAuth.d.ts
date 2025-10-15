@@ -1,3 +1,4 @@
+import { type RoleName } from "@prisma/client";
 import "next-auth";
 
 export interface NextAuthUser {
@@ -6,4 +7,5 @@ export interface NextAuthUser {
     id: number;
     name: string;
   };
+  roles: RoleName[];
 }

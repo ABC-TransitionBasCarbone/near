@@ -1,16 +1,7 @@
-import { env } from "~/env";
 import { type NextAuthUser } from "~/types/NextAuth";
 import { db } from "../db";
-
-const getUserNameAndPassword = (input: string) => {
-  const parts = input.split(":");
-  if (parts.length === 2) {
-    const [userName, password] = parts;
-    return { userName, password };
-  } else {
-    throw new Error("Le format attendu est 'user:password'.");
-  }
-};
+import bcrypt from "bcrypt";
+import { RoleName } from "@prisma/client";
 
 export const login = async (
   email: string,
@@ -20,18 +11,26 @@ export const login = async (
   success: boolean;
   user?: NextAuthUser;
 }> => {
-  const { userName: validUserName, password: validPassword } =
-    getUserNameAndPassword(env.SUPER_ADMIN);
+  const user = await db.user.findUnique({
+    where: { email },
+    include: { roles: true },
+  });
 
-  if (email !== validUserName || password !== validPassword) {
-    return { message: "Accès non autorisé", success: false };
-  }
+  if (!user) return { message: "Accès non autorisé", success: false };
 
-  const userSurvey = await db.survey.findFirst();
+  const isValid = await bcrypt.compare(password, user.passwordHash);
+  if (!isValid) return { message: "Accès non autorisé", success: false };
 
-  if (!userSurvey) {
-    console.debug(`Aucune enquête trouvée accès non autorisé.`);
-    return { message: "Accès non autorisé", success: false };
+  const userRoles = user.roles.map((role) => role.name);
+  let userSurvey;
+
+  if (userRoles.includes(RoleName.PILOTE)) {
+    userSurvey = await db.survey.findFirst();
+
+    if (!userSurvey) {
+      console.error(`Aucune enquête trouvée accès non autorisé.`);
+      return { message: "Accès non autorisé", success: false };
+    }
   }
 
   return {
@@ -39,8 +38,10 @@ export const login = async (
     success: true,
     user: {
       email,
-      surveyId: userSurvey.id,
-      surveyName: userSurvey.name,
+      survey: userSurvey
+        ? { id: userSurvey.id, name: userSurvey.name }
+        : undefined,
+      roles: userRoles,
     },
   };
 };
