@@ -26,7 +26,7 @@ model User {
   roles Role[]
 
   survey   Survey? @relation(fields: [surveyId], references: [id])
-  surveyId Int
+  surveyId Int?
 
   @@map("user")
 }
