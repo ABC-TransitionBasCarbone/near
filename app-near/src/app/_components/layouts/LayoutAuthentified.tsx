@@ -18,7 +18,7 @@ const LayoutAuthentified: React.FC<LayoutAuthentifiedProps> = async ({
     redirect(`${process.env.AUTH_URL}/connexion`);
   }
 
-  if (!session.user.surveyName) {
+  if (!session.user.survey?.name) {
     await signOut();
   }
 

@@ -5,7 +5,7 @@ import { TRPCError } from "@trpc/server";
 
 export const neighborhoodsRouter = createTRPCRouter({
   getOne: protectedProcedure.input(z.number()).query(({ ctx, input: id }) => {
-    if (id !== ctx.session.user.surveyId) {
+    if (id !== ctx.session.user.survey?.id) {
       throw new TRPCError({ code: "FORBIDDEN" });
     }
     return getOneNeighborhood(id);

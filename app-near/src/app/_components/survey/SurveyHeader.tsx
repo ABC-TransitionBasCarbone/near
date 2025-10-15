@@ -13,7 +13,7 @@ const SurveyHeader = () => {
   const { step, updateStep } = useSurveyStateContext();
 
   const { data: survey, refetch } = api.surveys.getOne.useQuery(undefined, {
-    enabled: !!session?.user?.surveyId,
+    enabled: !!session?.user?.survey?.id,
   });
 
   useEffect(() => {

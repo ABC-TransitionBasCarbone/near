@@ -9,7 +9,7 @@ export const suAnswersRouter = createTRPCRouter({
   count: protectedProcedure
     .input(z.number())
     .query(({ ctx, input: surveyId }) => {
-      if (surveyId !== ctx.session.user.surveyId) {
+      if (surveyId !== ctx.session.user.survey?.id) {
         throw new TRPCError({ code: "FORBIDDEN" });
       }
       return countAnswers(surveyId);
@@ -18,7 +18,7 @@ export const suAnswersRouter = createTRPCRouter({
   representativeness: protectedProcedure
     .input(z.number())
     .query(async ({ ctx, input: surveyId }) => {
-      if (surveyId !== ctx.session.user.surveyId) {
+      if (surveyId !== ctx.session.user.survey?.id) {
         throw new TRPCError({ code: "FORBIDDEN" });
       }
 
@@ -27,7 +27,7 @@ export const suAnswersRouter = createTRPCRouter({
   sendSu: protectedProcedure
     .input(z.number())
     .mutation(({ ctx, input: surveyId }) => {
-      if (surveyId !== ctx.session.user.surveyId) {
+      if (surveyId !== ctx.session.user.survey?.id) {
         throw new TRPCError({ code: "FORBIDDEN" });
       }
 

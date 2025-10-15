@@ -49,14 +49,14 @@ const RespondentsNumberLayout: React.FC<RespondentsNumberLayoutProps> = ({
   const updateSurveyStep = useUpdateSurveyStep();
 
   const { data: wayOfLifeAnswersCount } = api.wayOfLifeAnswers.count.useQuery(
-    session?.user?.surveyId ?? 0,
+    session?.user?.survey?.id ?? 0,
     {
-      enabled: !!session?.user?.surveyId,
+      enabled: !!session?.user?.survey?.id,
     },
   );
   const { data: carbonFootprintAnswersCount } =
-    api.carbonFootprintAnswers.count.useQuery(session?.user?.surveyId ?? 0, {
-      enabled: !!session?.user?.surveyId,
+    api.carbonFootprintAnswers.count.useQuery(session?.user?.survey?.id ?? 0, {
+      enabled: !!session?.user?.survey?.id,
     });
 
   const [showModal, setShowModal] = useState<boolean>(false);
@@ -64,7 +64,7 @@ const RespondentsNumberLayout: React.FC<RespondentsNumberLayoutProps> = ({
   const nextStepIsDisabled =
     wayOfLifeAnswersCount! < 80 && carbonFootprintAnswersCount! < 80;
 
-  if (!session?.user.surveyId || step === undefined) {
+  if (!session?.user.survey?.id || step === undefined) {
     return "loading...";
   }
 
@@ -137,7 +137,7 @@ const RespondentsNumberLayout: React.FC<RespondentsNumberLayoutProps> = ({
                     iframeNumber={chart.iframeNumber}
                     iframeType={MetabaseIframeType.QUESTION}
                     height="300px"
-                    params={{ surveyName: session?.user.surveyName }}
+                    params={{ surveyName: session?.user.survey?.name }}
                   />
                 </div>
                 <Button

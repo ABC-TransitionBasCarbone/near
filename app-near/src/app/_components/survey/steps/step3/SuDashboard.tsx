@@ -25,7 +25,7 @@ const SuDashboard: React.FC<SuDashboardProps> = ({ phase }) => {
   };
 
   const { data: survey } = api.surveys.getOne.useQuery(undefined, {
-    enabled: !!session?.user?.surveyId,
+    enabled: !!session?.user?.survey?.id,
   });
 
   const { data: computedSuList } = api.suDetection.getList.useQuery(undefined, {

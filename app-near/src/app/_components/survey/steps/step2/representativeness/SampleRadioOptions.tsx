@@ -38,9 +38,9 @@ const SampleRadioOptions: React.FC<SampleRadioOptionsProps> = ({
                   onChange={() => {
                     setSelected(option);
                     return (
-                      session?.user?.surveyId &&
+                      session?.user?.survey?.id &&
                       updateSurveyMutation.mutateAsync({
-                        surveyId: session?.user?.surveyId,
+                        surveyId: session?.user?.survey.id,
                         data: {
                           sampleTarget: option,
                         },

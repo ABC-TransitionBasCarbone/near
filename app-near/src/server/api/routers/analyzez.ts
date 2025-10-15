@@ -3,6 +3,7 @@ import { getAllQualityStatistics } from "~/server/analyzes/quality";
 
 export const analyzesRouter = createTRPCRouter({
   quality: protectedProcedure.query(({ ctx }) => {
-    return getAllQualityStatistics(ctx.session.user.surveyId);
+    if (!ctx.session.user.survey?.id) return null;
+    return getAllQualityStatistics(ctx.session.user.survey?.id);
   }),
 });

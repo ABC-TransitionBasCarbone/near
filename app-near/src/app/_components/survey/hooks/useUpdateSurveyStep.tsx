@@ -11,11 +11,12 @@ const useUpdateSurveyStep = () => {
 
   const updateSurveyStep = async (nextStep?: SurveyPhase) => {
     if (!nextStep || !session) return;
+    if (!session.user.survey) return;
 
     updateStep(nextStep);
 
     await updateSurveyMutation.mutateAsync({
-      surveyId: session?.user?.surveyId,
+      surveyId: session.user.survey?.id,
       data: { phase: nextStep },
     });
 
