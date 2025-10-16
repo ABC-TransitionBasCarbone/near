@@ -1,16 +1,16 @@
 import { type ReactNode } from "react";
-import LayoutAuthentified from "../_components/layouts/LayoutAuthentified";
+import LayoutSurvey from "../_components/layouts/LayoutSurvey";
 import { SurveyStateProvider } from "../_components/_context/surveyStateContext";
 
 interface LayoutProps {
   children: ReactNode;
 }
-const LayoutPublicContainer: React.FC<LayoutProps> = ({ children }) => {
+const LayoutSurveyContainer: React.FC<LayoutProps> = ({ children }) => {
   return (
     <SurveyStateProvider>
-      <LayoutAuthentified>{children}</LayoutAuthentified>
+      <LayoutSurvey>{children}</LayoutSurvey>
     </SurveyStateProvider>
   );
 };
 
-export default LayoutPublicContainer;
+export default LayoutSurveyContainer;
