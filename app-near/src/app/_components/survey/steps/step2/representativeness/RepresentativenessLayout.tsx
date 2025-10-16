@@ -33,17 +33,14 @@ const RepresentativenessLayout: React.FC<RepresentativenessLayoutProps> = ({
   const { data: session } = useSession();
   const { step } = useSurveyStateContext();
   const { data: categoryStats } = api.suAnswers.representativeness.useQuery(
-    session?.user?.survey?.id ?? 0,
+    undefined,
     {
       enabled: !!session?.user?.survey?.id,
     },
   );
-  const { data: count } = api.suAnswers.count.useQuery(
-    session?.user?.survey?.id ?? 0,
-    {
-      enabled: !!session?.user?.survey?.id,
-    },
-  );
+  const { data: count } = api.suAnswers.count.useQuery(undefined, {
+    enabled: !!session?.user?.survey?.id,
+  });
   const { data: survey } = api.surveys.getOne.useQuery(undefined, {
     enabled: !!session?.user?.survey?.id,
   });

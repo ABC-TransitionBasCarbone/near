@@ -104,7 +104,7 @@ const DetectionLayout: React.FC = () => {
             style={ButtonStyle.FILLED}
             onClick={() => {
               if (session?.user.survey) {
-                sendSuEmailMutation.mutate(session.user.survey.id);
+                sendSuEmailMutation.mutate();
               }
             }}
             disabled={
