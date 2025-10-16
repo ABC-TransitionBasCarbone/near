@@ -115,6 +115,16 @@ Pour plus de détail sur :
 
 voir le [README du dossier scripts](./scritps/README.md)
 
+## Comment créer des utilisateurs
+```bash
+npm run user:create -- email=<email> password=<password> role=<role> [surveyName=<surveyName>]
+
+# email : mettre l'email de l'utilisateur à créer
+# password : mettre le mot de passe de l'utilisateur à créer
+# role : mettre un rôle valid (ADMIN ou PILOTE)
+# surveyName : uniquement pour le rôle PILOTE, mettre un surveyName valid (par ex. "Porte d'Orléans")
+```
+
 ## Comment tester le webhook
 
 ```bash
