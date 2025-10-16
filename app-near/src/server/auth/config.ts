@@ -50,30 +50,63 @@ export const authConfig = {
           credentials.password as string,
         );
 
-        if (!connexion.success) {
+        if (!connexion.success || !connexion.user) {
           return null;
         }
 
-        return connexion.user!;
+        return connexion.user;
       },
     }),
   ],
   session: { strategy: "jwt", maxAge: tokenMaxAge },
   jwt: { maxAge: tokenMaxAge },
+
   callbacks: {
-    async redirect({ url, baseUrl }) {
-      if (url === `${baseUrl}/connexion`) {
-        return `${baseUrl}`;
-      }
-      return url.startsWith(baseUrl) ? url : baseUrl;
-    },
-    async signIn() {
+    /**
+     * Determines whether a user is allowed to sign in and optionally returns an URL
+     * for post-login redirection based on the user's role.
+     * - Returns false if the user object is missing (prevents sign-in).
+     * - Returns true to redirect the user after successful login.
+     *
+     * @param {Object} param0
+     * @param {NextAuthUser} param0.user - The authenticated user object returned from the provider
+     * @returns {boolean|string} false to block sign-in, or a URL string to redirect
+     */
+    async signIn({ user }) {
+      if (!user) return false;
+
       return true;
     },
+    /**
+     * Callback to control where NextAuth redirects the user after sign-in, sign-out, or other auth events.
+     * - Prevents returning to the login page after sign-in.
+     * - Ensures the URL is internal to the site (security against open redirects).
+     *
+     * @param {Object} param0
+     * @param {string} param0.url - The URL NextAuth intends to redirect to
+     * @param {string} param0.baseUrl - The base URL of the site
+     * @returns {string} The final URL to redirect the user to
+     */
+    async redirect({ url, baseUrl }) {
+      // Prevent to get back to /connexion or to get external url
+      if (url.includes("/connexion")) return baseUrl;
+      if (!url.startsWith(baseUrl)) return url;
+      return baseUrl;
+    },
+    /**
+     * Callback called whenever a JWT token is created or updated.
+     * - Adds custom properties to the token (e.g., roles, redirect URL).
+     * - Used to persist user-related data across sessions without storing it in the DB.
+     *
+     * @param {Object} param0
+     * @param {any} param0.token - The current JWT token
+     * @param {NextAuthUser} param0.user - The user object returned on first login
+     * @returns {any} The updated JWT token
+     */
     async jwt({ token, user }) {
       const now = Date.now();
 
-      // when user is just loged in: generate token
+      // On first user login: generate token
       if (user) {
         const currentUser = user as NextAuthUser;
         return {
@@ -81,6 +114,7 @@ export const authConfig = {
           userId: user.id,
           email: currentUser.email,
           survey: currentUser.survey,
+          roles: currentUser.roles,
           accessTokenExpires: now + tokenMaxAge * 1000, // 1h
         };
       }
@@ -90,10 +124,18 @@ export const authConfig = {
         return token;
       }
 
-      // when token is not valid : refresh token if user still existing
+      // when token is not valid anymore: refresh token if user still existing
       try {
+        if (!token.email) {
+          console.warn(
+            "User email not found in token during refresh, invalidating session.",
+          );
+          return {};
+        }
+
         const refreshedUser = await db.user.findUnique({
-          where: { email: token.email ?? undefined },
+          where: { email: token.email },
+          include: { survey: true, roles: true },
         });
 
         if (!refreshedUser) {
@@ -103,13 +145,30 @@ export const authConfig = {
 
         return {
           ...token,
-          accessTokenExpires: now + 60 * 60 * 1000,
+          userId: refreshedUser.id,
+          email: refreshedUser.email,
+          survey: {
+            id: refreshedUser.survey?.id,
+            name: refreshedUser.survey?.name,
+          },
+          roles: refreshedUser.roles.map((role) => role.name),
+          accessTokenExpires: now + tokenMaxAge * 1000,
         };
       } catch (err) {
         console.error("Error refreshing token:", err);
         return {};
       }
     },
+    /**
+     * Called whenever a session object is created or accessed (e.g., useSession, getServerSession).
+     * - Maps relevant properties from the JWT token to the session object sent to the client.
+     * - Makes user roles and redirect URL available in the session.
+     *
+     * @param {Object} param0
+     * @param {any} param0.session - The current session object
+     * @param {any} param0.token - The JWT token associated with the session
+     * @returns {any} The updated session object
+     */
     session: ({ session, token }) => {
       if (token.userId) {
         return {
