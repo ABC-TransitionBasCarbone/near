@@ -6,8 +6,10 @@ export default async function Home() {
   const session: Session | null = await auth();
   return (
     <>
-      you are an admin in not secure page yet {session?.user.email}
-      <SignOutButton />
+      <div>you are an admin in secure page : {session?.user.email}</div>
+      <div>
+        <SignOutButton />
+      </div>
     </>
   );
 }
