@@ -11,6 +11,7 @@ import { type UserLoginForm } from "~/types/User";
 import Button from "~/app/_components/_ui/Button";
 import { ButtonStyle } from "~/types/enums/button";
 import { type LoginError } from "~/types/enums/login";
+import { RoleName } from "@prisma/client";
 
 const CompanyFormRegistration = z.object({
   email: z
@@ -28,6 +29,12 @@ const displayError: Record<LoginError, string> = {
 
 export default function SignInForm(): JSX.Element {
   const { data: session } = useSession();
+  if (session?.user?.roles?.includes(RoleName.ADMIN)) {
+    redirect("/back-office");
+  } else if (session?.user) {
+    redirect("/");
+  }
+
   const [loginError, setLoginError] = useState<LoginError | null>(null);
 
   const searchParams = useSearchParams();
@@ -50,17 +57,13 @@ export default function SignInForm(): JSX.Element {
     await signIn("credentials", {
       email,
       password,
-      redirect: true,
+      redirect: false,
     });
   };
 
   useEffect(() => {
     setLoginError(error);
   }, [errors, error]);
-
-  if (session?.user?.email) {
-    redirect("/");
-  }
 
   return (
     <div className="container mx-auto w-full p-2">
