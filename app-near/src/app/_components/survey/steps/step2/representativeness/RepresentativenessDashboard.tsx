@@ -13,12 +13,9 @@ const Representativeness: React.FC<RepresentativenessProps> = ({
   target,
   session,
 }) => {
-  const { data: answserCount } = api.suAnswers.count.useQuery(
-    session?.user?.survey?.id ?? 0,
-    {
-      enabled: !!session?.user?.survey?.id,
-    },
-  );
+  const { data: answserCount } = api.suAnswers.count.useQuery(undefined, {
+    enabled: !!session?.user?.survey?.id,
+  });
 
   const hasReachedMoreThanTargetPercentage = () => {
     return (
