@@ -170,18 +170,9 @@ export const authConfig = {
      * @returns {any} The updated session object
      */
     session: ({ session, token }) => {
-      if (token.userId) {
-        return {
-          ...session,
-          user: {
-            ...session.user,
-            ...token,
-          },
-        };
-      }
       return {
         ...session,
-        user: undefined,
+        user: token.userId ? { ...session.user, ...token } : {},
       };
     },
   },
