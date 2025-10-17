@@ -15,6 +15,8 @@ export enum ErrorCode {
   WRONG_SIGNATURE = "WRONG_SIGNATURE",
   SU_NOT_FOUND = "SU_NOT_FOUND",
   WRONG_BARYCENTRE_DATA = "WRONG_BARYCENTRE_DATA",
+  EXISTING_SURVEY_NAME = "EXISTING_SURVEY_NAME",
+  WRONG_IRIS = "WRONG_IRIS",
 }
 
 export const errorCodeMapper: Partial<Record<ErrorCode, string>> = {
