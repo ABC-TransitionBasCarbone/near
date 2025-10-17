@@ -667,7 +667,7 @@ model InseeIris2021 {
   @@map("insee_iris_2021")
 }
 
-view Quartier {
+model Quartier {
   iris_selectors                    String[]
   population_sum_with_under_fifteen Float
   population_sum                    Float
@@ -690,8 +690,11 @@ view Quartier {
   population_sum_threshold_4p       Float
   population_sum_threshold_4_5p     Float
   population_sum_threshold_5p       Float
-  surveyId                          Int      @unique @map("survey_id") // Foreign key unique field to survey
-  survey                            Survey   @relation(fields: [surveyId], references: [id])
+  createdAt                         DateTime @default(now()) @map("created_at")
+  updatedAt                         DateTime @default(now()) @updatedAt @map("updated_at")
+
+  surveyId Int    @unique @map("survey_id") // Foreign key unique field to survey
+  survey   Survey @relation(fields: [surveyId], references: [id])
 
   @@map("quartiers")
 }
