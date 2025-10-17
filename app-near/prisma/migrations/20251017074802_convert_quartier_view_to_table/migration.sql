@@ -1,87 +1,97 @@
-CREATE TABLE quartiers_tmp AS SELECT * FROM quartiers;
-DROP VIEW quartiers;
+DO $$
+BEGIN
+  IF EXISTS (SELECT 1 FROM pg_views WHERE schemaname = 'public' AND viewname = 'quartiers') THEN
+    CREATE TABLE quartiers_tmp AS SELECT * FROM quartiers;
+    DROP VIEW quartiers;
+  END IF;
+END $$;
 
-CREATE TABLE "quartiers" (
-  "iris_selectors" TEXT[] NOT NULL,
-  "population_sum_with_under_fifteen" DOUBLE PRECISION NOT NULL,
-  "population_sum" DOUBLE PRECISION NOT NULL,
-  "p21_pop1529_sum" DOUBLE PRECISION NOT NULL,
-  "p21_pop3044_sum" DOUBLE PRECISION NOT NULL,
-  "p21_pop4559_sum" DOUBLE PRECISION NOT NULL,
-  "p21_pop6074_sum" DOUBLE PRECISION NOT NULL,
-  "p21_pop75p_sum" DOUBLE PRECISION NOT NULL,
-  "c21_pop15p_cs1_sum" DOUBLE PRECISION NOT NULL,
-  "c21_pop15p_cs2_sum" DOUBLE PRECISION NOT NULL,
-  "c21_pop15p_cs3_sum" DOUBLE PRECISION NOT NULL,
-  "c21_pop15p_cs4_sum" DOUBLE PRECISION NOT NULL,
-  "c21_pop15p_cs5_sum" DOUBLE PRECISION NOT NULL,
-  "c21_pop15p_cs6_sum" DOUBLE PRECISION NOT NULL,
-  "c21_pop15p_cs7_sum" DOUBLE PRECISION NOT NULL,
-  "c21_pop15p_cs8_sum" DOUBLE PRECISION NOT NULL,
-  "population_femme_sum" DOUBLE PRECISION NOT NULL,
-  "population_homme_sum" DOUBLE PRECISION NOT NULL,
-  "population_sum_threshold_3p" DOUBLE PRECISION NOT NULL,
-  "population_sum_threshold_4p" DOUBLE PRECISION NOT NULL,
-  "population_sum_threshold_4_5p" DOUBLE PRECISION NOT NULL,
-  "population_sum_threshold_5p" DOUBLE PRECISION NOT NULL,
-  "survey_id" INTEGER NOT NULL UNIQUE REFERENCES "surveys" ("id"),
-  "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  "updated_at" TIMESTAMP(3) NOT NULL
+CREATE TABLE IF NOT EXISTS quartiers (
+  iris_selectors TEXT[] NOT NULL,
+  population_sum_with_under_fifteen DOUBLE PRECISION NOT NULL,
+  population_sum DOUBLE PRECISION NOT NULL,
+  p21_pop1529_sum DOUBLE PRECISION NOT NULL,
+  p21_pop3044_sum DOUBLE PRECISION NOT NULL,
+  p21_pop4559_sum DOUBLE PRECISION NOT NULL,
+  p21_pop6074_sum DOUBLE PRECISION NOT NULL,
+  p21_pop75p_sum DOUBLE PRECISION NOT NULL,
+  c21_pop15p_cs1_sum DOUBLE PRECISION NOT NULL,
+  c21_pop15p_cs2_sum DOUBLE PRECISION NOT NULL,
+  c21_pop15p_cs3_sum DOUBLE PRECISION NOT NULL,
+  c21_pop15p_cs4_sum DOUBLE PRECISION NOT NULL,
+  c21_pop15p_cs5_sum DOUBLE PRECISION NOT NULL,
+  c21_pop15p_cs6_sum DOUBLE PRECISION NOT NULL,
+  c21_pop15p_cs7_sum DOUBLE PRECISION NOT NULL,
+  c21_pop15p_cs8_sum DOUBLE PRECISION NOT NULL,
+  population_femme_sum DOUBLE PRECISION NOT NULL,
+  population_homme_sum DOUBLE PRECISION NOT NULL,
+  population_sum_threshold_3p DOUBLE PRECISION NOT NULL,
+  population_sum_threshold_4p DOUBLE PRECISION NOT NULL,
+  population_sum_threshold_4_5p DOUBLE PRECISION NOT NULL,
+  population_sum_threshold_5p DOUBLE PRECISION NOT NULL,
+  survey_id INTEGER NOT NULL UNIQUE REFERENCES surveys(id),
+  created_at TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP(3) NOT NULL
 );
 
-INSERT INTO quartiers (
-  iris_selectors,
-  population_sum_with_under_fifteen,
-  population_sum,
-  p21_pop1529_sum,
-  p21_pop3044_sum,
-  p21_pop4559_sum,
-  p21_pop6074_sum,
-  p21_pop75p_sum,
-  c21_pop15p_cs1_sum,
-  c21_pop15p_cs2_sum,
-  c21_pop15p_cs3_sum,
-  c21_pop15p_cs4_sum,
-  c21_pop15p_cs5_sum,
-  c21_pop15p_cs6_sum,
-  c21_pop15p_cs7_sum,
-  c21_pop15p_cs8_sum,
-  population_femme_sum,
-  population_homme_sum,
-  population_sum_threshold_3p,
-  population_sum_threshold_4p,
-  population_sum_threshold_4_5p,
-  population_sum_threshold_5p,
-  survey_id,
-  created_at,
-  updated_at
-)
-SELECT
-  iris_selectors::text[],
-  population_sum_with_under_fifteen,
-  population_sum,
-  p21_pop1529_sum,
-  p21_pop3044_sum,
-  p21_pop4559_sum,
-  p21_pop6074_sum,
-  p21_pop75p_sum,
-  c21_pop15p_cs1_sum,
-  c21_pop15p_cs2_sum,
-  c21_pop15p_cs3_sum,
-  c21_pop15p_cs4_sum,
-  c21_pop15p_cs5_sum,
-  c21_pop15p_cs6_sum,
-  c21_pop15p_cs7_sum,
-  c21_pop15p_cs8_sum,
-  population_femme_sum,
-  population_homme_sum,
-  population_sum_threshold_3p,
-  population_sum_threshold_4p,
-  population_sum_threshold_4_5p,
-  population_sum_threshold_5p,
-  survey_id,
-  CURRENT_TIMESTAMP,
-  CURRENT_TIMESTAMP
-FROM quartiers_tmp;
+DO $$
+BEGIN
+  IF EXISTS (SELECT 1 FROM pg_tables WHERE schemaname = 'public' AND tablename = 'quartiers_tmp') THEN
+    INSERT INTO quartiers (
+      iris_selectors,
+      population_sum_with_under_fifteen,
+      population_sum,
+      p21_pop1529_sum,
+      p21_pop3044_sum,
+      p21_pop4559_sum,
+      p21_pop6074_sum,
+      p21_pop75p_sum,
+      c21_pop15p_cs1_sum,
+      c21_pop15p_cs2_sum,
+      c21_pop15p_cs3_sum,
+      c21_pop15p_cs4_sum,
+      c21_pop15p_cs5_sum,
+      c21_pop15p_cs6_sum,
+      c21_pop15p_cs7_sum,
+      c21_pop15p_cs8_sum,
+      population_femme_sum,
+      population_homme_sum,
+      population_sum_threshold_3p,
+      population_sum_threshold_4p,
+      population_sum_threshold_4_5p,
+      population_sum_threshold_5p,
+      survey_id,
+      created_at,
+      updated_at
+    )
+    SELECT
+      iris_selectors::text[],
+      population_sum_with_under_fifteen,
+      population_sum,
+      p21_pop1529_sum,
+      p21_pop3044_sum,
+      p21_pop4559_sum,
+      p21_pop6074_sum,
+      p21_pop75p_sum,
+      c21_pop15p_cs1_sum,
+      c21_pop15p_cs2_sum,
+      c21_pop15p_cs3_sum,
+      c21_pop15p_cs4_sum,
+      c21_pop15p_cs5_sum,
+      c21_pop15p_cs6_sum,
+      c21_pop15p_cs7_sum,
+      c21_pop15p_cs8_sum,
+      population_femme_sum,
+      population_homme_sum,
+      population_sum_threshold_3p,
+      population_sum_threshold_4p,
+      population_sum_threshold_4_5p,
+      population_sum_threshold_5p,
+      survey_id,
+      CURRENT_TIMESTAMP,
+      CURRENT_TIMESTAMP
+    FROM quartiers_tmp;
 
-DROP TABLE quartiers_tmp;
+    DROP TABLE quartiers_tmp;
+  END IF;
+END $$;
