@@ -17,12 +17,9 @@ const NeighborhoodInformations: React.FC = () => {
   const { data: session } = useSession();
   const { step } = useSurveyStateContext();
 
-  const { data: neighborhood } = api.neighborhoods.getOne.useQuery(
-    session?.user?.survey?.id ?? 0,
-    {
-      enabled: !!session?.user?.survey?.id,
-    },
-  );
+  const { data: neighborhood } = api.neighborhoods.getOne.useQuery(undefined, {
+    enabled: !!session?.user?.survey?.id,
+  });
 
   const updateSurveyStep = useUpdateSurveyStep();
 

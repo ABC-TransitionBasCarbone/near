@@ -49,13 +49,13 @@ const RespondentsNumberLayout: React.FC<RespondentsNumberLayoutProps> = ({
   const updateSurveyStep = useUpdateSurveyStep();
 
   const { data: wayOfLifeAnswersCount } = api.wayOfLifeAnswers.count.useQuery(
-    session?.user?.survey?.id ?? 0,
+    undefined,
     {
       enabled: !!session?.user?.survey?.id,
     },
   );
   const { data: carbonFootprintAnswersCount } =
-    api.carbonFootprintAnswers.count.useQuery(session?.user?.survey?.id ?? 0, {
+    api.carbonFootprintAnswers.count.useQuery(undefined, {
       enabled: !!session?.user?.survey?.id,
     });
 

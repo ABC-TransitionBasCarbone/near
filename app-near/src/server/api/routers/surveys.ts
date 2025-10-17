@@ -6,8 +6,9 @@ import { SurveyPhase } from "@prisma/client";
 
 export const surveysRouter = createTRPCRouter({
   getOne: protectedProcedure.query(({ ctx }) => {
-    if (!ctx.session.user.survey?.id) return null;
-    return getOneSurvey(ctx.session.user.survey?.id);
+    const surveyId = ctx.session.user.survey?.id;
+    if (!surveyId) return null;
+    return getOneSurvey(surveyId);
   }),
 
   update: protectedProcedure
@@ -23,7 +24,8 @@ export const surveysRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      if (!ctx.session.user.survey?.id) return null;
-      return updateSurvey(ctx.session.user.survey?.id, input.data);
+      const surveyId = ctx.session.user.survey?.id;
+      if (!surveyId) return null;
+      return updateSurvey(surveyId, input.data);
     }),
 });
