@@ -134,7 +134,7 @@ export const authConfig = {
         }
 
         const refreshedUser = await db.user.findUnique({
-          where: { email: token.email },
+          where: { id: token.userId as number },
           include: { survey: true, roles: true },
         });
 
