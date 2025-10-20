@@ -1,5 +1,5 @@
 import { RoleName } from "@prisma/client";
-import { userIsGranted } from "~/app/_components/_services/roles/grant-rules";
+import { userIsGranted } from "~/shared/services/roles/grant-rules";
 import { NavAction, NavItem } from "~/types/enums/navBar";
 import { type NavBar } from "~/types/NavBar";
 import { type NextAuthUser } from "~/types/NextAuth";

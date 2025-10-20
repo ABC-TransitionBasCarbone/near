@@ -1,8 +1,9 @@
 import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
-import { getOneSurvey } from "~/server/surveys/get";
+import { getAllSurveys, getOneSurvey } from "~/server/surveys/get";
 import { updateSurvey } from "~/server/surveys/put";
-import { SurveyPhase } from "@prisma/client";
+import { RoleName, SurveyPhase } from "@prisma/client";
+import { userIsGranted } from "~/shared/services/roles/grant-rules";
 
 export const surveysRouter = createTRPCRouter({
   getOne: protectedProcedure.query(({ ctx }) => {
@@ -10,6 +11,21 @@ export const surveysRouter = createTRPCRouter({
     if (!surveyId) return null;
     return getOneSurvey(surveyId);
   }),
+
+  getAll: protectedProcedure
+    .input(
+      z.object({
+        page: z.number().min(1).default(1),
+        limit: z.number().min(1).max(100).default(10),
+        filter: z.string().optional(),
+      }),
+    )
+    .query(({ input, ctx }) => {
+      if (!userIsGranted(ctx.session.user, [RoleName.ADMIN])) {
+        return null;
+      }
+      return getAllSurveys(input.page, input.limit, input.filter);
+    }),
 
   update: protectedProcedure
     .input(
