@@ -8,6 +8,7 @@ export const surveyForm = z.object({
         label: z.string(),
         value: z.string(),
       }),
+      { message: "Veuillez saisir au moins un code iris" },
     )
     .min(1, { message: "Veuillez saisir au moins un code iris" }), // to complete
 });

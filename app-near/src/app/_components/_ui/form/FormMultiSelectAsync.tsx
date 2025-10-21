@@ -47,15 +47,26 @@ const FormMultiSelectAsync = <FormValues extends FieldValues>({
         control={control}
         render={({ field, fieldState }) => (
           <>
-            <AsyncSelect<SelectOption, true>
-              {...field}
-              isMulti
-              cacheOptions
-              defaultOptions
-              placeholder={placeholder}
-              loadOptions={loadOptions}
-              onChange={(val) => field.onChange(val)}
-            />
+            <div className="hover:ring-indigo-400 focus-within:ring-indigo-400 mt-2 flex w-full items-center rounded border border-grayLight transition duration-300 focus-within:ring-2 hover:ring-2">
+              <AsyncSelect<SelectOption, true>
+                {...field}
+                isMulti
+                cacheOptions
+                defaultOptions
+                placeholder={placeholder}
+                loadOptions={loadOptions}
+                onChange={(val) => field.onChange(val)}
+                className="mx-2 flex-1"
+                styles={{
+                  control: (base) => ({
+                    ...base,
+                    border: "none",
+                    boxShadow: "none",
+                  }),
+                }}
+              />
+            </div>
+
             <FormErrorMessage id={`error-${name}`} error={fieldState.error} />
           </>
         )}

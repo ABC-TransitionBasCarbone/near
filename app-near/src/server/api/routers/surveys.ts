@@ -6,6 +6,7 @@ import { RoleName, SurveyPhase } from "@prisma/client";
 import { userIsGranted } from "~/shared/services/roles/grant-rules";
 import { createSurvey } from "~/server/surveys/create";
 import { surveyForm } from "~/shared/validations/surveyEdit.validation";
+import { deleteSurvey } from "~/server/surveys/delete";
 
 export const surveysRouter = createTRPCRouter({
   getOne: protectedProcedure.query(({ ctx }) => {
@@ -55,5 +56,12 @@ export const surveysRouter = createTRPCRouter({
         input.name,
         input.iris.map((iris) => iris.value),
       );
+    }),
+
+  delete: protectedProcedure
+    .input(z.number())
+    .mutation(async ({ ctx, input }) => {
+      if (!userIsGranted(ctx.session.user, [RoleName.ADMIN])) return null;
+      return deleteSurvey(input);
     }),
 });

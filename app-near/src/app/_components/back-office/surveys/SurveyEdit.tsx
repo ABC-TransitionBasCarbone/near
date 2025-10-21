@@ -18,6 +18,7 @@ import { NotificationType } from "~/types/enums/notifications";
 import { getErrorValue } from "../../_services/error";
 
 const SurveyEdit: React.FC = () => {
+  const utils = api.useUtils();
   const methods = useForm<SurveyForm>({
     resolver: zodResolver(surveyForm),
     mode: "all",
@@ -30,6 +31,7 @@ const SurveyEdit: React.FC = () => {
 
   const createSurveyMutation = api.surveys.create.useMutation({
     onSuccess: async () => {
+      await utils.surveys.getAll.invalidate();
       router.push("/back-office/quartiers");
     },
     onError: async (error) => {
@@ -73,6 +75,7 @@ const SurveyEdit: React.FC = () => {
             name="name"
             label="Nom du quartier"
             type="text"
+            placeholder="Saisissez le nom du quartier"
             required
           />
           <FormMultiSelectAsync

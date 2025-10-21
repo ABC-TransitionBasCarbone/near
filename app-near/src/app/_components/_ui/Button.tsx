@@ -43,6 +43,7 @@ const Button = ({
   > = {
     [ButtonStyle.LIGHT]: {
       blue: "border-blue text-blue disabled:bg-violetMedium",
+      error: "border-error text-error disabled:bg-violetMedium",
       black: "border-black text-black disabled:bg-violetMedium",
       green: "border-green text-blue disabled:border-greenLight",
       gradient: `
@@ -53,6 +54,8 @@ const Button = ({
     },
     [ButtonStyle.FILLED]: {
       blue: "border-blue bg-blue text-white disabled:bg-violetMedium disabled:bg-violetMedium",
+      error:
+        "border-error bg-error text-white disabled:bg-violetMedium disabled:bg-violetMedium",
       black: "border-black bg-black text-white disabled:bg-violetMedium",
       green: "border-green bg-green text-blue",
       gradient: `
