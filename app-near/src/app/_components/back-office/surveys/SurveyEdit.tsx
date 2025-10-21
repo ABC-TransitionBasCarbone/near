@@ -9,7 +9,6 @@ import FormInput from "../../_ui/form/FormInput";
 import FormMultiSelectAsync, {
   type SelectOption,
 } from "../../_ui/form/FormMultiSelectAsync";
-import { type InseeIris2021 } from "@prisma/client";
 import Button from "../../_ui/Button";
 import { api } from "~/trpc/react";
 import { useRouter } from "next/navigation";
@@ -19,6 +18,8 @@ import { getErrorValue } from "../../_services/error";
 
 const SurveyEdit: React.FC = () => {
   const utils = api.useUtils();
+  const inseeIrisMutation = api.iris.getAll.useMutation();
+
   const methods = useForm<SurveyForm>({
     resolver: zodResolver(surveyForm),
     mode: "all",
@@ -45,12 +46,12 @@ const SurveyEdit: React.FC = () => {
   const loadOptions = async (inputValue: string): Promise<SelectOption[]> => {
     if (!inputValue) return [];
     try {
-      const res = await fetch(`/api/iris/?q=${encodeURIComponent(inputValue)}`);
-      const data = (await res.json()) as InseeIris2021[];
-      const mapped = data.map((item) => ({
-        value: item.iris,
-        label: item.iris,
-      }));
+      const data = await inseeIrisMutation.mutateAsync(inputValue);
+      const mapped =
+        data?.map((item) => ({
+          value: item.iris,
+          label: item.iris,
+        })) ?? [];
       return mapped;
     } catch (error) {
       console.error("Erreur fetch options:", error);
