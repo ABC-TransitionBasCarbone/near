@@ -19,6 +19,7 @@ type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
   customStyle?: string;
   responsive?: boolean;
   iconRight?: boolean;
+  className?: string;
 };
 const Button = ({
   buttonType = "button",
@@ -33,6 +34,7 @@ const Button = ({
   tabIndex = 0,
   customStyle = "",
   iconRight = false,
+  className,
   ...props
 }: ButtonProps): JSX.Element => {
   const colorVariants: Record<
@@ -74,7 +76,7 @@ const Button = ({
       type={buttonType}
       // @ts-expect-error: fixme
       // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-      className={`flex ${border ? "border" : ""} justify-center gap-3 ${iconRight ? "flex-row-reverse" : ""} ${colorVariants[style][color]} items-center px-5 py-2 font-sans font-bold ${textColor ? textColorVariant[textColor] : ""} ${rounded ? "rounded-md" : ""} disabled:opacity-40 ${customStyle}`}
+      className={`flex ${border ? "border" : ""} justify-center gap-3 ${iconRight ? "flex-row-reverse" : ""} ${colorVariants[style][color]} items-center px-5 py-2 font-sans font-bold ${textColor ? textColorVariant[textColor] : ""} ${rounded ? "rounded-md" : ""} disabled:opacity-40 ${customStyle} ${className}`}
       onClick={onClick}
       tabIndex={tabIndex}
       {...props}

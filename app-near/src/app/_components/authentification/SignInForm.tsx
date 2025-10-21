@@ -6,12 +6,12 @@ import { signIn, useSession } from "next-auth/react";
 import { redirect, useSearchParams } from "next/navigation";
 import { FormProvider, type SubmitHandler, useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
-import FormInput from "~/app/_components/_ui/FormInput";
 import { type UserLoginForm } from "~/types/User";
 import Button from "~/app/_components/_ui/Button";
 import { ButtonStyle } from "~/types/enums/button";
 import { type LoginError } from "~/types/enums/login";
 import { RoleName } from "@prisma/client";
+import FormInput from "../_ui/form/FormInput";
 
 const CompanyFormRegistration = z.object({
   email: z
