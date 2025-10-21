@@ -86,9 +86,18 @@ const SurveyEdit: React.FC = () => {
             required
           />
 
-          <Button type="submit" className="mt-6">
-            Ajouter
-          </Button>
+          <div className="flex justify-center gap-6">
+            <Button
+              className="mt-6"
+              color="gray"
+              onClick={() => router.push("/back-office/quartiers")}
+            >
+              Annuler
+            </Button>
+            <Button type="submit" className="mt-6">
+              Ajouter
+            </Button>
+          </div>
         </form>
       </FormProvider>
     </div>
