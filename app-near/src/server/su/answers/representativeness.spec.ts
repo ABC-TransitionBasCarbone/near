@@ -15,15 +15,14 @@ import { db } from "~/server/db";
 import representativenessService from "./representativeness";
 import { TRPCError } from "@trpc/server";
 import { createNeighborhood } from "~/server/test-utils/create-data/neighborhood";
+import { clearAllSurveys } from "~/server/test-utils/clear/survey";
 
 describe("representativeness", () => {
   let survey: Survey;
   const surveyName = "survey-test-representativeness";
 
   beforeEach(async () => {
-    await db.suAnswer.deleteMany().catch(() => null);
-    await db.suData.deleteMany().catch(() => null);
-    await db.survey.delete({ where: { name: surveyName } }).catch(() => null);
+    await clearAllSurveys();
 
     survey = await createNeighborhood(surveyName);
   });
