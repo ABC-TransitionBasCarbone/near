@@ -9,7 +9,7 @@ export const login = async (
 ): Promise<{
   message: string;
   success: boolean;
-  user?: NextAuthUser;
+  user?: Partial<NextAuthUser>;
 }> => {
   const user = await db.user.findUnique({
     where: { email },

@@ -1,8 +1,9 @@
+import { type ReactNode } from "react";
 import LayoutBackOffice from "../_components/layouts/LayoutBackOffice";
 import VerifySession from "../_components/layouts/VerifySession";
 
 interface LayoutProps {
-  children: JSX.Element;
+  children: ReactNode;
 }
 const LayoutBackOfficeContainer: React.FC<LayoutProps> = ({ children }) => {
   return (

@@ -1,8 +1,8 @@
 "use client";
 
-import { type ReactNode } from "react";
 import type React from "react";
 import { useAutoSignOutOnExpiredSession } from "../_ui/hooks/useAutoSignOutOnExpiredSession";
+import { type ReactNode } from "react";
 
 interface VerifySessionProps {
   children: ReactNode;
