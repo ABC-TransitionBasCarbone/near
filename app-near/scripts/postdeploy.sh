@@ -20,6 +20,5 @@ fi
 
 
 echo "Mise à jour des enquêtes ..."
-npm run load:surveys
 
 exit 0
