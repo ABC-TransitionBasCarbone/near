@@ -10,7 +10,7 @@ import { api } from "~/trpc/react";
 import Button from "../../../_ui/Button";
 import { useSurveyStateContext } from "../../../_context/surveyStateContext";
 import { surveyConfig } from "../config";
-import useUpdateSurveyStep from "../../hooks/useUpdateSurveyStep";
+import useUpdateSurveyStep from "../../../_ui/hooks/useUpdateSurveyStep";
 import { env } from "~/env";
 
 const NeighborhoodInformations: React.FC = () => {

@@ -23,7 +23,7 @@ declare module "next/server" {
   }
 }
 
-const tokenMaxAge = 60 * 60; // 1h
+const tokenMaxAge = 60 * 60 * 24; // 24h
 
 /**
  * Options for NextAuth.js used to configure adapters, providers, callbacks, etc.
@@ -43,7 +43,9 @@ export const authConfig = {
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
-        if (!credentials?.password || !credentials.email) return null;
+        if (!credentials?.password || !credentials.email) {
+          return null;
+        }
 
         const connexion = await login(
           credentials.email as string,
@@ -58,8 +60,8 @@ export const authConfig = {
       },
     }),
   ],
-  session: { strategy: "jwt", maxAge: tokenMaxAge },
   jwt: { maxAge: tokenMaxAge },
+  session: { strategy: "jwt", maxAge: tokenMaxAge * 1.5 },
 
   callbacks: {
     /**
@@ -115,13 +117,16 @@ export const authConfig = {
           email: currentUser.email,
           survey: currentUser.survey,
           roles: currentUser.roles,
-          accessTokenExpires: now + tokenMaxAge * 1000, // 1h
+          accessTokenExpires: now + tokenMaxAge * 1000,
         };
       }
 
       // when token is still valid
       if (now < (token.accessTokenExpires as number)) {
-        return token;
+        return {
+          ...token,
+          accessTokenExpires: now + tokenMaxAge * 1000,
+        };
       }
 
       // when token is not valid anymore: refresh token if user still existing

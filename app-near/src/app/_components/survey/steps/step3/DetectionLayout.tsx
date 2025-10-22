@@ -6,7 +6,7 @@ import Button from "../../../_ui/Button";
 import SurveyLayout from "../../SurveyLayout";
 import { api } from "~/trpc/react";
 import SuDashboard from "./SuDashboard";
-import useUpdateSurveyStep from "../../hooks/useUpdateSurveyStep";
+import useUpdateSurveyStep from "../../../_ui/hooks/useUpdateSurveyStep";
 import { surveyConfig } from "../config";
 import { useSurveyStateContext } from "~/app/_components/_context/surveyStateContext";
 import { useSession } from "next-auth/react";

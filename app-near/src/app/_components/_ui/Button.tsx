@@ -19,6 +19,7 @@ type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
   customStyle?: string;
   responsive?: boolean;
   iconRight?: boolean;
+  className?: string;
 };
 const Button = ({
   buttonType = "button",
@@ -33,6 +34,7 @@ const Button = ({
   tabIndex = 0,
   customStyle = "",
   iconRight = false,
+  className,
   ...props
 }: ButtonProps): JSX.Element => {
   const colorVariants: Record<
@@ -41,6 +43,7 @@ const Button = ({
   > = {
     [ButtonStyle.LIGHT]: {
       blue: "border-blue text-blue disabled:bg-violetMedium",
+      error: "border-error text-error disabled:bg-violetMedium",
       black: "border-black text-black disabled:bg-violetMedium",
       green: "border-green text-blue disabled:border-greenLight",
       gradient: `
@@ -51,6 +54,8 @@ const Button = ({
     },
     [ButtonStyle.FILLED]: {
       blue: "border-blue bg-blue text-white disabled:bg-violetMedium disabled:bg-violetMedium",
+      error:
+        "border-error bg-error text-white disabled:bg-violetMedium disabled:bg-violetMedium",
       black: "border-black bg-black text-white disabled:bg-violetMedium",
       green: "border-green bg-green text-blue",
       gradient: `
@@ -74,7 +79,7 @@ const Button = ({
       type={buttonType}
       // @ts-expect-error: fixme
       // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-      className={`flex ${border ? "border" : ""} justify-center gap-3 ${iconRight ? "flex-row-reverse" : ""} ${colorVariants[style][color]} items-center px-5 py-2 font-sans font-bold ${textColor ? textColorVariant[textColor] : ""} ${rounded ? "rounded-md" : ""} disabled:opacity-40 ${customStyle}`}
+      className={`flex ${border ? "border" : ""} justify-center gap-3 ${iconRight ? "flex-row-reverse" : ""} ${colorVariants[style][color]} items-center px-5 py-2 font-sans font-bold ${textColor ? textColorVariant[textColor] : ""} ${rounded ? "rounded-md" : ""} disabled:opacity-40 ${customStyle} ${className}`}
       onClick={onClick}
       tabIndex={tabIndex}
       {...props}

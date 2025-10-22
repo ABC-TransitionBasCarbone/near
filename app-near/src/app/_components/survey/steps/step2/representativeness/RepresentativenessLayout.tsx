@@ -19,7 +19,7 @@ import {
   isRepresentativenessValid,
   THRESHOLD_ACCEPT_VALUE,
 } from "~/shared/services/su-surveys/threshold";
-import useUpdateSurveyStep from "../../../hooks/useUpdateSurveyStep";
+import useUpdateSurveyStep from "../../../../_ui/hooks/useUpdateSurveyStep";
 import ConfirmModal from "../../ConfirmModal";
 import { SurveyPhase } from "@prisma/client";
 

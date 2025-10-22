@@ -16,7 +16,7 @@ import ConfirmModal from "../ConfirmModal";
 import { api } from "~/trpc/react";
 import SuDashboard from "../step3/SuDashboard";
 import { SurveyType } from "~/types/enums/survey";
-import useUpdateSurveyStep from "../../hooks/useUpdateSurveyStep";
+import useUpdateSurveyStep from "../../../_ui/hooks/useUpdateSurveyStep";
 import { env } from "~/env";
 
 const chartConfig: {

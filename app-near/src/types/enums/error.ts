@@ -15,6 +15,8 @@ export enum ErrorCode {
   WRONG_SIGNATURE = "WRONG_SIGNATURE",
   SU_NOT_FOUND = "SU_NOT_FOUND",
   WRONG_BARYCENTRE_DATA = "WRONG_BARYCENTRE_DATA",
+  EXISTING_SURVEY_NAME = "EXISTING_SURVEY_NAME",
+  WRONG_IRIS = "WRONG_IRIS",
 }
 
 export const errorCodeMapper: Partial<Record<ErrorCode, string>> = {
@@ -28,4 +30,6 @@ export const errorCodeMapper: Partial<Record<ErrorCode, string>> = {
     "Votre sondage n'est pas à une phase lui permettant de réaliser cette action.",
   [ErrorCode.UNEXPECTED_COMPUTE_SU_ERROR]:
     "Une erreur inattendue pour computeSus s'est produite",
+  [ErrorCode.EXISTING_SURVEY_NAME]: "Ce quartier existe déjà",
+  [ErrorCode.WRONG_IRIS]: "Vérifiez la valeur des iris saisis",
 };

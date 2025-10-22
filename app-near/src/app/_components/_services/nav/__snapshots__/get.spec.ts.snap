@@ -1,0 +1,40 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`get navBars navBackOfficeItems should return navBackOffice item when ADMIN 1`] = `
+[
+  {
+    "icon": "dashboard",
+    "onlyFor": [
+      "ADMIN",
+    ],
+    "title": "Dashboard",
+    "url": "/back-office",
+  },
+  {
+    "icon": "survey",
+    "onlyFor": [
+      "ADMIN",
+    ],
+    "title": "Quartiers",
+    "url": "/back-office/quartiers",
+  },
+  {
+    "icon": "user",
+    "onlyFor": [
+      "ADMIN",
+    ],
+    "title": "Utilisateurs",
+    "url": "/back-office/utilisateurs",
+  },
+  {
+    "action": "logout",
+    "icon": "logout",
+    "onlyFor": [
+      "ADMIN",
+    ],
+    "title": "Se déconnecter",
+  },
+]
+`;
+
+exports[`get navBars navBackOfficeItems should return navBackOffice item when PILOTE 1`] = `[]`;

@@ -1,8 +1,12 @@
 import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
-import { getOneSurvey } from "~/server/surveys/get";
+import { querySurveys, getOneSurvey } from "~/server/surveys/get";
 import { updateSurvey } from "~/server/surveys/put";
-import { SurveyPhase } from "@prisma/client";
+import { RoleName, SurveyPhase } from "@prisma/client";
+import { userIsGranted } from "~/shared/services/roles/grant-rules";
+import { createSurvey } from "~/server/surveys/create";
+import { surveyForm } from "~/shared/validations/surveyEdit.validation";
+import { deleteSurvey } from "~/server/surveys/delete";
 
 export const surveysRouter = createTRPCRouter({
   getOne: protectedProcedure.query(({ ctx }) => {
@@ -10,6 +14,21 @@ export const surveysRouter = createTRPCRouter({
     if (!surveyId) return null;
     return getOneSurvey(surveyId);
   }),
+
+  querySurveys: protectedProcedure
+    .input(
+      z.object({
+        page: z.number().min(1).default(1),
+        limit: z.number().min(1).max(100).default(10),
+        filter: z.string().optional(),
+      }),
+    )
+    .query(({ input, ctx }) => {
+      if (!userIsGranted(ctx.session.user, [RoleName.ADMIN])) {
+        return null;
+      }
+      return querySurveys(input.page, input.limit, input.filter);
+    }),
 
   update: protectedProcedure
     .input(
@@ -27,5 +46,22 @@ export const surveysRouter = createTRPCRouter({
       const surveyId = ctx.session.user.survey?.id;
       if (!surveyId) return null;
       return updateSurvey(surveyId, input.data);
+    }),
+
+  create: protectedProcedure
+    .input(surveyForm)
+    .mutation(async ({ ctx, input }) => {
+      if (!userIsGranted(ctx.session.user, [RoleName.ADMIN])) return null;
+      return createSurvey(
+        input.name,
+        input.iris.map((iris) => iris.value),
+      );
+    }),
+
+  delete: protectedProcedure
+    .input(z.number())
+    .mutation(async ({ ctx, input }) => {
+      if (!userIsGranted(ctx.session.user, [RoleName.ADMIN])) return null;
+      return deleteSurvey(input);
     }),
 });

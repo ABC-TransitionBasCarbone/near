@@ -9,7 +9,7 @@ export const login = async (
 ): Promise<{
   message: string;
   success: boolean;
-  user?: NextAuthUser;
+  user?: Partial<NextAuthUser>;
 }> => {
   const user = await db.user.findUnique({
     where: { email },
@@ -25,7 +25,12 @@ export const login = async (
   let userSurvey;
 
   if (userRoles.includes(RoleName.PILOTE)) {
-    userSurvey = await db.survey.findFirst();
+    if (!user.surveyId) {
+      return { message: "Accès non autorisé", success: false };
+    }
+    userSurvey = await db.survey.findFirstOrThrow({
+      where: { id: user.surveyId },
+    });
 
     if (!userSurvey) {
       console.error(`Aucune enquête trouvée accès non autorisé.`);

@@ -10,8 +10,6 @@ ${message}
 Usages: 
   - npm run user:create -- email=<email> password=<password> role=<role> [surveyName=<surveyName>]
 `);
-
-  process.exit(1);
 };
 
 const verifyRoleName = async (roleName: RoleName): Promise<void> => {
@@ -46,7 +44,9 @@ const createUser = async () => {
   };
 
   if (!email || !password || !role) {
-    throw new Error("Can not seed on production environment");
+    throw new Error(
+      "Verify usage command: email or password or role is missing",
+    );
   }
 
   await verifyRoleName(role);
@@ -67,15 +67,14 @@ const createUser = async () => {
   });
 };
 
-await createUser()
-  .catch((e) => {
-    if (e instanceof Error) {
-      endProcess(e.message);
-    } else {
-      endProcess("unknown error");
-    }
-  })
-  .then(() => {
-    console.log("End create user successfully");
-    process.exit(0);
-  });
+try {
+  await createUser();
+
+  console.log("End create user successfully");
+} catch (e) {
+  if (e instanceof Error) {
+    endProcess(e.message);
+  } else {
+    endProcess("unknown error");
+  }
+}
