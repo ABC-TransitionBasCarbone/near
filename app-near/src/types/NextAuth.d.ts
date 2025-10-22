@@ -8,4 +8,5 @@ export interface NextAuthUser {
     name: string;
   };
   roles: RoleName[];
+  accessTokenExpires: number;
 }
