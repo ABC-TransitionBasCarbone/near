@@ -27,7 +27,7 @@ const DeleteSurveyButton: React.FC<DeleteSurveyButtonProps> = ({
         value: getErrorValue(error),
       }),
     onSuccess: async () => {
-      await utils.surveys.getAll.invalidate();
+      await utils.surveys.querySurveys.invalidate();
     },
   });
 

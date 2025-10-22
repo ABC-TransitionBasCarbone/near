@@ -11,7 +11,7 @@ export const getOneSurvey = async (id: number) => {
   });
 };
 
-export const getAllSurveys = async (
+export const querySurveys = async (
   page: number,
   limit: number,
   filter?: string,

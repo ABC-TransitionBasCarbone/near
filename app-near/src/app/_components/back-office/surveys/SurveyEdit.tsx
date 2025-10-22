@@ -18,7 +18,7 @@ import { getErrorValue } from "../../_services/error";
 
 const SurveyEdit: React.FC = () => {
   const utils = api.useUtils();
-  const inseeIrisMutation = api.iris.getAll.useMutation();
+  const inseeIrisMutation = api.iris.queryInseeIris.useMutation();
 
   const methods = useForm<SurveyForm>({
     resolver: zodResolver(surveyForm),
@@ -32,7 +32,7 @@ const SurveyEdit: React.FC = () => {
 
   const createSurveyMutation = api.surveys.create.useMutation({
     onSuccess: async () => {
-      await utils.surveys.getAll.invalidate();
+      await utils.surveys.querySurveys.invalidate();
       router.push("/back-office/quartiers");
     },
     onError: async (error) => {

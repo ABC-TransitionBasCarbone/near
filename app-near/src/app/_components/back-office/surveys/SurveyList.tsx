@@ -28,7 +28,7 @@ const SurveyList: React.FC = () => {
 
       <Table
         columns={SurveyListColumns}
-        fetcherHook={(params) => api.surveys.getAll.useQuery(params)}
+        fetcherHook={(params) => api.surveys.querySurveys.useQuery(params)}
         filter={debouncedSearch}
       />
     </div>
