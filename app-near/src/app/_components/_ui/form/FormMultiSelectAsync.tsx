@@ -55,7 +55,7 @@ const FormMultiSelectAsync = <FormValues extends FieldValues>({
                 defaultOptions
                 placeholder={placeholder}
                 loadOptions={loadOptions}
-                onChange={(val) => field.onChange(val)}
+                onChange={field.onChange}
                 className="mx-2 flex-1"
                 styles={{
                   control: (base) => ({
