@@ -90,7 +90,7 @@ const UserEdit: React.FC = () => {
                   value: survey.name,
                 })) ?? []
               }
-            ></FormSelect>
+            />
 
             <div className="flex justify-center gap-6">
               <Button
