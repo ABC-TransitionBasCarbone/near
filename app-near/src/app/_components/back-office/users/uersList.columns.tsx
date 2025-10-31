@@ -3,7 +3,7 @@ import { type ColumnDef } from "@tanstack/react-table";
 
 export const UserListColumns: ColumnDef<Survey>[] = [
   { accessorKey: "email", header: "Email" },
-  { accessorKey: "surveyId", header: "Enquête" },
+  { accessorKey: "survey.name", header: "Quartier" },
   {
     accessorKey: "createdAt",
     header: "Date de création",

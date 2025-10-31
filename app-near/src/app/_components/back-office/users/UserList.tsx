@@ -1,10 +1,9 @@
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { api } from "~/trpc/react";
+import Button from "../../_ui/Button";
 import Table from "../../_ui/Table";
 import { UserListColumns } from "./uersList.columns";
-import { useDebounced } from "../../_ui/hooks/useDebounced";
-import Button from "../../_ui/Button";
-import { useRouter } from "next/navigation";
 
 const UserList: React.FC = () => {
   const [search] = useState("");

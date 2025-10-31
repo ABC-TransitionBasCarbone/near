@@ -22,6 +22,9 @@ export const queryUsers = async (
       where,
       skip: (page - 1) * limit,
       take: limit,
+      include: {
+        survey: true,
+      },
     }),
     db.user.count({ where }),
   ]);
