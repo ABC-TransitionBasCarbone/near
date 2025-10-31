@@ -40,7 +40,7 @@ const FormSelect = <FormValues extends FieldValues>({
               id={name}
               className={`hover:ring-indigo-400 focus-within:ring-indigo-400 mt-2 flex w-full items-center rounded-md border border-grayLight bg-white px-4 py-3 text-sm outline-none transition duration-300 focus-within:ring-2 hover:ring-2`}
               value={field.value}
-              onChange={field.onChange}
+              onChange={(val) => field.onChange(Number(val.target.value))}
             >
               <option value="">Aucune réponse sélectionnée</option>
               {options.map((opt) => (

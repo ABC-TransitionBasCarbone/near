@@ -17,7 +17,7 @@ export const usersRouter = createTRPCRouter({
     .input(userform)
     .mutation(async ({ ctx, input }) => {
       if (!userIsGranted(ctx.session.user, [RoleName.ADMIN])) return null;
-      return createUser(input.email, Number(input.surveyId));
+      return createUser(input.email, input.surveyId);
     }),
 
   queryUsers: protectedProcedure
