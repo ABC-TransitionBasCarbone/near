@@ -32,9 +32,9 @@ const UserEdit: React.FC = () => {
   const router = useRouter();
   const { setNotification } = useNotification();
 
-  const createUserMutation = api.users.create.useMutation({
+  const createUserMutation = api.users.createPilote.useMutation({
     onSuccess: async (data) => {
-      await utils.users.queryUsers.invalidate();
+      await utils.users.queryPiloteUsers.invalidate();
       setUserPassword(data?.password ?? null);
       setShowModal(true);
     },

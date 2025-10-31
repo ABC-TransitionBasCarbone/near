@@ -20,7 +20,7 @@ const UserList: React.FC = () => {
 
       <Table
         columns={UserListColumns}
-        fetcherHook={(params) => api.users.queryUsers.useQuery(params)}
+        fetcherHook={(params) => api.users.queryPiloteUsers.useQuery(params)}
         filter={search}
       />
     </div>

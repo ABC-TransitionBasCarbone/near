@@ -1,4 +1,4 @@
-import { type User } from "@prisma/client";
+import { RoleName, type User } from "@prisma/client";
 import { db } from "../db";
 import bcrypt from "bcrypt";
 import crypto from "crypto";
@@ -16,7 +16,7 @@ const generateTmpPassword = (length = 12) => {
   return password;
 };
 
-export const createUser = async (
+export const createPiloteUser = async (
   email: string,
   surveyId: number,
 ): Promise<User & { password: string }> => {
@@ -35,6 +35,9 @@ export const createUser = async (
       email: email,
       surveyId: surveyId,
       passwordHash,
+      roles: {
+        connect: [{ name: RoleName.PILOTE }],
+      },
     },
   });
 

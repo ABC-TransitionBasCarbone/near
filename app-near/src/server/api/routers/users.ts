@@ -1,26 +1,20 @@
 import { RoleName } from "@prisma/client";
 import { z } from "zod";
-import { getOneUser, queryUsers } from "~/server/users/get";
+import { createPiloteUser } from "~/server/users/create";
+import { queryUsers } from "~/server/users/get";
 import { userIsGranted } from "~/shared/services/roles/grant-rules";
-import { createTRPCRouter, protectedProcedure } from "../trpc";
 import { userform } from "~/shared/validations/userEdit.validation";
-import { createUser } from "~/server/users/create";
+import { createTRPCRouter, protectedProcedure } from "../trpc";
 
 export const usersRouter = createTRPCRouter({
-  getOne: protectedProcedure.input(z.number()).query(({ input, ctx }) => {
-    const surveyId = ctx.session.user.survey?.id;
-    if (!surveyId) return null;
-    return getOneUser(input);
-  }),
-
-  create: protectedProcedure
+  createPilote: protectedProcedure
     .input(userform)
     .mutation(async ({ ctx, input }) => {
       if (!userIsGranted(ctx.session.user, [RoleName.ADMIN])) return null;
-      return createUser(input.email, input.surveyId);
+      return createPiloteUser(input.email, input.surveyId);
     }),
 
-  queryUsers: protectedProcedure
+  queryPiloteUsers: protectedProcedure
     .input(
       z.object({
         page: z.number().min(1).default(1),
