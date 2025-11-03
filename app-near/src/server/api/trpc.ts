@@ -9,11 +9,15 @@
 
 import { type RoleName } from "@prisma/client";
 import { initTRPC, TRPCError } from "@trpc/server";
+import { type Session } from "next-auth";
 import superjson from "superjson";
 import { ZodError } from "zod";
 
 import { auth } from "~/server/auth";
 import { db } from "~/server/db";
+import { hasSomeRolesAndLevelsGrantedForUser } from "~/shared/services/roles/grant-rules";
+import { type NextAuthUser } from "~/types/NextAuth";
+import { hasRoleOrThrow } from "./has-role-or-throw";
 
 /**
  * 1. CONTEXT
@@ -113,7 +117,7 @@ export const publicProcedure = t.procedure.use(timingMiddleware);
 
 const isAuthenticated = () =>
   t.middleware(({ ctx, next }) => {
-    if (!ctx.session?.user) {
+    if (!ctx.session?.user?.name) {
       throw new TRPCError({ code: "UNAUTHORIZED" });
     }
     return next({
@@ -124,16 +128,9 @@ const isAuthenticated = () =>
     });
   });
 
-export const hasRole = (roles: RoleName) =>
+export const hasRoleMiddleware = (roles: RoleName[]) =>
   t.middleware(({ ctx, next }) => {
-    const user = ctx.session?.user;
-
-    if (!user || !user.roles.includes(roles)) {
-      throw new TRPCError({
-        code: "FORBIDDEN",
-      });
-    }
-
+    hasRoleOrThrow(ctx, roles);
     return next();
   });
 
