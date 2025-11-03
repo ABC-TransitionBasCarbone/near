@@ -17,6 +17,7 @@ export enum ErrorCode {
   WRONG_BARYCENTRE_DATA = "WRONG_BARYCENTRE_DATA",
   EXISTING_SURVEY_NAME = "EXISTING_SURVEY_NAME",
   WRONG_IRIS = "WRONG_IRIS",
+  EXISTING_USER_EMAIL = "USER_ALREADY_EXISTS",
 }
 
 export const errorCodeMapper: Partial<Record<ErrorCode, string>> = {
@@ -28,6 +29,7 @@ export const errorCodeMapper: Partial<Record<ErrorCode, string>> = {
     "Les emails n'ont pas été correctement envoyés, veuillez vous rapprocher du support pour déterminer l'impact.",
   [ErrorCode.WRONG_SURVEY_PHASE]:
     "Votre sondage n'est pas à une phase lui permettant de réaliser cette action.",
+  [ErrorCode.EXISTING_USER_EMAIL]: "Cet utilisateur existe déjà.",
   [ErrorCode.UNEXPECTED_COMPUTE_SU_ERROR]:
     "Une erreur inattendue pour computeSus s'est produite",
   [ErrorCode.EXISTING_SURVEY_NAME]: "Ce quartier existe déjà",

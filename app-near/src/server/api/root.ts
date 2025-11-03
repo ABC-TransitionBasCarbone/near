@@ -8,6 +8,7 @@ import { wayOfLifeAnswersRouter } from "./routers/way-of-life-answers";
 import { carbonFootprintAnswersRouter } from "./routers/carbon-footprint-answers";
 import { analyzesRouter } from "./routers/analyzez";
 import { irisRouter } from "./routers/iris";
+import { usersRouter } from "./routers/users";
 
 /**
  * This is the primary router for your server.
@@ -24,6 +25,7 @@ export const appRouter = createTRPCRouter({
   carbonFootprintAnswers: carbonFootprintAnswersRouter,
   analyzes: analyzesRouter,
   iris: irisRouter,
+  users: usersRouter,
 });
 
 // export type definition of API

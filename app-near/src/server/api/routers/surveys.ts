@@ -1,12 +1,15 @@
-import { z } from "zod";
-import { createTRPCRouter, protectedProcedure } from "../trpc";
-import { querySurveys, getOneSurvey } from "~/server/surveys/get";
-import { updateSurvey } from "~/server/surveys/put";
 import { RoleName, SurveyPhase } from "@prisma/client";
-import { userIsGranted } from "~/shared/services/roles/grant-rules";
+import { z } from "zod";
 import { createSurvey } from "~/server/surveys/create";
-import { surveyForm } from "~/shared/validations/surveyEdit.validation";
 import { deleteSurvey } from "~/server/surveys/delete";
+import { getOneSurvey, querySurveys } from "~/server/surveys/get";
+import { updateSurvey } from "~/server/surveys/put";
+import { surveyForm } from "~/shared/validations/surveyEdit.validation";
+import {
+  createTRPCRouter,
+  hasRoleMiddleware,
+  protectedProcedure,
+} from "../trpc";
 
 export const surveysRouter = createTRPCRouter({
   getOne: protectedProcedure.query(({ ctx }) => {
@@ -16,6 +19,7 @@ export const surveysRouter = createTRPCRouter({
   }),
 
   querySurveys: protectedProcedure
+    .use(hasRoleMiddleware([RoleName.ADMIN]))
     .input(
       z.object({
         page: z.number().min(1).default(1),
@@ -24,9 +28,6 @@ export const surveysRouter = createTRPCRouter({
       }),
     )
     .query(({ input, ctx }) => {
-      if (!userIsGranted(ctx.session.user, [RoleName.ADMIN])) {
-        return null;
-      }
       return querySurveys(input.page, input.limit, input.filter);
     }),
 
@@ -49,9 +50,9 @@ export const surveysRouter = createTRPCRouter({
     }),
 
   create: protectedProcedure
+    .use(hasRoleMiddleware([RoleName.ADMIN]))
     .input(surveyForm)
     .mutation(async ({ ctx, input }) => {
-      if (!userIsGranted(ctx.session.user, [RoleName.ADMIN])) return null;
       return createSurvey(
         input.name,
         input.iris.map((iris) => iris.value),
@@ -59,9 +60,9 @@ export const surveysRouter = createTRPCRouter({
     }),
 
   delete: protectedProcedure
+    .use(hasRoleMiddleware([RoleName.ADMIN]))
     .input(z.number())
     .mutation(async ({ ctx, input }) => {
-      if (!userIsGranted(ctx.session.user, [RoleName.ADMIN])) return null;
       return deleteSurvey(input);
     }),
 });

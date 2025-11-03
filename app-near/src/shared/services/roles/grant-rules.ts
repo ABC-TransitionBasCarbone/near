@@ -1,12 +1,12 @@
 import { type RoleName } from "@prisma/client";
 import { type NextAuthUser } from "~/types/NextAuth";
 
-const hasSomeRolesAndLevelsGrantedForUser = (
-  roleNames: RoleName[] = [],
-  grantedRoles: RoleName[] = [],
+export const hasSomeRolesAndLevelsGrantedForUser = (
+  userRoles: RoleName[] = [],
+  neededRoles: RoleName[] = [],
 ): boolean => {
-  return roleNames.some((roleName) =>
-    grantedRoles.some((granted) => roleName === granted),
+  return userRoles.some((roleName) =>
+    neededRoles.some((granted) => roleName === granted),
   );
 };
 
