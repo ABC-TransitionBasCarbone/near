@@ -74,9 +74,9 @@ Exécuter l'application en local :
 npm run dev
 ```
 
-##  Comment charger la base de données INSEE des IRIS pour l'année 2021 ?
+##  Comment initialiser l'application ?
 
-### 1. Télécharger le fichier et l'extraire dans ./scripts
+### 1. Prérequis : Télécharger le fichier des données INSEE 2021 et l'extraire dans ./scripts
 
 Pour les données de l'INSEE 2021
 
@@ -84,36 +84,70 @@ Pour les données de l'INSEE 2021
 curl -L -O https://www.insee.fr/fr/statistiques/fichier/8268806/base-ic-evol-struct-pop-2021_csv.zip && unzip base-ic-evol-struct-pop-2021_csv.zip && mv base-ic-evol-struct-pop-2021.CSV ./scripts/base-ic-evol-struct-pop-2021.csv && rm base-ic-evol-struct-pop-2021_csv.zip
 ```
 
-### 2. Charger la BDD INSEE et initialiser une enquête pour le quartier "Porte d'Orléans"
+### 2. Initialiser l'application
 
-#### En environnement local
+#### 2.1 En environnement local
 
 ```bash
-npm run load:all
+docker-compose up;
+
+# or
+
+docker compose up;
+```
+Au démarrage, les actions suivantes seront réalisées :
+```bash
+# Reset de la base de données
+npm run data:reset "postgresql://postgres:password@database:5432/app-near";
+
+# Ajout des données de l'insee précédemment téléchargées dans la table InseeIris2021
+npm run load:insee -- "./scripts/load-insee/base-ic-evol-struct-pop-2021.csv" "postgresql://postgres:password@database:5432/app-near";
+
+# Création du quartier "Porte d'Orléans"
+npm run survey:create -- iris="751145501,751145503,751145601" surveyName="Porte d'Orléans";
+
+# Création de l'utilisateur avec le rôle PILOTE pour le quartier "Porte d'Orléans";
+npm run user:create -- role=PILOTE email=pilote@mail.com password=pilote surveyName="Porte d'Orléans";
+
+# Création de l'utilisateur avec le rôle ADMIN
+npm run user:create -- role=ADMIN email=admin@mail.com password=admin
 ```
 
-#### En environnement de production (ou dockerisé)
 
-##### 2.1. Charger les données INSEE dans une base de données locale
+#### 2.2 En environnement de production (ou dockerisé)
+
+##### 2.2.1 Charger les données INSEE dans une base de données locale
 
 ```bash
 npm run load:insee -- "$(pwd)/scripts/base-ic-evol-struct-pop-2021.csv" postgresql://postgres:password@localhost:5432/app-near
 ```
 
-##### 2.2. Initialiser une enquête en base et calculer les données statistiques nécessaires à l'enquête
-
-Le script utilise les variables du fichier `.env`
+##### 2.2.2 Créer un utilisateur avec le rôle d'administration
 
 ```bash
-npm run load:surveys
+npm run user:create -- role=ADMIN email=<email> password=<password>
 ```
 
-Pour plus de détail sur :
+##### 2.2.3 Initialiser une enquête en base et calculer les données statistiques nécessaires à l'enquête
 
-- l'ajout d'un nouveau millésime de l'INSEE
-- ou comment ajouter une enquête
+###### 2.2.3.1 En utilisant le back-office (fortement recommandé)
 
-voir le [README du dossier scripts](./scritps/README.md)
+Connectez vous en tant qu'administrateur, puis utilisez le back-office pour : 
+- Créer un quartier
+- Associer un utilisateur avec le rôle PILOTE à ce quartier
+
+###### 2.2.3.2 Avec des scripts
+
+```bash
+# Création du quartier "Porte d'Orléans"
+npm run survey:create -- iris="751145501,751145503,751145601" surveyName="Porte d'Orléans";
+
+# Création de l'utilisateur avec le rôle PILOTE pour le quartier "Porte d'Orléans";
+npm run user:create -- role=PILOTE email=pilote@mail.com password=pilote surveyName="Porte d'Orléans";
+
+```
+
+Les scripts utilisent les variables du fichier `.env`
 
 ## Comment créer des utilisateurs
 ```bash
@@ -125,7 +159,7 @@ npm run user:create -- email=<email> password=<password> role=<role> [surveyName
 # surveyName : uniquement pour le rôle PILOTE, mettre un surveyName valid (par ex. "Porte d'Orléans")
 ```
 
-## Comment tester le webhook
+## Comment tester les webhooks
 
 ```bash
 ./scripts/webhooks/query.sh <url> <secret> <json_file>
