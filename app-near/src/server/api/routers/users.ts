@@ -13,7 +13,7 @@ export const usersRouter = createTRPCRouter({
   createPilote: protectedProcedure
     .use(hasRoleMiddleware([RoleName.ADMIN]))
     .input(userform)
-    .mutation(async ({ ctx, input }) => {
+    .mutation(async ({ input }) => {
       return createPiloteUser(input.email, input.surveyId);
     }),
 
@@ -26,7 +26,7 @@ export const usersRouter = createTRPCRouter({
         filter: z.string().optional(),
       }),
     )
-    .query(({ input, ctx }) => {
+    .query(({ input }) => {
       return queryUsers(input.page, input.limit, input.filter);
     }),
 });

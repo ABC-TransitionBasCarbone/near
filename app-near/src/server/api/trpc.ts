@@ -9,14 +9,11 @@
 
 import { type RoleName } from "@prisma/client";
 import { initTRPC, TRPCError } from "@trpc/server";
-import { type Session } from "next-auth";
 import superjson from "superjson";
 import { ZodError } from "zod";
 
 import { auth } from "~/server/auth";
 import { db } from "~/server/db";
-import { hasSomeRolesAndLevelsGrantedForUser } from "~/shared/services/roles/grant-rules";
-import { type NextAuthUser } from "~/types/NextAuth";
 import { hasRoleOrThrow } from "./has-role-or-throw";
 
 /**

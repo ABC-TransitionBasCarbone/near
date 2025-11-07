@@ -27,7 +27,7 @@ export const surveysRouter = createTRPCRouter({
         filter: z.string().optional(),
       }),
     )
-    .query(({ input, ctx }) => {
+    .query(({ input }) => {
       return querySurveys(input.page, input.limit, input.filter);
     }),
 
@@ -52,7 +52,7 @@ export const surveysRouter = createTRPCRouter({
   create: protectedProcedure
     .use(hasRoleMiddleware([RoleName.ADMIN]))
     .input(surveyForm)
-    .mutation(async ({ ctx, input }) => {
+    .mutation(async ({ input }) => {
       return createSurvey(
         input.name,
         input.iris.map((iris) => iris.value),
@@ -62,7 +62,7 @@ export const surveysRouter = createTRPCRouter({
   delete: protectedProcedure
     .use(hasRoleMiddleware([RoleName.ADMIN]))
     .input(z.number())
-    .mutation(async ({ ctx, input }) => {
+    .mutation(async ({ input }) => {
       return deleteSurvey(input);
     }),
 });
