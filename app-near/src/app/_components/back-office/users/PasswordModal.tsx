@@ -1,5 +1,7 @@
 import Button from "~/app/_components/_ui/Button";
 import Modal from "~/app/_components/_ui/Modal";
+import { useNotification } from "../../_context/NotificationProvider";
+import { NotificationType } from "~/types/enums/notifications";
 
 interface PasswordModalProps {
   showModal: boolean;
@@ -11,6 +13,14 @@ const PasswordModal: React.FC<PasswordModalProps> = ({
   onPasswordModalClose,
   password,
 }) => {
+  const { setNotification } = useNotification();
+  const handleCopiePassword = async (password: string) => {
+    await navigator.clipboard.writeText(password);
+    setNotification({
+      type: NotificationType.SUCCESS,
+      value: "Mot de passe copié.",
+    });
+  };
   return (
     <Modal
       show={showModal}
@@ -31,7 +41,7 @@ const PasswordModal: React.FC<PasswordModalProps> = ({
           <div className="flex flex-row items-center justify-between bg-grayExtraLight p-4">
             <p className="">{password}</p>
             <button
-              onClick={() => navigator.clipboard.writeText(password)}
+              onClick={() => handleCopiePassword(password)}
               className="bg-blue-500 hover:bg-blue-600 rounded px-3 py-1 transition"
             >
               Copier
