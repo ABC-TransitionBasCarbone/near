@@ -15,7 +15,19 @@ services:
 
   app-near-web:
     image: node:22-alpine
-    command: sh -c "echo 'starting app-near...'; npm i; npx prisma db push; npm run dev"
+    command: > 
+      sh -c "
+        echo 'starting app-near...' && 
+        npm i &&
+        npm run db:migrate &&
+        apk add --no-cache postgresql-client && 
+        npm run data:reset "postgresql://postgres:password@database:5432/app-near" &&
+        npm run load:insee -- "./scripts/load-insee/base-ic-evol-struct-pop-2021.csv" \"postgresql://postgres:password@database:5432/app-near\" &&
+        npm run survey:create -- iris=\"751145501,751145503,751145601\" surveyName=\"Porte d'Orléans\" &&
+        npm run user:create -- role=PILOTE email=pilote@mail.com password=pilote surveyName=\"Porte d'Orléans\" &&
+        npm run user:create -- role=ADMIN email=admin@mail.com password=admin &&
+        npm run dev
+      "
     environment:
       DATABASE_URL: postgresql://postgres:password@database/app-near
     ports:

@@ -2,10 +2,16 @@
 
 import Link from "next/link";
 import { type HTMLInputTypeAttribute, type ReactNode, useState } from "react";
-import { type FieldValues, type Path, useFormContext } from "react-hook-form";
-import { renderIcon } from "./utils/renderIcon";
+import {
+  type FieldError,
+  type FieldValues,
+  type Path,
+  useFormContext,
+} from "react-hook-form";
+import { renderIcon } from "../utils/renderIcon";
+import FormErrorMessage from "./FormErrorMessage";
 
-interface FormInputProps<T> {
+interface FormInputProps<T extends FieldValues> {
   label?: string;
   labelLink?: {
     redirect: string;
@@ -58,8 +64,6 @@ const FormInput = <T extends FieldValues>({
       setInputType("text");
     }
   };
-
-  const errorMessage = errors[name]?.message as unknown as string;
 
   return (
     <div className="flex max-w-full flex-1 flex-col items-start">
@@ -125,7 +129,10 @@ const FormInput = <T extends FieldValues>({
           </button>
         )}
       </div>
-      <span className="text-red mt-2 text-sm">{errorMessage}</span>
+      <FormErrorMessage
+        id={`error-${name}`}
+        error={errors[name] as FieldError}
+      />
     </div>
   );
 };

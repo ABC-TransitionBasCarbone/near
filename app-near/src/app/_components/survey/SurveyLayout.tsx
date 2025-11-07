@@ -16,7 +16,7 @@ const SurveyLayout: React.FC<SurveyLayoutProps> = ({
 }) => {
   const { data: session } = useSession();
   const { data: survey } = api.surveys.getOne.useQuery(undefined, {
-    enabled: !!session?.user?.surveyId,
+    enabled: !!session?.user?.survey?.id,
   });
   const { step } = useSurveyStateContext();
 

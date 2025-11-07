@@ -2,8 +2,8 @@
 
 import DetectionLayout from "./DetectionLayout";
 
-const Main: React.FC = () => {
+const Exploration: React.FC = () => {
   return <DetectionLayout />;
 };
 
-export default Main;
+export default Exploration;

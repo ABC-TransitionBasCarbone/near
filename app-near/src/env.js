@@ -16,7 +16,6 @@ export const env = createEnv({
     NODE_ENV: z
       .enum(["development", "test", "production"])
       .default("development"),
-    SUPER_ADMIN: z.string().regex(/^[a-zA-Z0-9@.]+:[a-zA-Z0-9*^.$-@#]+$/),
     METABASE_SECRET_KEY: z.string(),
     METABASE_SITE_URL: z.string().url(),
     TYPEFORM_SECRET: z.string(),
@@ -36,7 +35,6 @@ export const env = createEnv({
    */
   client: {
     NEXT_PUBLIC_TYPEFORM_SU_LINK: z.string().url(),
-    NEXT_PUBLIC_TYPEFORM_SU_STATS: z.string().url(),
     NEXT_PUBLIC_TYPEFORM_WAY_OF_LIFE_LINK: z.string().url(),
     NEXT_PUBLIC_TYPEFORM_WAY_OF_LIFE_STAT: z.string().url(),
     NEXT_PUBLIC_TYPEFORM_CARBON_FOOTPRINT_LINK: z.string().url(),
@@ -63,9 +61,7 @@ export const env = createEnv({
     AUTH_URL: process.env.AUTH_URL,
     DATABASE_URL: process.env.DATABASE_URL,
     NODE_ENV: process.env.NODE_ENV,
-    SUPER_ADMIN: process.env.SUPER_ADMIN,
     NEXT_PUBLIC_TYPEFORM_SU_LINK: process.env.NEXT_PUBLIC_TYPEFORM_SU_LINK,
-    NEXT_PUBLIC_TYPEFORM_SU_STATS: process.env.NEXT_PUBLIC_TYPEFORM_SU_STATS,
     NEXT_PUBLIC_TYPEFORM_WAY_OF_LIFE_LINK:
       process.env.NEXT_PUBLIC_TYPEFORM_WAY_OF_LIFE_LINK,
     NEXT_PUBLIC_TYPEFORM_WAY_OF_LIFE_STAT:

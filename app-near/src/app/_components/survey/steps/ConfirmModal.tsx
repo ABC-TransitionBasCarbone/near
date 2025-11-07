@@ -3,7 +3,7 @@ import Button from "~/app/_components/_ui/Button";
 import LinkAsButton from "~/app/_components/_ui/LinkAsButton";
 import Modal from "~/app/_components/_ui/Modal";
 import { ButtonStyle } from "~/types/enums/button";
-import useUpdateSurveyStep from "../hooks/useUpdateSurveyStep";
+import useUpdateSurveyStep from "../../_ui/hooks/useUpdateSurveyStep";
 import { type SurveyPhase } from "@prisma/client";
 import { env } from "~/env";
 

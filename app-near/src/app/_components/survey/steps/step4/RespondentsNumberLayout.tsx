@@ -16,7 +16,7 @@ import ConfirmModal from "../ConfirmModal";
 import { api } from "~/trpc/react";
 import SuDashboard from "../step3/SuDashboard";
 import { SurveyType } from "~/types/enums/survey";
-import useUpdateSurveyStep from "../../hooks/useUpdateSurveyStep";
+import useUpdateSurveyStep from "../../../_ui/hooks/useUpdateSurveyStep";
 import { env } from "~/env";
 
 const chartConfig: {
@@ -49,14 +49,14 @@ const RespondentsNumberLayout: React.FC<RespondentsNumberLayoutProps> = ({
   const updateSurveyStep = useUpdateSurveyStep();
 
   const { data: wayOfLifeAnswersCount } = api.wayOfLifeAnswers.count.useQuery(
-    session?.user?.surveyId ?? 0,
+    undefined,
     {
-      enabled: !!session?.user?.surveyId,
+      enabled: !!session?.user?.survey?.id,
     },
   );
   const { data: carbonFootprintAnswersCount } =
-    api.carbonFootprintAnswers.count.useQuery(session?.user?.surveyId ?? 0, {
-      enabled: !!session?.user?.surveyId,
+    api.carbonFootprintAnswers.count.useQuery(undefined, {
+      enabled: !!session?.user?.survey?.id,
     });
 
   const [showModal, setShowModal] = useState<boolean>(false);
@@ -64,7 +64,11 @@ const RespondentsNumberLayout: React.FC<RespondentsNumberLayoutProps> = ({
   const nextStepIsDisabled =
     wayOfLifeAnswersCount! < 80 && carbonFootprintAnswersCount! < 80;
 
-  if (!session?.user.surveyId || step === undefined) {
+  if (
+    !session?.user.survey?.id ||
+    !session?.user.survey?.name ||
+    step === undefined
+  ) {
     return "loading...";
   }
 
@@ -137,7 +141,7 @@ const RespondentsNumberLayout: React.FC<RespondentsNumberLayoutProps> = ({
                     iframeNumber={chart.iframeNumber}
                     iframeType={MetabaseIframeType.QUESTION}
                     height="300px"
-                    params={{ surveyName: session?.user.surveyName }}
+                    params={{ surveyName: session.user.survey!.name }}
                   />
                 </div>
                 <Button

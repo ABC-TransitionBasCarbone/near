@@ -6,7 +6,7 @@ import Button from "../../../_ui/Button";
 import SurveyLayout from "../../SurveyLayout";
 import { api } from "~/trpc/react";
 import SuDashboard from "./SuDashboard";
-import useUpdateSurveyStep from "../../hooks/useUpdateSurveyStep";
+import useUpdateSurveyStep from "../../../_ui/hooks/useUpdateSurveyStep";
 import { surveyConfig } from "../config";
 import { useSurveyStateContext } from "~/app/_components/_context/surveyStateContext";
 import { useSession } from "next-auth/react";
@@ -24,7 +24,7 @@ const DetectionLayout: React.FC = () => {
   const utils = api.useUtils();
 
   const { data: survey } = api.surveys.getOne.useQuery(undefined, {
-    enabled: !!session?.user?.surveyId,
+    enabled: !!session?.user?.survey?.id,
   });
 
   const suDetectionMutation = api.suDetection.run.useMutation({
@@ -51,7 +51,7 @@ const DetectionLayout: React.FC = () => {
     await suDetectionMutation.mutateAsync();
   };
 
-  if (!session?.user.surveyId || step === undefined) {
+  if (!session?.user.survey?.id || step === undefined) {
     return "Loading...";
   }
 
@@ -102,7 +102,11 @@ const DetectionLayout: React.FC = () => {
             icon="/icons/arrow-right.svg"
             rounded
             style={ButtonStyle.FILLED}
-            onClick={() => sendSuEmailMutation.mutate(session?.user.surveyId)}
+            onClick={() => {
+              if (session?.user.survey) {
+                sendSuEmailMutation.mutate();
+              }
+            }}
             disabled={
               sendSuEmailMutation.isPending ||
               !survey?.computedSu ||

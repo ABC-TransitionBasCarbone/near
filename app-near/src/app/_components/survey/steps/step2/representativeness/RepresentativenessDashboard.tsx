@@ -13,12 +13,9 @@ const Representativeness: React.FC<RepresentativenessProps> = ({
   target,
   session,
 }) => {
-  const { data: answserCount } = api.suAnswers.count.useQuery(
-    session?.user?.surveyId ?? 0,
-    {
-      enabled: !!session?.user?.surveyId,
-    },
-  );
+  const { data: answserCount } = api.suAnswers.count.useQuery(undefined, {
+    enabled: !!session?.user?.survey?.id,
+  });
 
   const hasReachedMoreThanTargetPercentage = () => {
     return (
@@ -34,7 +31,7 @@ const Representativeness: React.FC<RepresentativenessProps> = ({
           iframeNumber={env.NEXT_PUBLIC_METABASE_PANEL_REPRESENTATIVNESS}
           iframeType={MetabaseIframeType.DASHBOARD}
           height="700px"
-          params={{ surveyname: session.user.surveyName }}
+          params={{ surveyname: session.user.survey?.name }}
         />
       </div>
     );

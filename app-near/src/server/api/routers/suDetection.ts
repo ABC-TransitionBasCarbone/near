@@ -4,7 +4,7 @@ import { computeSu, getSuList } from "~/server/su/computeSu";
 
 export const suDetectionRouter = createTRPCRouter({
   run: protectedProcedure.mutation(async ({ ctx }) => {
-    const { surveyId } = ctx.session.user;
+    const surveyId = ctx.session.user.survey?.id;
     if (!surveyId) {
       throw new TRPCError({ code: "FORBIDDEN" });
     }
@@ -12,7 +12,7 @@ export const suDetectionRouter = createTRPCRouter({
     return computeSu(surveyId);
   }),
   getList: protectedProcedure.query(async ({ ctx }) => {
-    const { surveyId } = ctx.session.user;
+    const surveyId = ctx.session.user.survey?.id;
     if (!surveyId) {
       throw new TRPCError({ code: "FORBIDDEN" });
     }

@@ -1,13 +1,35 @@
+import { RoleName, SurveyPhase } from "@prisma/client";
 import { z } from "zod";
-import { createTRPCRouter, protectedProcedure } from "../trpc";
-import { getOneSurvey } from "~/server/surveys/get";
+import { createSurvey } from "~/server/surveys/create";
+import { deleteSurvey } from "~/server/surveys/delete";
+import { getOneSurvey, querySurveys } from "~/server/surveys/get";
 import { updateSurvey } from "~/server/surveys/put";
-import { SurveyPhase } from "@prisma/client";
+import { surveyForm } from "~/shared/validations/surveyEdit.validation";
+import {
+  createTRPCRouter,
+  hasRoleMiddleware,
+  protectedProcedure,
+} from "../trpc";
 
 export const surveysRouter = createTRPCRouter({
   getOne: protectedProcedure.query(({ ctx }) => {
-    return getOneSurvey(ctx.session.user.surveyId);
+    const surveyId = ctx.session.user.survey?.id;
+    if (!surveyId) return null;
+    return getOneSurvey(surveyId);
   }),
+
+  querySurveys: protectedProcedure
+    .use(hasRoleMiddleware([RoleName.ADMIN]))
+    .input(
+      z.object({
+        page: z.number().min(1).default(1),
+        limit: z.number().min(1).max(100).default(10),
+        filter: z.string().optional(),
+      }),
+    )
+    .query(({ input }) => {
+      return querySurveys(input.page, input.limit, input.filter);
+    }),
 
   update: protectedProcedure
     .input(
@@ -22,6 +44,25 @@ export const surveysRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      return updateSurvey(ctx.session.user.surveyId, input.data);
+      const surveyId = ctx.session.user.survey?.id;
+      if (!surveyId) return null;
+      return updateSurvey(surveyId, input.data);
+    }),
+
+  create: protectedProcedure
+    .use(hasRoleMiddleware([RoleName.ADMIN]))
+    .input(surveyForm)
+    .mutation(async ({ input }) => {
+      return createSurvey(
+        input.name,
+        input.iris.map((iris) => iris.value),
+      );
+    }),
+
+  delete: protectedProcedure
+    .use(hasRoleMiddleware([RoleName.ADMIN]))
+    .input(z.number())
+    .mutation(async ({ input }) => {
+      return deleteSurvey(input);
     }),
 });

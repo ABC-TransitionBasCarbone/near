@@ -25,14 +25,19 @@ const SuDashboard: React.FC<SuDashboardProps> = ({ phase }) => {
   };
 
   const { data: survey } = api.surveys.getOne.useQuery(undefined, {
-    enabled: !!session?.user?.surveyId,
+    enabled: !!session?.user?.survey?.id,
   });
 
   const { data: computedSuList } = api.suDetection.getList.useQuery(undefined, {
     enabled: !!survey?.id,
   });
 
-  if (!survey?.computedSu || !computedSuList || computedSuList.length === 0) {
+  if (
+    !survey?.name ||
+    !survey?.computedSu ||
+    !computedSuList ||
+    computedSuList.length === 0
+  ) {
     return;
   }
 
@@ -45,6 +50,7 @@ const SuDashboard: React.FC<SuDashboardProps> = ({ phase }) => {
           iframeType={MetabaseIframeType.QUESTION}
           width="100%"
           height="250px"
+          params={{ surveyName: survey.name }}
         />
       </div>
 
@@ -56,7 +62,7 @@ const SuDashboard: React.FC<SuDashboardProps> = ({ phase }) => {
             iframeType={MetabaseIframeType.DASHBOARD}
             width="450px"
             height="3450px"
-            params={{ su: 0, surveyname: survey?.name }}
+            params={{ su: 0, surveyname: survey.name }}
           />
         </div>
         <div className="w-1 border-l-2 border-gray"></div>
@@ -74,7 +80,7 @@ const SuDashboard: React.FC<SuDashboardProps> = ({ phase }) => {
                   iframeType={MetabaseIframeType.DASHBOARD}
                   width="450px"
                   height="3450px"
-                  params={{ su: su.id, surveyname: survey?.name }}
+                  params={{ su: su.id, surveyname: survey.name }}
                 />
               </div>
             ))}

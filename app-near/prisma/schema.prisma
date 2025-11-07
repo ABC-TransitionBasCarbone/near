@@ -16,6 +16,35 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model User {
+  id           Int      @id @default(autoincrement())
+  email        String   @unique
+  passwordHash String   @map("password_hash")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @default(now()) @updatedAt @map("updated_at")
+
+  roles Role[]
+
+  survey   Survey? @relation(fields: [surveyId], references: [id])
+  surveyId Int?
+
+  @@map("user")
+}
+
+enum RoleName {
+  ADMIN
+  PILOTE
+}
+
+model Role {
+  id   Int      @id @default(autoincrement())
+  name RoleName @unique
+
+  users User[]
+
+  @@map("role")
+}
+
 enum SurveyPhase {
   STEP_1_NEIGHBORHOOD_INFORMATION
   STEP_2_SU_SURVERY
@@ -38,6 +67,8 @@ model Survey {
   carbonFootprintAnswer CarbonFootprintAnswer[]
   suData                SuData[]
   computedSu            Boolean                 @default(false)
+
+  users User[]
 
   @@map("surveys")
 }
@@ -135,8 +166,8 @@ model SuAnswer {
   heatSource           HeatSource           @map("heat_source")
   email                String?
   broadcastChannel     BroadcastChannel     @map("broadcast_channel")
-  broadcastId          String               @map("broadcast_id") @default("unknown")
-  typeformId           String               @map("typeform_id")  @default("unknown")
+  broadcastId          String               @default("unknown") @map("broadcast_id")
+  typeformId           String               @default("unknown") @map("typeform_id")
   emailApiCalled       Boolean?             @default(false) @map("email_api_called")
   suId                 Int?                 @map("su_id")
   su                   SuData?              @relation(fields: [suId], references: [id])
@@ -421,8 +452,8 @@ model WayOfLifeAnswer {
   comment String?
 
   broadcastChannel     BroadcastChannel @map("broadcast_channel")
-  broadcastId          String           @map("broadcast_id") @default("unknown")
-  typeformId           String           @map("typeform_id") @default("unknown")
+  broadcastId          String           @default("unknown") @map("broadcast_id")
+  typeformId           String           @default("unknown") @map("typeform_id")
   emailApiCalled       Boolean?         @default(false) @map("email_api_called")
   surveyId             Int
   survey               Survey           @relation(fields: [surveyId], references: [id])
@@ -636,7 +667,7 @@ model InseeIris2021 {
   @@map("insee_iris_2021")
 }
 
-view Quartier {
+model Quartier {
   iris_selectors                    String[]
   population_sum_with_under_fifteen Float
   population_sum                    Float
@@ -659,8 +690,11 @@ view Quartier {
   population_sum_threshold_4p       Float
   population_sum_threshold_4_5p     Float
   population_sum_threshold_5p       Float
-  surveyId                          Int      @unique @map("survey_id") // Foreign key unique field to survey
-  survey                            Survey   @relation(fields: [surveyId], references: [id])
+  createdAt                         DateTime @default(now()) @map("created_at")
+  updatedAt                         DateTime @default(now()) @updatedAt @map("updated_at")
+
+  surveyId Int    @unique @map("survey_id") // Foreign key unique field to survey
+  survey   Survey @relation(fields: [surveyId], references: [id])
 
   @@map("quartiers")
 }

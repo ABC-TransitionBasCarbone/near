@@ -7,12 +7,14 @@
  * need to use are documented accordingly near the end.
  */
 
+import { type RoleName } from "@prisma/client";
 import { initTRPC, TRPCError } from "@trpc/server";
 import superjson from "superjson";
 import { ZodError } from "zod";
 
 import { auth } from "~/server/auth";
 import { db } from "~/server/db";
+import { hasRoleOrThrow } from "./has-role-or-throw";
 
 /**
  * 1. CONTEXT
@@ -110,6 +112,25 @@ const timingMiddleware = t.middleware(async ({ next, path }) => {
  */
 export const publicProcedure = t.procedure.use(timingMiddleware);
 
+const isAuthenticated = () =>
+  t.middleware(({ ctx, next }) => {
+    if (!ctx.session?.user) {
+      throw new TRPCError({ code: "UNAUTHORIZED" });
+    }
+    return next({
+      ctx: {
+        // infers the `session` as non-nullable
+        session: { ...ctx.session, user: ctx.session.user },
+      },
+    });
+  });
+
+export const hasRoleMiddleware = (roles: RoleName[]) =>
+  t.middleware(({ ctx, next }) => {
+    hasRoleOrThrow(ctx, roles);
+    return next();
+  });
+
 /**
  * Protected (authenticated) procedure
  *
@@ -120,14 +141,4 @@ export const publicProcedure = t.procedure.use(timingMiddleware);
  */
 export const protectedProcedure = t.procedure
   .use(timingMiddleware)
-  .use(({ ctx, next }) => {
-    if (!ctx.session || !ctx.session.user) {
-      throw new TRPCError({ code: "UNAUTHORIZED" });
-    }
-    return next({
-      ctx: {
-        // infers the `session` as non-nullable
-        session: { ...ctx.session, user: ctx.session.user },
-      },
-    });
-  });
+  .use(isAuthenticated());

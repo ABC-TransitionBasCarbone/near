@@ -55,7 +55,7 @@ const BroadcastingButton: React.FC<BroadcastingButtonProps> = ({
     const link = buildSurveyLink(
       broadcastType,
       surveyType,
-      session?.user.surveyName,
+      session?.user.survey?.name,
     );
     await navigator.clipboard.writeText(link);
     setCopiedMessage(
@@ -93,7 +93,7 @@ const BroadcastingButton: React.FC<BroadcastingButtonProps> = ({
             link={buildSurveyLink(
               broadcastType,
               surveyType,
-              session?.user.surveyName,
+              session?.user.survey?.name,
             )}
           ></QRCodeModal>
         )}

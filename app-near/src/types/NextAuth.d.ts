@@ -1,7 +1,12 @@
+import { type RoleName } from "@prisma/client";
 import "next-auth";
 
 export interface NextAuthUser {
   email: string;
-  surveyId: number;
-  surveyName: string;
+  survey?: {
+    id: number;
+    name: string;
+  };
+  roles: RoleName[];
+  accessTokenExpires: number;
 }

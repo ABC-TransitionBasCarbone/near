@@ -10,23 +10,20 @@ import { api } from "~/trpc/react";
 import Button from "../../../_ui/Button";
 import { useSurveyStateContext } from "../../../_context/surveyStateContext";
 import { surveyConfig } from "../config";
-import useUpdateSurveyStep from "../../hooks/useUpdateSurveyStep";
+import useUpdateSurveyStep from "../../../_ui/hooks/useUpdateSurveyStep";
 import { env } from "~/env";
 
 const NeighborhoodInformations: React.FC = () => {
   const { data: session } = useSession();
   const { step } = useSurveyStateContext();
 
-  const { data: neighborhood } = api.neighborhoods.getOne.useQuery(
-    session?.user?.surveyId ?? 0,
-    {
-      enabled: !!session?.user?.surveyId,
-    },
-  );
+  const { data: neighborhood } = api.neighborhoods.getOne.useQuery(undefined, {
+    enabled: !!session?.user?.survey?.id,
+  });
 
   const updateSurveyStep = useUpdateSurveyStep();
 
-  if (!session || step === undefined) {
+  if (!session?.user.survey || step === undefined) {
     return "loading...";
   }
 
@@ -77,6 +74,7 @@ const NeighborhoodInformations: React.FC = () => {
         iframeNumber={env.NEXT_PUBLIC_METABASE_POPULATION_STATISTICS}
         iframeType={MetabaseIframeType.DASHBOARD}
         height="600px"
+        params={{ surveyname: session.user.survey.name }}
       />
     </SurveyLayout>
   );
