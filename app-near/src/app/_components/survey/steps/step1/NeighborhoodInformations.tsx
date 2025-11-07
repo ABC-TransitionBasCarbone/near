@@ -23,7 +23,7 @@ const NeighborhoodInformations: React.FC = () => {
 
   const updateSurveyStep = useUpdateSurveyStep();
 
-  if (!session || step === undefined) {
+  if (!session?.user.survey || step === undefined) {
     return "loading...";
   }
 
@@ -74,6 +74,7 @@ const NeighborhoodInformations: React.FC = () => {
         iframeNumber={env.NEXT_PUBLIC_METABASE_POPULATION_STATISTICS}
         iframeType={MetabaseIframeType.DASHBOARD}
         height="600px"
+        params={{ surveyname: session.user.survey.name }}
       />
     </SurveyLayout>
   );

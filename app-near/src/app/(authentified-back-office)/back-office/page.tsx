@@ -1,15 +1,23 @@
-import { type Session } from "next-auth";
-import SignOutButton from "~/app/_components/authentification/SignOutButton";
-import { auth } from "~/server/auth";
+import Link from "next/link";
 
 export default async function Home() {
-  const session: Session | null = await auth();
   return (
-    <>
-      <div>you are an admin in secure page : {session?.user.email}</div>
+    <div className="flex flex-col gap-4">
+      <h1 className="mb-2">Bienvenue dans le back-office</h1>
+
       <div>
-        <SignOutButton />
+        <div>Vous pouvez</div>
+        <ul className="list-inside list-disc">
+          <li>
+            <Link href={"/back-office/quartiers"}>Créer des quartiers</Link>
+          </li>
+          <li>
+            <Link href={"/back-office/utilisateurs"}>
+              Créer des pilotes d&apos;enquête et les associer à des quartiers
+            </Link>
+          </li>
+        </ul>
       </div>
-    </>
+    </div>
   );
 }

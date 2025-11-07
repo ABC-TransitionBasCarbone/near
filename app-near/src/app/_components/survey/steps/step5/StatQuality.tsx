@@ -25,6 +25,8 @@ const StatQuality: React.FC = () => {
       enabled: !!session?.user.survey?.name,
     });
 
+  if (!session?.user.survey?.name) return null;
+
   return (
     <div className="flex flex-col flex-wrap gap-5 md:flex-row">
       <div className="flex flex-col gap-5 md:w-[350px]">
@@ -63,7 +65,7 @@ const StatQuality: React.FC = () => {
           Population générale :{" "}
           {`${new Intl.NumberFormat("fr-FR").format(qualityStatisticsWithPopulation?.populationSumWith15 ?? 0)} `}
         </div>
-        {session?.user.survey?.name && (
+        {session.user.survey.name && (
           <div className="flex flex-col gap-8">
             <div className="mt-5 flex flex-col flex-wrap gap-6 md:flex-row">
               <div className="flex-1">
@@ -73,7 +75,7 @@ const StatQuality: React.FC = () => {
                 <MetabaseIframe
                   iframeNumber={env.NEXT_PUBLIC_METABASE_RESULT_GENDER}
                   iframeType={MetabaseIframeType.QUESTION}
-                  params={{ surveyName: session?.user.survey.name }}
+                  params={{ surveyName: session.user.survey.name }}
                   height="250px"
                 />
               </div>
@@ -82,7 +84,7 @@ const StatQuality: React.FC = () => {
                 <MetabaseIframe
                   iframeNumber={env.NEXT_PUBLIC_METABASE_RESULT_AGE}
                   iframeType={MetabaseIframeType.QUESTION}
-                  params={{ surveyName: session?.user.survey.name }}
+                  params={{ surveyName: session.user.survey.name }}
                   height="250px"
                 />
               </div>
@@ -94,7 +96,7 @@ const StatQuality: React.FC = () => {
               <MetabaseIframe
                 iframeNumber={env.NEXT_PUBLIC_METABASE_RESULT_CS}
                 iframeType={MetabaseIframeType.QUESTION}
-                params={{ surveyName: session?.user.survey.name }}
+                params={{ surveyName: session.user.survey.name }}
                 height="250px"
               />
             </div>
