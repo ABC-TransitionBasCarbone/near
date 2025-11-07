@@ -64,7 +64,11 @@ const RespondentsNumberLayout: React.FC<RespondentsNumberLayoutProps> = ({
   const nextStepIsDisabled =
     wayOfLifeAnswersCount! < 80 && carbonFootprintAnswersCount! < 80;
 
-  if (!session?.user.survey?.id || step === undefined) {
+  if (
+    !session?.user.survey?.id ||
+    !session?.user.survey?.name ||
+    step === undefined
+  ) {
     return "loading...";
   }
 
@@ -137,7 +141,7 @@ const RespondentsNumberLayout: React.FC<RespondentsNumberLayoutProps> = ({
                     iframeNumber={chart.iframeNumber}
                     iframeType={MetabaseIframeType.QUESTION}
                     height="300px"
-                    params={{ surveyName: session?.user.survey?.name }}
+                    params={{ surveyName: session.user.survey!.name }}
                   />
                 </div>
                 <Button
