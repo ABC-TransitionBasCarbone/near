@@ -9,7 +9,6 @@ import { useSurveyStateContext } from "../../../../_context/surveyStateContext";
 import Button from "../../../../_ui/Button";
 import LinkAsButton from "../../../../_ui/LinkAsButton";
 import MetabaseIframe from "../../../../_ui/MetabaseIframe";
-import { renderIcon } from "../../../../_ui/utils/renderIcon";
 import SurveyLayout from "../../../SurveyLayout";
 import { surveyConfig } from "../../config";
 import RepresentativenessPage from "./RepresentativenessPage";
@@ -81,6 +80,7 @@ const RepresentativenessLayout: React.FC<RepresentativenessLayoutProps> = ({
                   iframeType={MetabaseIframeType.QUESTION}
                   height="300px"
                   width="300px"
+                  params={{ surveyName: survey.name }}
                 />
               </div>
 
@@ -116,14 +116,6 @@ const RepresentativenessLayout: React.FC<RepresentativenessLayoutProps> = ({
                 >
                   Diffuser le questionnaire
                 </Button>
-                <LinkAsButton
-                  href={`${env.NEXT_PUBLIC_TYPEFORM_SU_STATS}`}
-                  icon="/icons/megaphone.svg"
-                  openNewTab
-                  rounded
-                >
-                  Suivre la diffusion {renderIcon("/icons/external-link.svg")}
-                </LinkAsButton>
               </div>
             </div>
           </>

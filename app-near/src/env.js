@@ -35,7 +35,6 @@ export const env = createEnv({
    */
   client: {
     NEXT_PUBLIC_TYPEFORM_SU_LINK: z.string().url(),
-    NEXT_PUBLIC_TYPEFORM_SU_STATS: z.string().url(),
     NEXT_PUBLIC_TYPEFORM_WAY_OF_LIFE_LINK: z.string().url(),
     NEXT_PUBLIC_TYPEFORM_WAY_OF_LIFE_STAT: z.string().url(),
     NEXT_PUBLIC_TYPEFORM_CARBON_FOOTPRINT_LINK: z.string().url(),
@@ -63,7 +62,6 @@ export const env = createEnv({
     DATABASE_URL: process.env.DATABASE_URL,
     NODE_ENV: process.env.NODE_ENV,
     NEXT_PUBLIC_TYPEFORM_SU_LINK: process.env.NEXT_PUBLIC_TYPEFORM_SU_LINK,
-    NEXT_PUBLIC_TYPEFORM_SU_STATS: process.env.NEXT_PUBLIC_TYPEFORM_SU_STATS,
     NEXT_PUBLIC_TYPEFORM_WAY_OF_LIFE_LINK:
       process.env.NEXT_PUBLIC_TYPEFORM_WAY_OF_LIFE_LINK,
     NEXT_PUBLIC_TYPEFORM_WAY_OF_LIFE_STAT:

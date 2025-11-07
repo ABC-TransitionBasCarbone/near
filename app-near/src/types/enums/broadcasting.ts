@@ -22,7 +22,6 @@ export const surveyTypeMapper: Record<
   },
   [SurveyType.SU]: {
     label: "Sphère d'usage",
-    stat: env.NEXT_PUBLIC_TYPEFORM_SU_STATS,
     baseUrl: env.NEXT_PUBLIC_TYPEFORM_SU_LINK,
   },
 };
