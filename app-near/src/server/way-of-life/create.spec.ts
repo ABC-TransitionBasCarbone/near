@@ -1,6 +1,6 @@
 import { type SuData, type Survey } from "@prisma/client";
 import { handleWayOfLifeCreation } from "./create";
-import { clearAllSurveys } from "../test-utils/clear/survey";
+import { clearAlldata } from "../test-utils/clear";
 import { db } from "../db";
 import { buildWayOfLifeAnswer } from "../test-utils/create-data/wayOfLifeAnswer";
 
@@ -12,7 +12,7 @@ describe("create", () => {
     let knownSuData: SuData;
 
     beforeEach(async () => {
-      await clearAllSurveys();
+      await clearAlldata();
 
       survey = await db.survey.create({
         data: { name: neighborhoodName },

@@ -5,7 +5,7 @@ import { TypeformType, type TypeformWebhookPayload } from "~/types/Typeform";
 import { db } from "../db";
 import EmailService from "../email";
 import apiSuService from "../external-api/api-su";
-import { clearAllSurveys } from "../test-utils/clear/survey";
+import { clearAlldata } from "../test-utils/clear";
 import { buildSuAnswer } from "../test-utils/create-data/suAnswer";
 import { buildWayOfLifeAnswer } from "../test-utils/create-data/wayOfLifeAnswer";
 import { buildRequest } from "../test-utils/request/buildRequest";
@@ -33,7 +33,7 @@ describe("handleAnswer", () => {
   const fixedUUID = "mocked-uuid-1234";
 
   beforeEach(async () => {
-    await clearAllSurveys();
+    await clearAlldata();
     survey = await db.survey.create({
       data: { name: neighborhoodName },
     });

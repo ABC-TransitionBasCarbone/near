@@ -3,7 +3,7 @@ import { db } from "../db";
 import { buildSuAnswer } from "../test-utils/create-data/suAnswer";
 import { sendUsersSu } from "./sendUsersSu";
 import { TRPCError } from "@trpc/server";
-import { clearAllSurveys } from "../test-utils/clear/survey";
+import { clearAlldata } from "../test-utils/clear";
 import EmailService from "../email";
 import { env } from "~/env";
 
@@ -27,7 +27,7 @@ describe("sendUsersSu", () => {
 
     jest.spyOn(global.crypto, "randomUUID").mockReturnValue(fixedUUID);
 
-    await clearAllSurveys();
+    await clearAlldata();
   });
 
   afterEach(() => {

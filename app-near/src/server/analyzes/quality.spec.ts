@@ -7,7 +7,7 @@ import { buildSuAnswer } from "../test-utils/create-data/suAnswer";
 import { type CarbonFootprintAnswer, type Survey } from "@prisma/client";
 import { buildWayOfLifeAnswer } from "../test-utils/create-data/wayOfLifeAnswer";
 import { buildCarbonFootprintAnswer } from "../test-utils/create-data/carbonFootprintAnswer";
-import { clearAllSurveys } from "../test-utils/clear/survey";
+import { clearAlldata } from "../test-utils/clear";
 
 describe("quality", () => {
   describe("getAllQualityStatistics", () => {
@@ -16,7 +16,7 @@ describe("quality", () => {
     const suId = 2;
 
     beforeEach(async () => {
-      await clearAllSurveys();
+      await clearAlldata();
 
       survey = await createNeighborhood(surveyName);
       await db.suData.create({

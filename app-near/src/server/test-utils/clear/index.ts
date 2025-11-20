@@ -1,6 +1,6 @@
 import { db } from "~/server/db";
 
-export const clearAllSurveys = async () => {
+export const clearAlldata = async () => {
   await db.carbonFootprintAnswer.deleteMany();
   await db.wayOfLifeAnswer.deleteMany();
   await db.suAnswer.deleteMany();
@@ -8,4 +8,6 @@ export const clearAllSurveys = async () => {
   await db.rawAnswerError.deleteMany();
   await db.quartier.deleteMany();
   await db.survey.deleteMany();
+  await db.user.deleteMany();
+  await db.role.deleteMany();
 };
