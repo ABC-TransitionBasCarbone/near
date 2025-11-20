@@ -26,6 +26,7 @@ export const env = createEnv({
     BREVO_API_KEY: z.string(),
     API_SU_URL: z.string().url(),
     API_SU_KEY: z.string(),
+    SEEDS_ENABLED: z.boolean().default(false),
   },
 
   /**
@@ -109,6 +110,7 @@ export const env = createEnv({
     NEXT_PUBLIC_METABASE_RESULT_CS: Number(
       process.env.NEXT_PUBLIC_METABASE_RESULT_CS,
     ),
+    SEEDS_ENABLED: Boolean(process.env.SEEDS_ENABLED),
   },
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially

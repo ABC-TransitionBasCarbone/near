@@ -13,8 +13,8 @@ export enum SeedScope {
 const args = parseArgs();
 
 const seed = async () => {
-  if (env.NODE_ENV === "production") {
-    throw new Error("Can not seed on production environment");
+  if (!env.SEEDS_ENABLED) {
+    throw new Error("Seeds are not enabled");
   }
 
   const seedScope = args.scope as SeedScope | undefined;
