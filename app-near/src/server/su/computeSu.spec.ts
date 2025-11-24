@@ -14,14 +14,14 @@ import { buildSuAnswer } from "../test-utils/create-data/suAnswer";
 import { computeSu } from "./computeSu";
 import apiSuService from "../external-api/api-su";
 import { ErrorCode } from "~/types/enums/error";
-import { clearAllSurveys } from "../test-utils/clear/survey";
+import { clearAlldata } from "../test-utils/clear";
 
 describe("computeSu", () => {
   const surveyId = 765;
   let apiSuSpy: jest.SpyInstance;
 
   beforeEach(async () => {
-    await clearAllSurveys();
+    await clearAlldata();
 
     apiSuSpy = jest.spyOn(apiSuService, "computeSus");
   });

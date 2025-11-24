@@ -4,7 +4,7 @@ import { signPayload } from "../typeform/signature";
 import { SignatureType } from "../typeform/signature";
 import { db } from "../db";
 import EmailService from "../email";
-import { clearAllSurveys } from "../test-utils/clear/survey";
+import { clearAlldata } from "../test-utils/clear";
 import crypto from "crypto";
 import { buildCarbonFootprintAnswer } from "../test-utils/create-data/carbonFootprintAnswer";
 import { createNeighborhood } from "../test-utils/create-data/neighborhood";
@@ -25,7 +25,7 @@ describe("handleCarbonFootprintEmail", () => {
   let sendEmailMock: jest.SpyInstance;
 
   beforeEach(async () => {
-    await clearAllSurveys();
+    await clearAlldata();
     sendEmailMock = jest
       .spyOn(EmailService, "sendEmail")
       .mockReturnValue(Promise.resolve("send"));

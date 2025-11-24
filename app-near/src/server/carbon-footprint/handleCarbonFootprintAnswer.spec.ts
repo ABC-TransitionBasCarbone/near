@@ -4,7 +4,7 @@ import { db } from "~/server/db";
 import { ErrorCode } from "~/types/enums/error";
 import apiSuService from "../external-api/api-su";
 import { getValideCarbonFootprintPayload } from "../test-utils/carbonFootprint";
-import { clearAllSurveys } from "../test-utils/clear/survey";
+import { clearAlldata } from "../test-utils/clear";
 import { expectFailedPayloadIsSaved } from "../test-utils/expects/answerError";
 import { buildRequest } from "../test-utils/request/buildRequest";
 import { SignatureType, signPayload } from "../typeform/signature";
@@ -17,7 +17,7 @@ describe("handleCarbonFootprintAnswer", () => {
   const su = 3;
 
   beforeEach(async () => {
-    await clearAllSurveys();
+    await clearAlldata();
     survey = await db.survey.create({
       data: { name: neighborhoodName },
     });

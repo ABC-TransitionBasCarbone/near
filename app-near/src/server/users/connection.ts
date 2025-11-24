@@ -3,6 +3,12 @@ import { db } from "../db";
 import bcrypt from "bcrypt";
 import { RoleName } from "@prisma/client";
 
+const updateTry = async (id: number, value: number) =>
+  await db.user.update({
+    data: { try: value },
+    where: { id },
+  });
+
 export const login = async (
   email: string,
   password: string,
@@ -16,16 +22,22 @@ export const login = async (
     include: { roles: true },
   });
 
-  if (!user) return { message: "Accès non autorisé", success: false };
+  if (!user || user.try >= 5) {
+    return { message: "Accès non autorisé", success: false };
+  }
 
   const isValid = await bcrypt.compare(password, user.passwordHash);
-  if (!isValid) return { message: "Accès non autorisé", success: false };
+  if (!isValid) {
+    await updateTry(user.id, user.try + 1);
+    return { message: "Accès non autorisé", success: false };
+  }
 
   const userRoles = user.roles.map((role) => role.name);
   let userSurvey;
 
   if (userRoles.includes(RoleName.PILOTE)) {
     if (!user.surveyId) {
+      await updateTry(user.id, user.try + 1);
       return { message: "Accès non autorisé", success: false };
     }
     userSurvey = await db.survey.findFirstOrThrow({
@@ -34,9 +46,12 @@ export const login = async (
 
     if (!userSurvey) {
       console.error(`Aucune enquête trouvée accès non autorisé.`);
+      await updateTry(user.id, user.try + 1);
       return { message: "Accès non autorisé", success: false };
     }
   }
+
+  await updateTry(user.id, 0);
 
   return {
     message: "Accès validé",
