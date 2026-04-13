@@ -6,28 +6,39 @@ import {
   Gender,
   HeatSource,
   MeatFrequency,
-  ProfessionalCategory,
+  ProfessionalSituation,
   PurchasingStrategy,
   type Quartier,
   type SuAnswer,
   TransportationMode,
 } from "@prisma/client";
 import { z } from "zod";
+import { CurrentProfessionalCategory } from "./enums/professionalCategory";
 
-export const convertedSuAnswer = z.object({
-  isNeighborhoodResident: z.literal(true),
-  ageCategory: z.nativeEnum(AgeCategory),
-  gender: z.nativeEnum(Gender),
-  professionalCategory: z.nativeEnum(ProfessionalCategory),
-  easyHealthAccess: z.nativeEnum(EasyHealthAccess),
-  meatFrequency: z.nativeEnum(MeatFrequency),
-  transportationMode: z.nativeEnum(TransportationMode),
-  digitalIntensity: z.nativeEnum(DigitalIntensity),
-  purchasingStrategy: z.nativeEnum(PurchasingStrategy),
-  airTravelFrequency: z.nativeEnum(AirTravelFrequency),
-  heatSource: z.nativeEnum(HeatSource),
-  email: z.string().email().or(z.literal("")).optional().nullable(),
-});
+export const convertedSuAnswer = z
+  .object({
+    isNeighborhoodResident: z.literal(true),
+    ageCategory: z.nativeEnum(AgeCategory),
+    gender: z.nativeEnum(Gender),
+    professionalSituation: z.nativeEnum(ProfessionalSituation),
+    professionalCategory: z.nativeEnum(CurrentProfessionalCategory).optional(),
+    easyHealthAccess: z.nativeEnum(EasyHealthAccess),
+    meatFrequency: z.nativeEnum(MeatFrequency),
+    transportationMode: z.nativeEnum(TransportationMode),
+    digitalIntensity: z.nativeEnum(DigitalIntensity),
+    purchasingStrategy: z.nativeEnum(PurchasingStrategy),
+    airTravelFrequency: z.nativeEnum(AirTravelFrequency),
+    heatSource: z.nativeEnum(HeatSource),
+    email: z.string().email().or(z.literal("")).optional().nullable(),
+  })
+  .refine((answer) => {
+    if (
+      ProfessionalSituation.EMPLOYEE === answer.professionalSituation &&
+      !answer.professionalCategory
+    ) {
+      return { message: "missing professionalCategory" };
+    }
+  });
 
 export type ConvertedSuAnswer = z.infer<typeof convertedSuAnswer>;
 

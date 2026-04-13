@@ -2,7 +2,7 @@ import { faker } from "@faker-js/faker";
 import {
   AgeCategory,
   Gender,
-  ProfessionalCategory,
+  ProfessionalSituation,
   type Quartier,
 } from "@prisma/client";
 import { db } from "~/server/db";
@@ -11,6 +11,7 @@ import { select } from "weighted";
 import targetService from "~/server/neighborhoods/targets";
 import { TRPCError } from "@trpc/server";
 import { type CategoryStat } from "~/types/SuAnswer";
+import { CurrentProfessionalCategory } from "~/types/enums/professionalCategory";
 
 export enum SurveyCase {
   LESS_THAN_GLOBAL_TARGET = "LESS_THAN_GLOBAL_TARGET",
@@ -142,22 +143,29 @@ Valid values for surveyName: ${existingSurveys.map((item) => item.name).join(", 
                 [Gender.MAN]: answerTargetsByCategories.man,
                 [Gender.WOMAN]: answerTargetsByCategories.woman,
               }),
+              professionalSituation: select({
+                [ProfessionalSituation.EMPLOYEE]: answerTargetsByCategories.cs1,
+                [ProfessionalSituation.RETIRED]: answerTargetsByCategories.cs7,
+                [ProfessionalSituation.NOT_EMPLOYED]:
+                  answerTargetsByCategories.cs8! / 3,
+                [ProfessionalSituation.STAY_AT_HOME]:
+                  answerTargetsByCategories.cs8! / 3,
+                [ProfessionalSituation.STUDENT]:
+                  answerTargetsByCategories.cs8! / 3,
+              }),
               professionalCategory: select({
-                [ProfessionalCategory.CS1]: answerTargetsByCategories.cs1,
-                [ProfessionalCategory.CS2]: answerTargetsByCategories.cs2! / 2,
-                [ProfessionalCategory.CS2_platform_entrepreneurship]:
-                  answerTargetsByCategories.cs2! / 2,
-                [ProfessionalCategory.CS3]: answerTargetsByCategories.cs3,
-                [ProfessionalCategory.CS4]: answerTargetsByCategories.cs4,
-                [ProfessionalCategory.CS5]: answerTargetsByCategories.cs5,
-                [ProfessionalCategory.CS6]: answerTargetsByCategories.cs6,
-                [ProfessionalCategory.CS7]: answerTargetsByCategories.cs7,
-                [ProfessionalCategory.CS8_student]:
-                  answerTargetsByCategories.cs8! / 3,
-                [ProfessionalCategory.CS8_home]:
-                  answerTargetsByCategories.cs8! / 3,
-                [ProfessionalCategory.CS8_unemployed]:
-                  answerTargetsByCategories.cs8! / 3,
+                [CurrentProfessionalCategory.CS1]:
+                  answerTargetsByCategories.cs1,
+                [CurrentProfessionalCategory.CS2]:
+                  answerTargetsByCategories.cs2,
+                [CurrentProfessionalCategory.CS3]:
+                  answerTargetsByCategories.cs3,
+                [CurrentProfessionalCategory.CS4]:
+                  answerTargetsByCategories.cs4,
+                [CurrentProfessionalCategory.CS5]:
+                  answerTargetsByCategories.cs5,
+                [CurrentProfessionalCategory.CS6]:
+                  answerTargetsByCategories.cs6,
               }),
               ageCategory: select({
                 [AgeCategory.ABOVE_75]: answerTargetsByCategories.above_75,

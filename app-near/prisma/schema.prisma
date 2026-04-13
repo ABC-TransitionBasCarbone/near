@@ -88,14 +88,32 @@ enum Gender {
   OTHER
 }
 
+enum ProfessionalSituation {
+  EMPLOYEE
+  STUDENT
+  STAY_AT_HOME
+  NOT_EMPLOYED
+  RETIRED
+}
+
+// CS1: Agriculteurs exploitants en 2021
+// CS2: Artisans, Comm., Chefs entr. en 2021
+// CS3: Cadres, Prof. intel. sup. en 2021
+// CS4: Prof. intermédiaires en 2021
+// CS5: Employés en 2021
+// CS6: Ouvriers en 2021
+// Others categories should not been used anymore but still exists in database
+// See https://pathtech.atlassian.net/jira/software/c/projects/SHOW/boards/2?quickFilter=81&selectedIssue=NEAR-105
+// CS7: Retraités en 2021
+// CS8: Autres en 2021
 enum ProfessionalCategory {
   CS1
   CS2
-  CS2_platform_entrepreneurship
   CS3
   CS4
   CS5
   CS6
+  CS2_platform_entrepreneurship
   CS7
   CS8_unemployed
   CS8_student
@@ -154,29 +172,30 @@ enum BroadcastChannel {
 }
 
 model SuAnswer {
-  id                   Int                  @id @default(autoincrement())
-  ageCategory          AgeCategory          @map("age_category")
-  gender               Gender
-  professionalCategory ProfessionalCategory @map("professional_category")
-  easyHealthAccess     EasyHealthAccess     @map("easy_healt_access")
-  meatFrequency        MeatFrequency        @map("meat_frequency")
-  transportationMode   TransportationMode   @map("transportation_mode")
-  digitalIntensity     DigitalIntensity     @map("digital_intensity")
-  purchasingStrategy   PurchasingStrategy   @map("purchasing_strategy")
-  airTravelFrequency   AirTravelFrequency   @map("air_travel_frequency")
-  heatSource           HeatSource           @map("heat_source")
-  email                String?
-  broadcastChannel     BroadcastChannel     @map("broadcast_channel")
-  broadcastId          String               @default("unknown") @map("broadcast_id")
-  typeformId           String               @default("unknown") @map("typeform_id")
-  emailApiCalled       Boolean?             @default(false) @map("email_api_called")
-  suId                 Int?                 @map("su_id")
-  su                   SuData?              @relation(fields: [suId], references: [id])
-  distanceToBarycenter Float?               @map("distance_to_barycenter")
-  surveyId             Int
-  survey               Survey               @relation(fields: [surveyId], references: [id])
-  createdAt            DateTime             @default(now()) @map("created_at")
-  updatedAt            DateTime             @default(now()) @updatedAt @map("updated_at")
+  id                    Int                   @id @default(autoincrement())
+  ageCategory           AgeCategory           @map("age_category")
+  gender                Gender
+  professionalSituation ProfessionalSituation @map("professional_situation")
+  professionalCategory  ProfessionalCategory  @map("professional_category")
+  easyHealthAccess      EasyHealthAccess      @map("easy_healt_access")
+  meatFrequency         MeatFrequency         @map("meat_frequency")
+  transportationMode    TransportationMode    @map("transportation_mode")
+  digitalIntensity      DigitalIntensity      @map("digital_intensity")
+  purchasingStrategy    PurchasingStrategy    @map("purchasing_strategy")
+  airTravelFrequency    AirTravelFrequency    @map("air_travel_frequency")
+  heatSource            HeatSource            @map("heat_source")
+  email                 String?
+  broadcastChannel      BroadcastChannel      @map("broadcast_channel")
+  broadcastId           String                @default("unknown") @map("broadcast_id")
+  typeformId            String                @default("unknown") @map("typeform_id")
+  emailApiCalled        Boolean?              @default(false) @map("email_api_called")
+  suId                  Int?                  @map("su_id")
+  su                    SuData?               @relation(fields: [suId], references: [id])
+  distanceToBarycenter  Float?                @map("distance_to_barycenter")
+  surveyId              Int
+  survey                Survey                @relation(fields: [surveyId], references: [id])
+  createdAt             DateTime              @default(now()) @map("created_at")
+  updatedAt             DateTime              @default(now()) @updatedAt @map("updated_at")
 
   @@map("su_answer")
 }
