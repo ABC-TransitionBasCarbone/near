@@ -14,19 +14,7 @@ import {
 } from "@prisma/client";
 import { z } from "zod";
 import { CurrentProfessionalCategory } from "./enums/professionalCategory";
-
-export const hasProfessionalCategory = (answer: {
-  professionalSituation: ProfessionalSituation;
-  professionalCategory?: unknown;
-}) => {
-  if (
-    ProfessionalSituation.EMPLOYEE === answer.professionalSituation &&
-    !answer.professionalCategory
-  ) {
-    return false;
-  }
-  return true;
-};
+import { hasProfessionalCategory } from "../shared/services/su-answers/hasProfessionalCategory";
 
 export const convertedSuAnswer = z
   .object({
