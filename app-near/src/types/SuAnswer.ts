@@ -31,14 +31,20 @@ export const convertedSuAnswer = z
     heatSource: z.nativeEnum(HeatSource),
     email: z.string().email().or(z.literal("")).optional().nullable(),
   })
-  .refine((answer) => {
-    if (
-      ProfessionalSituation.EMPLOYEE === answer.professionalSituation &&
-      !answer.professionalCategory
-    ) {
-      return { message: "missing professionalCategory" };
-    }
-  });
+  .refine(
+    (answer) => {
+      if (
+        ProfessionalSituation.EMPLOYEE === answer.professionalSituation &&
+        !answer.professionalCategory
+      ) {
+        return false;
+      }
+      return true;
+    },
+    {
+      message: "missing professionalCategory",
+    },
+  );
 
 export type ConvertedSuAnswer = z.infer<typeof convertedSuAnswer>;
 
