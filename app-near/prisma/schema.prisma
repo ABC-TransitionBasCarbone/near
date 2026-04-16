@@ -175,7 +175,7 @@ model SuAnswer {
   id                    Int                   @id @default(autoincrement())
   ageCategory           AgeCategory           @map("age_category")
   gender                Gender
-  professionalSituation ProfessionalSituation @map("professional_situation")
+  professionalSituation ProfessionalSituation? @map("professional_situation")
   professionalCategory  ProfessionalCategory  @map("professional_category")
   easyHealthAccess      EasyHealthAccess      @map("easy_healt_access")
   meatFrequency         MeatFrequency         @map("meat_frequency")
