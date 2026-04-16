@@ -4,7 +4,7 @@ import { TypeformType } from "~/types/Typeform";
 import { convertedWayOfLifeAnswer } from "~/types/WayOfLifeAnswer";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const typeformSchemaMapper: Record<TypeformType, z.ZodObject<any>> = {
+export const typeformSchemaMapper: Record<TypeformType, z.ZodTypeAny> = {
   [TypeformType.SU]: convertedSuAnswer,
   [TypeformType.WAY_OF_LIFE]: convertedWayOfLifeAnswer,
 };
