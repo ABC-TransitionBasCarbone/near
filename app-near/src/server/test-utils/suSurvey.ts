@@ -102,6 +102,41 @@ export const valideSuSurveyPayload = {
           ],
         },
         {
+          id: "5hDoUeVPfgeG",
+          ref: "professionalSituation",
+          type: "multiple_choice",
+          title: "*👷‍♀️👨‍⚖️ Quelle est votre situation actuelle? *",
+          properties: {},
+          choices: [
+            {
+              id: "WJaUKRphlxCd",
+              ref: "f44fd9bf-9360-4330-8cda-2332d33196cc",
+              label: "*J'ai un emploi* (y compris stagiaire ou apprenti)",
+            },
+            {
+              id: "guSxjjktBd6C",
+              ref: "46f3df0a-8c10-4ef2-844b-bf80d02b224f",
+              label: "*Étudiant, lycéen *(sans stage actuel)",
+            },
+            {
+              id: "rMwKGg5NFC40",
+              ref: "f12b6c94-5780-4367-aef7-e9ab25610c13",
+              label: "*Homme ou femme au foyer* sans activité professionnelle.",
+            },
+            {
+              id: "EGES86nhPKJO",
+              ref: "12c9d78c-47d0-4c78-8b4f-8210c6cf33c2",
+              label:
+                "*Sans activité professionnelle *(inscrit·e ou non à France-Travail)",
+            },
+            {
+              id: "vXwBDrYsEp1n",
+              ref: "27df4f5b-329d-450e-925e-0955af8e50b8",
+              label: "*Retraité*",
+            },
+          ],
+        },
+        {
           id: "ZKmXP3TwmEm5",
           ref: "professionalCategory",
           type: "multiple_choice",
@@ -406,6 +441,19 @@ export const valideSuSurveyPayload = {
           id: "z8pS3bYvL4fk",
           type: "multiple_choice",
           ref: "gender",
+        },
+      },
+      {
+        type: "choice",
+        choice: {
+          id: "WJaUKRphlxCd",
+          label: "*J'ai un emploi* (y compris stagiaire ou apprenti)",
+          ref: "f44fd9bf-9360-4330-8cda-2332d33196cc",
+        },
+        field: {
+          id: "5hDoUeVPfgeG",
+          type: "multiple_choice",
+          ref: "professionalSituation",
         },
       },
       {

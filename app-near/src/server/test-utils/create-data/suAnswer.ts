@@ -8,6 +8,7 @@ import {
   HeatSource,
   MeatFrequency,
   ProfessionalCategory,
+  ProfessionalSituation,
   PurchasingStrategy,
   type SuAnswer,
   TransportationMode,
@@ -34,6 +35,9 @@ export const buildSuAnswer = (
   meatFrequency: faker.helpers.arrayElement(Object.values(MeatFrequency)),
   professionalCategory: faker.helpers.arrayElement(
     Object.values(ProfessionalCategory),
+  ),
+  professionalSituation: faker.helpers.arrayElement(
+    Object.values(ProfessionalSituation),
   ),
   purchasingStrategy: faker.helpers.arrayElement(
     Object.values(PurchasingStrategy),

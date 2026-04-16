@@ -193,7 +193,7 @@ describe("handleAnswer", () => {
       ) as TypeformWebhookPayload;
 
       // @ts-expect-error allow for test
-      payload.form_response.answers[11].email = "wrong-email";
+      payload.form_response.answers[12].email = "wrong-email";
       const signature = signPayload(
         JSON.stringify(payload),
         SignatureType.TYPEFORM,
