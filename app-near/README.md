@@ -167,7 +167,7 @@ npm run user:create -- email=<email> password=<password> role=<role> [surveyName
 # Exemple pour les su:
 #
 # Without Prompt
-# ./scripts/webhooks/query.sh localhost:3000/api/typeform typeform-secret ./scripts/webhooks/su.json
+# ./scripts/webhooks/query.sh localhost:3000/api/typeform typeform-secret ./scripts/webhooks/su.json | jq
 #
 # With Prompt
 # Entrez l'URL de destination : localhost:3000/api/typeform

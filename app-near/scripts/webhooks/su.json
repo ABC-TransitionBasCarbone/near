@@ -1,11 +1,11 @@
 {
-  "event_id": "01JKFQWCEMGV7CTP9NE3PMT12P",
+  "event_id": "01KP2TXW2MSYTE2SGB84TRF6A0",
   "event_type": "form_response",
   "form_response": {
     "form_id": "nnvyN0HF",
-    "token": "01JKFQWCEMGV7CTP9NE3PMT12P",
-    "landed_at": "2025-02-07T08:19:37Z",
-    "submitted_at": "2025-02-07T08:19:37Z",
+    "token": "01KP2TXW2MSYTE2SGB84TRF6A0",
+    "landed_at": "2026-04-13T07:12:08Z",
+    "submitted_at": "2026-04-13T07:12:08Z",
     "hidden": {
       "broadcast_channel": "mail_campaign",
       "broadcast_id": "de68a7fa-35a8-441d-97ee-05f0c64d634b",
@@ -13,346 +13,375 @@
     },
     "definition": {
       "id": "nnvyN0HF",
-      "title": "Sphères d'Usages V1.92 (copie test)",
+      "title": "Sphères d'Usages V1.92 [PRODUCTION]",
       "fields": [
         {
-          "id": "oUXuhFxx8N00",
+          "id": "iyxRjD9V4ptm",
           "ref": "isNeighborhoodResident",
           "type": "multiple_choice",
-          "title": "🏙️📍 Vivez-vous dans le quartier [nom du quartier] ?",
+          "title": "*🏙️📍 Vivez-vous dans le quartier **{{hidden:neighborhood}}** ?*",
           "properties": {},
           "choices": [
             {
-              "id": "Iw7sUEnnQOW1",
+              "id": "QjiQG3bFcnJw",
               "ref": "6226e10f-baf0-43f8-af05-2cddc649f509",
-              "label": "Oui (j'y habite ou j'y suis souvent)"
+              "label": "*Oui*"
             },
             {
-              "id": "fugWMOloSfDA",
+              "id": "OOttzJ1603fy",
               "ref": "3a347ad6-7461-4549-8cf3-d45167702a74",
-              "label": "Non"
+              "label": "*Non*"
             }
           ]
         },
         {
-          "id": "JwT4jf99PqwZ",
+          "id": "Bx0KjpEgBnIN",
           "ref": "ageCategory",
           "type": "multiple_choice",
-          "title": "🧒🧓 Dans quelle tranche d’âge vous trouvez-vous ? ",
+          "title": "*🧒🧓 Quel âge avez vous ?*",
           "properties": {},
           "choices": [
             {
-              "id": "quEgbNpyxmlD",
+              "id": "RhWW6jjqRfu6",
               "ref": "a403515c-5a86-4c4b-a842-bae699a09f47",
-              "label": "Moins de 15 ans"
+              "label": "0 à 14 ans"
             },
             {
-              "id": "46nXytjeqV4c",
+              "id": "eEl7Nu8twk1E",
               "ref": "e56029c8-f14a-45dc-8a90-4e61a0f45581",
               "label": "15 à 29 ans"
             },
             {
-              "id": "MGN8iiCc82cx",
+              "id": "wSPr1ApkMIpk",
               "ref": "58756e59-7741-4e9b-8d7b-c16c8eca4361",
               "label": "30 à 44 ans"
             },
             {
-              "id": "2VrLQOyMxY85",
+              "id": "en8dPhnvreCg",
               "ref": "e1d0ef1b-5caa-4b62-aed0-f8efa82131b3",
               "label": "45 à 59 ans"
             },
             {
-              "id": "RXS0N3PyMEif",
+              "id": "aB37A9vffcl3",
               "ref": "65b4afe2-e818-456e-b9fe-a5082a9abc79",
               "label": "60 à 74 ans"
             },
             {
-              "id": "SBSp9JHSIeA5",
+              "id": "XrIg5HFSzCh2",
               "ref": "fa4746bb-223c-4bbc-8a39-ff07a2246a0b",
               "label": "75 ans et plus"
             }
           ]
         },
         {
-          "id": "z8pS3bYvL4fk",
+          "id": "zApgC6Bym1PR",
           "ref": "gender",
           "type": "multiple_choice",
-          "title": "♀️♂️ Quel est votre genre ? ",
+          "title": "*♀️♂️ Vous êtes ? *",
           "properties": {},
           "choices": [
             {
-              "id": "OVajhTciqVz5",
+              "id": "djavyw1iEFfZ",
               "ref": "191de28b-587d-4f34-b57f-b687c77e1c1e",
-              "label": "Femme"
+              "label": "*Une femme*"
             },
             {
-              "id": "V538CoGJs48v",
+              "id": "CsM2Y2W4dPmT",
               "ref": "1caec0f3-6a02-42e6-9bf7-10030b6d38b6",
-              "label": "Homme"
+              "label": "*Un homme*"
             },
             {
-              "id": "BZ85rcdhgijl",
-              "ref": "9ac0fb83-a344-44d4-a235-add149bb6de3",
-              "label": "Autre"
+              "id": "hqVszPHAvZks",
+              "ref": "0fea5725-a8da-42a7-b60b-b6eb14746a6c",
+              "label": "*Autre*"
             }
           ]
         },
         {
-          "id": "ZKmXP3TwmEm5",
+          "id": "5hDoUeVPfgeG",
+          "ref": "professionalSituation",
+          "type": "multiple_choice",
+          "title": "*👷‍♀️👨‍⚖️ Quelle est votre situation actuelle? *",
+          "properties": {},
+          "choices": [
+            {
+              "id": "WJaUKRphlxCd",
+              "ref": "f44fd9bf-9360-4330-8cda-2332d33196cc",
+              "label": "*J'ai un emploi* (y compris stagiaire ou apprenti)"
+            },
+            {
+              "id": "guSxjjktBd6C",
+              "ref": "46f3df0a-8c10-4ef2-844b-bf80d02b224f",
+              "label": "*Étudiant, lycéen *(sans stage actuel)"
+            },
+            {
+              "id": "rMwKGg5NFC40",
+              "ref": "f12b6c94-5780-4367-aef7-e9ab25610c13",
+              "label": "*Homme ou femme au foyer* sans activité professionnelle."
+            },
+            {
+              "id": "EGES86nhPKJO",
+              "ref": "12c9d78c-47d0-4c78-8b4f-8210c6cf33c2",
+              "label": "*Sans activité professionnelle *(inscrit·e ou non à France-Travail)"
+            },
+            {
+              "id": "vXwBDrYsEp1n",
+              "ref": "27df4f5b-329d-450e-925e-0955af8e50b8",
+              "label": "*Retraité*"
+            }
+          ]
+        },
+        {
+          "id": "WTXfEeo0uHry",
           "ref": "professionalCategory",
           "type": "multiple_choice",
-          "title": "👷‍♀️👨‍⚖️ Quelle est votre catégorie socio-professionnelle ?* *",
+          "title": "*👷‍♀️👨‍⚖️ Dans quelle catégorie classez-vous votre profession ? *",
           "properties": {},
           "choices": [
             {
-              "id": "7gUWDN5CbRUZ",
+              "id": "F1FTtg5OsjCU",
               "ref": "34937a02-6445-4624-9d37-06158160fedc",
-              "label": "*Agriculteurs exploitant*"
+              "label": "*Agriculteur*"
             },
             {
-              "id": "Hu4N1RyzVMqB",
+              "id": "FylQGasqpEAZ",
               "ref": "eafa75de-50ee-42b5-8a49-9edc5a665d5c",
-              "label": "*Artisans, commerçants et chefs d'entreprise*"
+              "label": "*Artisan, commerçant et chef d'entreprise*"
             },
             {
-              "id": "SAKNBtjP3iqK",
+              "id": "0aXaQqHkrFyb",
               "ref": "a69d126e-0436-4b3d-b1b7-ba39af69354f",
-              "label": "*Cadre et professions intellectuelles supérieures* (avocats, architectes, médecins, professeurs, scientifiques, …)"
+              "label": "*Cadre et profession intellectuelle supérieure* (ex : avocat, architecte, médecin, professeur, scientifique, …)"
             },
             {
-              "id": "Yika7Njb6ZhK",
+              "id": "TLsL5EXuRWdM",
               "ref": "d8ff03ac-c2e7-4db7-a4ba-dd1162d31d0d",
-              "label": "*Professions intermédiaires* (santé, social, enseignement, techniciens, agents de maîtrise, employés qualifiés, …)"
+              "label": "*Profession intermédiaire* (ex : infirmier, technicien, officier de police, assistant sociale, etc.)"
             },
             {
-              "id": "n3BlsM8GxwqN",
+              "id": "sczxqYT0D2CV",
               "ref": "1f383874-b1ba-4b95-84ca-5bb735afb1f3",
-              "label": "*Employés*"
+              "label": "*Employé*"
             },
             {
-              "id": "WEFGZWPCauh7",
+              "id": "C2IkdRxpAYcK",
               "ref": "1af27fdf-88ac-4a0c-ae42-3961c1509763",
-              "label": "*Ouvriers *(qualifiés (industrie, bâtiment, transport, etc.) et non-qualifiés (manœuvres, manutentions, etc.), conducteurs, chauffeurs)."
-            },
-            {
-              "id": "l2iwR15MS5xI",
-              "ref": "144ee3b6-cc45-4c8a-bd6b-d507579a8a27",
-              "label": "*Retraités*"
-            },
-            {
-              "id": "toF2Sdi83jmB",
-              "ref": "c72b89cf-162b-422c-a55c-cd831494fcfb",
-              "label": "*Autre personnes sans activité professionnelle *(chômeur, rentiers)"
-            },
-            {
-              "id": "tidKRdys8El1",
-              "ref": "a18b427c-ab45-4534-ad45-326c142a7869",
-              "label": "*Étudiants et/ou stagiaires*"
+              "label": "*Ouvrier, chauffeur et livreur*"
             }
           ]
         },
         {
-          "id": "8OiuZK8vWvXN",
-          "ref": "easyHealthAccess",
-          "type": "multiple_choice",
-          "title": "⚕️💶 Est-ce qu’il est aisé pour vous de financer votre accès aux soins ?",
-          "properties": {},
-          "choices": [
-            {
-              "id": "QZYsk2rDUcvT",
-              "ref": "2360d7d5-b501-4f3e-b829-4b374483849e",
-              "label": "*Pas de limitation forte vis-à-vis du coût des soins de base ou de soins spécialisés.* Vous n'avez pas de problème pour accéder à tous les types de soin, y compris spécialisés et coûteux."
-            },
-            {
-              "id": "G7M6Me72ui8N",
-              "ref": "bd25627f-8aa4-4c43-a013-635e5af4cee0",
-              "label": "*Les soins de base sont faciles à obtenir, mais les soins spécialisés sont difficiles à financer.* Vous avez un accès satisfaisant aux soins de base, mais les soins plus coûteux ou spécialisés nécessitent des efforts financiers importants."
-            },
-            {
-              "id": "jR33YoOKpdKg",
-              "ref": "9fe68244-2af7-49a0-a9e1-7d5e73878953",
-              "label": "*Les soins de base comme les soins spécialisés sont difficiles à financer. *L'accès aux soins est régulièrement limité par des contraintes financières"
-            }
-          ]
-        },
-        {
-          "id": "dZltG3fKIYO4",
-          "ref": "meatFrequency",
-          "type": "multiple_choice",
-          "title": "🍖🥓 Lors de vos repas, la viande (poulet, bœuf, etc…) est présente dans… ",
-          "properties": {},
-          "choices": [
-            {
-              "id": "0xaNJ1uzjLZD",
-              "ref": "3beb39cf-2cee-4c3b-81fb-8dd1b1ea3f00",
-              "label": "0 à 4 repas par semaine (rarement ou jamais)"
-            },
-            {
-              "id": "KVGZULXscGsT",
-              "ref": "f3d254c4-0b61-4aa4-9df4-a631475787d6",
-              "label": "5 à 9 repas par semaine (régulièrement)"
-            },
-            {
-              "id": "dJbIS3pECKby",
-              "ref": "6884a62e-bc9f-47af-8e28-7ea4a27f0230",
-              "label": "10 repas par semaine ou plus (majoritairement)"
-            }
-          ]
-        },
-        {
-          "id": "8qh4vbXKaCop",
+          "id": "FL0AolZAihAp",
           "ref": "transportationMode",
           "type": "multiple_choice",
-          "title": "🚗🚲 Quel mode de transport utilisez-vous le plus pour vos déplacements réguliers ?",
+          "title": "*🚗🚲 Comment vous déplacez-vous au quotidien ?*",
           "properties": {},
           "choices": [
             {
-              "id": "EZWReHWBbvTN",
+              "id": "bNUsz1PhAFW4",
               "ref": "8719d78b-30c6-4ef4-b7c4-a4627f594502",
-              "label": "Voiture"
+              "label": "*Voiture*"
             },
             {
-              "id": "tsJEndtJtcdD",
+              "id": "EMjYZpGGjdUn",
               "ref": "45402959-78d9-4518-b3c3-ab5d3e4c1feb",
-              "label": "Transports en commun"
+              "label": "*Transports en commun*"
             },
             {
-              "id": "iqCslFz9EHdN",
+              "id": "A45QsHr3xZkc",
               "ref": "7612df4d-5cb3-484c-8026-030331c61b3a",
-              "label": "Vélo, trottinette ou marche"
+              "label": "*Marche, vélo ou trottinette*"
             }
           ]
         },
         {
-          "id": "JxtcOM50Qm0e",
+          "id": "Fiee33k7HhBH",
           "ref": "digitalIntensity",
           "type": "multiple_choice",
-          "title": "🤳💻 Quelle est l’intensité de votre utilisation du numérique (téléphone, ordinateur, TV, …) ?",
+          "title": "🤳💻 *Combien de temps passez vous devant les écrans : téléphone, ordinateur, TV... *(en dehors du travail)* ?*",
           "properties": {},
           "choices": [
             {
-              "id": "j94LA9hOHHfv",
+              "id": "tWzMrQrYPDI8",
               "ref": "270e40f2-2aa5-43b2-b9d9-0cadd018442c",
-              "label": "*Utilisation légère* (mails, bureautique, un peu de streaming ou jeux vidéo, *moins de 2h par jour*)"
+              "label": "*Un peu* (mails, bureautique, peu de streaming ou de jeux vidéo, *moins de 2h par jour*)"
             },
             {
-              "id": "sazWrDTRoENb",
+              "id": "uWWndKnO9tSg",
               "ref": "8b1e124f-a5d2-4a02-9383-3ef0e5aa7cf9",
-              "label": "*Utilisation régulière* (Usage varié avec *entre 2 et 4 heures* de streaming quotidien, de jeux vidéo (console ou mobile), ou de télévision)."
+              "label": "*Moyennement *(usages variés avec* entre 2 et 4 heures par jour*)"
             },
             {
-              "id": "QmMvmuE2dHkV",
+              "id": "DSiKdp7cRu8z",
               "ref": "f04dfe0c-f517-403e-883a-bb8c9de80de8",
-              "label": "*Utilisation intensive* (Usage intensif avec *plus de 4 heures par jour *consacrées au streaming vidéo, aux jeux vidéo ou à la télévision)."
+              "label": "*Beaucoup *(usages intensifs avec *plus de 4 heures par jour*)"
             }
           ]
         },
         {
-          "id": "Dpl4qNCPtGVV",
-          "ref": "purchasingStrategy",
+          "id": "SO8CSIyQBVkW",
+          "ref": "meatFrequency",
           "type": "multiple_choice",
-          "title": "🛒💶 Quand vous avez besoin d’un objet (vêtements, électronique, mobilier, …), vous privilégiez généralement…",
+          "title": "*🍖🥓 Lors de vos repas, vous mangez de la viande (poulet, bœuf, etc.)...*",
           "properties": {},
           "choices": [
             {
-              "id": "dsg572gscKgo",
+              "id": "4UgDsjYgP4J2",
+              "ref": "3beb39cf-2cee-4c3b-81fb-8dd1b1ea3f00",
+              "label": "*0 à 4 repas par semaine* (rarement ou jamais)"
+            },
+            {
+              "id": "Pi7NkKJHXsWj",
+              "ref": "f3d254c4-0b61-4aa4-9df4-a631475787d6",
+              "label": "*5 à 9 repas par semaine* (souvent)"
+            },
+            {
+              "id": "I3sGOcBUmAM6",
+              "ref": "6884a62e-bc9f-47af-8e28-7ea4a27f0230",
+              "label": "*10 repas par semaine ou plus *(dans presque tous les repas)"
+            }
+          ]
+        },
+        {
+          "id": "JKvqE5c8BfX8",
+          "ref": "purchasingStrategy",
+          "type": "multiple_choice",
+          "title": "*🛒💶 Quand vous avez besoin d’un objet (vêtements, électronique, mobilier, etc.), vous choisissez…*",
+          "properties": {},
+          "choices": [
+            {
+              "id": "NgL0XHPNzDyD",
               "ref": "84702054-4b2e-40c9-932a-3bd813d5d646",
               "label": "…*le neuf en priorité* (même si l'occasion est disponible)"
             },
             {
-              "id": "GhW9lybgoeo6",
+              "id": "of82gGq2ovPh",
               "ref": "13c4b137-28c3-4cca-ae27-6b228fb52f37",
               "label": "…*un mélange entre neuf et occasion* (selon la disponibilité ou le type de produit)"
             },
             {
-              "id": "vrm1jGyAaxDu",
+              "id": "4AnXnNwXA4KU",
               "ref": "8166cf94-e353-4b46-a522-acd9530782c0",
               "label": "…*l’occasion en priorité *(neuf seulement en dernier recours)"
             }
           ]
         },
         {
-          "id": "HreBEMDifVhr",
+          "id": "CtPRaNGcnYyA",
           "ref": "airTravelFrequency",
           "type": "multiple_choice",
-          "title": "🛫👩‍✈️ En moyenne, combien d’allers-retours en avion faites-vous par an ?",
+          "title": "*🛫👩‍✈️ En moyenne, combien de vols en avion faites-vous par an ?*",
           "properties": {},
           "choices": [
             {
-              "id": "TJaIV97Vek20",
+              "id": "hI67IhkRUjb1",
               "ref": "22c056f4-21e7-4e63-8fb6-60b1f5569f8b",
-              "label": "*0*"
+              "label": "*Moins d'1 vol par an*"
             },
             {
-              "id": "r2JDDCClqtMC",
+              "id": "of9YqNYGFYQ2",
               "ref": "e9c48d61-16c8-41a4-a53e-e8d838c539be",
-              "label": "*1 à 3 allers-retours*"
+              "label": "*1 à 3 vols*"
             },
             {
-              "id": "eDWfhTDTko6k",
+              "id": "nUNglNNOB6RE",
               "ref": "04385aba-ae3e-4bda-b32b-1f0c03bec5b8",
-              "label": "*Plus de 3 allers-retours*"
+              "label": "*Plus de 3 vols*"
             }
           ]
         },
         {
-          "id": "rOBkR1gVgkyP",
+          "id": "KoEgIKWqZ8G4",
           "ref": "heatSource",
           "type": "multiple_choice",
-          "title": "♨️🏠 Quelle est l’énergie de chauffage de votre logement ?",
+          "title": "*♨️🏠 Comment votre logement est chauffé ?*",
           "properties": {},
           "choices": [
             {
-              "id": "pt9lOL1L8zvk",
+              "id": "nEezvcTutbOc",
               "ref": "6a3d2558-6612-4cf1-90a6-e5e1bf3bbca8",
               "label": "*Électricité, réseau de chaleur ou pompe à chaleur*"
             },
             {
-              "id": "RjztaRJTDdpG",
+              "id": "UPfA2x6ydjfZ",
               "ref": "60220a76-eacb-435d-beb9-30c6e139827c",
               "label": "*Gaz*"
             },
             {
-              "id": "MvpSO8T9i1gU",
+              "id": "C3wU3tSXoKHQ",
               "ref": "8d91547d-f2aa-4987-9d0b-cb3ce17527c5",
               "label": "*Fioul*"
             }
           ]
         },
         {
-          "id": "wldBg2PVYBgI",
+          "id": "ZcwlypWpkpwb",
+          "ref": "easyHealthAccess",
+          "type": "multiple_choice",
+          "title": "*💶 Actuellement, pour votre foyer, diriez-vous plutôt que financièrement...*",
+          "properties": {},
+          "choices": [
+            {
+              "id": "cDgzBPmxzQy4",
+              "ref": "2360d7d5-b501-4f3e-b829-4b374483849e",
+              "label": "*Vous êtes à l'aise, ça va.*"
+            },
+            {
+              "id": "hRdFXhIr7abM",
+              "ref": "bd25627f-8aa4-4c43-a013-635e5af4cee0",
+              "label": "*C'est juste, il faut faire attention.*"
+            },
+            {
+              "id": "yarPBrLe2mmN",
+              "ref": "9fe68244-2af7-49a0-a9e1-7d5e73878953",
+              "label": "*Vous y arrivez difficilement, compliqué sans faire de dettes.*"
+            }
+          ]
+        },
+        {
+          "id": "uo8Mn374TT0e",
           "ref": "email",
           "type": "email",
-          "title": "📧🤚 *Souhaitez-vous nous transmettre votre mail pour être tenu au courant des résultats ?*",
+          "title": "📧 *Souhaitez-vous nous transmettre votre mail pour recevoir les résultats ?*",
+          "properties": {}
+        },
+        {
+          "id": "FDJquDUD3iPd",
+          "ref": "ed3579e1-4d60-47de-bbb7-54da97b612d1",
+          "type": "long_text",
+          "title": "* ✍️ Un témoignage ? Quelque chose à dire au sujet des questions précédentes ?*",
           "properties": {}
         }
       ],
       "endings": [
         {
-          "id": "OEYROGkSgGg3",
+          "id": "HzF3T71blgsj",
           "ref": "9acf61d6-becd-4a62-bea3-4353c07d5769",
-          "title": "Vous ne faites pas partie du public de cette enquête. ",
+          "title": "*Merci beaucoup pour votre temps ! 🙂*\n*Cette enquête est adressée aux habitants et habitantes du quartier *{{hidden:neighborhood}}.",
           "type": "thankyou_screen",
           "properties": {
-            "description": "Vous pouvez cependant nous aider à la diffuser aux personnes de plus de 15 ans, habitants ou visiteurs réguliers du quartier.",
-            "button_text": "Create a typeform",
-            "show_button": true,
-            "share_icons": true,
+            "description": "Vous pouvez cependant nous aider à la diffuser aux personnes de plus de 15 ans habitants dans le quartier, en leur partageant ce lien :)",
+            "button_text": "again",
+            "show_button": false,
+            "share_icons": false,
             "button_mode": "default_redirect"
           }
         }
-      ]
+      ],
+      "settings": {
+        "partial_responses_to_all_integrations": false
+      }
     },
     "answers": [
       {
         "type": "choice",
         "choice": {
-          "id": "Iw7sUEnnQOW1",
-          "label": "Oui (j'y habite ou j'y suis souvent)",
+          "id": "QjiQG3bFcnJw",
+          "label": "*Oui*",
           "ref": "6226e10f-baf0-43f8-af05-2cddc649f509"
         },
         "field": {
-          "id": "oUXuhFxx8N00",
+          "id": "iyxRjD9V4ptm",
           "type": "multiple_choice",
           "ref": "isNeighborhoodResident"
         }
@@ -365,7 +394,7 @@
           "ref": "e56029c8-f14a-45dc-8a90-4e61a0f45581"
         },
         "field": {
-          "id": "JwT4jf99PqwZ",
+          "id": "Bx0KjpEgBnIN",
           "type": "multiple_choice",
           "ref": "ageCategory"
         }
@@ -373,12 +402,12 @@
       {
         "type": "choice",
         "choice": {
-          "id": "OVajhTciqVz5",
-          "label": "Femme",
+          "id": "djavyw1iEFfZ",
+          "label": "*Une femme*",
           "ref": "191de28b-587d-4f34-b57f-b687c77e1c1e"
         },
         "field": {
-          "id": "z8pS3bYvL4fk",
+          "id": "zApgC6Bym1PR",
           "type": "multiple_choice",
           "ref": "gender"
         }
@@ -386,12 +415,25 @@
       {
         "type": "choice",
         "choice": {
-          "id": "7gUWDN5CbRUZ",
-          "label": "*Agriculteurs exploitant*",
+          "id": "WJaUKRphlxCd",
+          "label": "*J'ai un emploi* (y compris stagiaire ou apprenti)",
+          "ref": "f44fd9bf-9360-4330-8cda-2332d33196cc"
+        },
+        "field": {
+          "id": "5hDoUeVPfgeG",
+          "type": "multiple_choice",
+          "ref": "professionalSituation"
+        }
+      },
+      {
+        "type": "choice",
+        "choice": {
+          "id": "F1FTtg5OsjCU",
+          "label": "*Agriculteur*",
           "ref": "34937a02-6445-4624-9d37-06158160fedc"
         },
         "field": {
-          "id": "ZKmXP3TwmEm5",
+          "id": "WTXfEeo0uHry",
           "type": "multiple_choice",
           "ref": "professionalCategory"
         }
@@ -399,38 +441,12 @@
       {
         "type": "choice",
         "choice": {
-          "id": "QZYsk2rDUcvT",
-          "label": "*Pas de limitation forte vis-à-vis du coût des soins de base ou de soins spécialisés.* Vous n'avez pas de problème pour accéder à tous les types de soin, y compris spécialisés et coûteux.",
-          "ref": "2360d7d5-b501-4f3e-b829-4b374483849e"
-        },
-        "field": {
-          "id": "8OiuZK8vWvXN",
-          "type": "multiple_choice",
-          "ref": "easyHealthAccess"
-        }
-      },
-      {
-        "type": "choice",
-        "choice": {
-          "id": "0xaNJ1uzjLZD",
-          "label": "0 à 4 repas par semaine (rarement ou jamais)",
-          "ref": "3beb39cf-2cee-4c3b-81fb-8dd1b1ea3f00"
-        },
-        "field": {
-          "id": "dZltG3fKIYO4",
-          "type": "multiple_choice",
-          "ref": "meatFrequency"
-        }
-      },
-      {
-        "type": "choice",
-        "choice": {
-          "id": "EZWReHWBbvTN",
-          "label": "Voiture",
+          "id": "bNUsz1PhAFW4",
+          "label": "*Voiture*",
           "ref": "8719d78b-30c6-4ef4-b7c4-a4627f594502"
         },
         "field": {
-          "id": "8qh4vbXKaCop",
+          "id": "FL0AolZAihAp",
           "type": "multiple_choice",
           "ref": "transportationMode"
         }
@@ -438,12 +454,12 @@
       {
         "type": "choice",
         "choice": {
-          "id": "j94LA9hOHHfv",
-          "label": "*Utilisation légère* (mails, bureautique, un peu de streaming ou jeux vidéo, *moins de 2h par jour*)",
+          "id": "tWzMrQrYPDI8",
+          "label": "*Un peu* (mails, bureautique, peu de streaming ou de jeux vidéo, *moins de 2h par jour*)",
           "ref": "270e40f2-2aa5-43b2-b9d9-0cadd018442c"
         },
         "field": {
-          "id": "JxtcOM50Qm0e",
+          "id": "Fiee33k7HhBH",
           "type": "multiple_choice",
           "ref": "digitalIntensity"
         }
@@ -451,12 +467,25 @@
       {
         "type": "choice",
         "choice": {
-          "id": "dsg572gscKgo",
+          "id": "4UgDsjYgP4J2",
+          "label": "*0 à 4 repas par semaine* (rarement ou jamais)",
+          "ref": "3beb39cf-2cee-4c3b-81fb-8dd1b1ea3f00"
+        },
+        "field": {
+          "id": "SO8CSIyQBVkW",
+          "type": "multiple_choice",
+          "ref": "meatFrequency"
+        }
+      },
+      {
+        "type": "choice",
+        "choice": {
+          "id": "NgL0XHPNzDyD",
           "label": "…*le neuf en priorité* (même si l'occasion est disponible)",
           "ref": "84702054-4b2e-40c9-932a-3bd813d5d646"
         },
         "field": {
-          "id": "Dpl4qNCPtGVV",
+          "id": "JKvqE5c8BfX8",
           "type": "multiple_choice",
           "ref": "purchasingStrategy"
         }
@@ -464,12 +493,12 @@
       {
         "type": "choice",
         "choice": {
-          "id": "TJaIV97Vek20",
-          "label": "*0*",
+          "id": "hI67IhkRUjb1",
+          "label": "*Moins d'1 vol par an*",
           "ref": "22c056f4-21e7-4e63-8fb6-60b1f5569f8b"
         },
         "field": {
-          "id": "HreBEMDifVhr",
+          "id": "CtPRaNGcnYyA",
           "type": "multiple_choice",
           "ref": "airTravelFrequency"
         }
@@ -477,28 +506,50 @@
       {
         "type": "choice",
         "choice": {
-          "id": "pt9lOL1L8zvk",
+          "id": "nEezvcTutbOc",
           "label": "*Électricité, réseau de chaleur ou pompe à chaleur*",
           "ref": "6a3d2558-6612-4cf1-90a6-e5e1bf3bbca8"
         },
         "field": {
-          "id": "rOBkR1gVgkyP",
+          "id": "KoEgIKWqZ8G4",
           "type": "multiple_choice",
           "ref": "heatSource"
+        }
+      },
+      {
+        "type": "choice",
+        "choice": {
+          "id": "cDgzBPmxzQy4",
+          "label": "*Vous êtes à l'aise, ça va.*",
+          "ref": "2360d7d5-b501-4f3e-b829-4b374483849e"
+        },
+        "field": {
+          "id": "ZcwlypWpkpwb",
+          "type": "multiple_choice",
+          "ref": "easyHealthAccess"
         }
       },
       {
         "type": "email",
         "email": "an_account@example.com",
         "field": {
-          "id": "wldBg2PVYBgI",
+          "id": "uo8Mn374TT0e",
           "type": "email",
           "ref": "email"
+        }
+      },
+      {
+        "type": "text",
+        "text": "Lorem ipsum dolor",
+        "field": {
+          "id": "FDJquDUD3iPd",
+          "type": "long_text",
+          "ref": "ed3579e1-4d60-47de-bbb7-54da97b612d1"
         }
       }
     ],
     "ending": {
-      "id": "OEYROGkSgGg3",
+      "id": "HzF3T71blgsj",
       "ref": "9acf61d6-becd-4a62-bea3-4353c07d5769"
     }
   }
