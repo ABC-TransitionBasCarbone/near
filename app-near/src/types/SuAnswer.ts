@@ -15,6 +15,19 @@ import {
 import { z } from "zod";
 import { CurrentProfessionalCategory } from "./enums/professionalCategory";
 
+export const hasProfessionalCategory = (answer: {
+  professionalSituation: ProfessionalSituation;
+  professionalCategory?: unknown;
+}) => {
+  if (
+    ProfessionalSituation.EMPLOYEE === answer.professionalSituation &&
+    !answer.professionalCategory
+  ) {
+    return false;
+  }
+  return true;
+};
+
 export const convertedSuAnswer = z
   .object({
     isNeighborhoodResident: z.literal(true),
@@ -31,20 +44,9 @@ export const convertedSuAnswer = z
     heatSource: z.nativeEnum(HeatSource),
     email: z.string().email().or(z.literal("")).optional().nullable(),
   })
-  .refine(
-    (answer) => {
-      if (
-        ProfessionalSituation.EMPLOYEE === answer.professionalSituation &&
-        !answer.professionalCategory
-      ) {
-        return false;
-      }
-      return true;
-    },
-    {
-      message: "missing professionalCategory",
-    },
-  );
+  .refine(hasProfessionalCategory, {
+    message: "missing professionalCategory",
+  });
 
 export type ConvertedSuAnswer = z.infer<typeof convertedSuAnswer>;
 
