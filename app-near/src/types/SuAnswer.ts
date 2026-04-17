@@ -14,7 +14,7 @@ import {
 } from "@prisma/client";
 import { z } from "zod";
 import { CurrentProfessionalCategory } from "./enums/professionalCategory";
-import { hasProfessionalCategory } from "../shared/services/su-answers/hasProfessionalCategory";
+import { shouldHaveProfessionalCategory } from "../shared/services/su-answers/hasProfessionalCategory";
 
 export const convertedSuAnswer = z
   .object({
@@ -32,7 +32,7 @@ export const convertedSuAnswer = z
     heatSource: z.nativeEnum(HeatSource),
     email: z.string().email().or(z.literal("")).optional().nullable(),
   })
-  .refine(hasProfessionalCategory, {
+  .refine(shouldHaveProfessionalCategory, {
     message: "missing professionalCategory",
   });
 

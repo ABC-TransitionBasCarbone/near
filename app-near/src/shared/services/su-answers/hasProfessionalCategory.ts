@@ -1,6 +1,6 @@
 import { ProfessionalSituation } from "@prisma/client";
 
-export const hasProfessionalCategory = (answer: {
+export const shouldHaveProfessionalCategory = (answer: {
   professionalSituation: ProfessionalSituation;
   professionalCategory?: unknown;
 }) => {

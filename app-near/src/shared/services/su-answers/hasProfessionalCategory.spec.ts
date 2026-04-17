@@ -1,11 +1,11 @@
 import { ProfessionalSituation } from "@prisma/client";
 import { CurrentProfessionalCategory } from "../../../types/enums/professionalCategory";
-import { hasProfessionalCategory } from "./hasProfessionalCategory";
+import { shouldHaveProfessionalCategory } from "./hasProfessionalCategory";
 
-describe("hasProfessionalCategory", () => {
+describe("shouldHaveProfessionalCategory", () => {
   it("returns false when professionalSituation is EMPLOYEE and professionalCategory is missing", () => {
     expect(
-      hasProfessionalCategory({
+      shouldHaveProfessionalCategory({
         professionalSituation: ProfessionalSituation.EMPLOYEE,
         professionalCategory: undefined,
       }),
@@ -14,7 +14,7 @@ describe("hasProfessionalCategory", () => {
 
   it("returns true when professionalSituation is EMPLOYEE and professionalCategory is provided", () => {
     expect(
-      hasProfessionalCategory({
+      shouldHaveProfessionalCategory({
         professionalSituation: ProfessionalSituation.EMPLOYEE,
         professionalCategory: CurrentProfessionalCategory.CS1,
       }),
@@ -30,7 +30,7 @@ describe("hasProfessionalCategory", () => {
     "returns true when professionalSituation is %s regardless of professionalCategory",
     (professionalSituation) => {
       expect(
-        hasProfessionalCategory({
+        shouldHaveProfessionalCategory({
           professionalSituation,
           professionalCategory: undefined,
         }),
