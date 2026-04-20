@@ -1,4 +1,6 @@
 import {
+  ProfessionalCategory,
+  ProfessionalSituation,
   type SuAnswer,
   SurveyPhase,
   type WayOfLifeAnswer,
@@ -34,6 +36,24 @@ import {
 import { typeformSchemaMapper } from "./schema";
 import { isValidSignature, SignatureType } from "./signature";
 import { createAnswerError } from "../anwser-error/create";
+
+const mapProfessionalCategoryFromSituation = (
+  situation: ProfessionalSituation,
+  category: ProfessionalCategory | undefined,
+): ProfessionalCategory => {
+  switch (situation) {
+    case ProfessionalSituation.RETIRED:
+      return ProfessionalCategory.CS7;
+    case ProfessionalSituation.STUDENT:
+      return ProfessionalCategory.CS8_student;
+    case ProfessionalSituation.STAY_AT_HOME:
+      return ProfessionalCategory.CS8_home;
+    case ProfessionalSituation.NOT_EMPLOYED:
+      return ProfessionalCategory.CS8_unemployed;
+    default:
+      return category!;
+  }
+};
 
 export const handleTypeformAnswer = async (
   req: NextRequest,
@@ -102,12 +122,20 @@ export const handleTypeformAnswer = async (
     const typeformId = parsedBody.form_response.token;
 
     if (typeformType === TypeformType.SU) {
+      const suCreateQuery = createQuery as Omit<
+        ConvertedSuAnswer,
+        "isNeighborhoodResident" | "su"
+      >;
       await createSu(
         {
           ...createQuery,
           broadcastChannel,
           broadcastId,
           typeformId,
+          professionalCategory: mapProfessionalCategoryFromSituation(
+            suCreateQuery.professionalSituation,
+            suCreateQuery.professionalCategory,
+          ),
         } as SuAnswer,
         surveyName,
       );

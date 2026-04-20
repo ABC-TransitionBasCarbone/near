@@ -133,6 +133,10 @@ Valid values for surveyName: ${existingSurveys.map((item) => item.name).join(", 
   }
   const answerQuantity = getAnswerQuantity(surveyCase, surveyTarget);
 
+  console.debug(
+    `Creating ${answerQuantity} answers for survey ${surveyName} with target ${surveyTarget} and case ${surveyCase}`,
+  );
+
   for (let index = 0; index < answerQuantity; index++) {
     const overrides =
       surveyCase === SurveyCase.MORE_THAN_CATEGORIES_TARGETS
