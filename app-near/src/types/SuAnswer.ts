@@ -14,7 +14,7 @@ import {
 } from "@prisma/client";
 import { z } from "zod";
 import { CurrentProfessionalCategory } from "./enums/professionalCategory";
-import { shouldHaveProfessionalCategory } from "../shared/services/su-answers/hasProfessionalCategory";
+import { shouldHaveProfessionalCategory } from "../shared/services/su-answers/shouldHaveProfessionalCategory";
 
 export const convertedSuAnswer = z
   .object({

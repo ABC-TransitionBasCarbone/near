@@ -1,6 +1,6 @@
 import { ProfessionalSituation } from "@prisma/client";
 import { CurrentProfessionalCategory } from "../../../types/enums/professionalCategory";
-import { shouldHaveProfessionalCategory } from "./hasProfessionalCategory";
+import { shouldHaveProfessionalCategory } from "./shouldHaveProfessionalCategory";
 
 describe("shouldHaveProfessionalCategory", () => {
   it("returns false when professionalSituation is EMPLOYEE and professionalCategory is missing", () => {
