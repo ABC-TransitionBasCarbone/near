@@ -15,6 +15,7 @@ import {
 } from "@prisma/client";
 import { faker } from "@faker-js/faker";
 import { type BuilderSuAnswer } from "~/types/SuAnswer";
+import { mapProfessionalCategoryFromSituation } from "~/shared/services/su-answers/mapProfessionalCategory";
 
 export const buildSuAnswer = (
   surveyId: number,
@@ -45,17 +46,17 @@ export const buildSuAnswer = (
     heatSource: faker.helpers.arrayElement(Object.values(HeatSource)),
     meatFrequency: faker.helpers.arrayElement(Object.values(MeatFrequency)),
     professionalSituation,
-    professionalCategory:
-      professionalSituation === ProfessionalSituation.EMPLOYEE
-        ? faker.helpers.arrayElement([
-            ProfessionalCategory.CS1,
-            ProfessionalCategory.CS2,
-            ProfessionalCategory.CS3,
-            ProfessionalCategory.CS4,
-            ProfessionalCategory.CS5,
-            ProfessionalCategory.CS6,
-          ])
-        : null,
+    professionalCategory: mapProfessionalCategoryFromSituation(
+      professionalSituation,
+      faker.helpers.arrayElement([
+        ProfessionalCategory.CS1,
+        ProfessionalCategory.CS2,
+        ProfessionalCategory.CS3,
+        ProfessionalCategory.CS4,
+        ProfessionalCategory.CS5,
+        ProfessionalCategory.CS6,
+      ]),
+    ),
     purchasingStrategy: faker.helpers.arrayElement(
       Object.values(PurchasingStrategy),
     ),
