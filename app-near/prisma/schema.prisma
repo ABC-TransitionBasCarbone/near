@@ -176,7 +176,7 @@ model SuAnswer {
   ageCategory           AgeCategory           @map("age_category")
   gender                Gender
   professionalSituation ProfessionalSituation? @map("professional_situation")
-  professionalCategory  ProfessionalCategory  @map("professional_category")
+  professionalCategory  ProfessionalCategory?  @map("professional_category")
   easyHealthAccess      EasyHealthAccess      @map("easy_healt_access")
   meatFrequency         MeatFrequency         @map("meat_frequency")
   transportationMode    TransportationMode    @map("transportation_mode")
