@@ -134,39 +134,49 @@ Valid values for surveyName: ${existingSurveys.map((item) => item.name).join(", 
   const answerQuantity = getAnswerQuantity(surveyCase, surveyTarget);
 
   for (let index = 0; index < answerQuantity; index++) {
-    await db.suAnswer.create({
-      data: buildSuAnswer(
-        survey.id,
-        surveyCase === SurveyCase.MORE_THAN_CATEGORIES_TARGETS
-          ? {
+    const overrides =
+      surveyCase === SurveyCase.MORE_THAN_CATEGORIES_TARGETS
+        ? (() => {
+            const professionalSituation = select({
+              [ProfessionalSituation.EMPLOYEE]:
+                (answerTargetsByCategories.cs1 ?? 0) +
+                (answerTargetsByCategories.cs2 ?? 0) +
+                (answerTargetsByCategories.cs3 ?? 0) +
+                (answerTargetsByCategories.cs4 ?? 0) +
+                (answerTargetsByCategories.cs5 ?? 0) +
+                (answerTargetsByCategories.cs6 ?? 0),
+              [ProfessionalSituation.RETIRED]: answerTargetsByCategories.cs7,
+              [ProfessionalSituation.NOT_EMPLOYED]:
+                answerTargetsByCategories.cs8! / 3,
+              [ProfessionalSituation.STAY_AT_HOME]:
+                answerTargetsByCategories.cs8! / 3,
+              [ProfessionalSituation.STUDENT]:
+                answerTargetsByCategories.cs8! / 3,
+            });
+            return {
               gender: select({
                 [Gender.MAN]: answerTargetsByCategories.man,
                 [Gender.WOMAN]: answerTargetsByCategories.woman,
               }),
-              professionalSituation: select({
-                [ProfessionalSituation.EMPLOYEE]: answerTargetsByCategories.cs1,
-                [ProfessionalSituation.RETIRED]: answerTargetsByCategories.cs7,
-                [ProfessionalSituation.NOT_EMPLOYED]:
-                  answerTargetsByCategories.cs8! / 3,
-                [ProfessionalSituation.STAY_AT_HOME]:
-                  answerTargetsByCategories.cs8! / 3,
-                [ProfessionalSituation.STUDENT]:
-                  answerTargetsByCategories.cs8! / 3,
-              }),
-              professionalCategory: select({
-                [CurrentProfessionalCategory.CS1]:
-                  answerTargetsByCategories.cs1,
-                [CurrentProfessionalCategory.CS2]:
-                  answerTargetsByCategories.cs2,
-                [CurrentProfessionalCategory.CS3]:
-                  answerTargetsByCategories.cs3,
-                [CurrentProfessionalCategory.CS4]:
-                  answerTargetsByCategories.cs4,
-                [CurrentProfessionalCategory.CS5]:
-                  answerTargetsByCategories.cs5,
-                [CurrentProfessionalCategory.CS6]:
-                  answerTargetsByCategories.cs6,
-              }),
+              professionalSituation,
+              ...(professionalSituation === ProfessionalSituation.EMPLOYEE
+                ? {
+                    professionalCategory: select({
+                      [CurrentProfessionalCategory.CS1]:
+                        answerTargetsByCategories.cs1,
+                      [CurrentProfessionalCategory.CS2]:
+                        answerTargetsByCategories.cs2,
+                      [CurrentProfessionalCategory.CS3]:
+                        answerTargetsByCategories.cs3,
+                      [CurrentProfessionalCategory.CS4]:
+                        answerTargetsByCategories.cs4,
+                      [CurrentProfessionalCategory.CS5]:
+                        answerTargetsByCategories.cs5,
+                      [CurrentProfessionalCategory.CS6]:
+                        answerTargetsByCategories.cs6,
+                    }),
+                  }
+                : {}),
               ageCategory: select({
                 [AgeCategory.ABOVE_75]: answerTargetsByCategories.above_75,
                 [AgeCategory.FROM_15_TO_29]:
@@ -178,9 +188,12 @@ Valid values for surveyName: ${existingSurveys.map((item) => item.name).join(", 
                 [AgeCategory.FROM_60_TO_74]:
                   answerTargetsByCategories.from_60_to_74,
               }),
-            }
-          : undefined,
-      ),
+            };
+          })()
+        : undefined;
+
+    await db.suAnswer.create({
+      data: buildSuAnswer(survey.id, overrides),
     });
   }
 };
