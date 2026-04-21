@@ -12,6 +12,7 @@ import {
   MeatFrequency,
   ParksUsageFrequency,
   ProfessionalCategory,
+  ProfessionalSituation,
   PurchasingStrategy,
   ReasonsToEatMeat,
   ReasonsToNotBuyFrenchSeasonFood,
@@ -44,19 +45,19 @@ export const surveySUReferencesMapping: Record<string, string | boolean> = {
   ["191de28b-587d-4f34-b57f-b687c77e1c1e"]: Gender.WOMAN,
   ["1caec0f3-6a02-42e6-9bf7-10030b6d38b6"]: Gender.MAN,
   ["0fea5725-a8da-42a7-b60b-b6eb14746a6c"]: Gender.OTHER,
+  // professionalSituation
+  ["f44fd9bf-9360-4330-8cda-2332d33196cc"]: ProfessionalSituation.EMPLOYEE,
+  ["46f3df0a-8c10-4ef2-844b-bf80d02b224f"]: ProfessionalSituation.STUDENT,
+  ["f12b6c94-5780-4367-aef7-e9ab25610c13"]: ProfessionalSituation.STAY_AT_HOME,
+  ["12c9d78c-47d0-4c78-8b4f-8210c6cf33c2"]: ProfessionalSituation.NOT_EMPLOYED,
+  ["27df4f5b-329d-450e-925e-0955af8e50b8"]: ProfessionalSituation.RETIRED,
   // professionalCategory
   ["34937a02-6445-4624-9d37-06158160fedc"]: ProfessionalCategory.CS1,
-  ["392aa02d-894f-4359-96e3-dbe902090974"]:
-    ProfessionalCategory.CS2_platform_entrepreneurship,
   ["eafa75de-50ee-42b5-8a49-9edc5a665d5c"]: ProfessionalCategory.CS2,
   ["a69d126e-0436-4b3d-b1b7-ba39af69354f"]: ProfessionalCategory.CS3,
   ["d8ff03ac-c2e7-4db7-a4ba-dd1162d31d0d"]: ProfessionalCategory.CS4,
   ["1f383874-b1ba-4b95-84ca-5bb735afb1f3"]: ProfessionalCategory.CS5,
   ["1af27fdf-88ac-4a0c-ae42-3961c1509763"]: ProfessionalCategory.CS6,
-  ["144ee3b6-cc45-4c8a-bd6b-d507579a8a27"]: ProfessionalCategory.CS7,
-  ["c72b89cf-162b-422c-a55c-cd831494fcfb"]: ProfessionalCategory.CS8_unemployed,
-  ["a18b427c-ab45-4534-ad45-326c142a7869"]: ProfessionalCategory.CS8_student,
-  ["db5c0ae8-772d-430a-84d6-b6a44026a25c"]: ProfessionalCategory.CS8_home,
   // easyHealthAccess
   ["2360d7d5-b501-4f3e-b829-4b374483849e"]: EasyHealthAccess.EASY,
   ["bd25627f-8aa4-4c43-a013-635e5af4cee0"]: EasyHealthAccess.MODERATE,

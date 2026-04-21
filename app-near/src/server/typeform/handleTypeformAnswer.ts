@@ -34,6 +34,7 @@ import {
 import { typeformSchemaMapper } from "./schema";
 import { isValidSignature, SignatureType } from "./signature";
 import { createAnswerError } from "../anwser-error/create";
+import { mapProfessionalCategoryFromSituation } from "~/shared/services/su-answers/mapProfessionalCategory";
 
 export const handleTypeformAnswer = async (
   req: NextRequest,
@@ -102,12 +103,20 @@ export const handleTypeformAnswer = async (
     const typeformId = parsedBody.form_response.token;
 
     if (typeformType === TypeformType.SU) {
+      const suCreateQuery = createQuery as Omit<
+        ConvertedSuAnswer,
+        "isNeighborhoodResident" | "su"
+      >;
       await createSu(
         {
           ...createQuery,
           broadcastChannel,
           broadcastId,
           typeformId,
+          professionalCategory: mapProfessionalCategoryFromSituation(
+            suCreateQuery.professionalSituation,
+            suCreateQuery.professionalCategory!,
+          ),
         } as SuAnswer,
         surveyName,
       );

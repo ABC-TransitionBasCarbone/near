@@ -1,4 +1,9 @@
-import { BroadcastChannel, type Survey } from "@prisma/client";
+import {
+  BroadcastChannel,
+  ProfessionalCategory,
+  ProfessionalSituation,
+  type Survey,
+} from "@prisma/client";
 import { TemplateId } from "~/types/enums/brevo";
 import { ErrorCode } from "~/types/enums/error";
 import { TypeformType, type TypeformWebhookPayload } from "~/types/Typeform";
@@ -193,7 +198,7 @@ describe("handleAnswer", () => {
       ) as TypeformWebhookPayload;
 
       // @ts-expect-error allow for test
-      payload.form_response.answers[11].email = "wrong-email";
+      payload.form_response.answers[12].email = "wrong-email";
       const signature = signPayload(
         JSON.stringify(payload),
         SignatureType.TYPEFORM,
@@ -685,5 +690,132 @@ describe("handleAnswer", () => {
         // TODO : should not saved failed
       });
     }
+  });
+
+  describe("SU - professionalCategory mapping from professionalSituation", () => {
+    const replaceChoiceRef = (
+      object: TypeformWebhookPayload,
+      fieldRef: string,
+      newChoiceRef: string,
+    ): TypeformWebhookPayload => {
+      if (
+        object?.form_response &&
+        Array.isArray(object.form_response.answers)
+      ) {
+        object.form_response.answers = object.form_response.answers.map(
+          (answer) => {
+            if (answer.field.ref === fieldRef && answer.type === "choice") {
+              return {
+                ...answer,
+                choice: { ...answer.choice, ref: newChoiceRef },
+              };
+            }
+            return answer;
+          },
+        );
+      }
+      return object;
+    };
+
+    const removeAnswerByRef = (
+      object: TypeformWebhookPayload,
+      ref: string,
+    ): TypeformWebhookPayload => {
+      if (
+        object?.form_response &&
+        Array.isArray(object.form_response.answers)
+      ) {
+        object.form_response.answers = object.form_response.answers.filter(
+          (answer) => answer.field.ref !== ref,
+        );
+      }
+      return object;
+    };
+
+    it("should map RETIRED professionalSituation to CS7", async () => {
+      await db.survey.update({
+        data: { phase: getValidSurveyPhase(TypeformType.SU) },
+        where: { name: neighborhoodName },
+      });
+
+      // eslint-disable-next-line
+      let payload = JSON.parse(
+        JSON.stringify(valideSuSurveyPayload),
+      ) as TypeformWebhookPayload;
+
+      payload.form_response.hidden = {
+        neighborhood: neighborhoodName,
+        broadcast_channel: BroadcastChannel.mail_campaign,
+        broadcast_id: broadcastId,
+      };
+
+      payload = replaceChoiceRef(
+        payload,
+        "professionalSituation",
+        "27df4f5b-329d-450e-925e-0955af8e50b8", // RETIRED
+      );
+      payload = removeAnswerByRef(payload, "professionalCategory");
+
+      const signature = signPayload(
+        JSON.stringify(payload),
+        SignatureType.TYPEFORM,
+      );
+      const response = await handleTypeformAnswer(
+        // @ts-expect-error allow partial for test
+        buildRequest(payload, signature),
+      );
+
+      expect(response.status).toBe(201);
+      const savedAnswers = await db.suAnswer.findMany();
+      expect(savedAnswers[0]?.professionalCategory).toBe(
+        ProfessionalCategory.CS7,
+      );
+      expect(savedAnswers[0]?.professionalSituation).toBe(
+        ProfessionalSituation.RETIRED,
+      );
+    });
+
+    it("should map STUDENT professionalSituation to CS8_student", async () => {
+      await db.survey.update({
+        data: { phase: getValidSurveyPhase(TypeformType.SU) },
+        where: { name: neighborhoodName },
+      });
+
+      // eslint-disable-next-line
+      let payload = JSON.parse(
+        JSON.stringify(valideSuSurveyPayload),
+      ) as TypeformWebhookPayload;
+
+      payload.form_response.hidden = {
+        neighborhood: neighborhoodName,
+        broadcast_channel: BroadcastChannel.mail_campaign,
+        broadcast_id: broadcastId,
+      };
+
+      payload = replaceChoiceRef(
+        payload,
+        "professionalSituation",
+        "46f3df0a-8c10-4ef2-844b-bf80d02b224f", // STUDENT
+      );
+      payload = removeAnswerByRef(payload, "professionalCategory");
+
+      const signature = signPayload(
+        JSON.stringify(payload),
+        SignatureType.TYPEFORM,
+      );
+      const response = await handleTypeformAnswer(
+        // @ts-expect-error allow partial for test
+        buildRequest(payload, signature),
+      );
+
+      expect(response.status).toBe(201);
+      const savedAnswers = await db.suAnswer.findMany();
+      expect(savedAnswers[0]?.professionalCategory).toBe(
+        ProfessionalCategory.CS8_student,
+      );
+      expect(savedAnswers[0]?.professionalSituation).toBe(
+        ProfessionalSituation.STUDENT,
+      );
+    });
   });
 });
