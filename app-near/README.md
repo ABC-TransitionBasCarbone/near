@@ -47,7 +47,7 @@ npm run prepare
 Lancer la base de données PostgreSQL :
 
 ```sh
-docker-compose up -d
+docker-compose up database -d
 ```
 
 Créer un fichier .env :
