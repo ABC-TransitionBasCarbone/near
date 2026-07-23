@@ -1,11 +1,10 @@
 "use client";
 import { useState } from "react";
-import { type BroadcastType } from "../../../../types/enums/broadcasting";
+import { BroadcastType } from "../../../../types/enums/broadcasting";
 import Button from "../../_ui/Button";
 import QRCodeModal from "./QRCodeModal";
-import { useSession } from "next-auth/react";
 import { type SurveyType } from "~/types/enums/survey";
-import { buildSurveyLink } from "~/shared/services/survey-links/build";
+import { api } from "~/trpc/react";
 
 interface BroadcastingButtonProps {
   surveyType: SurveyType;
@@ -16,10 +15,11 @@ const BroadcastingButton: React.FC<BroadcastingButtonProps> = ({
   broadcastType,
   surveyType,
 }) => {
-  const { data: session } = useSession();
+  const buildSurveyLinkMutation = api.surveyLinks.build.useMutation();
 
   const [copiedMessage, setCopiedMessage] = useState("");
   const [showQRCode, setShowQRCode] = useState(false);
+  const [generatedLink, setGeneratedLink] = useState("");
 
   const broadcastWordings = {
     mail_campaign: {
@@ -52,16 +52,20 @@ const BroadcastingButton: React.FC<BroadcastingButtonProps> = ({
   };
 
   const onGenerateClick = async (broadcastType: BroadcastType) => {
-    const link = buildSurveyLink(
-      broadcastType,
-      surveyType,
-      session?.user.survey?.name,
-    );
-    await navigator.clipboard.writeText(link);
-    setCopiedMessage(
-      link === "error" ? "Veuillez réessayer plus tard" : "Lien copié !",
-    );
-    setShowQRCode(true);
+    try {
+      const link = await buildSurveyLinkMutation.mutateAsync({
+        broadcastType,
+        surveyType,
+      });
+      setGeneratedLink(link);
+      await navigator.clipboard.writeText(link);
+      setCopiedMessage(
+        link === "error" ? "Veuillez réessayer plus tard" : "Lien copié !",
+      );
+      setShowQRCode(true);
+    } catch {
+      setCopiedMessage("Veuillez réessayer plus tard");
+    }
     setTimeout(() => setCopiedMessage(""), 4000);
   };
 
@@ -84,19 +88,17 @@ const BroadcastingButton: React.FC<BroadcastingButtonProps> = ({
             {copiedMessage}
           </div>
         )}
-        {broadcastType === "qr_code" && showQRCode && (
-          <QRCodeModal
-            onClose={() => {
-              setShowQRCode(false);
-              document.body.classList.remove("overflow-hidden");
-            }}
-            link={buildSurveyLink(
-              broadcastType,
-              surveyType,
-              session?.user.survey?.name,
-            )}
-          ></QRCodeModal>
-        )}
+        {broadcastType === BroadcastType.QR_CODE &&
+          showQRCode &&
+          generatedLink && (
+            <QRCodeModal
+              onClose={() => {
+                setShowQRCode(false);
+                document.body.classList.remove("overflow-hidden");
+              }}
+              link={generatedLink}
+            ></QRCodeModal>
+          )}
       </div>
     </div>
   );

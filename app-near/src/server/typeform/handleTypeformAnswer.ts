@@ -139,6 +139,7 @@ export const handleTypeformAnswer = async (
 
       if (createQuery.email) {
         await sendPhaseTwoFormNotification(
+          survey.id,
           createQuery.email,
           surveyName,
           suName,
