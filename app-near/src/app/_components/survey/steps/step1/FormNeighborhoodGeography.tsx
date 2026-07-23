@@ -1,6 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
 import { FormProvider, type SubmitHandler, useForm } from "react-hook-form";
+import ArrowForwardOutlinedIcon from "@mui/icons-material/ArrowForwardOutlined";
 import Button from "~/app/_components/_ui/Button";
 import FormTextareaWithLabel from "~/app/_components/_ui/form/FormTextareaWithLabel";
 import { useNotification } from "~/app/_components/_context/NotificationProvider";
@@ -32,31 +33,21 @@ enum Step {
   EAST = "east",
   WEST = "west",
 }
-const stepConfig = {
-  [Step.NORTH]: {
-    name: Step.NORTH,
-    label: "au NORD",
-    nextStep: Step.EAST,
-    previousStep: Step.NORTH,
-  },
-  [Step.EAST]: {
-    name: Step.EAST,
-    label: "à l'EST",
-    nextStep: Step.SUD,
-    previousStep: Step.NORTH,
-  },
-  [Step.SUD]: {
-    name: Step.SUD,
-    label: "au SUD",
-    nextStep: Step.WEST,
-    previousStep: Step.EAST,
-  },
-  [Step.WEST]: {
-    name: Step.WEST,
-    label: "à l'OUEST",
-    nextStep: Step.WEST,
-    previousStep: Step.SUD,
-  },
+
+const stepsOrder = [Step.NORTH, Step.EAST, Step.SUD, Step.WEST];
+
+const stepLabel: Record<Step, string> = {
+  [Step.NORTH]: "au NORD",
+  [Step.EAST]: "à l'EST",
+  [Step.SUD]: "au SUD",
+  [Step.WEST]: "à l'OUEST",
+};
+
+const stepShortLabel: Record<Step, string> = {
+  [Step.NORTH]: "Nord",
+  [Step.EAST]: "Est",
+  [Step.SUD]: "Sud",
+  [Step.WEST]: "Ouest",
 };
 
 type FormNeighborhoodGeographyProps = {
@@ -68,8 +59,10 @@ const FormNeighborhoodGeography: React.FC<FormNeighborhoodGeographyProps> = ({
 }) => {
   const [step, setStep] = useState(Step.NORTH);
   const { setNotification } = useNotification();
+  const utils = api.useUtils();
 
   const { data: values } = api.neighborhoodsConfigs.getOne.useQuery();
+  const { data: isCompleted } = api.neighborhoodsConfigs.isCompleted.useQuery();
   const neighborhoodConfigMutation =
     api.neighborhoodsConfigs.upsertOne.useMutation();
 
@@ -102,13 +95,50 @@ const FormNeighborhoodGeography: React.FC<FormNeighborhoodGeographyProps> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isDirty]);
 
+  const stepIndex = stepsOrder.indexOf(step);
+  const isFirstStep = stepIndex === 0;
+  const isLastStep = stepIndex === stepsOrder.length - 1;
+
+  const goToPreviousStep = () => {
+    if (!isFirstStep) setStep(stepsOrder[stepIndex - 1]!);
+  };
+  const goToNextStep = () => {
+    if (!isLastStep) setStep(stepsOrder[stepIndex + 1]!);
+  };
+
+  const previousStepButton = (
+    <Button
+      aria-label="Direction précédente"
+      icon={<ArrowForwardOutlinedIcon aria-hidden className="rotate-180" />}
+      rounded
+      className="shrink-0"
+      style={ButtonStyle.LIGHT}
+      color="blue"
+      disabled={isFirstStep}
+      onClick={goToPreviousStep}
+    />
+  );
+  const nextStepButton = (
+    <Button
+      aria-label="Direction suivante"
+      icon={<ArrowForwardOutlinedIcon aria-hidden />}
+      rounded
+      className="shrink-0"
+      style={ButtonStyle.LIGHT}
+      color="blue"
+      disabled={isLastStep}
+      onClick={goToNextStep}
+    />
+  );
+
   const onSubmit: SubmitHandler<NeighborhoodConfigFormValues> = async (
     data,
   ) => {
     try {
       await neighborhoodConfigMutation.mutateAsync(data);
       form.reset(data);
-      setStep(stepConfig[step].nextStep);
+      await utils.neighborhoodsConfigs.isCompleted.invalidate();
+      goToNextStep();
     } catch {
       setNotification({
         type: NotificationType.ERROR,
@@ -124,7 +154,25 @@ const FormNeighborhoodGeography: React.FC<FormNeighborhoodGeographyProps> = ({
         onSubmit={handleSubmit(onSubmit)}
         className="m-auto flex max-w-2xl flex-col gap-5 pb-8"
       >
-        <h1>Définir les destinations phares depuis le quartier</h1>
+        <div className="flex flex-wrap items-center gap-3">
+          <h1>Définir les destinations phares depuis le quartier</h1>
+          <span
+            className={`rounded-full px-3 py-1 text-sm font-bold ${
+              isCompleted
+                ? "bg-success/10 text-success"
+                : "bg-error/10 text-error"
+            }`}
+          >
+            {isCompleted ? "✓ Complet" : "● À compléter"}
+          </span>
+        </div>
+        {!isCompleted && (
+          <p className="text-sm italic text-gray">
+            Tant que ce formulaire n&apos;est pas complété pour les 4
+            directions, un rappel s&apos;affichera à l&apos;étape &quot;Enquêtes
+            complémentaires&quot;.
+          </p>
+        )}
 
         <p>
           Ce questionnaire vous accompagne dans la définition des destinations
@@ -186,47 +234,71 @@ const FormNeighborhoodGeography: React.FC<FormNeighborhoodGeographyProps> = ({
           </li>
         </ul>
 
-        <div className="my-4 mt-4 border-t border-dashed" />
+        <div className="flex items-center gap-2 rounded-lg bg-grayExtraLight p-5 sm:gap-4">
+          <div className="hidden sm:block">{previousStepButton}</div>
 
-        <FormTextareaWithLabel<NeighborhoodConfigFormValues>
-          name={`${stepConfig[step].name}CloseLocations`}
-          label={
-            <div className="text-lg text-blue">
-              Quelles sont les{" "}
-              <strong>destinations proches {stepConfig[step].label}</strong> du
-              quartier, situées à moins de 20 minutes à pied et en dehors du
-              quartier ?
-            </div>
-          }
-          hint="Espaces publics, quartiers, communes, lieux-dits ou points de repère.... Citez les lieux du plus proche au plus éloigné."
-          maxLength={71}
-          rows={3}
-        />
-        <FormTextareaWithLabel<NeighborhoodConfigFormValues>
-          name={`${stepConfig[step].name}DistantLocations`}
-          label={
-            <div className="text-lg text-blue">
-              Quelles sont les{" "}
-              <strong>destinations éloignées {stepConfig[step].label}</strong>{" "}
-              du quartier, au-delà de 20 minutes à pied ?
-            </div>
-          }
-          hint="Citez les lieux du plus proche au plus éloigné."
-          maxLength={71}
-          rows={3}
-        />
-        <div className="flex w-full items-center justify-center gap-3">
-          <Button
-            style={ButtonStyle.LIGHT}
-            color="blue"
-            onClick={() => setStep(stepConfig[step].previousStep)}
-          >
-            Précédent
-          </Button>
-          <Button style={ButtonStyle.FILLED} color="blue" type="submit">
-            {step === Step.WEST ? "Enregistrer" : "Suivant"}
-          </Button>
+          <div className="flex min-w-0 flex-1 flex-col gap-5">
+            <FormTextareaWithLabel<NeighborhoodConfigFormValues>
+              name={`${step}CloseLocations`}
+              label={
+                <div className="text-lg text-blue">
+                  Quelles sont les{" "}
+                  <strong>destinations proches {stepLabel[step]}</strong> du
+                  quartier, situées à moins de 20 minutes à pied et en dehors du
+                  quartier ?
+                </div>
+              }
+              hint="Espaces publics, quartiers, communes, lieux-dits ou points de repère.... Citez les lieux du plus proche au plus éloigné."
+              maxLength={71}
+              rows={3}
+            />
+            <FormTextareaWithLabel<NeighborhoodConfigFormValues>
+              name={`${step}DistantLocations`}
+              label={
+                <div className="text-lg text-blue">
+                  Quelles sont les{" "}
+                  <strong>destinations éloignées {stepLabel[step]}</strong> du
+                  quartier, au-delà de 20 minutes à pied ?
+                </div>
+              }
+              hint="Citez les lieux du plus proche au plus éloigné."
+              maxLength={71}
+              rows={3}
+            />
+          </div>
+
+          <div className="hidden sm:block">{nextStepButton}</div>
         </div>
+
+        <div className="flex items-center justify-center gap-6 sm:hidden">
+          {previousStepButton}
+          {nextStepButton}
+        </div>
+
+        <div
+          aria-hidden="true"
+          className="flex items-center justify-center gap-2 pt-2"
+        >
+          {stepsOrder.map((direction) => (
+            <span
+              key={direction}
+              title={stepShortLabel[direction]}
+              className={`h-2.5 w-2.5 rounded-full transition-colors ${
+                direction === step ? "bg-blue" : "bg-grayLight"
+              }`}
+            />
+          ))}
+        </div>
+
+        <Button
+          style={ButtonStyle.FILLED}
+          color="blue"
+          type="submit"
+          rounded
+          className="mt-2 w-full sm:w-auto sm:self-center"
+        >
+          Enregistrer
+        </Button>
       </form>
     </FormProvider>
   );

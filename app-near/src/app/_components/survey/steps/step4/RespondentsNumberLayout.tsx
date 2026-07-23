@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import ErrorOutlineOutlinedIcon from "@mui/icons-material/ErrorOutlineOutlined";
 import SurveyLayout from "../../SurveyLayout";
 import { useSurveyStateContext } from "~/app/_components/_context/surveyStateContext";
 import { useSession } from "next-auth/react";
@@ -59,6 +60,11 @@ const RespondentsNumberLayout: React.FC<RespondentsNumberLayoutProps> = ({
       enabled: !!session?.user?.survey?.id,
     });
 
+  const { data: neighborhoodConfigIsCompleted } =
+    api.neighborhoodsConfigs.isCompleted.useQuery(undefined, {
+      enabled: !!session?.user.survey?.id,
+    });
+
   const [showModal, setShowModal] = useState<boolean>(false);
 
   const nextStepIsDisabled =
@@ -90,6 +96,22 @@ const RespondentsNumberLayout: React.FC<RespondentsNumberLayoutProps> = ({
             Phase d&apos;enquête n°2 : nombre de répondants
           </h1>
           <p>Où en êtes-vous du nombre de personnes à interroger ?</p>
+          {!neighborhoodConfigIsCompleted && (
+            <div
+              id="neighborhood-config-prerequisite"
+              className="mt-5 flex items-start gap-3 rounded-lg bg-error/10 p-4 text-error"
+            >
+              <ErrorOutlineOutlinedIcon
+                aria-hidden
+                className="mt-0.5 shrink-0"
+              />
+              <p>
+                <strong>Prérequis</strong> : vous devez compléter le formulaire
+                à l&apos;étape 1 Informations sur le quartier pour diffuser le
+                questionnaire <em>Espace et mode de vie</em>.
+              </p>
+            </div>
+          )}
           <div className="mt-8 flex justify-center"></div>
         </div>
       }
@@ -130,33 +152,56 @@ const RespondentsNumberLayout: React.FC<RespondentsNumberLayoutProps> = ({
         />
         <div className="mx-6 my-8 flex flex-col gap-16">
           <div className="flex flex-wrap justify-center gap-x-8 gap-y-16">
-            {chartConfig.map((chart) => (
-              <div
-                key={chart.iframeNumber}
-                className="flex w-full flex-col items-center gap-y-8 sm:w-[600px]"
-              >
-                <div className="w-full">
-                  <div className="mb-1 text-center text-3xl">{chart.title}</div>
-                  <MetabaseIframe
-                    iframeNumber={chart.iframeNumber}
-                    iframeType={MetabaseIframeType.QUESTION}
-                    height="300px"
-                    params={{ surveyName: session.user.survey!.name }}
-                  />
-                </div>
-                <Button
-                  icon="/icons/rocket.svg"
-                  rounded
-                  style={ButtonStyle.LIGHT}
-                  onClick={() => {
-                    setToggleBroadcastingPage(true);
-                    setSurveyType(chart.surveyType);
-                  }}
+            {chartConfig.map((chart) => {
+              const isDisabled =
+                chart.surveyType === SurveyType.WAY_OF_LIFE &&
+                !neighborhoodConfigIsCompleted;
+
+              return (
+                <div
+                  key={chart.iframeNumber}
+                  className="flex w-full flex-col items-center gap-y-8 sm:w-[600px]"
                 >
-                  Diffuser le questionnaire
-                </Button>
-              </div>
-            ))}
+                  <div className="w-full">
+                    <div className="mb-1 text-center text-3xl">
+                      {chart.title}
+                    </div>
+                    <MetabaseIframe
+                      iframeNumber={chart.iframeNumber}
+                      iframeType={MetabaseIframeType.QUESTION}
+                      height="300px"
+                      params={{ surveyName: session.user.survey!.name }}
+                    />
+                  </div>
+                  <Button
+                    icon="/icons/rocket.svg"
+                    rounded
+                    style={ButtonStyle.LIGHT}
+                    aria-disabled={isDisabled}
+                    aria-describedby={
+                      isDisabled
+                        ? "neighborhood-config-prerequisite"
+                        : undefined
+                    }
+                    title={
+                      isDisabled
+                        ? "Vous devez d'abord compléter le formulaire de l'étape 1 (Informations sur le quartier)."
+                        : undefined
+                    }
+                    className={
+                      isDisabled ? "cursor-not-allowed opacity-40" : undefined
+                    }
+                    onClick={() => {
+                      if (isDisabled) return;
+                      setToggleBroadcastingPage(true);
+                      setSurveyType(chart.surveyType);
+                    }}
+                  >
+                    Diffuser le questionnaire
+                  </Button>
+                </div>
+              );
+            })}
           </div>
           <div className="flex flex-col items-center gap-10">
             <div className="text-xl">Rappel des Sphères d&apos;Usages</div>
