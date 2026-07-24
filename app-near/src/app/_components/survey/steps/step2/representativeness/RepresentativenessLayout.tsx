@@ -3,12 +3,9 @@
 import Link from "next/link";
 import { useState, type Dispatch, type SetStateAction } from "react";
 import { ButtonStyle } from "~/types/enums/button";
-import { env } from "../../../../../../env";
-import { MetabaseIframeType } from "../../../../../../types/enums/metabase";
 import { useSurveyStateContext } from "../../../../_context/surveyStateContext";
 import Button from "../../../../_ui/Button";
 import LinkAsButton from "../../../../_ui/LinkAsButton";
-import MetabaseIframe from "../../../../_ui/MetabaseIframe";
 import SurveyLayout from "../../../SurveyLayout";
 import { surveyConfig } from "../../config";
 import RepresentativenessPage from "./RepresentativenessPage";
@@ -21,6 +18,7 @@ import {
 import useUpdateSurveyStep from "../../../../_ui/hooks/useUpdateSurveyStep";
 import ConfirmModal from "../../ConfirmModal";
 import { SurveyPhase } from "@prisma/client";
+import GaugeErrorMargin from "./GaugeErrorMargin";
 
 interface RepresentativenessLayoutProps {
   setToggleBroadcastingPage: Dispatch<SetStateAction<boolean>>;
@@ -44,6 +42,10 @@ const RepresentativenessLayout: React.FC<RepresentativenessLayoutProps> = ({
     enabled: !!session?.user?.survey?.id,
   });
 
+  const { data: neighborhood } = api.neighborhoods.getOne.useQuery(undefined, {
+    enabled: !!session?.user?.survey?.id,
+  });
+
   const [showModal, setShowModal] = useState<boolean>(false);
 
   const updateSurveyStep = useUpdateSurveyStep();
@@ -58,7 +60,6 @@ const RepresentativenessLayout: React.FC<RepresentativenessLayoutProps> = ({
   if (!survey || step === undefined) {
     return "Loading...";
   }
-
   return (
     <>
       <ConfirmModal
@@ -75,12 +76,14 @@ const RepresentativenessLayout: React.FC<RepresentativenessLayoutProps> = ({
           <>
             <div className="flex flex-row flex-wrap items-stretch justify-center gap-10">
               <div className="order-2 sm:order-1">
-                <MetabaseIframe
-                  iframeNumber={env.NEXT_PUBLIC_METABASE_JAUGE_ERROR_MARGIN}
-                  iframeType={MetabaseIframeType.QUESTION}
-                  height="300px"
-                  width="300px"
-                  params={{ surveyName: survey.name }}
+                <GaugeErrorMargin
+                  value={count}
+                  percentiles={[
+                    neighborhood?.population_sum_threshold_5p,
+                    neighborhood?.population_sum_threshold_4_5p,
+                    neighborhood?.population_sum_threshold_4p,
+                    neighborhood?.population_sum_threshold_3p,
+                  ]}
                 />
               </div>
 
