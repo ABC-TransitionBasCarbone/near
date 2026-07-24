@@ -17,12 +17,12 @@ type FormTextareaWithLabelProps<TFieldValues extends FieldValues> = {
   required?: boolean;
   hint?: string | ReactNode;
   error?: FieldError;
-  ariaDescribedBy?: string;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   handleChange?: (...args: any[]) => Promise<void>;
   placeholder?: string;
   rows?: number;
   maxLength?: number;
+  maxLengthRatio?: number;
 };
 
 const FormTextareaWithLabel = <TFieldValues extends FieldValues>({
@@ -30,11 +30,11 @@ const FormTextareaWithLabel = <TFieldValues extends FieldValues>({
   label,
   required = false,
   hint,
-  ariaDescribedBy,
   handleChange,
   placeholder,
   rows,
   maxLength,
+  maxLengthRatio = 0.1,
 }: FormTextareaWithLabelProps<TFieldValues>) => {
   const { control } = useFormContext();
   const value = useWatch({ control, name });
@@ -63,10 +63,11 @@ const FormTextareaWithLabel = <TFieldValues extends FieldValues>({
       render={({ field, fieldState }) => {
         const currentLength = (field.value as string | undefined)?.length ?? 0;
         const isNearLimit = maxLength
-          ? maxLength - currentLength <= Math.ceil(maxLength * 0.1)
+          ? maxLength - currentLength <= Math.ceil(maxLength * maxLengthRatio)
           : false;
         const describedBy = [
-          ariaDescribedBy ?? `${name}-error ${name}-hint`,
+          `${name}-error`,
+          `${name}-hint`,
           maxLength ? counterId : undefined,
         ]
           .filter(Boolean)

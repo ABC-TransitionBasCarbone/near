@@ -1,11 +1,11 @@
 import React from "react";
 
-interface FOrmRequiredLabelProps {
+interface FormRequiredLabelProps {
   htmlFor?: string;
   children: React.ReactNode;
 }
 
-const FormRequiredLabel: React.FC<FOrmRequiredLabelProps> = ({
+const FormRequiredLabel: React.FC<FormRequiredLabelProps> = ({
   htmlFor,
   children,
 }) => (
@@ -13,6 +13,7 @@ const FormRequiredLabel: React.FC<FOrmRequiredLabelProps> = ({
     <span className="text-red" aria-hidden={true}>
       *
     </span>{" "}
+    <span className="sr-only">Champ obligatoire</span>
     {children}
   </label>
 );

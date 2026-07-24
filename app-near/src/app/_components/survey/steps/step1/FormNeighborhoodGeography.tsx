@@ -21,32 +21,32 @@ const defaultValues: NeighborhoodConfigFormValues = {
   eastDistantLocations: "",
   northCloseLocations: "",
   northDistantLocations: "",
-  sudCloseLocations: "",
-  sudDistantLocations: "",
+  southCloseLocations: "",
+  southDistantLocations: "",
   westCloseLocations: "",
   westDistantLocations: "",
 };
 
 enum Step {
   NORTH = "north",
-  SUD = "sud",
+  SOUTH = "south",
   EAST = "east",
   WEST = "west",
 }
 
-const stepsOrder = [Step.NORTH, Step.EAST, Step.SUD, Step.WEST];
+const stepsOrder = [Step.NORTH, Step.EAST, Step.SOUTH, Step.WEST];
 
 const stepLabel: Record<Step, string> = {
   [Step.NORTH]: "au NORD",
   [Step.EAST]: "à l'EST",
-  [Step.SUD]: "au SUD",
+  [Step.SOUTH]: "au SUD",
   [Step.WEST]: "à l'OUEST",
 };
 
 const stepShortLabel: Record<Step, string> = {
   [Step.NORTH]: "Nord",
   [Step.EAST]: "Est",
-  [Step.SUD]: "Sud",
+  [Step.SOUTH]: "Sud",
   [Step.WEST]: "Ouest",
 };
 
@@ -72,8 +72,8 @@ const FormNeighborhoodGeography: React.FC<FormNeighborhoodGeographyProps> = ({
       ? {
           northCloseLocations: values.northCloseLocations ?? "",
           northDistantLocations: values.northDistantLocations ?? "",
-          sudCloseLocations: values.sudCloseLocations ?? "",
-          sudDistantLocations: values.sudDistantLocations ?? "",
+          southCloseLocations: values.southCloseLocations ?? "",
+          southDistantLocations: values.southDistantLocations ?? "",
           eastCloseLocations: values.eastCloseLocations ?? "",
           eastDistantLocations: values.eastDistantLocations ?? "",
           westCloseLocations: values.westCloseLocations ?? "",
@@ -155,7 +155,9 @@ const FormNeighborhoodGeography: React.FC<FormNeighborhoodGeographyProps> = ({
         className="m-auto flex max-w-2xl flex-col gap-5 pb-8"
       >
         <div className="flex flex-wrap items-center gap-3">
-          <h1>Définir les destinations phares depuis le quartier</h1>
+          <h2 className="text-4xl font-bold text-blue">
+            Définir les destinations phares depuis le quartier
+          </h2>
           <span
             className={`rounded-full px-3 py-1 text-sm font-bold ${
               isCompleted
@@ -223,7 +225,7 @@ const FormNeighborhoodGeography: React.FC<FormNeighborhoodGeographyProps> = ({
 
         <ul className="list-inside list-disc">
           <li>
-            les <strong>destinations proches</strong> à 20 mins à pied du
+            les <strong>destinations proches</strong> à 20 minutes à pied du
             quartier, à proximité immédiate (et qui ne sont pas dans le
             quartier).
           </li>
