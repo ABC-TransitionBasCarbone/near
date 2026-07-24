@@ -596,15 +596,15 @@ model NeighborhoodConfig {
   id                    Int     @id @default(autoincrement())
   northCloseLocations   String? @map("north_close_location")
   northDistantLocations String? @map("north_distant_location")
-  sudCloseLocations     String? @map("sud_close_location")
-  sudDistantLocations   String? @map("sud_distant_location")
+  southCloseLocations     String? @map("south_close_location")
+  southDistantLocations   String? @map("south_distant_location")
   eastCloseLocations    String? @map("east_close_location")
   eastDistantLocations  String? @map("east_distant_location")
   westCloseLocations    String? @map("west_close_location")
   westDistantLocations  String? @map("west_distant_location")
 
   surveyId Int    @unique @map("survey_id")
-  survey   Survey @relation(fields: [surveyId], references: [id])
+  survey   Survey @relation(fields: [surveyId], references: [id], onDelete: Restrict, onUpdate: Cascade)
 
   @@map("neighborhood_config")
 }
@@ -732,7 +732,7 @@ model Quartier {
   updatedAt                         DateTime @default(now()) @updatedAt @map("updated_at")
 
   surveyId Int    @unique @map("survey_id") // Foreign key unique field to survey
-  survey   Survey @relation(fields: [surveyId], references: [id])
+  survey   Survey @relation(fields: [surveyId], references: [id], onDelete: Restrict, onUpdate: Cascade)
 
   @@map("quartiers")
 }
