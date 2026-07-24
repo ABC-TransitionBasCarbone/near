@@ -73,8 +73,8 @@ describe("buildSurveyLink", () => {
       northDistantLocations: "Gare",
       eastCloseLocations: "École",
       eastDistantLocations: null,
-      sudCloseLocations: null,
-      sudDistantLocations: null,
+      southCloseLocations: null,
+      southDistantLocations: null,
       westCloseLocations: null,
       westDistantLocations: null,
     });
@@ -90,7 +90,7 @@ describe("buildSurveyLink", () => {
       `${env.NEXT_PUBLIC_TYPEFORM_WAY_OF_LIFE_LINK}#broadcast_channel=mail_campaign&broadcast_id=${fixedUUID}&date=${encodeURIComponent(fixedDate.toISOString())}&neighborhood=${surveyName}` +
         `&north_list=${encodeURIComponent("Parc, Gare")}` +
         `&east_list=${encodeURIComponent("École")}` +
-        `&sud_list=` +
+        `&south_list=` +
         `&west_list=`,
     );
   });

@@ -17,9 +17,9 @@ const neighborhoodListDirections = [
     distant: "eastDistantLocations",
   },
   {
-    param: "sud_list",
-    close: "sudCloseLocations",
-    distant: "sudDistantLocations",
+    param: "south_list",
+    close: "southCloseLocations",
+    distant: "southDistantLocations",
   },
   {
     param: "west_list",
