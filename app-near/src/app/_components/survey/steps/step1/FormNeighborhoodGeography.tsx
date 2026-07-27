@@ -250,7 +250,7 @@ const FormNeighborhoodGeography: React.FC<FormNeighborhoodGeographyProps> = ({
                   quartier ?
                 </div>
               }
-              hint="Espaces publics, quartiers, communes, lieux-dits ou points de repère.... Citez les lieux du plus proche au plus éloigné."
+              hint="Espaces publics, quartiers, communes, lieux-dits ou points de repère... Citez les lieux du plus proche au plus éloigné."
               maxLength={71}
               rows={3}
             />
