@@ -1,4 +1,7 @@
 "use client";
+// inspiration :
+// - https://observablehq.com/@d3/gallery
+// - https://d3-graph-gallery.com/
 
 import * as d3 from "d3";
 import { useEffect, useRef } from "react";
@@ -30,8 +33,6 @@ const PADDING = 16;
 const LABEL_OFFSET = 14;
 const VALUE_BLOCK_HEIGHT = 50;
 
-// Bounding box of an arc in gauge-angle space (0 = top, clockwise), so the
-// SVG can size and center itself for any start/end angle, not just a 180° dome.
 const getArcBounds = (startAngle: number, endAngle: number, radius: number) => {
   const angles = [startAngle, endAngle, -180, -90, 0, 90, 180].filter(
     (angle) =>
@@ -57,15 +58,12 @@ const getArcBounds = (startAngle: number, endAngle: number, radius: number) => {
   return { minX, maxX, minY, maxY };
 };
 
-// Value indicator: a small arrow sitting just inside the track, tip pointing
-// out at the arc, that rotates around the gauge to the current value.
-const ARROW_HEIGHT = 12;
-const ARROW_HALF_BASE = 7;
-const ARROW_GAP = 4;
+const ARROW_HEIGHT = 16;
+const ARROW_HALF_BASE = 9;
 
 const buildArrowPath = (innerRadius: number): string => {
-  const tipY = -(innerRadius - ARROW_GAP);
-  const baseY = tipY + ARROW_HEIGHT;
+  const baseY = -innerRadius;
+  const tipY = baseY - ARROW_HEIGHT;
   return `M 0,${tipY} L ${-ARROW_HALF_BASE},${baseY} L ${ARROW_HALF_BASE},${baseY} Z`;
 };
 
@@ -118,7 +116,6 @@ const Gauge: React.FC<GaugeProps> = ({
       .arc<{ start: number; end: number }>()
       .innerRadius(radius - trackWidth)
       .outerRadius(radius)
-      .cornerRadius(2)
       .startAngle((d) => (angleScale(d.start) * Math.PI) / 180)
       .endAngle((d) => (angleScale(d.end) * Math.PI) / 180);
 
@@ -152,6 +149,9 @@ const Gauge: React.FC<GaugeProps> = ({
       .append("path")
       .attr("d", buildArrowPath(radius - trackWidth))
       .attr("fill", needleColor)
+      .attr("stroke", colors.white)
+      .attr("stroke-width", 2)
+      .attr("stroke-linejoin", "round")
       .attr("transform", `rotate(${startAngle})`)
       .transition()
       .duration(600)
