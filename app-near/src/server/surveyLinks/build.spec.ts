@@ -3,6 +3,8 @@ import { buildSurveyLink } from "./build";
 import { SurveyType } from "~/types/enums/survey";
 import { BroadcastType } from "~/types/enums/broadcasting";
 import { env } from "~/env";
+import { TRPCError } from "@trpc/server";
+import { ErrorCode } from "~/types/enums/error";
 
 describe("buildSurveyLink", () => {
   const surveyId = 1;
@@ -24,14 +26,20 @@ describe("buildSurveyLink", () => {
   });
 
   it("should return 'error' when surveyName is missing", async () => {
-    const result = await buildSurveyLink(
-      surveyId,
-      BroadcastType.MAIL_CAMPAIGN,
-      SurveyType.WAY_OF_LIFE,
-      undefined,
-    );
-
-    expect(result).toBe("error");
+    expect.assertions(2);
+    try {
+      await buildSurveyLink(
+        surveyId,
+        BroadcastType.MAIL_CAMPAIGN,
+        SurveyType.WAY_OF_LIFE,
+        undefined,
+      );
+    } catch (error) {
+      if (error instanceof TRPCError) {
+        expect(error.code).toBe("BAD_REQUEST");
+        expect(error.message).toBe(ErrorCode.MISSING_SURVEY_NAME);
+      }
+    }
   });
 
   it("should build a carbon footprint link without neighborhood list params", async () => {
@@ -50,6 +58,7 @@ describe("buildSurveyLink", () => {
     expect(findUniqueSpy).not.toHaveBeenCalled();
   });
 
+  // this case should not appen, it is cached upstream.
   it("should build a way of life link without neighborhood list params when no neighborhood config exists", async () => {
     jest.spyOn(db.neighborhoodConfig, "findUnique").mockResolvedValue(null);
 
@@ -65,7 +74,7 @@ describe("buildSurveyLink", () => {
     );
   });
 
-  it("should append north_list/east_list/sud_list/west_list when a neighborhood config exists", async () => {
+  it("should append north_list/east_list/south_list/west_list when a neighborhood config exists", async () => {
     jest.spyOn(db.neighborhoodConfig, "findUnique").mockResolvedValue({
       id: 1,
       surveyId,

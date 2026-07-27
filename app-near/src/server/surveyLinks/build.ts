@@ -1,9 +1,11 @@
+import { TRPCError } from "@trpc/server";
 import { getOneNeighborhoodConfig } from "../neighborhoodConfig/get";
 import {
   type BroadcastType,
   surveyTypeMapper,
 } from "~/types/enums/broadcasting";
 import { SurveyType } from "~/types/enums/survey";
+import { ErrorCode } from "~/types/enums/error";
 
 const neighborhoodListDirections = [
   {
@@ -51,7 +53,10 @@ export const buildSurveyLink = async (
   surveyName?: string,
 ): Promise<string> => {
   if (!surveyName) {
-    return "error";
+    throw new TRPCError({
+      code: "BAD_REQUEST",
+      message: ErrorCode.MISSING_SURVEY_NAME,
+    });
   }
 
   const neighborhoodListParams =
