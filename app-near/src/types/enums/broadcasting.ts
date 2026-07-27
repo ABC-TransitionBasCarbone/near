@@ -1,11 +1,12 @@
 import { env } from "~/env";
 import { SurveyType } from "./survey";
 
-export type BroadcastType =
-  | "mail_campaign"
-  | "social_network"
-  | "street_survey"
-  | "qr_code";
+export enum BroadcastType {
+  MAIL_CAMPAIGN = "mail_campaign",
+  SOCIAL_NETWORK = "social_network",
+  STREET_SURVEY = "street_survey",
+  QR_CODE = "qr_code",
+}
 
 export const surveyTypeMapper: Record<
   SurveyType,

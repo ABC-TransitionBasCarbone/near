@@ -10,6 +10,7 @@ import { analyzesRouter } from "./routers/analyzez";
 import { irisRouter } from "./routers/iris";
 import { usersRouter } from "./routers/users";
 import { neighborhoodsConfigsRouter } from "./routers/neighborhoodConfigs";
+import { surveyLinksRouter } from "./routers/surveyLinks";
 
 /**
  * This is the primary router for your server.
@@ -20,6 +21,7 @@ export const appRouter = createTRPCRouter({
   metabase: metabaseRouter,
   neighborhoods: neighborhoodsRouter,
   neighborhoodsConfigs: neighborhoodsConfigsRouter,
+  surveyLinks: surveyLinksRouter,
   surveys: surveysRouter,
   suDetection: suDetectionRouter,
   suAnswers: suAnswersRouter,
