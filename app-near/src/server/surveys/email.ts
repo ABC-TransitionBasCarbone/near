@@ -1,11 +1,13 @@
 import { TemplateId } from "~/types/enums/brevo";
 import EmailService from "../email";
-import { buildSurveyLink } from "~/shared/services/survey-links/build";
+import { buildSurveyLink } from "~/server/surveyLinks/build";
 import { SurveyType } from "~/types/enums/survey";
+import { BroadcastType } from "~/types/enums/broadcasting";
 import { TRPCError } from "@trpc/server";
 import { ErrorCode } from "~/types/enums/error";
 
 export const sendPhaseTwoFormNotification = async (
+  surveyId: number,
   email: string,
   surveyName: string,
   suName: number | undefined,
@@ -27,13 +29,15 @@ export const sendPhaseTwoFormNotification = async (
       ...options,
       neighborhood: surveyName,
       suName: suName.toString(),
-      wayOfLifeUrl: buildSurveyLink(
-        "mail_campaign",
+      wayOfLifeUrl: await buildSurveyLink(
+        surveyId,
+        BroadcastType.MAIL_CAMPAIGN,
         SurveyType.WAY_OF_LIFE,
         surveyName,
       ),
-      ngcUrl: buildSurveyLink(
-        "mail_campaign",
+      ngcUrl: await buildSurveyLink(
+        surveyId,
+        BroadcastType.MAIL_CAMPAIGN,
         SurveyType.CARBON_FOOTPRINT,
         surveyName,
       ),

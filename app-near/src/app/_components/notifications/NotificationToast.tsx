@@ -26,7 +26,7 @@ const NotificationToast: React.FC<Notification> = ({ type, value, id }) => {
 
   return (
     <div
-      className={`absolute left-0 top-0 z-50 flex h-[48px] w-full items-center justify-center gap-6 font-bold ${textColors[type]}`}
+      className={`fixed left-0 top-0 z-50 flex h-[48px] w-full items-center justify-center gap-6 font-bold ${textColors[type]}`}
     >
       <div>{value}</div>
       <button

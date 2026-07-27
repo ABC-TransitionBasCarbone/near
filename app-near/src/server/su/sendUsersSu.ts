@@ -5,8 +5,9 @@ import { SurveyPhase } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 import { ErrorCode } from "~/types/enums/error";
 import { chunkArray } from "../utils/arrays";
-import { buildSurveyLink } from "~/shared/services/survey-links/build";
+import { buildSurveyLink } from "~/server/surveyLinks/build";
 import { SurveyType } from "~/types/enums/survey";
+import { BroadcastType } from "~/types/enums/broadcasting";
 
 interface Result {
   status: "fulfilled" | "rejected";
@@ -45,20 +46,21 @@ export const sendUsersSu = async (surveyId: number): Promise<Result[]> => {
 
   for (const chunk of chunkedAnswers) {
     try {
-      const result = await EmailService.sendEmail({
-        templateId: TemplateId.SU_RESULT,
-        messageVersions: chunk.map((item) => ({
+      const messageVersions = await Promise.all(
+        chunk.map(async (item) => ({
           params: {
             suName: `${item.su!.su}`,
             neighborhood: survey.name,
             numberOfResponses: count.toString(),
-            wayOfLifeUrl: buildSurveyLink(
-              "mail_campaign",
+            wayOfLifeUrl: await buildSurveyLink(
+              survey.id,
+              BroadcastType.MAIL_CAMPAIGN,
               SurveyType.WAY_OF_LIFE,
               survey.name,
             ),
-            ngcUrl: buildSurveyLink(
-              "mail_campaign",
+            ngcUrl: await buildSurveyLink(
+              survey.id,
+              BroadcastType.MAIL_CAMPAIGN,
               SurveyType.CARBON_FOOTPRINT,
               survey.name,
             ),
@@ -66,6 +68,11 @@ export const sendUsersSu = async (surveyId: number): Promise<Result[]> => {
           to: [{ email: item.email! }],
           subject: `Petite enquête ${survey.name} : merci d'avoir répondu ! Et la suite ?`,
         })),
+      );
+
+      const result = await EmailService.sendEmail({
+        templateId: TemplateId.SU_RESULT,
+        messageVersions,
       });
 
       await db.suAnswer.updateMany({
