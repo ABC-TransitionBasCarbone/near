@@ -1,21 +1,28 @@
 "use client";
 
+import { useState } from "react";
 import { useSession } from "next-auth/react";
 import { MetabaseIframeType } from "~/types/enums/metabase";
 import MetabaseIframe from "../../../_ui/MetabaseIframe";
 import { ButtonStyle } from "~/types/enums/button";
+import { NotificationType } from "~/types/enums/notifications";
 import LinkAsButton from "../../../_ui/LinkAsButton";
 import SurveyLayout from "../../SurveyLayout";
 import { api } from "~/trpc/react";
 import Button from "../../../_ui/Button";
 import { useSurveyStateContext } from "../../../_context/surveyStateContext";
+import { useNotification } from "../../../_context/NotificationProvider";
 import { surveyConfig } from "../config";
 import useUpdateSurveyStep from "../../../_ui/hooks/useUpdateSurveyStep";
 import { env } from "~/env";
+import FormNeighborhoodGeography from "./FormNeighborhoodGeography";
 
 const NeighborhoodInformations: React.FC = () => {
   const { data: session } = useSession();
   const { step } = useSurveyStateContext();
+  const { setNotification } = useNotification();
+  const [hasUnsavedGeographyChanges, setHasUnsavedGeographyChanges] =
+    useState(false);
 
   const { data: neighborhood } = api.neighborhoods.getOne.useQuery(undefined, {
     enabled: !!session?.user?.survey?.id,
@@ -26,6 +33,18 @@ const NeighborhoodInformations: React.FC = () => {
   if (!session?.user.survey || step === undefined) {
     return "loading...";
   }
+
+  const handleStartSurvey = () => {
+    if (hasUnsavedGeographyChanges) {
+      setNotification({
+        type: NotificationType.ERROR,
+        value:
+          "Veuillez enregistrer les destinations du quartier avant de démarrer l'enquête.",
+      });
+      return;
+    }
+    void updateSurveyStep(surveyConfig[step]?.nextStep);
+  };
 
   return (
     <SurveyLayout
@@ -63,7 +82,7 @@ const NeighborhoodInformations: React.FC = () => {
             icon="/icons/flash.svg"
             rounded
             style={ButtonStyle.FILLED}
-            onClick={() => updateSurveyStep(surveyConfig[step]?.nextStep)}
+            onClick={handleStartSurvey}
           >
             Démarrer l&apos;enquête
           </Button>
@@ -75,6 +94,9 @@ const NeighborhoodInformations: React.FC = () => {
         iframeType={MetabaseIframeType.DASHBOARD}
         height="600px"
         params={{ surveyname: session.user.survey.name }}
+      />
+      <FormNeighborhoodGeography
+        onDirtyChange={setHasUnsavedGeographyChanges}
       />
     </SurveyLayout>
   );
