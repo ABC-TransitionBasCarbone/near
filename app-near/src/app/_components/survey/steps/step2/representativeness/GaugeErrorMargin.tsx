@@ -5,8 +5,18 @@ interface GaugeErrorMarginProps {
   percentiles: (number | undefined)[];
 }
 
-const ZONE_COLORS = ["#FEFEE3", "#FFC9B9", "#DDDF03", "#ABCC02", "#55A630"];
-const LEGEND_LABELS = [">5 %", "<5 %", "<4,5 %", "<4 %", "<3 %"];
+interface ZoneConfig {
+  color: string;
+  legendLabel: string;
+}
+
+const ZONE_CONFIG: ZoneConfig[] = [
+  { color: "#FEFEE3", legendLabel: ">5 %" },
+  { color: "#FFC9B9", legendLabel: "<5 %" },
+  { color: "#DDDF03", legendLabel: "<4,5 %" },
+  { color: "#ABCC02", legendLabel: "<4 %" },
+  { color: "#55A630", legendLabel: "<3 %" },
+];
 
 const MAX_ZONE_RATIO = 1.1;
 
@@ -16,18 +26,19 @@ const roundToUpperN = (value: number, n: number): number =>
 const buildZones = (thresholds: number[]): GaugeZone[] => {
   const roundedThresholds = thresholds.map((t) => roundToUpperN(t, 1));
   const lastThreshold = roundedThresholds[roundedThresholds.length - 1] ?? 0;
+  const lastZoneConfig = ZONE_CONFIG[ZONE_CONFIG.length - 1]!;
 
   return [
     ...roundedThresholds.map((to, i) => ({
       to,
-      color: ZONE_COLORS[i]!,
+      color: ZONE_CONFIG[i]!.color,
       label: to.toLocaleString("fr-FR"),
-      legendLabel: LEGEND_LABELS[i],
+      legendLabel: ZONE_CONFIG[i]!.legendLabel,
     })),
     {
       to: lastThreshold * MAX_ZONE_RATIO,
-      color: ZONE_COLORS[ZONE_COLORS.length - 1]!,
-      legendLabel: LEGEND_LABELS[LEGEND_LABELS.length - 1],
+      color: lastZoneConfig.color,
+      legendLabel: lastZoneConfig.legendLabel,
     },
   ];
 };
