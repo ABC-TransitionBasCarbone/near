@@ -39,7 +39,7 @@ const buildBarChartConfig = (
         neighborhoodPopulation,
       ),
     }))
-    .sort((a, b) => (a.label > b.label ? 1 : 0));
+    .sort((a, b) => a.label - b.label);
 
 const CHART_SECTIONS: { title: string; surveyType: SurveyType }[] = [
   { title: "Espace et Mode de vie", surveyType: SurveyType.WAY_OF_LIFE },
