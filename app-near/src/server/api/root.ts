@@ -4,8 +4,6 @@ import { neighborhoodsRouter } from "./routers/neighborhoods";
 import { surveysRouter } from "./routers/surveys";
 import { suDetectionRouter } from "./routers/suDetection";
 import { suAnswersRouter } from "./routers/su-answers";
-import { wayOfLifeAnswersRouter } from "./routers/way-of-life-answers";
-import { carbonFootprintAnswersRouter } from "./routers/carbon-footprint-answers";
 import { analyzesRouter } from "./routers/analyzez";
 import { irisRouter } from "./routers/iris";
 import { usersRouter } from "./routers/users";
@@ -25,8 +23,6 @@ export const appRouter = createTRPCRouter({
   surveys: surveysRouter,
   suDetection: suDetectionRouter,
   suAnswers: suAnswersRouter,
-  wayOfLifeAnswers: wayOfLifeAnswersRouter,
-  carbonFootprintAnswers: carbonFootprintAnswersRouter,
   analyzes: analyzesRouter,
   iris: irisRouter,
   users: usersRouter,

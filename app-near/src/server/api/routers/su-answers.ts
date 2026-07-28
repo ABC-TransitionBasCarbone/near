@@ -3,7 +3,7 @@ import { createTRPCRouter, protectedProcedure } from "../trpc";
 import { countAnswers } from "../../su/answers/count";
 import representativenessService from "../../su/answers/representativeness";
 import { sendUsersSu } from "~/server/su/sendUsersSu";
-import { getSuVolumes } from "~/server/su/data/get";
+import { countBySu } from "~/server/su/data/count";
 
 export const suAnswersRouter = createTRPCRouter({
   count: protectedProcedure.query(({ ctx }) => {
@@ -24,10 +24,10 @@ export const suAnswersRouter = createTRPCRouter({
 
     return sendUsersSu(surveyId);
   }),
-  suVolumes: protectedProcedure.query(async ({ ctx }) => {
+  countBySu: protectedProcedure.query(async ({ ctx }) => {
     const surveyId = ctx.session.user.survey?.id;
     if (!surveyId) throw new TRPCError({ code: "FORBIDDEN" });
 
-    return getSuVolumes(surveyId);
+    return countBySu(surveyId);
   }),
 });
