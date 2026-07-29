@@ -21,6 +21,7 @@ export const suAnswersRouter = createTRPCRouter({
 
     return representativenessService.representativeness(surveyId);
   }),
+
   sendSu: protectedProcedure.mutation(({ ctx }) => {
     const surveyId = ctx.session.user.survey?.id;
     if (!surveyId) {
