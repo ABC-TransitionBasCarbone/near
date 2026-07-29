@@ -1,26 +1,24 @@
 import { db } from "~/server/db";
 import { buildCsv } from "~/server/utils/csv";
 
-export const buildCSVFromSUAnswers = async (
+export const buildCSVFromWayOfLifeAnswers = async (
   surveyId: number,
 ): Promise<string> => {
-  const suAnswers = await db.suAnswer.findMany({
+  const answers = await db.wayOfLifeAnswer.findMany({
     where: { surveyId },
     orderBy: { id: "asc" },
     select: {
       email: true,
-      gender: true,
       ageCategory: true,
-      professionalCategory: true,
+      gender: true,
       su: true,
     },
   });
 
-  return buildCsv(suAnswers, (answer) => ({
-    Email: answer.email,
-    Genre: answer.gender,
-    Age: answer.ageCategory,
-    CSP: answer.professionalCategory,
+  return buildCsv(answers, (answer) => ({
     SU: answer.su?.su,
+    Email: answer.email,
+    Age: answer.ageCategory,
+    Genre: answer.gender,
   }));
 };

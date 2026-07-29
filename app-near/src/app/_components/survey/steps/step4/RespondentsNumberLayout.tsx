@@ -18,6 +18,8 @@ import SuDashboard from "../step3/SuDashboard";
 import { SurveyType } from "~/types/enums/survey";
 import useUpdateSurveyStep from "../../../_ui/hooks/useUpdateSurveyStep";
 import { env } from "~/env";
+import ExportButton from "~/app/_components/export/ExportButton";
+import { mapSurveyTypeInAnswerType } from "~/types/enums/AnswerType";
 
 const chartConfig: {
   title: string;
@@ -136,6 +138,12 @@ const RespondentsNumberLayout: React.FC<RespondentsNumberLayoutProps> = ({
                 className="flex w-full flex-col items-center gap-y-8 sm:w-[600px]"
               >
                 <div className="w-full">
+                  <div className="mx-20 flex max-w-full justify-end p-4">
+                    <ExportButton
+                      label="Exporter les réponses"
+                      endPoint={`/api/${mapSurveyTypeInAnswerType[chart.surveyType]}/export`}
+                    />
+                  </div>
                   <div className="mb-1 text-center text-3xl">{chart.title}</div>
                   <MetabaseIframe
                     iframeNumber={chart.iframeNumber}

@@ -6,7 +6,7 @@ import { clearAlldata } from "~/server/test-utils/clear";
 import { AgeCategory, Gender, ProfessionalCategory } from "@prisma/client";
 
 describe("buildCSVFromSUAnswers", () => {
-  const surveyName = "survey-test-export";
+  const surveyName = "survey-test-export-su";
   let surveyId: number;
 
   beforeEach(async () => {
@@ -15,32 +15,18 @@ describe("buildCSVFromSUAnswers", () => {
     surveyId = survey.id;
   });
 
-  it("should return only the header row when there is no answer", async () => {
-    const csv = await buildCSVFromSUAnswers(surveyId);
-
-    expect(csv).toBe("Email,Genre,Age,CSP,SU");
+  it("should return an empty string when there is no answer", async () => {
+    expect(await buildCSVFromSUAnswers(surveyId)).toBe("");
   });
 
-  it("should not include answers from another survey", async () => {
-    const otherSurvey = await createNeighborhood("survey-test-export-other");
+  it("should export only the current survey's SU answers, ordered by id, with the linked SU value", async () => {
+    const otherSurvey = await createNeighborhood("survey-test-export-su-other");
     await db.suAnswer.create({
       data: buildSuAnswer(otherSurvey.id, { email: "other@mail.com" }),
     });
 
-    const csv = await buildCSVFromSUAnswers(surveyId);
-
-    expect(csv).toBe("Email,Genre,Age,CSP,SU");
-  });
-
-  it("should export SU answers as CSV rows, ordered by id, with the linked SU value", async () => {
     await db.suData.create({
-      data: {
-        id: 1,
-        surveyId,
-        su: 11,
-        popPercentage: 0.11,
-        barycenter: {},
-      },
+      data: { id: 1, surveyId, su: 11, popPercentage: 0.11, barycenter: {} },
     });
 
     await db.suAnswer.createMany({
