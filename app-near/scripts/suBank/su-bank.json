@@ -1,0 +1,727 @@
+[
+  {
+    "id": 0,
+    "name": "Myrtille",
+    "colorMain": "#4B3F72"
+  },
+  {
+    "id": 1,
+    "name": "Orange",
+    "colorMain": "#ff9900"
+  },
+  {
+    "id": 2,
+    "name": "Kiwi",
+    "colorMain": "#6DBE45"
+  },
+  {
+    "id": 3,
+    "name": "Jade",
+    "colorMain": "#2D7D62"
+  },
+  {
+    "id": 4,
+    "name": "Améthyste",
+    "colorMain": "#6B3A9E"
+  },
+  {
+    "id": 5,
+    "name": "Pin",
+    "colorMain": "#556E4A"
+  },
+  {
+    "id": 6,
+    "name": "Bronze",
+    "colorMain": "#8B6431"
+  },
+  {
+    "id": 7,
+    "name": "Turquoise",
+    "colorMain": "#1A7A8A"
+  },
+  {
+    "id": 8,
+    "name": "Rosier",
+    "colorMain": "#ff4d6d"
+  },
+  {
+    "id": 9,
+    "name": "Fougère",
+    "colorMain": "#5A8A6F"
+  },
+  {
+    "id": 10,
+    "name": "Onyx",
+    "colorMain": "#2A2A3A"
+  },
+  {
+    "id": 11,
+    "name": "Tilleul",
+    "colorMain": "#7C9653"
+  },
+  {
+    "id": 12,
+    "name": "Tournesol",
+    "colorMain": "#F5C400"
+  },
+  {
+    "id": 13,
+    "name": "Opale",
+    "colorMain": "#4A7A9E"
+  },
+  {
+    "id": 14,
+    "name": "Corail",
+    "colorMain": "#C44A30"
+  },
+  {
+    "id": 15,
+    "name": "Orchidée",
+    "colorMain": "#5E3453"
+  },
+  {
+    "id": 16,
+    "name": "Sauge",
+    "colorMain": "#9DC183"
+  },
+  {
+    "id": 17,
+    "name": "Lavande",
+    "colorMain": "#B29CE4"
+  },
+  {
+    "id": 18,
+    "name": "Cèdre",
+    "colorMain": "#6D4A32"
+  },
+  {
+    "id": 19,
+    "name": "Pissenlit",
+    "colorMain": "#F5C937"
+  },
+  {
+    "id": 20,
+    "name": "Émeraude",
+    "colorMain": "#1E8050"
+  },
+  {
+    "id": 21,
+    "name": "Chêne",
+    "colorMain": "#6B5344"
+  },
+  {
+    "id": 22,
+    "name": "Lilas",
+    "colorMain": "#9B6BB3"
+  },
+  {
+    "id": 23,
+    "name": "Girofle",
+    "colorMain": "#76412E"
+  },
+  {
+    "id": 24,
+    "name": "Menthe",
+    "colorMain": "#64C27B"
+  },
+  {
+    "id": 25,
+    "name": "Jasmin",
+    "colorMain": "#DFC98F"
+  },
+  {
+    "id": 26,
+    "name": "Érable",
+    "colorMain": "#D32F2F"
+  },
+  {
+    "id": 27,
+    "name": "Chanterelle",
+    "colorMain": "#B27819"
+  },
+  {
+    "id": 28,
+    "name": "Châtaignier",
+    "colorMain": "#5D4037"
+  },
+  {
+    "id": 29,
+    "name": "Lichen",
+    "colorMain": "#9BA67A"
+  },
+  {
+    "id": 30,
+    "name": "Bouleau",
+    "colorMain": "#505550"
+  },
+  {
+    "id": 31,
+    "name": "Fleur d’Oranger",
+    "colorMain": "#FF8040"
+  },
+  {
+    "id": 32,
+    "name": "Acajou",
+    "colorMain": "#783A31"
+  },
+  {
+    "id": 33,
+    "name": "Granite",
+    "colorMain": "#4A5C6A"
+  },
+  {
+    "id": 34,
+    "name": "Coquelicot",
+    "colorMain": "#B83020"
+  },
+  {
+    "id": 35,
+    "name": "Séquoia",
+    "colorMain": "#7A3E2E"
+  },
+  {
+    "id": 36,
+    "name": "Hêtre",
+    "colorMain": "#567839"
+  },
+  {
+    "id": 37,
+    "name": "Mimosa",
+    "colorMain": "#FFC93C"
+  },
+  {
+    "id": 38,
+    "name": "Figue",
+    "colorMain": "#75405F"
+  },
+  {
+    "id": 39,
+    "name": "Vigne",
+    "colorMain": "#496F3E"
+  },
+  {
+    "id": 40,
+    "name": "Cannelle",
+    "colorMain": "#9A4E2E"
+  },
+  {
+    "id": 41,
+    "name": "Romarin",
+    "colorMain": "#477563"
+  },
+  {
+    "id": 42,
+    "name": "Verveine",
+    "colorMain": "#81963F"
+  },
+  {
+    "id": 43,
+    "name": "Abricot",
+    "colorMain": "#C96739"
+  },
+  {
+    "id": 44,
+    "name": "Eucalyptus",
+    "colorMain": "#3D786E"
+  },
+  {
+    "id": 45,
+    "name": "Noisetier",
+    "colorMain": "#72523A"
+  },
+  {
+    "id": 46,
+    "name": "Olivier",
+    "colorMain": "#78C000"
+  },
+  {
+    "id": 47,
+    "name": "Melon",
+    "colorMain": "#F5A25C"
+  },
+  {
+    "id": 48,
+    "name": "Basilic",
+    "colorMain": "#3F7A4B"
+  },
+  {
+    "id": 49,
+    "name": "Magnolia",
+    "colorMain": "#A85B78"
+  },
+  {
+    "id": 50,
+    "name": "Nénuphar",
+    "colorMain": "#4E8A6E"
+  },
+  {
+    "id": 51,
+    "name": "Argan",
+    "colorMain": "#7B5A32"
+  },
+  {
+    "id": 52,
+    "name": "Mandarine",
+    "colorMain": "#BF5B18"
+  },
+  {
+    "id": 53,
+    "name": "Peuplier",
+    "colorMain": "#68744B"
+  },
+  {
+    "id": 54,
+    "name": "Mousseline",
+    "colorMain": "#9B7C67"
+  },
+  {
+    "id": 55,
+    "name": "Cactus",
+    "colorMain": "#417B48"
+  },
+  {
+    "id": 56,
+    "name": "Saphir",
+    "colorMain": "#2350A0"
+  },
+  {
+    "id": 57,
+    "name": "Acacia",
+    "colorMain": "#927128"
+  },
+  {
+    "id": 58,
+    "name": "Trèfle",
+    "colorMain": "#4B803E"
+  },
+  {
+    "id": 59,
+    "name": "Mangue",
+    "colorMain": "#B86B16"
+  },
+  {
+    "id": 60,
+    "name": "Mûre",
+    "colorMain": "#5D3D82"
+  },
+  {
+    "id": 61,
+    "name": "Pêche",
+    "colorMain": "#C65D45"
+  },
+  {
+    "id": 62,
+    "name": "Cardamome",
+    "colorMain": "#6D8550"
+  },
+  {
+    "id": 63,
+    "name": "Pivoine",
+    "colorMain": "#B74771"
+  },
+  {
+    "id": 64,
+    "name": "Gingembre",
+    "colorMain": "#9A6A32"
+  },
+  {
+    "id": 65,
+    "name": "Cassis",
+    "colorMain": "#53316F"
+  },
+  {
+    "id": 66,
+    "name": "Primevère",
+    "colorMain": "#B58A22"
+  },
+  {
+    "id": 67,
+    "name": "Roseau",
+    "colorMain": "#7B8C56"
+  },
+  {
+    "id": 68,
+    "name": "Quartz",
+    "colorMain": "#D4547A"
+  },
+  {
+    "id": 69,
+    "name": "Girolle",
+    "colorMain": "#A36F18"
+  },
+  {
+    "id": 70,
+    "name": "Pomme",
+    "colorMain": "#4C8A3E"
+  },
+  {
+    "id": 71,
+    "name": "Bleuet",
+    "colorMain": "#416EB2"
+  },
+  {
+    "id": 72,
+    "name": "Muguet",
+    "colorMain": "#739B6B"
+  },
+  {
+    "id": 73,
+    "name": "Réglisse",
+    "colorMain": "#4A3C32"
+  },
+  {
+    "id": 74,
+    "name": "Groseille",
+    "colorMain": "#B63647"
+  },
+  {
+    "id": 75,
+    "name": "Saule",
+    "colorMain": "#5A674E"
+  },
+  {
+    "id": 76,
+    "name": "Mirabelle",
+    "colorMain": "#B78A25"
+  },
+  {
+    "id": 77,
+    "name": "Écorce",
+    "colorMain": "#694534"
+  },
+  {
+    "id": 78,
+    "name": "Pistache",
+    "colorMain": "#778B37"
+  },
+  {
+    "id": 79,
+    "name": "Passiflore",
+    "colorMain": "#67489A"
+  },
+  {
+    "id": 80,
+    "name": "Mélèze",
+    "colorMain": "#80613C"
+  },
+  {
+    "id": 81,
+    "name": "Sapin",
+    "colorMain": "#276044"
+  },
+  {
+    "id": 82,
+    "name": "Citronnelle",
+    "colorMain": "#7F962C"
+  },
+  {
+    "id": 83,
+    "name": "Pamplemousse",
+    "colorMain": "#B84755"
+  },
+  {
+    "id": 84,
+    "name": "Cyprès",
+    "colorMain": "#2F6955"
+  },
+  {
+    "id": 85,
+    "name": "Ananas",
+    "colorMain": "#A57F17"
+  },
+  {
+    "id": 86,
+    "name": "Persil",
+    "colorMain": "#4F8239"
+  },
+  {
+    "id": 87,
+    "name": "Azalée",
+    "colorMain": "#B04C78"
+  },
+  {
+    "id": 88,
+    "name": "Camomille",
+    "colorMain": "#A88A20"
+  },
+  {
+    "id": 89,
+    "name": "Prune",
+    "colorMain": "#6C3C75"
+  },
+  {
+    "id": 90,
+    "name": "Algue",
+    "colorMain": "#28756E"
+  },
+  {
+    "id": 91,
+    "name": "Curcuma",
+    "colorMain": "#E3A008"
+  },
+  {
+    "id": 92,
+    "name": "Poire",
+    "colorMain": "#7B8D28"
+  },
+  {
+    "id": 93,
+    "name": "Fraise",
+    "colorMain": "#C73C4D"
+  },
+  {
+    "id": 94,
+    "name": "Raisin",
+    "colorMain": "#65458D"
+  },
+  {
+    "id": 95,
+    "name": "Morille",
+    "colorMain": "#715B3C"
+  },
+  {
+    "id": 96,
+    "name": "Anis",
+    "colorMain": "#7B8E46"
+  },
+  {
+    "id": 97,
+    "name": "Pastèque",
+    "colorMain": "#B83C55"
+  },
+  {
+    "id": 98,
+    "name": "Laurier",
+    "colorMain": "#567A3A"
+  },
+  {
+    "id": 99,
+    "name": "Hortensia",
+    "colorMain": "#5276AA"
+  },
+  {
+    "id": 100,
+    "name": "Grenade",
+    "colorMain": "#A92C3B"
+  },
+  {
+    "id": 101,
+    "name": "Houx",
+    "colorMain": "#3D7245"
+  },
+  {
+    "id": 102,
+    "name": "Papaye",
+    "colorMain": "#C8602D"
+  },
+  {
+    "id": 103,
+    "name": "Glycine",
+    "colorMain": "#7454A1"
+  },
+  {
+    "id": 104,
+    "name": "Estragon",
+    "colorMain": "#718C4A"
+  },
+  {
+    "id": 105,
+    "name": "Goyave",
+    "colorMain": "#A95068"
+  },
+  {
+    "id": 106,
+    "name": "Palmier",
+    "colorMain": "#39785B"
+  },
+  {
+    "id": 107,
+    "name": "Cerise",
+    "colorMain": "#B52A3A"
+  },
+  {
+    "id": 108,
+    "name": "Genévrier",
+    "colorMain": "#3D6B70"
+  },
+  {
+    "id": 109,
+    "name": "Violette",
+    "colorMain": "#6D4C9B"
+  },
+  {
+    "id": 110,
+    "name": "Aneth",
+    "colorMain": "#778A43"
+  },
+  {
+    "id": 111,
+    "name": "Framboise",
+    "colorMain": "#B52F62"
+  },
+  {
+    "id": 112,
+    "name": "Marguerite",
+    "colorMain": "#F5E267"
+  },
+  {
+    "id": 113,
+    "name": "Ciboulette",
+    "colorMain": "#4A8A64"
+  },
+  {
+    "id": 114,
+    "name": "Gypse",
+    "colorMain": "#9B8766"
+  },
+  {
+    "id": 115,
+    "name": "Iris",
+    "colorMain": "#5B4795"
+  },
+  {
+    "id": 116,
+    "name": "Tulipe",
+    "colorMain": "#B84455"
+  },
+  {
+    "id": 117,
+    "name": "Platane",
+    "colorMain": "#707051"
+  },
+  {
+    "id": 118,
+    "name": "Jonquille",
+    "colorMain": "#F6C90E"
+  },
+  {
+    "id": 119,
+    "name": "Thym",
+    "colorMain": "#657B45"
+  },
+  {
+    "id": 120,
+    "name": "Dahlia",
+    "colorMain": "#A84370"
+  },
+  {
+    "id": 121,
+    "name": "Cèpe",
+    "colorMain": "#765339"
+  },
+  {
+    "id": 122,
+    "name": "Sureau",
+    "colorMain": "#583D73"
+  },
+  {
+    "id": 123,
+    "name": "Aubépine",
+    "colorMain": "#A9444D"
+  },
+  {
+    "id": 124,
+    "name": "Orme",
+    "colorMain": "#53663A"
+  },
+  {
+    "id": 125,
+    "name": "Ambre",
+    "colorMain": "#A96E12"
+  },
+  {
+    "id": 126,
+    "name": "Charme",
+    "colorMain": "#626044"
+  },
+  {
+    "id": 127,
+    "name": "Bruyère",
+    "colorMain": "#8A5B90"
+  },
+  {
+    "id": 128,
+    "name": "Merisier",
+    "colorMain": "#94433B"
+  },
+  {
+    "id": 129,
+    "name": "Pommier",
+    "colorMain": "#7C9647"
+  },
+  {
+    "id": 130,
+    "name": "Ardoise",
+    "colorMain": "#4B5964"
+  },
+  {
+    "id": 131,
+    "name": "Noyer",
+    "colorMain": "#654735"
+  },
+  {
+    "id": 132,
+    "name": "Camélia",
+    "colorMain": "#B33D58"
+  },
+  {
+    "id": 133,
+    "name": "Calcite",
+    "colorMain": "#8B7A5D"
+  },
+  {
+    "id": 134,
+    "name": "Prunier",
+    "colorMain": "#704058"
+  },
+  {
+    "id": 135,
+    "name": "Olivine",
+    "colorMain": "#6B8736"
+  },
+  {
+    "id": 136,
+    "name": "Agate",
+    "colorMain": "#9A4A55"
+  },
+  {
+    "id": 137,
+    "name": "Topaze",
+    "colorMain": "#A66B1C"
+  },
+  {
+    "id": 138,
+    "name": "Perle",
+    "colorMain": "#8A8275"
+  },
+  {
+    "id": 139,
+    "name": "Cuivre",
+    "colorMain": "#A65332"
+  },
+  {
+    "id": 140,
+    "name": "Basalte",
+    "colorMain": "#3E4850"
+  },
+  {
+    "id": 141,
+    "name": "Rubis",
+    "colorMain": "#B5332A"
+  },
+  {
+    "id": 142,
+    "name": "Frêne",
+    "colorMain": "#617144"
+  },
+  {
+    "id": 143,
+    "name": "Amanite",
+    "colorMain": "#B4494C"
+  },
+  {
+    "id": 144,
+    "name": "Pistil",
+    "colorMain": "#A86C2C"
+  }
+]
