@@ -1,33 +1,22 @@
-import { TRPCError } from "@trpc/server";
-import { createTRPCRouter, protectedProcedure } from "../trpc";
+import { createTRPCRouter, surveyProtectedProcedure } from "../trpc";
 import { countAnswers } from "../../su/answers/count";
 import representativenessService from "../../su/answers/representativeness";
 import { sendUsersSu } from "~/server/su/sendUsersSu";
 import { countBySu } from "~/server/su/data/count";
 
 export const suAnswersRouter = createTRPCRouter({
-  count: protectedProcedure.query(({ ctx }) => {
-    const surveyId = ctx.session.user.survey?.id;
-    if (!surveyId) throw new TRPCError({ code: "FORBIDDEN" });
-
-    return countAnswers(surveyId);
+  count: surveyProtectedProcedure.query(({ ctx }) => {
+    return countAnswers(ctx.session.user.survey.id);
   }),
-  representativeness: protectedProcedure.query(async ({ ctx }) => {
-    const surveyId = ctx.session.user.survey?.id;
-    if (!surveyId) throw new TRPCError({ code: "FORBIDDEN" });
-
-    return representativenessService.representativeness(surveyId);
+  representativeness: surveyProtectedProcedure.query(async ({ ctx }) => {
+    return representativenessService.representativeness(
+      ctx.session.user.survey.id,
+    );
   }),
-  sendSu: protectedProcedure.mutation(({ ctx }) => {
-    const surveyId = ctx.session.user.survey?.id;
-    if (!surveyId) throw new TRPCError({ code: "FORBIDDEN" });
-
-    return sendUsersSu(surveyId);
+  sendSu: surveyProtectedProcedure.mutation(({ ctx }) => {
+    return sendUsersSu(ctx.session.user.survey.id);
   }),
-  countBySu: protectedProcedure.query(async ({ ctx }) => {
-    const surveyId = ctx.session.user.survey?.id;
-    if (!surveyId) throw new TRPCError({ code: "FORBIDDEN" });
-
-    return countBySu(surveyId);
+  countBySu: surveyProtectedProcedure.query(async ({ ctx }) => {
+    return countBySu(ctx.session.user.survey.id);
   }),
 });
