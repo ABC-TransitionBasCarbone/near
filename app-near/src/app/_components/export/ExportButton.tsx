@@ -1,10 +1,12 @@
 import { useState, type ReactNode } from "react";
 import Button from "../_ui/Button";
 import CloudDownloadOutlinedIcon from "@mui/icons-material/CloudDownloadOutlined";
+import { mapSurveyTypeToAnswerType } from "~/types/enums/AnswerType";
+import { type SurveyType } from "~/types/enums/survey";
 
 interface ExportButtonProps {
   label: string;
-  endPoint: string;
+  surveyType: SurveyType;
   icon?: ReactNode;
 }
 
@@ -15,14 +17,15 @@ const getFilename = (contentDisposition: string | null): string => {
 
 const ExportButton: React.FC<ExportButtonProps> = ({
   label,
-  endPoint,
+  surveyType,
   icon = <CloudDownloadOutlinedIcon aria-hidden />,
 }) => {
   const [hasError, setHasError] = useState(false);
 
   const handleOnClick = async () => {
     setHasError(false);
-    const response = await fetch(endPoint);
+    const type = mapSurveyTypeToAnswerType[surveyType];
+    const response = await fetch(`/api/${type}/export`);
 
     if (!response.ok) {
       setHasError(true);

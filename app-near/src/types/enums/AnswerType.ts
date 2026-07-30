@@ -6,7 +6,7 @@ export enum AnswerType {
   CARBON_FOOTPRINT = "carbon-footprint",
 }
 
-export const mapSurveyTypeInAnswerType: Record<SurveyType, AnswerType> = {
+export const mapSurveyTypeToAnswerType: Record<SurveyType, AnswerType> = {
   [SurveyType.CARBON_FOOTPRINT]: AnswerType.CARBON_FOOTPRINT,
   [SurveyType.SU]: AnswerType.SU,
   [SurveyType.WAY_OF_LIFE]: AnswerType.WAY_OF_LIFE,

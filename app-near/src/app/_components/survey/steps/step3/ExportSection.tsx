@@ -1,12 +1,12 @@
 import ExportButton from "~/app/_components/export/ExportButton";
+import { SurveyType } from "~/types/enums/survey";
 
 const ExportSection: React.FC = () => {
-  console.log("todo");
   return (
     <div className="mx-20 flex max-w-full justify-end p-4">
       <ExportButton
         label="Exporter les réponses au questionnaire des SU"
-        endPoint="/api/su/export"
+        surveyType={SurveyType.SU}
       />
     </div>
   );
