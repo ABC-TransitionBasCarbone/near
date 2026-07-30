@@ -17,6 +17,7 @@ import { api } from "~/trpc/react";
 import SuDashboard from "../step3/SuDashboard";
 import { SurveyType } from "~/types/enums/survey";
 import useUpdateSurveyStep from "../../../_ui/hooks/useUpdateSurveyStep";
+import ExportButton from "~/app/_components/export/ExportButton";
 import { buildChartSections } from "~/app/_components/_services/su/respondents";
 
 interface RespondentsNumberLayoutProps {
@@ -155,6 +156,12 @@ const RespondentsNumberLayout: React.FC<RespondentsNumberLayoutProps> = ({
                         <BarChart
                           title={section.title}
                           config={section.config}
+                          footerAction={
+                            <ExportButton
+                              label="Exporter les réponses"
+                              surveyType={section.surveyType}
+                            />
+                          }
                         />
                       </div>
                       <Button

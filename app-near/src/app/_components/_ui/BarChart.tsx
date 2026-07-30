@@ -13,6 +13,7 @@ export interface BarChartItem {
 interface BarChartProps {
   config: BarChartItem[];
   title?: string;
+  footerAction?: React.ReactNode;
   barHeight?: number;
   barGap?: number;
   labelWidth?: number;
@@ -44,6 +45,7 @@ const THRESHOLD_ARROW_PATH = `M 0,0 L ${-ARROW_HALF_WIDTH},${-ARROW_HEIGHT} L ${
 const BarChart: React.FC<BarChartProps> = ({
   config,
   title,
+  footerAction,
   barHeight = 24,
   barGap = 30,
   labelWidth = 32,
@@ -245,10 +247,14 @@ const BarChart: React.FC<BarChartProps> = ({
     labelColor,
   ]);
 
+  const header = title && (
+    <div className="mb-1 text-center text-3xl">{title}</div>
+  );
+
   if (config.length === 0) {
     return (
       <div className="flex w-full flex-col items-center gap-2">
-        {title && <div className="mb-1 text-center text-3xl">{title}</div>}
+        {header}
         <div
           style={{ height }}
           className="w-full animate-pulse rounded bg-grayExtraLight"
@@ -259,7 +265,7 @@ const BarChart: React.FC<BarChartProps> = ({
 
   return (
     <div ref={containerRef} className="flex w-full flex-col items-center gap-2">
-      {title && <div className="mb-1 text-center text-3xl">{title}</div>}
+      {header}
       {containerWidth > 0 && (
         <svg ref={svgRef} width={width} height={height} aria-hidden="true" />
       )}
@@ -273,19 +279,22 @@ const BarChart: React.FC<BarChartProps> = ({
           </li>
         ))}
       </ul>
-      <div
-        className="flex items-center gap-1.5 text-xs"
-        style={{ color: thresholdColor }}
-      >
-        <svg width="12" height="8" viewBox="-6 -8 12 8" aria-hidden="true">
-          <path
-            d={THRESHOLD_ARROW_PATH}
-            fill={thresholdColor}
-            stroke={colors.white}
-            strokeWidth={1}
-          />
-        </svg>
-        <span>Seuil à atteindre pour la SU</span>
+      <div className="flex w-full items-center justify-around text-xs">
+        <div
+          className="flex items-center gap-1.5"
+          style={{ color: thresholdColor }}
+        >
+          <svg width="12" height="8" viewBox="-6 -8 12 8" aria-hidden="true">
+            <path
+              d={THRESHOLD_ARROW_PATH}
+              fill={thresholdColor}
+              stroke={colors.white}
+              strokeWidth={1}
+            />
+          </svg>
+          <span>Seuil à atteindre pour la SU</span>
+        </div>
+        {footerAction}
       </div>
     </div>
   );

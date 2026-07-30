@@ -14,6 +14,7 @@ import { useNotification } from "~/app/_components/_context/NotificationProvider
 import { NotificationType } from "~/types/enums/notifications";
 import { SurveyPhase } from "@prisma/client";
 import { getErrorValue } from "~/app/_components/_services/error";
+import ExportSection from "./ExportSection";
 
 const DetectionLayout: React.FC = () => {
   const { step } = useSurveyStateContext();
@@ -120,6 +121,7 @@ const DetectionLayout: React.FC = () => {
         </>
       }
     >
+      <ExportSection />
       <SuDashboard phase={SurveyPhase.STEP_3_SU_EXPLORATION} />
     </SurveyLayout>
   );
