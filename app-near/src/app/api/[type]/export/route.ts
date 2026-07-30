@@ -6,7 +6,7 @@ import { AnswerType } from "~/types/enums/AnswerType";
 
 export async function GET(
   request: Request,
-  { params }: { params: Promise<{ type: AnswerType }> },
+  { params }: { params: Promise<{ type: string }> },
 ) {
   const session = await auth();
   const surveyId = session?.user.survey?.id;
@@ -15,7 +15,7 @@ export async function GET(
     return new Response(null, { status: 403 });
   }
 
-  const { type } = await params;
+  const type = (await params).type as AnswerType;
 
   let csv = "";
 
