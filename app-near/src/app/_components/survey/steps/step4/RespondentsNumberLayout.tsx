@@ -54,10 +54,14 @@ const RespondentsNumberLayout: React.FC<RespondentsNumberLayoutProps> = ({
     return "loading...";
   }
 
+  const chartSection =
+    suCounts && neighborhood
+      ? buildChartSections(suCounts, neighborhood.population_sum)
+      : null;
+
   const nextStepIsDisabled =
-    !suCounts ||
-    !neighborhood ||
-    buildChartSections(suCounts, neighborhood.population_sum).some((section) =>
+    !chartSection ||
+    chartSection.some((section) =>
       section.config.some((config) => config.value < config.threshold),
     );
 
@@ -135,57 +139,55 @@ const RespondentsNumberLayout: React.FC<RespondentsNumberLayoutProps> = ({
         />
         <div className="mx-6 my-8 flex flex-col gap-16">
           <div className="flex flex-wrap justify-center gap-x-8 gap-y-16">
-            {!suCounts || !neighborhood
+            {!chartSection
               ? "Chargement..."
-              : buildChartSections(suCounts, neighborhood.population_sum).map(
-                  (section) => {
-                    const isDisabled =
-                      section.surveyType === SurveyType.WAY_OF_LIFE &&
-                      !neighborhoodConfigIsCompleted;
+              : chartSection.map((section) => {
+                  const isDisabled =
+                    section.surveyType === SurveyType.WAY_OF_LIFE &&
+                    !neighborhoodConfigIsCompleted;
 
-                    return (
-                      <div
-                        key={section.title}
-                        className="flex w-full flex-col items-center gap-y-8 sm:w-[600px]"
-                      >
-                        <div className="w-full">
-                          <BarChart
-                            title={section.title}
-                            config={section.config}
-                          />
-                        </div>
-                        <Button
-                          icon="/icons/rocket.svg"
-                          rounded
-                          style={ButtonStyle.LIGHT}
-                          aria-disabled={isDisabled}
-                          aria-describedby={
-                            isDisabled
-                              ? "neighborhood-config-prerequisite"
-                              : undefined
-                          }
-                          title={
-                            isDisabled
-                              ? "Vous devez d'abord compléter le formulaire de l'étape 1 (Informations sur le quartier)."
-                              : undefined
-                          }
-                          className={
-                            isDisabled
-                              ? "cursor-not-allowed opacity-40"
-                              : undefined
-                          }
-                          onClick={() => {
-                            if (isDisabled) return;
-                            setToggleBroadcastingPage(true);
-                            setSurveyType(section.surveyType);
-                          }}
-                        >
-                          Diffuser le questionnaire
-                        </Button>
+                  return (
+                    <div
+                      key={section.title}
+                      className="flex w-full flex-col items-center gap-y-8 sm:w-[600px]"
+                    >
+                      <div className="w-full">
+                        <BarChart
+                          title={section.title}
+                          config={section.config}
+                        />
                       </div>
-                    );
-                  },
-                )}
+                      <Button
+                        icon="/icons/rocket.svg"
+                        rounded
+                        style={ButtonStyle.LIGHT}
+                        aria-disabled={isDisabled}
+                        aria-describedby={
+                          isDisabled
+                            ? "neighborhood-config-prerequisite"
+                            : undefined
+                        }
+                        title={
+                          isDisabled
+                            ? "Vous devez d'abord compléter le formulaire de l'étape 1 (Informations sur le quartier)."
+                            : undefined
+                        }
+                        className={
+                          isDisabled
+                            ? "cursor-not-allowed opacity-40"
+                            : undefined
+                        }
+                        onClick={() => {
+                          if (isDisabled) return;
+                          setToggleBroadcastingPage(true);
+                          setSurveyType(section.surveyType);
+                        }}
+                      >
+                        Diffuser le questionnaire
+                      </Button>
+                    </div>
+                  );
+                })}
           </div>
           <div className="flex flex-col items-center gap-10">
             <div className="text-xl">Rappel des Sphères d&apos;Usages</div>

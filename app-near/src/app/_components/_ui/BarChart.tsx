@@ -260,12 +260,24 @@ const BarChart: React.FC<BarChartProps> = ({
   return (
     <div ref={containerRef} className="flex w-full flex-col items-center gap-2">
       {title && <div className="mb-1 text-center text-3xl">{title}</div>}
-      {containerWidth > 0 && <svg ref={svgRef} width={width} height={height} />}
+      {containerWidth > 0 && (
+        <svg ref={svgRef} width={width} height={height} aria-hidden="true" />
+      )}
+      <ul className="sr-only">
+        {config.map((item) => (
+          <li key={item.label}>
+            {item.label} : {item.value} sur un seuil de {item.threshold}
+            {item.value >= item.threshold
+              ? " (seuil atteint)"
+              : " (seuil non atteint)"}
+          </li>
+        ))}
+      </ul>
       <div
         className="flex items-center gap-1.5 text-xs"
         style={{ color: thresholdColor }}
       >
-        <svg width="12" height="8" viewBox="-6 -8 12 8">
+        <svg width="12" height="8" viewBox="-6 -8 12 8" aria-hidden="true">
           <path
             d={THRESHOLD_ARROW_PATH}
             fill={thresholdColor}
