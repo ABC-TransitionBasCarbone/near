@@ -33,6 +33,8 @@ const PADDING = 16;
 const LABEL_OFFSET = 14;
 const VALUE_BLOCK_HEIGHT = 50;
 
+// Do not simplify, it allows to have startAngle > endAngle
+// when you want to invert gauge rotation.
 const getArcBounds = (startAngle: number, endAngle: number, radius: number) => {
   const angles = [startAngle, endAngle, -180, -90, 0, 90, 180].filter(
     (angle) =>
@@ -203,20 +205,29 @@ const Gauge: React.FC<GaugeProps> = ({
   if (zones.length === 0 || value === undefined) {
     return (
       <div
-        style={{ width, height }}
-        className="animate-pulse rounded bg-grayExtraLight"
+        style={{ maxWidth: width, aspectRatio: `${width} / ${height}` }}
+        className="w-full animate-pulse rounded bg-grayExtraLight"
       />
     );
   }
 
+  const currentZone = zones.find((zone) => value <= zone.to) ?? zones.at(-1);
+  const currentZoneLabel = currentZone?.legendLabel ?? currentZone?.label;
+
   return (
-    <div className="flex flex-col items-center gap-2">
+    <div className="flex w-full flex-col items-center gap-2">
       <svg
         ref={svgRef}
         viewBox={`0 0 ${width} ${height}`}
-        width={width}
-        height={height}
+        style={{ maxWidth: width }}
+        className="h-auto w-full"
+        aria-hidden="true"
       />
+      <p className="sr-only">
+        {valueFormatter(value)}
+        {unitLabel ? ` ${unitLabel}` : ""}
+        {currentZoneLabel ? ` (zone : ${currentZoneLabel})` : ""}
+      </p>
       {legendZones.length > 0 && (
         <ul className="flex flex-wrap justify-center gap-x-3 gap-y-1">
           {legendZones.map((zone) => (
