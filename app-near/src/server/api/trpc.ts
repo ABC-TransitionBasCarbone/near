@@ -142,3 +142,27 @@ export const hasRoleMiddleware = (roles: RoleName[]) =>
 export const protectedProcedure = t.procedure
   .use(timingMiddleware)
   .use(isAuthenticated());
+
+/**
+ * Survey-scoped protected procedure
+ *
+ * Use this instead of `protectedProcedure` when a query or mutation only makes sense for a user
+ * with a survey assigned. Throws FORBIDDEN otherwise, and guarantees `ctx.session.user.survey` is
+ * not null.
+ */
+export const surveyProtectedProcedure = protectedProcedure.use(
+  ({ ctx, next }) => {
+    const survey = ctx.session.user.survey;
+    if (!survey) {
+      throw new TRPCError({ code: "FORBIDDEN" });
+    }
+    return next({
+      ctx: {
+        session: {
+          ...ctx.session,
+          user: { ...ctx.session.user, survey },
+        },
+      },
+    });
+  },
+);

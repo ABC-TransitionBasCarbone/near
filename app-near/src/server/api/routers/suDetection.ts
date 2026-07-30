@@ -1,22 +1,11 @@
-import { TRPCError } from "@trpc/server";
-import { createTRPCRouter, protectedProcedure } from "../trpc";
+import { createTRPCRouter, surveyProtectedProcedure } from "../trpc";
 import { computeSu, getSuList } from "~/server/su/computeSu";
 
 export const suDetectionRouter = createTRPCRouter({
-  run: protectedProcedure.mutation(async ({ ctx }) => {
-    const surveyId = ctx.session.user.survey?.id;
-    if (!surveyId) {
-      throw new TRPCError({ code: "FORBIDDEN" });
-    }
-
-    return computeSu(surveyId);
+  run: surveyProtectedProcedure.mutation(async ({ ctx }) => {
+    return computeSu(ctx.session.user.survey.id);
   }),
-  getList: protectedProcedure.query(async ({ ctx }) => {
-    const surveyId = ctx.session.user.survey?.id;
-    if (!surveyId) {
-      throw new TRPCError({ code: "FORBIDDEN" });
-    }
-
-    return getSuList(surveyId);
+  getList: surveyProtectedProcedure.query(async ({ ctx }) => {
+    return getSuList(ctx.session.user.survey.id);
   }),
 });

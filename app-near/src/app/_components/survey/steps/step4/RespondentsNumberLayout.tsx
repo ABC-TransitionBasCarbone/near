@@ -1,13 +1,13 @@
 "use client";
 
 import Link from "next/link";
+import ErrorOutlineOutlinedIcon from "@mui/icons-material/ErrorOutlineOutlined";
 import SurveyLayout from "../../SurveyLayout";
 import { useSurveyStateContext } from "~/app/_components/_context/surveyStateContext";
 import { useSession } from "next-auth/react";
 import { SurveyPhase } from "@prisma/client";
-import MetabaseIframe from "~/app/_components/_ui/MetabaseIframe";
-import { MetabaseIframeType } from "~/types/enums/metabase";
 import Button from "~/app/_components/_ui/Button";
+import BarChart from "~/app/_components/_ui/BarChart";
 import { ButtonStyle } from "~/types/enums/button";
 import { useState, type Dispatch, type SetStateAction } from "react";
 import LinkAsButton from "~/app/_components/_ui/LinkAsButton";
@@ -17,25 +17,8 @@ import { api } from "~/trpc/react";
 import SuDashboard from "../step3/SuDashboard";
 import { SurveyType } from "~/types/enums/survey";
 import useUpdateSurveyStep from "../../../_ui/hooks/useUpdateSurveyStep";
-import { env } from "~/env";
 import ExportButton from "~/app/_components/export/ExportButton";
-
-const chartConfig: {
-  title: string;
-  iframeNumber: number;
-  surveyType: SurveyType;
-}[] = [
-  {
-    title: "Espace et Mode de vie",
-    iframeNumber: env.NEXT_PUBLIC_METABASE_WAY_OF_LIFE,
-    surveyType: SurveyType.WAY_OF_LIFE,
-  },
-  {
-    title: "Empreinte carbone",
-    iframeNumber: env.NEXT_PUBLIC_METABASE_CARBON_FOOTPRINT,
-    surveyType: SurveyType.CARBON_FOOTPRINT,
-  },
-];
+import { buildChartSections } from "~/app/_components/_services/su/respondents";
 
 interface RespondentsNumberLayoutProps {
   setToggleBroadcastingPage: Dispatch<SetStateAction<boolean>>;
@@ -49,21 +32,20 @@ const RespondentsNumberLayout: React.FC<RespondentsNumberLayoutProps> = ({
   const { data: session } = useSession();
   const updateSurveyStep = useUpdateSurveyStep();
 
-  const { data: wayOfLifeAnswersCount } = api.wayOfLifeAnswers.count.useQuery(
-    undefined,
-    {
-      enabled: !!session?.user?.survey?.id,
-    },
-  );
-  const { data: carbonFootprintAnswersCount } =
-    api.carbonFootprintAnswers.count.useQuery(undefined, {
-      enabled: !!session?.user?.survey?.id,
+  const { data: neighborhoodConfigIsCompleted } =
+    api.neighborhoodsConfigs.isCompleted.useQuery(undefined, {
+      enabled: !!session?.user.survey?.id,
     });
 
-  const [showModal, setShowModal] = useState<boolean>(false);
+  const { data: neighborhood } = api.neighborhoods.getOne.useQuery(undefined, {
+    enabled: !!session?.user?.survey?.id,
+  });
 
-  const nextStepIsDisabled =
-    wayOfLifeAnswersCount! < 80 && carbonFootprintAnswersCount! < 80;
+  const { data: suCounts } = api.suAnswers.countBySu.useQuery(undefined, {
+    enabled: !!session?.user?.survey?.id,
+  });
+
+  const [showModal, setShowModal] = useState<boolean>(false);
 
   if (
     !session?.user.survey?.id ||
@@ -72,6 +54,17 @@ const RespondentsNumberLayout: React.FC<RespondentsNumberLayoutProps> = ({
   ) {
     return "loading...";
   }
+
+  const chartSection =
+    suCounts && neighborhood
+      ? buildChartSections(suCounts, neighborhood.population_sum)
+      : null;
+
+  const nextStepIsDisabled =
+    !chartSection ||
+    chartSection.some((section) =>
+      section.config.some((config) => config.value < config.threshold),
+    );
 
   return (
     <SurveyLayout
@@ -91,6 +84,22 @@ const RespondentsNumberLayout: React.FC<RespondentsNumberLayoutProps> = ({
             Phase d&apos;enquête n°2 : nombre de répondants
           </h1>
           <p>Où en êtes-vous du nombre de personnes à interroger ?</p>
+          {!neighborhoodConfigIsCompleted && (
+            <div
+              id="neighborhood-config-prerequisite"
+              className="mt-5 flex items-start gap-3 rounded-lg bg-error/10 p-4 text-error"
+            >
+              <ErrorOutlineOutlinedIcon
+                aria-hidden
+                className="mt-0.5 shrink-0"
+              />
+              <p>
+                <strong>Prérequis</strong> : vous devez compléter le formulaire
+                à l&apos;étape 1 Informations sur le quartier pour diffuser le
+                questionnaire <em>Espace et mode de vie</em>.
+              </p>
+            </div>
+          )}
           <div className="mt-8 flex justify-center"></div>
         </div>
       }
@@ -131,39 +140,61 @@ const RespondentsNumberLayout: React.FC<RespondentsNumberLayoutProps> = ({
         />
         <div className="mx-6 my-8 flex flex-col gap-16">
           <div className="flex flex-wrap justify-center gap-x-8 gap-y-16">
-            {chartConfig.map((chart) => (
-              <div
-                key={chart.iframeNumber}
-                className="flex w-full flex-col items-center gap-y-8 sm:w-[600px]"
-              >
-                <div className="w-full">
-                  <div className="mx-20 flex max-w-full justify-end p-4">
-                    <ExportButton
-                      label="Exporter les réponses"
-                      surveyType={chart.surveyType}
-                    />
-                  </div>
-                  <div className="mb-1 text-center text-3xl">{chart.title}</div>
-                  <MetabaseIframe
-                    iframeNumber={chart.iframeNumber}
-                    iframeType={MetabaseIframeType.QUESTION}
-                    height="300px"
-                    params={{ surveyName: session.user.survey!.name }}
-                  />
-                </div>
-                <Button
-                  icon="/icons/rocket.svg"
-                  rounded
-                  style={ButtonStyle.LIGHT}
-                  onClick={() => {
-                    setToggleBroadcastingPage(true);
-                    setSurveyType(chart.surveyType);
-                  }}
-                >
-                  Diffuser le questionnaire
-                </Button>
-              </div>
-            ))}
+            {!chartSection
+              ? "Chargement..."
+              : chartSection.map((section) => {
+                  const isDisabled =
+                    section.surveyType === SurveyType.WAY_OF_LIFE &&
+                    !neighborhoodConfigIsCompleted;
+
+                  return (
+                    <div
+                      key={section.title}
+                      className="flex w-full flex-col items-center gap-y-8 sm:w-[600px]"
+                    >
+                      <div className="w-full">
+                        <BarChart
+                          title={section.title}
+                          config={section.config}
+                          footerAction={
+                            <ExportButton
+                              label="Exporter les réponses"
+                              surveyType={section.surveyType}
+                            />
+                          }
+                        />
+                      </div>
+                      <Button
+                        icon="/icons/rocket.svg"
+                        rounded
+                        style={ButtonStyle.LIGHT}
+                        aria-disabled={isDisabled}
+                        aria-describedby={
+                          isDisabled
+                            ? "neighborhood-config-prerequisite"
+                            : undefined
+                        }
+                        title={
+                          isDisabled
+                            ? "Vous devez d'abord compléter le formulaire de l'étape 1 (Informations sur le quartier)."
+                            : undefined
+                        }
+                        className={
+                          isDisabled
+                            ? "cursor-not-allowed opacity-40"
+                            : undefined
+                        }
+                        onClick={() => {
+                          if (isDisabled) return;
+                          setToggleBroadcastingPage(true);
+                          setSurveyType(section.surveyType);
+                        }}
+                      >
+                        Diffuser le questionnaire
+                      </Button>
+                    </div>
+                  );
+                })}
           </div>
           <div className="flex flex-col items-center gap-10">
             <div className="text-xl">Rappel des Sphères d&apos;Usages</div>
