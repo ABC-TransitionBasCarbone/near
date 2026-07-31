@@ -30,7 +30,10 @@ const DetectionLayout: React.FC = () => {
 
   const suDetectionMutation = api.suDetection.run.useMutation({
     onSuccess: async () => {
-      await utils.surveys.getOne.invalidate();
+      await Promise.all([
+        utils.surveys.getOne.invalidate(),
+        utils.suDetection.getList.invalidate(),
+      ]);
     },
     onError: (e) =>
       setNotification({
