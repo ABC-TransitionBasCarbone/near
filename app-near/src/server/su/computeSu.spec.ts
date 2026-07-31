@@ -81,6 +81,7 @@ describe("computeSu", () => {
   it("should compute su", async () => {
     await createSurvey(surveyId);
     await createSuAnswers(surveyId);
+    await createSuBanks();
 
     apiSuSpy.mockReturnValue(Promise.resolve(buildApiSuResponse()));
 
@@ -95,6 +96,7 @@ describe("computeSu", () => {
   it("should erase data su before recomputing", async () => {
     await createSurvey(surveyId);
     await createSuAnswers(surveyId);
+    await createSuBanks();
 
     const response = buildApiSuResponse();
     response.computedSus.push({
@@ -121,6 +123,41 @@ describe("computeSu", () => {
     await expectSuAnswerUpdated(surveyId);
     await expectSurveyUpdated(surveyId);
   });
+
+  it("should assign a su_bank to each computed su", async () => {
+    await createSurvey(surveyId);
+    await createSuAnswers(surveyId);
+    const suBanks = await createSuBanks();
+
+    apiSuSpy.mockReturnValue(Promise.resolve(buildApiSuResponse()));
+    await computeSu(surveyId);
+
+    const suDatas = await db.suData.findMany({
+      where: { surveyId },
+      orderBy: { su: "asc" },
+    });
+    expect(suDatas.map((suData) => suData.suBankId)).toStrictEqual([
+      suBanks[0]!.id,
+      suBanks[1]!.id,
+      suBanks[2]!.id,
+    ]);
+  });
+
+  it("should throw when no su_bank is available to assign", async () => {
+    await createSurvey(surveyId);
+    await createSuAnswers(surveyId);
+
+    apiSuSpy.mockReturnValue(Promise.resolve(buildApiSuResponse()));
+
+    expect.assertions(1);
+    try {
+      await computeSu(surveyId);
+    } catch (error) {
+      if (error instanceof TRPCError) {
+        expect(error.message).toBe(ErrorCode.UNEXPECTED_ERROR);
+      }
+    }
+  });
 });
 
 const createSurvey = (surveyId: number) =>
@@ -131,6 +168,15 @@ const createSurvey = (surveyId: number) =>
       phase: SurveyPhase.STEP_3_SU_EXPLORATION,
       computedSu: false,
     },
+  });
+
+const createSuBanks = () =>
+  db.suBank.createManyAndReturn({
+    data: [
+      { id: 1, name: "bank-a", colorMain: "#111111" },
+      { id: 2, name: "bank-b", colorMain: "#222222" },
+      { id: 3, name: "bank-c", colorMain: "#333333" },
+    ],
   });
 
 const createSuAnswers = (surveyId: number) =>

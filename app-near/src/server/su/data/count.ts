@@ -6,7 +6,7 @@ export const countBySu = async (surveyId: number): Promise<SuCount[]> => {
     where: { surveyId },
     select: {
       id: true,
-      su: true,
+      suBank: true,
       popPercentage: true,
       _count: {
         select: {
@@ -17,9 +17,9 @@ export const countBySu = async (surveyId: number): Promise<SuCount[]> => {
     },
   });
 
-  return suData.map(({ id, su, popPercentage, _count }) => ({
+  return suData.map(({ id, suBank, popPercentage, _count }) => ({
     id,
-    su,
+    su: suBank?.name ?? "",
     popPercentage,
     carbonFootprintAnswerCount: _count.carbonFootprintAnswer,
     wayOfLifeAnswerCount: _count.wayOfLifeAnswer,

@@ -13,6 +13,7 @@ export interface BarChartItem {
 interface BarChartProps {
   config: BarChartItem[];
   title?: string;
+  yAxisLabel?: string;
   footerAction?: React.ReactNode;
   barHeight?: number;
   barGap?: number;
@@ -45,6 +46,7 @@ const THRESHOLD_ARROW_PATH = `M 0,0 L ${-ARROW_HALF_WIDTH},${-ARROW_HEIGHT} L ${
 const BarChart: React.FC<BarChartProps> = ({
   config,
   title,
+  yAxisLabel = "SU",
   footerAction,
   barHeight = 24,
   barGap = 30,
@@ -199,18 +201,13 @@ const BarChart: React.FC<BarChartProps> = ({
 
     svg
       .append("text")
-      .attr(
-        "transform",
-        `translate(${PADDING + Y_AXIS_TITLE_WIDTH / 2}, ${
-          PADDING + TOP_SPACE + chartHeight / 2
-        }) rotate(-90)`,
-      )
+      .attr("x", PADDING + chartLeftSpace / 2)
+      .attr("y", PADDING + TOP_SPACE - 15)
       .attr("text-anchor", "middle")
-      .attr("dominant-baseline", "middle")
       .attr("font-size", 11)
       .attr("font-weight", 700)
       .attr("fill", labelColor)
-      .text("SU");
+      .text(yAxisLabel);
 
     const axisY = chartHeight;
     const axis = root
@@ -239,6 +236,7 @@ const BarChart: React.FC<BarChartProps> = ({
     barGap,
     chartLeftSpace,
     chartHeight,
+    yAxisLabel,
     valueColor,
     valueReachedColor,
     trackColor,

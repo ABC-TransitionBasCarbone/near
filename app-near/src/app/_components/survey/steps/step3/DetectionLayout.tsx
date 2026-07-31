@@ -125,7 +125,9 @@ const DetectionLayout: React.FC = () => {
       }
     >
       <ExportSection />
-      <SuDashboard phase={SurveyPhase.STEP_3_SU_EXPLORATION} />
+      {suDetectionMutation.isPending ? null : (
+        <SuDashboard phase={SurveyPhase.STEP_3_SU_EXPLORATION} />
+      )}
     </SurveyLayout>
   );
 };
