@@ -44,6 +44,7 @@ describe("buildChartSections", () => {
     );
 
     expect(wayOfLifeSection?.config).toStrictEqual([
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       { label: "bank-b", value: 7, threshold: expect.any(Number) },
     ]);
   });
@@ -63,6 +64,7 @@ describe("buildChartSections", () => {
     );
 
     expect(carbonFootprintSection?.config).toStrictEqual([
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       { label: "bank-b", value: 3, threshold: expect.any(Number) },
     ]);
   });
