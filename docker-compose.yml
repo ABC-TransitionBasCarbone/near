@@ -1,7 +1,7 @@
 version: '3.5'
 services:
   database:
-    image: postgres:17.2
+    image: postgres:17.9
     container_name: app-near-postgres
     ports:
       - "5432:5432"
@@ -14,7 +14,7 @@ services:
     command: postgres -c max_connections=30
 
   app-near-web:
-    image: node:22-alpine
+    image: node:24.18-alpine
     command: > 
       sh -c "
         echo 'starting app-near...' && 

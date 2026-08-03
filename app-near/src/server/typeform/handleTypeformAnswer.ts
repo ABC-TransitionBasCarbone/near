@@ -75,8 +75,7 @@ export const handleTypeformAnswer = async (
 
     // could throw zod exception from zod parsing
     const parsedAnswer = typeformSchemaMapper[typeformType].parse(answers) as
-      | ConvertedSuAnswer
-      | ConvertedWayOfLifeAnswer;
+      ConvertedSuAnswer | ConvertedWayOfLifeAnswer;
 
     // remove isNeighborhoodResident property before save
     // @ts-expect-error remove su name

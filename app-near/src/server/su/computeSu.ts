@@ -27,7 +27,7 @@ export const getSuList = async (
 
 export const computeSu = async (surveyId: number): Promise<number[]> => {
   const survey = await db.survey.findUnique({ where: { id: surveyId } });
-  if (!survey || survey.phase !== SurveyPhase.STEP_3_SU_EXPLORATION) {
+  if (survey?.phase !== SurveyPhase.STEP_3_SU_EXPLORATION) {
     throw new TRPCError({
       code: "FORBIDDEN",
       message: ErrorCode.WRONG_SURVEY_PHASE,
