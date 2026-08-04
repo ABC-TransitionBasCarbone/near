@@ -4,7 +4,7 @@ import { buildChartSections } from "./respondents";
 
 const buildSuCount = (overrides: Partial<SuCount>): SuCount => ({
   id: 1,
-  su: 1,
+  su: "bank-a",
   popPercentage: 0,
   carbonFootprintAnswerCount: 0,
   wayOfLifeAnswerCount: 0,
@@ -32,7 +32,7 @@ describe("buildChartSections", () => {
   it("should use wayOfLifeAnswerCount as value for the way of life section", () => {
     const suCounts = [
       buildSuCount({
-        su: 12,
+        su: "bank-b",
         wayOfLifeAnswerCount: 7,
         carbonFootprintAnswerCount: 3,
       }),
@@ -45,14 +45,14 @@ describe("buildChartSections", () => {
 
     expect(wayOfLifeSection?.config).toStrictEqual([
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      { label: 12, value: 7, threshold: expect.any(Number) },
+      { label: "bank-b", value: 7, threshold: expect.any(Number) },
     ]);
   });
 
   it("should use carbonFootprintAnswerCount as value for the carbon footprint section", () => {
     const suCounts = [
       buildSuCount({
-        su: 12,
+        su: "bank-b",
         wayOfLifeAnswerCount: 7,
         carbonFootprintAnswerCount: 3,
       }),
@@ -65,15 +65,15 @@ describe("buildChartSections", () => {
 
     expect(carbonFootprintSection?.config).toStrictEqual([
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      { label: 12, value: 3, threshold: expect.any(Number) },
+      { label: "bank-b", value: 3, threshold: expect.any(Number) },
     ]);
   });
 
   it("should sort the config by label (su) ascending", () => {
     const suCounts = [
-      buildSuCount({ su: 30 }),
-      buildSuCount({ su: 10 }),
-      buildSuCount({ su: 20 }),
+      buildSuCount({ su: "bank-c" }),
+      buildSuCount({ su: "bank-a" }),
+      buildSuCount({ su: "bank-b" }),
     ];
 
     const result = buildChartSections(suCounts, 1000);
@@ -82,7 +82,9 @@ describe("buildChartSections", () => {
     );
 
     expect(wayOfLifeSection?.config.map((item) => item.label)).toStrictEqual([
-      10, 20, 30,
+      "bank-a",
+      "bank-b",
+      "bank-c",
     ]);
   });
 

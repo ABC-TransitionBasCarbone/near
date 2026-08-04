@@ -213,9 +213,20 @@ model SuData {
   carbonFootprintAnswer CarbonFootprintAnswer[]
   createdAt             DateTime                @default(now()) @map("created_at")
   updatedAt             DateTime                @default(now()) @updatedAt @map("updated_at")
+  suBankId              Int?                    @map("su_bank_id")
+  suBank                SuBank?                 @relation(fields: [suBankId], references: [id], onDelete: SetNull, onUpdate: Cascade)
 
   @@unique([surveyId, su])
   @@map("su_data")
+}
+
+model SuBank {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique
+  colorMain String   @unique @map("color_main")
+  suData    SuData[]
+
+  @@map("su_bank")
 }
 
 enum YesNo {
@@ -596,8 +607,8 @@ model NeighborhoodConfig {
   id                    Int     @id @default(autoincrement())
   northCloseLocations   String? @map("north_close_location")
   northDistantLocations String? @map("north_distant_location")
-  southCloseLocations     String? @map("south_close_location")
-  southDistantLocations   String? @map("south_distant_location")
+  southCloseLocations   String? @map("south_close_location")
+  southDistantLocations String? @map("south_distant_location")
   eastCloseLocations    String? @map("east_close_location")
   eastDistantLocations  String? @map("east_distant_location")
   westCloseLocations    String? @map("west_close_location")

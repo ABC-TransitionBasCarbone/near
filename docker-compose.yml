@@ -26,6 +26,7 @@ services:
         npm run survey:create -- iris=\"751145501,751145503,751145601\" surveyName=\"Porte d'Orléans\" &&
         npm run user:create -- role=PILOTE email=pilote@mail.com password=pilote surveyName=\"Porte d'Orléans\" &&
         npm run user:create -- role=ADMIN email=admin@mail.com password=admin &&
+        npm run su-bank:init &&
         npm run dev
       "
     environment:

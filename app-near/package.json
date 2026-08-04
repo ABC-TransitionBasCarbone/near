@@ -29,6 +29,7 @@
     "load:insee": "/bin/sh ./scripts/load-insee/load_insee_data.sh",
     "user:create": "tsx ./scripts/users/createUser.ts",
     "survey:create": "tsx ./scripts/surveys/createSurvey.ts",
+    "su-bank:init": "tsx ./scripts/suBank/init.ts",
     "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,mdx}\" --cache",
     "format:write": "prettier --write \"**/*.{ts,tsx,js,jsx,mdx}\" --cache",
     "typecheck": "tsc --noEmit",

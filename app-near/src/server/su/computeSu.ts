@@ -6,10 +6,14 @@ import { updateSuAnswerWithSu } from "~/server/su/answers/update";
 import { saveSuData } from "~/server/su/data/save";
 import { updateSurvey } from "~/server/surveys/put";
 import { ErrorCode } from "~/types/enums/error";
+import { assignAvailableSuBanksToSuData } from "../suBank/assign";
 
 export interface StoredComputedSu {
   id: number;
-  su: number;
+  su: {
+    name: string;
+    colorMain: string;
+  };
 }
 
 export const getSuList = async (
@@ -20,9 +24,18 @@ export const getSuList = async (
     return null;
   }
 
-  const su = await db.suData.findMany({ where: { surveyId: survey.id } });
+  const su = await db.suData.findMany({
+    where: { surveyId: survey.id },
+    select: { id: true, suBank: true },
+  });
 
-  return su.map((item) => ({ id: item.id, su: item.su }));
+  return su.map((item) => ({
+    id: item.id,
+    su: {
+      name: item.suBank?.name ?? "",
+      colorMain: item.suBank?.colorMain ?? "",
+    },
+  }));
 };
 
 export const computeSu = async (surveyId: number): Promise<number[]> => {
@@ -46,6 +59,8 @@ export const computeSu = async (surveyId: number): Promise<number[]> => {
         const suNames = await saveSuData(surveyId, response.computedSus);
 
         await updateSuAnswerWithSu(surveyId, response.answerAttributedSu);
+
+        await assignAvailableSuBanksToSuData();
 
         await updateSurvey(surveyId, { computedSu: true });
 

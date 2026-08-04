@@ -30,7 +30,10 @@ const DetectionLayout: React.FC = () => {
 
   const suDetectionMutation = api.suDetection.run.useMutation({
     onSuccess: async () => {
-      await utils.surveys.getOne.invalidate();
+      await Promise.all([
+        utils.surveys.getOne.invalidate(),
+        utils.suDetection.getList.invalidate(),
+      ]);
     },
     onError: (e) =>
       setNotification({
@@ -122,7 +125,9 @@ const DetectionLayout: React.FC = () => {
       }
     >
       <ExportSection />
-      <SuDashboard phase={SurveyPhase.STEP_3_SU_EXPLORATION} />
+      {suDetectionMutation.isPending ? null : (
+        <SuDashboard phase={SurveyPhase.STEP_3_SU_EXPLORATION} />
+      )}
     </SurveyLayout>
   );
 };

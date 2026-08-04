@@ -74,7 +74,7 @@ const SuDashboard: React.FC<SuDashboardProps> = ({ phase }) => {
           >
             {computedSuList.map((su: StoredComputedSu) => (
               <div key={su.id} className="flex flex-col">
-                <h2 className="text-lg font-semibold">Su n°{su.su}</h2>
+                <h2 className="text-lg font-semibold">Su {su.su.name}</h2>
                 <MetabaseIframe
                   iframeNumber={env.NEXT_PUBLIC_METABASE_SU}
                   iframeType={MetabaseIframeType.DASHBOARD}
