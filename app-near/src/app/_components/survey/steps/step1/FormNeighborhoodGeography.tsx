@@ -1,8 +1,11 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { FormProvider, type SubmitHandler, useForm } from "react-hook-form";
 import ArrowForwardOutlinedIcon from "@mui/icons-material/ArrowForwardOutlined";
 import Button from "~/app/_components/_ui/Button";
+import SavedBadge, {
+  type SavedBadgeHandle,
+} from "~/app/_components/_ui/SavedBadge";
 import FormTextareaWithLabel from "~/app/_components/_ui/form/FormTextareaWithLabel";
 import { useNotification } from "~/app/_components/_context/NotificationProvider";
 import { useUnsavedChangesWarning } from "~/app/_components/_ui/hooks/useUnsavedChangesWarning";
@@ -58,6 +61,7 @@ const FormNeighborhoodGeography: React.FC<FormNeighborhoodGeographyProps> = ({
   onDirtyChange,
 }) => {
   const [step, setStep] = useState(Step.NORTH);
+  const savedBadgeRef = useRef<SavedBadgeHandle>(null);
   const { setNotification } = useNotification();
   const utils = api.useUtils();
 
@@ -138,6 +142,7 @@ const FormNeighborhoodGeography: React.FC<FormNeighborhoodGeographyProps> = ({
       await neighborhoodConfigMutation.mutateAsync(data);
       form.reset(data);
       await utils.neighborhoodsConfigs.isCompleted.invalidate();
+      savedBadgeRef.current?.show();
       goToNextStep();
     } catch {
       setNotification({
@@ -292,16 +297,22 @@ const FormNeighborhoodGeography: React.FC<FormNeighborhoodGeographyProps> = ({
           ))}
         </div>
 
-        <Button
-          style={ButtonStyle.FILLED}
-          color="blue"
-          type="submit"
-          rounded
-          disabled={neighborhoodConfigMutation.isPending}
-          className="mt-2 w-full sm:w-auto sm:self-center"
-        >
-          Enregistrer
-        </Button>
+        <div className="relative mt-2 flex w-full flex-col items-center sm:w-auto sm:self-center">
+          <Button
+            style={ButtonStyle.FILLED}
+            color="blue"
+            type="submit"
+            rounded
+            disabled={neighborhoodConfigMutation.isPending}
+            className="w-full sm:w-auto"
+          >
+            Enregistrer
+          </Button>
+          <SavedBadge
+            ref={savedBadgeRef}
+            className="absolute left-1/2 top-full mt-2 -translate-x-1/2 whitespace-nowrap"
+          />
+        </div>
       </form>
     </FormProvider>
   );
