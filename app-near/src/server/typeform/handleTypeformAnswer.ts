@@ -88,13 +88,19 @@ export const handleTypeformAnswer = async (
       typeformType,
     );
 
+    const validSuPhases = [
+      SurveyPhase.STEP_1_NEIGHBORHOOD_INFORMATION,
+      SurveyPhase.STEP_2_SU_SURVERY,
+    ];
+
     if (
       typeformType === TypeformType.SU &&
-      isNotInPhase(survey, SurveyPhase.STEP_2_SU_SURVERY)
+      isNotInPhase(survey, validSuPhases)
     ) {
       return notInPhaseSuSurveyResponse(
         surveyName,
-        SurveyPhase.STEP_2_SU_SURVERY,
+        survey.phase,
+        validSuPhases,
       );
     }
 
