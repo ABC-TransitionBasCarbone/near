@@ -1,5 +1,6 @@
 import { db } from "~/server/db";
 import { clearAlldata } from "~/server/test-utils/clear";
+import { buildSuBank } from "~/server/test-utils/create-data/suBank";
 import { type SuBankSeed } from ".";
 import { assignSuBanksToSuData, initSuBank } from "./init";
 
@@ -8,9 +9,9 @@ describe("suBank/init", () => {
   let surveyId: number;
 
   const suBankSeeds: SuBankSeed[] = [
-    { id: 0, name: "bank-a", colorMain: "#111111" },
-    { id: 1, name: "bank-b", colorMain: "#222222" },
-    { id: 2, name: "bank-c", colorMain: "#333333" },
+    buildSuBank({ id: 0, name: "bank-a", colorMain: "#111111" }),
+    buildSuBank({ id: 1, name: "bank-b", colorMain: "#222222" }),
+    buildSuBank({ id: 2, name: "bank-c", colorMain: "#333333" }),
   ];
 
   const createSuData = async (su: number) =>

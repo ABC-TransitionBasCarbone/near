@@ -1,5 +1,6 @@
 import { db } from "~/server/db";
 import { clearAlldata } from "~/server/test-utils/clear";
+import { buildSuBank } from "~/server/test-utils/create-data/suBank";
 import {
   assignSuBanksInRoundRobin,
   deleteRemovedSuBanks,
@@ -12,9 +13,9 @@ describe("suBank", () => {
   let surveyId: number;
 
   const suBankSeeds: SuBankSeed[] = [
-    { id: 0, name: "bank-a", colorMain: "#111111" },
-    { id: 1, name: "bank-b", colorMain: "#222222" },
-    { id: 2, name: "bank-c", colorMain: "#333333" },
+    buildSuBank({ id: 0, name: "bank-a", colorMain: "#111111" }),
+    buildSuBank({ id: 1, name: "bank-b", colorMain: "#222222" }),
+    buildSuBank({ id: 2, name: "bank-c", colorMain: "#333333" }),
   ];
 
   const createSuData = async (su: number) =>
@@ -44,7 +45,7 @@ describe("suBank", () => {
     it("updates colorMain without creating duplicates when run twice", async () => {
       await upsertSuBanks(suBankSeeds);
       await upsertSuBanks([
-        { id: 0, name: "bank-a", colorMain: "#ABCDEF" },
+        buildSuBank({ id: 0, name: "bank-a", colorMain: "#ABCDEF" }),
         ...suBankSeeds.slice(1),
       ]);
 
@@ -60,8 +61,8 @@ describe("suBank", () => {
       await upsertSuBanks(suBankSeeds);
 
       await upsertSuBanks([
-        { id: 0, name: "bank-b", colorMain: "#111111" },
-        { id: 1, name: "bank-a", colorMain: "#222222" },
+        buildSuBank({ id: 0, name: "bank-b", colorMain: "#111111" }),
+        buildSuBank({ id: 1, name: "bank-a", colorMain: "#222222" }),
         suBankSeeds[2]!,
       ]);
 
@@ -78,8 +79,8 @@ describe("suBank", () => {
       await upsertSuBanks(suBankSeeds);
 
       await upsertSuBanks([
-        { id: 0, name: "bank-a", colorMain: "#222222" },
-        { id: 1, name: "bank-b", colorMain: "#111111" },
+        buildSuBank({ id: 0, name: "bank-a", colorMain: "#222222" }),
+        buildSuBank({ id: 1, name: "bank-b", colorMain: "#111111" }),
         suBankSeeds[2]!,
       ]);
 

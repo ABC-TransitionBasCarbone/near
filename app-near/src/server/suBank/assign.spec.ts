@@ -1,5 +1,6 @@
 import { db } from "~/server/db";
 import { clearAlldata } from "~/server/test-utils/clear";
+import { buildSuBank } from "~/server/test-utils/create-data/suBank";
 import { assignAvailableSuBanksToSuData } from "./assign";
 
 describe("assignAvailableSuBanksToSuData", () => {
@@ -9,9 +10,9 @@ describe("assignAvailableSuBanksToSuData", () => {
   const createSuBanks = () =>
     db.suBank.createManyAndReturn({
       data: [
-        { id: 1, name: "bank-a", colorMain: "#111111" },
-        { id: 2, name: "bank-b", colorMain: "#222222" },
-        { id: 3, name: "bank-c", colorMain: "#333333" },
+        buildSuBank({ id: 1, name: "bank-a", colorMain: "#111111" }),
+        buildSuBank({ id: 2, name: "bank-b", colorMain: "#222222" }),
+        buildSuBank({ id: 3, name: "bank-c", colorMain: "#333333" }),
       ],
     });
 
