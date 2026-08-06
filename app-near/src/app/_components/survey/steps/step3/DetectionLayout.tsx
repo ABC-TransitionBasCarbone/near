@@ -15,6 +15,7 @@ import { NotificationType } from "~/types/enums/notifications";
 import { SurveyPhase } from "@prisma/client";
 import { getErrorValue } from "~/app/_components/_services/error";
 import ExportSection from "./ExportSection";
+import NeighborhoodConfigurationWarning from "../NeighborhoodConfigurationWarning";
 
 const DetectionLayout: React.FC = () => {
   const { step } = useSurveyStateContext();
@@ -50,6 +51,11 @@ const DetectionLayout: React.FC = () => {
         value: getErrorValue(e),
       }),
   });
+
+  const { data: neighborhoodConfigIsCompleted } =
+    api.neighborhoodsConfigs.isCompleted.useQuery(undefined, {
+      enabled: !!session?.user.survey?.id,
+    });
 
   const launchSuDetection = async () => {
     await suDetectionMutation.mutateAsync();
@@ -101,27 +107,37 @@ const DetectionLayout: React.FC = () => {
         </div>
       }
       actions={
-        <>
-          <Button
-            icon="/icons/arrow-right.svg"
-            rounded
-            style={ButtonStyle.FILLED}
-            onClick={() => {
-              if (session?.user.survey) {
-                sendSuEmailMutation.mutate();
+        <div className="flex flex-col items-center justify-center">
+          <div>
+            <Button
+              icon="/icons/arrow-right.svg"
+              rounded
+              style={ButtonStyle.FILLED}
+              onClick={() => {
+                if (session?.user.survey) {
+                  sendSuEmailMutation.mutate();
+                }
+              }}
+              disabled={
+                sendSuEmailMutation.isPending ||
+                !survey?.computedSu ||
+                survey.phase !== SurveyPhase.STEP_3_SU_EXPLORATION ||
+                !neighborhoodConfigIsCompleted
               }
-            }}
-            disabled={
-              sendSuEmailMutation.isPending ||
-              !survey?.computedSu ||
-              survey.phase !== SurveyPhase.STEP_3_SU_EXPLORATION
-            }
-          >
-            {sendSuEmailMutation.isPending
-              ? "...chargement"
-              : "Continuer l'enquête"}
-          </Button>
-        </>
+            >
+              {sendSuEmailMutation.isPending
+                ? "...chargement"
+                : "Continuer l'enquête"}
+            </Button>
+          </div>
+          {!neighborhoodConfigIsCompleted && (
+            <NeighborhoodConfigurationWarning>
+              <strong>Prérequis</strong> : vous devez compléter le formulaire à
+              l&apos;étape 1 Informations sur le quartier pour continuer
+              l&apos;enquête.
+            </NeighborhoodConfigurationWarning>
+          )}
+        </div>
       }
     >
       <ExportSection />

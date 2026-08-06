@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import ErrorOutlineOutlinedIcon from "@mui/icons-material/ErrorOutlineOutlined";
+
 import SurveyLayout from "../../SurveyLayout";
 import { useSurveyStateContext } from "~/app/_components/_context/surveyStateContext";
 import { useSession } from "next-auth/react";
@@ -19,6 +19,7 @@ import { SurveyType } from "~/types/enums/survey";
 import useUpdateSurveyStep from "../../../_ui/hooks/useUpdateSurveyStep";
 import ExportButton from "~/app/_components/export/ExportButton";
 import { buildChartSections } from "~/app/_components/_services/su/respondents";
+import NeighborhoodConfigurationWarning from "../NeighborhoodConfigurationWarning";
 
 interface RespondentsNumberLayoutProps {
   setToggleBroadcastingPage: Dispatch<SetStateAction<boolean>>;
@@ -85,20 +86,11 @@ const RespondentsNumberLayout: React.FC<RespondentsNumberLayoutProps> = ({
           </h1>
           <p>Où en êtes-vous du nombre de personnes à interroger ?</p>
           {!neighborhoodConfigIsCompleted && (
-            <div
-              id="neighborhood-config-prerequisite"
-              className="mt-5 flex items-start gap-3 rounded-lg bg-error/10 p-4 text-error"
-            >
-              <ErrorOutlineOutlinedIcon
-                aria-hidden
-                className="mt-0.5 shrink-0"
-              />
-              <p>
-                <strong>Prérequis</strong> : vous devez compléter le formulaire
-                à l&apos;étape 1 Informations sur le quartier pour diffuser le
-                questionnaire <em>Espace et mode de vie</em>.
-              </p>
-            </div>
+            <NeighborhoodConfigurationWarning>
+              <strong>Prérequis</strong> : vous devez compléter le formulaire à
+              l&apos;étape 1 Informations sur le quartier pour diffuser le
+              questionnaire <em>Espace et mode de vie</em>.
+            </NeighborhoodConfigurationWarning>
           )}
           <div className="mt-8 flex justify-center"></div>
         </div>

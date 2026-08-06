@@ -297,6 +297,7 @@ const FormNeighborhoodGeography: React.FC<FormNeighborhoodGeographyProps> = ({
           color="blue"
           type="submit"
           rounded
+          disabled={neighborhoodConfigMutation.isPending}
           className="mt-2 w-full sm:w-auto sm:self-center"
         >
           Enregistrer
