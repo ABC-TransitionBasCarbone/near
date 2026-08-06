@@ -23,7 +23,7 @@ export const convertedSuAnswer = z
     gender: z.nativeEnum(Gender),
     professionalSituation: z.nativeEnum(ProfessionalSituation),
     professionalCategory: z.nativeEnum(CurrentProfessionalCategory).optional(),
-    easyHealthAccess: z.nativeEnum(EasyHealthAccess),
+    easyHealthAccess: z.nativeEnum(EasyHealthAccess).optional(),
     meatFrequency: z.nativeEnum(MeatFrequency),
     transportationMode: z.nativeEnum(TransportationMode),
     digitalIntensity: z.nativeEnum(DigitalIntensity),
