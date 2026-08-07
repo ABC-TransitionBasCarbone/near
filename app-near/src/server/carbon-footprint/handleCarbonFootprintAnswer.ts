@@ -10,6 +10,7 @@ import {
   type NgcWebhookPayload,
 } from "~/types/CarbonFootprint";
 import { createAnswerError } from "../anwser-error/create";
+import { getErrorMessage } from "../anwser-error/getErrorMessage";
 import { getSurveyInformations } from "../typeform/helpers";
 import { isValidSignature, SignatureType } from "../typeform/signature";
 import { convertCarbonFootprintBody } from "./convert";
@@ -52,7 +53,11 @@ export const handleCarbonFootprintAnswer = async (
 
     return NextResponse.json({ message: "created" }, { status: 201 });
   } catch (error) {
-    await createAnswerError(JSON.parse(body), AnswerType.CARBON_FOOTPRINT);
+    await createAnswerError(
+      JSON.parse(body),
+      AnswerType.CARBON_FOOTPRINT,
+      getErrorMessage(error),
+    );
     if (error instanceof z.ZodError) {
       console.error(
         "[whebhook]",

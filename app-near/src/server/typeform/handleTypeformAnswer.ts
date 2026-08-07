@@ -34,6 +34,7 @@ import {
 import { typeformSchemaMapper } from "./schema";
 import { isValidSignature, SignatureType } from "./signature";
 import { createAnswerError } from "../anwser-error/create";
+import { getErrorMessage } from "../anwser-error/getErrorMessage";
 import { mapProfessionalCategoryFromSituation } from "~/shared/services/su-answers/mapProfessionalCategory";
 
 export const handleTypeformAnswer = async (
@@ -155,7 +156,11 @@ export const handleTypeformAnswer = async (
 
     return NextResponse.json({ message: "created" }, { status: 201 });
   } catch (error) {
-    await createAnswerError(JSON.parse(body), getAnswerType(formId));
+    await createAnswerError(
+      JSON.parse(body),
+      getAnswerType(formId),
+      getErrorMessage(error),
+    );
 
     if (error instanceof z.ZodError) {
       console.error(

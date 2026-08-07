@@ -6,7 +6,7 @@ import apiSuService from "../external-api/api-su";
 import { getValideCarbonFootprintPayload } from "../test-utils/carbonFootprint";
 import { clearAlldata } from "../test-utils/clear";
 import { expectFailedPayloadIsSaved } from "../test-utils/expects/answerError";
-import { buildRequest } from "../test-utils/request/buildRequest";
+import { buildRequest } from "../utils/buildRequest";
 import { SignatureType, signPayload } from "../typeform/signature";
 import { handleCarbonFootprintAnswer } from "./handleCarbonFootprintAnswer";
 
@@ -195,6 +195,34 @@ describe("handleCarbonFootprintAnswer", () => {
     expect(body.code).toBe("BAD_REQUEST");
     expect(body.message).toBe(ErrorCode.MISSING_SURVEY_NAME);
     await expectFailedPayloadIsSaved(payload);
+  });
+
+  it("should not create a duplicate when replayed with the same payload", async () => {
+    await db.survey.update({
+      data: { phase: SurveyPhase.STEP_4_ADDITIONAL_SURVEY },
+      where: { name: neighborhoodName },
+    });
+
+    const payload = getValideCarbonFootprintPayload(neighborhoodName);
+    const signature = signPayload(
+      JSON.stringify(payload),
+      SignatureType.NGC_FORM,
+    );
+
+    const firstResponse = await handleCarbonFootprintAnswer(
+      // @ts-expect-error allow partial for test
+      buildRequest(payload, signature),
+    );
+    const secondResponse = await handleCarbonFootprintAnswer(
+      // @ts-expect-error allow partial for test
+      buildRequest(payload, signature),
+    );
+
+    expect(firstResponse.status).toBe(201);
+    expect(secondResponse.status).toBe(201);
+
+    const data = await db.carbonFootprintAnswer.findMany();
+    expect(data.length).toBe(1);
   });
 
   it("should return 404 when calculated su is not found", async () => {

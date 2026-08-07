@@ -14,7 +14,7 @@ import apiSuService from "../external-api/api-su";
 import { clearAlldata } from "../test-utils/clear";
 import { buildSuAnswer } from "../test-utils/create-data/suAnswer";
 import { buildWayOfLifeAnswer } from "../test-utils/create-data/wayOfLifeAnswer";
-import { buildRequest } from "../test-utils/request/buildRequest";
+import { buildRequest } from "../utils/buildRequest";
 import { valideSuSurveyPayload } from "../test-utils/suSurvey";
 import { valideWayOfLifeSurveyPayload } from "../test-utils/wayOfLifeSurvey";
 import { handleTypeformAnswer } from "./handleTypeformAnswer";
@@ -444,6 +444,48 @@ describe("handleAnswer", () => {
         expect(sendEmailMock).not.toHaveBeenCalled();
         expect(apiSuServiceMock).not.toHaveBeenCalled();
       }
+    });
+
+    it("should not create a duplicate when replayed with the same payload", async () => {
+      await db.survey.update({
+        data: { phase: validSurveyPhase },
+        where: { name: neighborhoodName },
+      });
+
+      // eslint-disable-next-line
+      let payload = JSON.parse(
+        JSON.stringify(validSurveyPayload),
+      ) as TypeformWebhookPayload;
+
+      payload.form_response.hidden = {
+        neighborhood: neighborhoodName,
+        broadcast_channel: BroadcastChannel.mail_campaign,
+        broadcast_id: broadcastId,
+      };
+
+      payload = replaceSu(payload, su);
+
+      const signature = signPayload(
+        JSON.stringify(payload),
+        SignatureType.TYPEFORM,
+      );
+
+      const firstResponse = await handleTypeformAnswer(
+        // @ts-expect-error allow partial for test
+        buildRequest(payload, signature),
+      );
+      const secondResponse = await handleTypeformAnswer(
+        // @ts-expect-error allow partial for test
+        buildRequest(payload, signature),
+      );
+
+      expect(firstResponse.status).toBe(201);
+      expect(secondResponse.status).toBe(201);
+
+      // @ts-expect-error model is a union of two incompatible Prisma delegates
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      const data = await model.findMany();
+      expect(data.length).toBe(1);
     });
 
     it("should return 201 for suAnswer when email already exist", async () => {

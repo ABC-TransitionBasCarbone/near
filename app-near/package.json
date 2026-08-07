@@ -26,6 +26,8 @@
     "load:insee": "/bin/sh ./scripts/load-insee/load_insee_data.sh",
     "user:create": "tsx ./scripts/users/createUser.ts",
     "survey:create": "tsx ./scripts/surveys/createSurvey.ts",
+    "webhooks:list-errors": "tsx ./scripts/webhooks/list-errors.ts",
+    "webhooks:replay": "tsx ./scripts/webhooks/replay.ts",
     "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,mdx}\" --cache",
     "format:write": "prettier --write \"**/*.{ts,tsx,js,jsx,mdx}\" --cache",
     "typecheck": "tsc --noEmit",
