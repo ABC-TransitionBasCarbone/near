@@ -75,7 +75,7 @@ export const handleCarbonFootprintEmail = async (
     }
 
     console.error(
-      "[whebhook ngcform email]",
+      "[webhook ngcform email]",
       `unexpected error:`,
       error,
       "BODY:",

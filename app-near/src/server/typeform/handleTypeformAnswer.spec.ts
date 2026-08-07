@@ -2,6 +2,7 @@ import {
   BroadcastChannel,
   ProfessionalCategory,
   ProfessionalSituation,
+  SurveyPhase,
   type Survey,
 } from "@prisma/client";
 import { TemplateId } from "~/types/enums/brevo";
@@ -260,6 +261,44 @@ describe("handleAnswer", () => {
       expect(response.status).toBe(200);
       expect(await response.text()).toContain(
         "user should live in neighborhood",
+      );
+
+      expect(sendEmailMock).not.toHaveBeenCalled();
+      await expectFailedPayloadIsNotSaved();
+    });
+
+    it("should return 200 with current and valid phases when SU survey is not in a valid phase", async () => {
+      await db.survey.update({
+        data: { phase: SurveyPhase.STEP_3_SU_EXPLORATION },
+        where: { name: neighborhoodName },
+      });
+
+      // eslint-disable-next-line
+      const payload = JSON.parse(
+        JSON.stringify(valideSuSurveyPayload),
+      ) as TypeformWebhookPayload;
+
+      payload.form_response.hidden = {
+        neighborhood: neighborhoodName,
+        broadcast_channel: BroadcastChannel.mail_campaign,
+        broadcast_id: broadcastId,
+      };
+
+      const signature = signPayload(
+        JSON.stringify(payload),
+        SignatureType.TYPEFORM,
+      );
+      const response = await handleTypeformAnswer(
+        // @ts-expect-error allow partial for test
+        buildRequest(payload, signature),
+      );
+      expect(response.status).toBe(200);
+      const text = await response.text();
+      expect(text).toContain(
+        `survey ${neighborhoodName} is in phase ${SurveyPhase.STEP_3_SU_EXPLORATION}`,
+      );
+      expect(text).toContain(
+        `valid phases are: ${SurveyPhase.STEP_1_NEIGHBORHOOD_INFORMATION}, ${SurveyPhase.STEP_2_SU_SURVERY}`,
       );
 
       expect(sendEmailMock).not.toHaveBeenCalled();
@@ -816,6 +855,56 @@ describe("handleAnswer", () => {
       expect(savedAnswers[0]?.professionalSituation).toBe(
         ProfessionalSituation.STUDENT,
       );
+    });
+  });
+
+  describe("SU - easyHealthAccess optional", () => {
+    const removeAnswerByRef = (
+      object: TypeformWebhookPayload,
+      ref: string,
+    ): TypeformWebhookPayload => {
+      if (
+        object?.form_response &&
+        Array.isArray(object.form_response.answers)
+      ) {
+        object.form_response.answers = object.form_response.answers.filter(
+          (answer) => answer.field.ref !== ref,
+        );
+      }
+      return object;
+    };
+
+    it("should return 201 and save a null easyHealthAccess when not answered", async () => {
+      await db.survey.update({
+        data: { phase: getValidSurveyPhase(TypeformType.SU) },
+        where: { name: neighborhoodName },
+      });
+
+      // eslint-disable-next-line
+      let payload = JSON.parse(
+        JSON.stringify(valideSuSurveyPayload),
+      ) as TypeformWebhookPayload;
+
+      payload.form_response.hidden = {
+        neighborhood: neighborhoodName,
+        broadcast_channel: BroadcastChannel.mail_campaign,
+        broadcast_id: broadcastId,
+      };
+
+      payload = removeAnswerByRef(payload, "easyHealthAccess");
+
+      const signature = signPayload(
+        JSON.stringify(payload),
+        SignatureType.TYPEFORM,
+      );
+      const response = await handleTypeformAnswer(
+        // @ts-expect-error allow partial for test
+        buildRequest(payload, signature),
+      );
+
+      expect(response.status).toBe(201);
+      const savedAnswers = await db.suAnswer.findMany();
+      expect(savedAnswers[0]?.easyHealthAccess).toBeNull();
     });
   });
 });

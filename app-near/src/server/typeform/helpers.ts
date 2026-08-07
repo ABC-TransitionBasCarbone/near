@@ -62,7 +62,7 @@ export const getAnswerType = (formId?: string): AnswerType => {
 const noSurveyNameProvidedResponse = (
   surveyType: TypeformType | CarbonFootprintType,
 ): NextResponse<{ error: string }> => {
-  console.error("[whebhook]", surveyType, "Survey name not provided");
+  console.error("[webhook]", surveyType, "Survey name not provided");
   throw new TRPCError({
     code: "BAD_REQUEST",
     message: ErrorCode.MISSING_SURVEY_NAME,
@@ -72,7 +72,7 @@ const noSurveyNameProvidedResponse = (
 const noSurveyFoundResponse = (
   surveyName?: string,
 ): NextResponse<{ error: string }> => {
-  console.error("[whebhook]", surveyName, "Survey not found");
+  console.error("[webhook]", surveyName, "Survey not found");
   throw new TRPCError({
     code: "NOT_FOUND",
     message: ErrorCode.WRONG_SURVEY_NAME,
@@ -97,24 +97,22 @@ export const getSurveyInformations = async (
 
 export const notInPhaseSuSurveyResponse = (
   surveyName: string,
-  validPhase: SurveyPhase,
+  currentPhase: SurveyPhase,
+  validPhases: SurveyPhase[],
 ): NextResponse<{ error: string }> => {
-  console.error(
-    "[whebhook]",
-    surveyName,
-    `step ${validPhase} is over for ${surveyName}`,
-  );
+  const message = `survey ${surveyName} is in phase ${currentPhase}, valid phases are: ${validPhases.join(", ")}`;
+  console.error("[webhook]", surveyName, message);
   return NextResponse.json(
     {
-      error: `step ${validPhase} is over for ${surveyName}`,
+      error: message,
     },
 
     { status: 200 },
   );
 };
 
-export const isNotInPhase = (survey: Survey, validPhase: SurveyPhase) => {
-  return survey.phase !== validPhase;
+export const isNotInPhase = (survey: Survey, validPhases: SurveyPhase[]) => {
+  return !validPhases.includes(survey.phase);
 };
 
 export const okResponse = (
