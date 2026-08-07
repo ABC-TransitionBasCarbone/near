@@ -62,7 +62,7 @@ export const getAnswerType = (formId?: string): AnswerType => {
 const noSurveyNameProvidedResponse = (
   surveyType: TypeformType | CarbonFootprintType,
 ): NextResponse<{ error: string }> => {
-  console.error("[whebhook]", surveyType, "Survey name not provided");
+  console.error("[webhook]", surveyType, "Survey name not provided");
   throw new TRPCError({
     code: "BAD_REQUEST",
     message: ErrorCode.MISSING_SURVEY_NAME,
@@ -72,7 +72,7 @@ const noSurveyNameProvidedResponse = (
 const noSurveyFoundResponse = (
   surveyName?: string,
 ): NextResponse<{ error: string }> => {
-  console.error("[whebhook]", surveyName, "Survey not found");
+  console.error("[webhook]", surveyName, "Survey not found");
   throw new TRPCError({
     code: "NOT_FOUND",
     message: ErrorCode.WRONG_SURVEY_NAME,
@@ -101,7 +101,7 @@ export const notInPhaseSuSurveyResponse = (
   validPhases: SurveyPhase[],
 ): NextResponse<{ error: string }> => {
   const message = `survey ${surveyName} is in phase ${currentPhase}, valid phases are: ${validPhases.join(", ")}`;
-  console.error("[whebhook]", surveyName, message);
+  console.error("[webhook]", surveyName, message);
   return NextResponse.json(
     {
       error: message,

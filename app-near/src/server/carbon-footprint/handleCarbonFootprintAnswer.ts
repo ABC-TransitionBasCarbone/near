@@ -55,7 +55,7 @@ export const handleCarbonFootprintAnswer = async (
     await createAnswerError(JSON.parse(body), AnswerType.CARBON_FOOTPRINT);
     if (error instanceof z.ZodError) {
       console.error(
-        "[whebhook]",
+        "[webhook]",
         CarbonFootprintType.CARBON_FOOTPRINT,
         "ZOD ERROR :",
         error,
@@ -79,7 +79,7 @@ export const handleCarbonFootprintAnswer = async (
 
     if (error instanceof Error) {
       console.error(
-        "[whebhook]",
+        "[webhook]",
         CarbonFootprintType.CARBON_FOOTPRINT,
         "ERROR :",
         error.message,
@@ -88,7 +88,7 @@ export const handleCarbonFootprintAnswer = async (
     }
 
     console.error(
-      "[whebhook]",
+      "[webhook]",
       CarbonFootprintType.CARBON_FOOTPRINT,
       "UNKNOWN ERROR:",
       error,
