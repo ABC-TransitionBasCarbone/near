@@ -203,6 +203,26 @@ Note :
 - ngc*.json > exemples de payload pour le webhook ngcform
 - way-of-life.json > exemples de payload pour le webhook mode de vie
 
+## Comment lister et rejouer les webhooks en erreur
+
+Quand un webhook (Typeform ou NGC) échoue, son payload brut est sauvegardé en base (table `raw_answer_error`). Deux scripts permettent de lister ces erreurs et de les rejouer :
+
+```bash
+# Lister les erreurs actives
+npm run webhooks:list-errors -- [type=SU|WAY_OF_LIFE|CARBON_FOOTPRINT]
+
+# Rejouer une erreur précise
+npm run webhooks:replay -- id=<id>
+
+# Rejouer toutes les erreurs actives
+npm run webhooks:replay -- all=true [type=SU|WAY_OF_LIFE|CARBON_FOOTPRINT]
+
+# Rejouer toutes les erreurs actives d'une enquête donnée
+npm run webhooks:replay -- surveyName=<surveyName> [type=SU|WAY_OF_LIFE|CARBON_FOOTPRINT]
+```
+
+Note : si `surveyName` ne correspond à aucune enquête, le script affiche la liste des noms d'enquêtes valides.
+
 ## Comment jouer les seeds
 
 Pour lister les différents scopes (scénario de seed) possibles :

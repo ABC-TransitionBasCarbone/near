@@ -3,6 +3,7 @@ import { parseArgs } from "scripts/utils";
 import { recordAnswerErrorAttempt } from "~/server/anwser-error/recordAttempt";
 import { handleCarbonFootprintAnswer } from "~/server/carbon-footprint/handleCarbonFootprintAnswer";
 import { db } from "~/server/db";
+import { getOneSurveyByName } from "~/server/surveys/get";
 import { handleTypeformAnswer } from "~/server/typeform/handleTypeformAnswer";
 import { SignatureType, signPayload } from "~/server/typeform/signature";
 import { buildRequest } from "~/server/utils/buildRequest";
@@ -14,10 +15,22 @@ ${message}
 Usages:
   - npm run webhooks:replay -- id=<id>
   - npm run webhooks:replay -- all=true [type=SU|WAY_OF_LIFE|CARBON_FOOTPRINT]
+  - npm run webhooks:replay -- surveyName=<surveyName> [type=SU|WAY_OF_LIFE|CARBON_FOOTPRINT]
 `);
 };
 
 type RawAnswerError = Prisma.RawAnswerErrorGetPayload<object>;
+
+const getRowSurveyName = (row: RawAnswerError): string | undefined => {
+  const payload = row.rawPayload as {
+    neighborhoodId?: string;
+    form_response?: { hidden?: { neighborhood?: string } };
+  } | null;
+
+  return row.answerType === AnswerType.CARBON_FOOTPRINT
+    ? payload?.neighborhoodId
+    : payload?.form_response?.hidden?.neighborhood;
+};
 
 const replayOne = async (row: RawAnswerError): Promise<boolean> => {
   const body = JSON.stringify(row.rawPayload);
@@ -50,25 +63,51 @@ const replayOne = async (row: RawAnswerError): Promise<boolean> => {
   return false;
 };
 
-const replay = async () => {
-  const { id, all, type } = parseArgs() as {
-    id?: string;
-    all?: string;
-    type?: AnswerType;
-  };
+type ReplayArgs = {
+  id?: string;
+  all?: string;
+  type?: AnswerType;
+  surveyName?: string;
+};
 
-  if (!id && all !== "true") {
-    throw new Error("Verify usage command: id or all=true is missing");
+export const selectRowsToReplay = async (
+  args: ReplayArgs,
+): Promise<RawAnswerError[]> => {
+  const { id, all, type, surveyName } = args;
+
+  if (!id && all !== "true" && !surveyName) {
+    throw new Error(
+      "Verify usage command: id, all=true or surveyName is missing",
+    );
   }
 
-  const rows = await db.rawAnswerError.findMany({
-    where: {
-      status: AnswerErrorStatus.ACTIVE,
-      ...(id ? { id: Number(id) } : {}),
-      ...(type ? { answerType: type } : {}),
-    },
-    orderBy: { id: "asc" },
-  });
+  if (surveyName && !(await getOneSurveyByName(surveyName))) {
+    const validSurveyNames = (
+      await db.survey.findMany({
+        select: { name: true },
+        orderBy: { name: "asc" },
+      })
+    ).map(({ name }) => name);
+
+    throw new Error(
+      `Survey "${surveyName}" not found. Valid survey names: ${validSurveyNames.join(", ")}`,
+    );
+  }
+
+  return (
+    await db.rawAnswerError.findMany({
+      where: {
+        status: AnswerErrorStatus.ACTIVE,
+        ...(id ? { id: Number(id) } : {}),
+        ...(type ? { answerType: type } : {}),
+      },
+      orderBy: { id: "asc" },
+    })
+  ).filter((row) => !surveyName || getRowSurveyName(row) === surveyName);
+};
+
+export const replay = async (args: ReplayArgs = parseArgs() as ReplayArgs) => {
+  const rows = await selectRowsToReplay(args);
 
   if (rows.length === 0) {
     console.log("Nothing to replay (not found, or already resolved)");
