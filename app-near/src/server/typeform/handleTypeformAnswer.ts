@@ -52,7 +52,7 @@ export const handleTypeformAnswer = async (
     webhookId = parsedBody.event_id;
     const typeformType = getFormIdType(formId);
 
-    console.debug("[whebhook]", typeformType, body);
+    console.debug("[webhook]", typeformType, body);
 
     if (!isValidSignature(req, body, SignatureType.TYPEFORM)) {
       throw new TRPCError({
@@ -64,7 +64,7 @@ export const handleTypeformAnswer = async (
     const referencesMapping = getReferencesMapping(typeformType);
 
     const answers = convertFormToAnswer(parsedBody, referencesMapping);
-    console.debug("[whebhook]", typeformType, JSON.stringify(answers));
+    console.debug("[webhook]", typeformType, JSON.stringify(answers));
 
     if (isNotPartOfNeighborhood(answers)) {
       return okResponse("user should live in neighborhood");
@@ -164,7 +164,7 @@ export const handleTypeformAnswer = async (
 
     if (error instanceof z.ZodError) {
       console.error(
-        "[whebhook]",
+        "[webhook]",
         formId,
         webhookId,
         "ZOD ERROR :",
@@ -188,11 +188,11 @@ export const handleTypeformAnswer = async (
     }
 
     if (error instanceof Error) {
-      console.error("[whebhook]", formId, webhookId, "ERROR :", error.message);
+      console.error("[webhook]", formId, webhookId, "ERROR :", error.message);
       return NextResponse.json({ error: error.message }, { status: 400 });
     }
 
-    console.error("[whebhook]", formId, webhookId, "UNKNOWN ERROR:", error);
+    console.error("[webhook]", formId, webhookId, "UNKNOWN ERROR:", error);
     return NextResponse.json(
       { error: "Internal Server Error" },
       { status: 500 },
