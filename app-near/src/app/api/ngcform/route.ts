@@ -18,7 +18,7 @@ export async function POST(req: NextRequest) {
     }
 
     console.error(
-      "[whebhook ngcform]",
+      "[webhook ngcform]",
       `unexpected error:`,
       error,
       "BODY:",
