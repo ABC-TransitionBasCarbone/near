@@ -28,6 +28,8 @@
     "survey:create": "tsx ./scripts/surveys/createSurvey.ts",
     "webhooks:list-errors": "tsx ./scripts/webhooks/list-errors.ts",
     "webhooks:replay": "tsx ./scripts/webhooks/replay.ts",
+    "webhooks:recover-from-logs": "tsx ./scripts/webhooks/recover-from-logs.ts",
+    "webhooks:replay-from-file": "tsx ./scripts/webhooks/replay-from-file.ts",
     "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,mdx}\" --cache",
     "format:write": "prettier --write \"**/*.{ts,tsx,js,jsx,mdx}\" --cache",
     "typecheck": "tsc --noEmit",

@@ -32,33 +32,55 @@ const getRowSurveyName = (row: RawAnswerError): string | undefined => {
     : payload?.form_response?.hidden?.neighborhood;
 };
 
-const replayOne = async (row: RawAnswerError): Promise<boolean> => {
-  const body = JSON.stringify(row.rawPayload);
+export type ReplayResult = {
+  success: boolean;
+  status: number;
+  text: string;
+};
+
+export const replayPayload = async (
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  payload: any,
+  answerType: AnswerType,
+): Promise<ReplayResult> => {
+  const body = JSON.stringify(payload);
   const signatureType =
-    row.answerType === AnswerType.CARBON_FOOTPRINT
+    answerType === AnswerType.CARBON_FOOTPRINT
       ? SignatureType.NGC_FORM
       : SignatureType.TYPEFORM;
   const signature = signPayload(body, signatureType);
 
-  const request = buildRequest(row.rawPayload, signature);
+  const request = buildRequest(payload, signature);
 
   const response =
-    row.answerType === AnswerType.CARBON_FOOTPRINT
+    answerType === AnswerType.CARBON_FOOTPRINT
       ? // @ts-expect-error buildRequest is a partial NextRequest, enough for the handler
         await handleCarbonFootprintAnswer(request)
       : // @ts-expect-error buildRequest is a partial NextRequest, enough for the handler
         await handleTypeformAnswer(request);
 
-  if (response.status === 200 || response.status === 201) {
+  return {
+    success: response.status === 200 || response.status === 201,
+    status: response.status,
+    text: await response.text(),
+  };
+};
+
+const replayOne = async (row: RawAnswerError): Promise<boolean> => {
+  const result = await replayPayload(row.rawPayload, row.answerType);
+
+  if (result.success) {
     await recordAnswerErrorAttempt(row.id, { success: true });
-    console.log(`[replay] id=${row.id} resolved (status ${response.status})`);
+    console.log(`[replay] id=${row.id} resolved (status ${result.status})`);
     return true;
   }
 
-  const errorMessage = await response.text();
-  await recordAnswerErrorAttempt(row.id, { success: false, errorMessage });
+  await recordAnswerErrorAttempt(row.id, {
+    success: false,
+    errorMessage: result.text,
+  });
   console.log(
-    `[replay] id=${row.id} still failing (status ${response.status}): ${errorMessage}`,
+    `[replay] id=${row.id} still failing (status ${result.status}): ${result.text}`,
   );
   return false;
 };
