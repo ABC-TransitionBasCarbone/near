@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import { type Survey, SurveyPhase } from "@prisma/client";
+import { AnswerErrorStatus, type Survey, SurveyPhase } from "@prisma/client";
 import { db } from "~/server/db";
 import { ErrorCode } from "~/types/enums/error";
 import apiSuService from "../external-api/api-su";
@@ -223,6 +223,88 @@ describe("handleCarbonFootprintAnswer", () => {
 
     const data = await db.carbonFootprintAnswer.findMany();
     expect(data.length).toBe(1);
+  });
+
+  it("should not create a duplicate error row when the same payload fails again (Typeform retry)", async () => {
+    await db.survey.update({
+      data: { phase: SurveyPhase.STEP_4_ADDITIONAL_SURVEY },
+      where: { name: neighborhoodName },
+    });
+
+    jest.spyOn(apiSuService, "assignSu").mockReturnValue(
+      Promise.resolve({
+        distanceToBarycenter: 1234,
+        su: 19, // su not existing in db
+      }),
+    );
+
+    const payload = getValideCarbonFootprintPayload(neighborhoodName);
+    const signature = signPayload(
+      JSON.stringify(payload),
+      SignatureType.NGC_FORM,
+    );
+
+    await handleCarbonFootprintAnswer(
+      // @ts-expect-error allow partial for test
+      buildRequest(payload, signature),
+    );
+    await handleCarbonFootprintAnswer(
+      // @ts-expect-error allow partial for test
+      buildRequest(payload, signature),
+    );
+
+    const data = await db.rawAnswerError.findMany();
+    expect(data.length).toBe(1);
+    expect(data[0]?.retryCount).toBe(1);
+    expect(data[0]?.externalId).toBe(payload.id);
+  });
+
+  it("should resolve a previous error for the same payload once a retry succeeds", async () => {
+    await db.survey.update({
+      data: { phase: SurveyPhase.STEP_4_ADDITIONAL_SURVEY },
+      where: { name: neighborhoodName },
+    });
+
+    const payload = getValideCarbonFootprintPayload(neighborhoodName);
+    const signature = signPayload(
+      JSON.stringify(payload),
+      SignatureType.NGC_FORM,
+    );
+
+    jest.spyOn(apiSuService, "assignSu").mockReturnValue(
+      Promise.resolve({
+        distanceToBarycenter: 1234,
+        su: 19, // su not existing in db, first attempt fails
+      }),
+    );
+
+    await handleCarbonFootprintAnswer(
+      // @ts-expect-error allow partial for test
+      buildRequest(payload, signature),
+    );
+
+    const errorsBefore = await db.rawAnswerError.findMany();
+    expect(errorsBefore.length).toBe(1);
+    expect(errorsBefore[0]?.status).toBe(AnswerErrorStatus.ACTIVE);
+
+    jest.spyOn(apiSuService, "assignSu").mockReturnValue(
+      Promise.resolve({
+        distanceToBarycenter: 1234,
+        su, // retry succeeds
+      }),
+    );
+
+    const response = await handleCarbonFootprintAnswer(
+      // @ts-expect-error allow partial for test
+      buildRequest(payload, signature),
+    );
+
+    expect(response.status).toBe(201);
+
+    const errorsAfter = await db.rawAnswerError.findMany();
+    expect(errorsAfter.length).toBe(1);
+    expect(errorsAfter[0]?.status).toBe(AnswerErrorStatus.RESOLVED);
+    expect(errorsAfter[0]?.comment).toBeTruthy();
   });
 
   it("should return 404 when calculated su is not found", async () => {

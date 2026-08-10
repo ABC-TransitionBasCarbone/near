@@ -35,6 +35,7 @@ import { typeformSchemaMapper } from "./schema";
 import { isValidSignature, SignatureType } from "./signature";
 import { createAnswerError } from "../anwser-error/create";
 import { getErrorMessage } from "../anwser-error/getErrorMessage";
+import { resolveAnswerErrorsByExternalId } from "../anwser-error/resolve";
 import { mapProfessionalCategoryFromSituation } from "~/shared/services/su-answers/mapProfessionalCategory";
 
 export const handleTypeformAnswer = async (
@@ -42,12 +43,20 @@ export const handleTypeformAnswer = async (
 ): Promise<NextResponse> => {
   let formId: string | undefined = undefined;
   let webhookId: string | undefined = undefined;
+  let externalId: string | undefined = undefined;
 
   const body = await req.text();
+  let rawBody: unknown = null;
   try {
-    const parsedBody: TypeformWebhookPayload = TypeformWebhookSchema.parse(
-      JSON.parse(body),
-    );
+    rawBody = JSON.parse(body);
+    externalId =
+      typeof (rawBody as { form_response?: { token?: unknown } })?.form_response
+        ?.token === "string"
+        ? (rawBody as { form_response: { token: string } }).form_response.token
+        : undefined;
+
+    const parsedBody: TypeformWebhookPayload =
+      TypeformWebhookSchema.parse(rawBody);
     formId = parsedBody.form_response.form_id;
     webhookId = parsedBody.event_id;
     const typeformType = getFormIdType(formId);
@@ -154,12 +163,15 @@ export const handleTypeformAnswer = async (
       }
     }
 
+    await resolveAnswerErrorsByExternalId(externalId, getAnswerType(formId));
+
     return NextResponse.json({ message: "created" }, { status: 201 });
   } catch (error) {
     await createAnswerError(
-      JSON.parse(body),
+      rawBody ?? body,
       getAnswerType(formId),
       getErrorMessage(error),
+      externalId,
     );
 
     if (error instanceof z.ZodError) {

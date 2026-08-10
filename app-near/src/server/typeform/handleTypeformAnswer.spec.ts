@@ -1,4 +1,5 @@
 import {
+  AnswerErrorStatus,
   BroadcastChannel,
   ProfessionalCategory,
   ProfessionalSituation,
@@ -304,6 +305,24 @@ describe("handleAnswer", () => {
       expect(sendEmailMock).not.toHaveBeenCalled();
       await expectFailedPayloadIsNotSaved();
     });
+
+    it("should not create a duplicate error row when the same payload fails again (Typeform retry)", async () => {
+      await handleTypeformAnswer(
+        // @ts-expect-error allow partial for test
+        buildRequest(valideSuSurveyPayload, "wrong-signature"),
+      );
+      await handleTypeformAnswer(
+        // @ts-expect-error allow partial for test
+        buildRequest(valideSuSurveyPayload, "wrong-signature"),
+      );
+
+      const data = await db.rawAnswerError.findMany();
+      expect(data.length).toBe(1);
+      expect(data[0]?.retryCount).toBe(1);
+      expect(data[0]?.externalId).toBe(
+        valideSuSurveyPayload.form_response.token,
+      );
+    });
   });
 
   describe.each(Object.values(TypeformType))("When %s", (typeformType) => {
@@ -486,6 +505,53 @@ describe("handleAnswer", () => {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       const data = await model.findMany();
       expect(data.length).toBe(1);
+    });
+
+    it("should resolve a previous error for the same payload once a retry succeeds", async () => {
+      await db.survey.update({
+        data: { phase: validSurveyPhase },
+        where: { name: neighborhoodName },
+      });
+
+      // eslint-disable-next-line
+      let payload = JSON.parse(
+        JSON.stringify(validSurveyPayload),
+      ) as TypeformWebhookPayload;
+
+      payload.form_response.hidden = {
+        neighborhood: neighborhoodName,
+        broadcast_channel: BroadcastChannel.mail_campaign,
+        broadcast_id: broadcastId,
+      };
+
+      payload = replaceSu(payload, su);
+
+      // first attempt fails (simulates a Typeform-side transient failure)
+      await handleTypeformAnswer(
+        // @ts-expect-error allow partial for test
+        buildRequest(payload, "wrong-signature"),
+      );
+
+      const errorsBefore = await db.rawAnswerError.findMany();
+      expect(errorsBefore.length).toBe(1);
+      expect(errorsBefore[0]?.status).toBe(AnswerErrorStatus.ACTIVE);
+
+      // Typeform retries the same event and it succeeds this time
+      const signature = signPayload(
+        JSON.stringify(payload),
+        SignatureType.TYPEFORM,
+      );
+      const response = await handleTypeformAnswer(
+        // @ts-expect-error allow partial for test
+        buildRequest(payload, signature),
+      );
+
+      expect(response.status).toBe(201);
+
+      const errorsAfter = await db.rawAnswerError.findMany();
+      expect(errorsAfter.length).toBe(1);
+      expect(errorsAfter[0]?.status).toBe(AnswerErrorStatus.RESOLVED);
+      expect(errorsAfter[0]?.comment).toBeTruthy();
     });
 
     it("should return 201 for suAnswer when email already exist", async () => {
