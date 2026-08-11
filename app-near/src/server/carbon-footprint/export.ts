@@ -9,12 +9,12 @@ export const buildCSVFromCarbonFootprintAnswers = async (
     orderBy: { id: "asc" },
     select: {
       email: true,
-      su: true,
+      su: { select: { suBank: true } },
     },
   });
 
   return buildCsv(answers, (answer) => ({
-    SU: answer.su?.su,
+    SU: answer.su?.suBank?.name,
     Email: answer.email,
   }));
 };
