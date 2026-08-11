@@ -11,7 +11,7 @@ export const createSu = async (answer: SuAnswer, surveyName: string) => {
     throw new Error("survey not found");
   }
 
-  if (answer.typeformId === UNKNOWN_TYPEFORM_ID) {
+  if (!answer.typeformId || answer.typeformId === UNKNOWN_TYPEFORM_ID) {
     throw new Error("missing typeformId");
   }
 

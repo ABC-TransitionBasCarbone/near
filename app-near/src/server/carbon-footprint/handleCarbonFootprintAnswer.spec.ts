@@ -3,7 +3,7 @@ import { AnswerErrorStatus, type Survey, SurveyPhase } from "@prisma/client";
 import { db } from "~/server/db";
 import { ErrorCode } from "~/types/enums/error";
 import apiSuService from "../external-api/api-su";
-import { getValideCarbonFootprintPayload } from "../test-utils/carbonFootprint";
+import { getValidCarbonFootprintPayload } from "../test-utils/carbonFootprint";
 import { clearAlldata } from "../test-utils/clear";
 import { expectFailedPayloadIsSaved } from "../test-utils/expects/answerError";
 import { buildRequest } from "../utils/buildRequest";
@@ -54,7 +54,7 @@ describe("handleCarbonFootprintAnswer", () => {
   });
 
   it("should return 401 when signature is invalid", async () => {
-    const payload = getValideCarbonFootprintPayload(neighborhoodName);
+    const payload = getValidCarbonFootprintPayload(neighborhoodName);
 
     const response = await handleCarbonFootprintAnswer(
       // @ts-expect-error allow partial for test
@@ -67,7 +67,7 @@ describe("handleCarbonFootprintAnswer", () => {
   });
 
   it("should return 400 when transformed data is invalid", async () => {
-    const payload = getValideCarbonFootprintPayload(neighborhoodName);
+    const payload = getValidCarbonFootprintPayload(neighborhoodName);
 
     // @ts-expect-error pas string rather than number for test purpose
     payload.calculatedResults.alimentation = "should be number";
@@ -86,7 +86,7 @@ describe("handleCarbonFootprintAnswer", () => {
   });
 
   it("should return 404 when no survey found by name", async () => {
-    const payload = getValideCarbonFootprintPayload(neighborhoodName);
+    const payload = getValidCarbonFootprintPayload(neighborhoodName);
 
     payload.neighborhoodId = "unknown";
     const signature = signPayload(
@@ -112,7 +112,7 @@ describe("handleCarbonFootprintAnswer", () => {
       where: { name: neighborhoodName },
     });
 
-    const payload = getValideCarbonFootprintPayload(neighborhoodName);
+    const payload = getValidCarbonFootprintPayload(neighborhoodName);
     const signature = signPayload(
       JSON.stringify(payload),
       SignatureType.NGC_FORM,
@@ -151,7 +151,7 @@ describe("handleCarbonFootprintAnswer", () => {
       },
     });
 
-    const payload = getValideCarbonFootprintPayload(
+    const payload = getValidCarbonFootprintPayload(
       neighborhoodName,
       suNameFromNGC,
     );
@@ -177,7 +177,7 @@ describe("handleCarbonFootprintAnswer", () => {
   });
 
   it("should return 400 when neighborhood is not defined", async () => {
-    const payload = getValideCarbonFootprintPayload(neighborhoodName);
+    const payload = getValidCarbonFootprintPayload(neighborhoodName);
 
     payload.neighborhoodId = "";
     const signature = signPayload(
@@ -203,7 +203,7 @@ describe("handleCarbonFootprintAnswer", () => {
       where: { name: neighborhoodName },
     });
 
-    const payload = getValideCarbonFootprintPayload(neighborhoodName);
+    const payload = getValidCarbonFootprintPayload(neighborhoodName);
     const signature = signPayload(
       JSON.stringify(payload),
       SignatureType.NGC_FORM,
@@ -238,7 +238,7 @@ describe("handleCarbonFootprintAnswer", () => {
       }),
     );
 
-    const payload = getValideCarbonFootprintPayload(neighborhoodName);
+    const payload = getValidCarbonFootprintPayload(neighborhoodName);
     const signature = signPayload(
       JSON.stringify(payload),
       SignatureType.NGC_FORM,
@@ -265,7 +265,7 @@ describe("handleCarbonFootprintAnswer", () => {
       where: { name: neighborhoodName },
     });
 
-    const payload = getValideCarbonFootprintPayload(neighborhoodName);
+    const payload = getValidCarbonFootprintPayload(neighborhoodName);
     const signature = signPayload(
       JSON.stringify(payload),
       SignatureType.NGC_FORM,
@@ -320,7 +320,7 @@ describe("handleCarbonFootprintAnswer", () => {
       where: { name: neighborhoodName },
     });
 
-    const payload = getValideCarbonFootprintPayload(neighborhoodName);
+    const payload = getValidCarbonFootprintPayload(neighborhoodName);
     const signature = signPayload(
       JSON.stringify(payload),
       SignatureType.NGC_FORM,
