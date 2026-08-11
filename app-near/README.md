@@ -95,7 +95,9 @@ docker-compose up;
 
 docker compose up;
 ```
+
 Au démarrage, les actions suivantes seront réalisées :
+
 ```bash
 # Reset de la base de données
 npm run data:reset "postgresql://postgres:password@database:5432/app-near";
@@ -112,7 +114,6 @@ npm run user:create -- role=PILOTE email=pilote@mail.com password=pilote surveyN
 # Création de l'utilisateur avec le rôle ADMIN
 npm run user:create -- role=ADMIN email=admin@mail.com password=admin
 ```
-
 
 #### 2.2 En environnement de production (ou dockerisé)
 
@@ -132,7 +133,8 @@ npm run user:create -- role=ADMIN email=<email> password=<password>
 
 ###### 2.2.3.1 En utilisant le back-office (fortement recommandé)
 
-Connectez vous en tant qu'administrateur, puis utilisez le back-office pour : 
+Connectez vous en tant qu'administrateur, puis utilisez le back-office pour :
+
 - Créer un quartier
 - Associer un utilisateur avec le rôle PILOTE à ce quartier
 
@@ -150,6 +152,7 @@ npm run user:create -- role=PILOTE email=pilote@mail.com password=pilote surveyN
 Les scripts utilisent les variables du fichier `.env`
 
 ## Comment créer des utilisateurs
+
 ```bash
 npm run user:create -- email=<email> password=<password> role=<role> [surveyName=<surveyName>]
 
@@ -200,8 +203,43 @@ npm run user:create -- email=<email> password=<password> role=<role> [surveyName
 Note :
 
 - su.json > exemple de payload pour le webhook sphère d'usage
-- ngc*.json > exemples de payload pour le webhook ngcform
+- ngc\*.json > exemples de payload pour le webhook ngcform
 - way-of-life.json > exemples de payload pour le webhook mode de vie
+
+## Comment lister et rejouer les webhooks en erreur
+
+Quand un webhook (Typeform ou NGC) échoue, son payload brut est sauvegardé en base (table `raw_answer_error`). Deux scripts permettent de lister ces erreurs et de les rejouer :
+
+```bash
+# Lister les erreurs actives
+npm run webhooks:list-errors -- [type=SU|WAY_OF_LIFE|CARBON_FOOTPRINT]
+
+# Rejouer une erreur précise
+npm run webhooks:replay -- id=<id>
+
+# Rejouer toutes les erreurs actives
+npm run webhooks:replay -- all=true [type=SU|WAY_OF_LIFE|CARBON_FOOTPRINT]
+
+# Rejouer toutes les erreurs actives d'une enquête donnée
+npm run webhooks:replay -- surveyName=<surveyName> [type=SU|WAY_OF_LIFE|CARBON_FOOTPRINT]
+```
+
+Note : si `surveyName` ne correspond à aucune enquête, le script affiche la liste des noms d'enquêtes valides.
+
+## Comment récupérer des soumissions SU perdues dans les logs à cause de la phase
+
+Avant le fix NEAR-87, une soumission SU arrivant hors phase valide était silencieusement rejetée (réponse 200, rien n'était sauvegardé ni enregistré dans `raw_answer_error`) : le payload n'existe alors que dans les logs applicatifs, sous la forme d'une ligne `<enquête> step <phase> is over for <enquête>`. Deux scripts permettent de les récupérer et de les rejouer, séparément de `raw_answer_error` :
+
+```bash
+# 1. Extraire les payloads perdus d'un fichier de log vers un JSON exploitable
+# (opération de lecture seule, sans écriture en base, idempotente)
+npm run webhooks:recover-from-logs -- file=<chemin vers logs-app.log> [out=<chemin du json, défaut scripts/webhooks/recovered-su-payloads.json>]
+
+# 2. Rejouer les payloads du fichier extrait (mêmes options que webhooks:replay)
+npm run webhooks:replay-from-file -- file=<chemin du json> id=<id>
+npm run webhooks:replay-from-file -- file=<chemin du json> all=true
+npm run webhooks:replay-from-file -- file=<chemin du json> surveyName=<surveyName>
+```
 
 ## Comment jouer les seeds
 
@@ -222,4 +260,3 @@ Pour jouer un scénario de seed (exemple pour les sphères d'usage) :
 ```bash
  npm run seed -- scope=su_answer surveyName="Porte d'Orléans" surveyTarget=400 surveyCase=LESS_THAN_GLOBAL_TARGET
 ```
-

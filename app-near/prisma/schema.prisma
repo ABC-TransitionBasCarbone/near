@@ -598,11 +598,24 @@ enum AnswerType {
   UNKNWON
 }
 
-model RawAnswerError {
-  id         Int        @id @default(autoincrement())
-  rawPayload Json       @map("raw_payload")
-  answerType AnswerType @map("answer_type")
+enum AnswerErrorStatus {
+  ACTIVE
+  RESOLVED
+}
 
+model RawAnswerError {
+  id            Int               @id @default(autoincrement())
+  rawPayload    Json              @map("raw_payload")
+  answerType    AnswerType        @map("answer_type")
+  errorMessage  String?           @map("error_message")
+  status        AnswerErrorStatus @default(ACTIVE)
+  retryCount    Int               @default(0) @map("retry_count")
+  lastAttemptAt DateTime?         @map("last_attempt_at")
+  resolvedAt    DateTime?         @map("resolved_at")
+  externalId    String?           @map("external_id")
+  comment       String?           @map("comment")
+
+  @@index([externalId, answerType, status])
   @@map("raw_answer_error")
 }
 

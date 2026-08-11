@@ -1,5 +1,4 @@
 # Logs
-logs
 *.log
 npm-debug.log*
 yarn-debug.log*
@@ -129,7 +128,6 @@ dist
 .yarn/install-state.gz
 .pnp.*
 
-
 # Python
 .venv/
 .ruff_cache/
@@ -140,3 +138,6 @@ __pycache__/
 *.csv
 *.CSV
 *.zip
+
+# Backup
+*.pgsql

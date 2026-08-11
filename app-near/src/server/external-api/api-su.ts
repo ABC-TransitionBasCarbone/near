@@ -1,4 +1,4 @@
-import { type SuData, type SuAnswer } from ".prisma/client";
+import { type SuData, type SuAnswer } from "@prisma/client";
 import camelcaseKeys from "camelcase-keys";
 import snakecaseKeys from "snakecase-keys";
 import { env } from "~/env";

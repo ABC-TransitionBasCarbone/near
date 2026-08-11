@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
+import { AnswerErrorStatus } from "@prisma/client";
 import { db } from "~/server/db";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -26,6 +27,8 @@ export const expectFailedPayloadIsSaved = async (payload: unknown) => {
   expect(roundNumbers(data[0]!.rawPayload)).toMatchObject(
     roundNumbers(payload),
   );
+  expect(data[0]!.status).toBe(AnswerErrorStatus.ACTIVE);
+  expect(data[0]!.errorMessage).toBeTruthy();
 };
 
 export const expectFailedPayloadIsNotSaved = async () => {

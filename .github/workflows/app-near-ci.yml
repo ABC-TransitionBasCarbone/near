@@ -1,9 +1,8 @@
-name: Build and Test APP NEAR on develop branch
+name: Build and Test APP NEAR
 
 on:
   pull_request:
-    branches-ignore:
-      - main
+    branches: [develop, main]
     paths:
       - 'app-near/**'
 
