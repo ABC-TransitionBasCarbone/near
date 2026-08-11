@@ -58,6 +58,7 @@ const GaugeErrorMargin: React.FC<GaugeErrorMarginProps> = ({
       startAngle={-120}
       endAngle={120}
       unitLabel={`répondant${value ? "s" : ""}`}
+      legendTitle="Marge d'erreur estimée"
     />
   );
 };
