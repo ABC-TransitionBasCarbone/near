@@ -176,8 +176,8 @@ const FormNeighborhoodGeography: React.FC<FormNeighborhoodGeographyProps> = ({
         {!isCompleted && (
           <p className="text-sm italic text-gray">
             Tant que ce formulaire n&apos;est pas complété pour les 4
-            directions, un rappel s&apos;affichera à l&apos;étape &quot;Enquêtes
-            complémentaires&quot;.
+            directions, un rappel s&apos;affichera avant de passer à
+            l&apos;étape &quot;Enquêtes complémentaires&quot;.
           </p>
         )}
 
@@ -238,6 +238,48 @@ const FormNeighborhoodGeography: React.FC<FormNeighborhoodGeographyProps> = ({
             Les <strong>destinations éloignées</strong> : destinations/communes
             connues du plus ou moins proches au delà de 20 minutes à pied (zones
             de proximité, villes voisines, communes en agglomération… ).
+          </li>
+        </ul>
+
+        <p className="font-bold">
+          Avant de commencer... les contraintes de saisie
+        </p>
+        <ul className="list-inside list-disc">
+          <li>
+            Privilégier les destinations attractives, fréquentées, connues.
+          </li>
+          <li>Citer les destinations du plus proche au plus éloigné.</li>
+          <li>
+            Les listes de destinations doivent être séparées par des virgules
+            afin d&apos;être lisibles.
+          </li>
+          <li>
+            Évitez les indications approximatives ou subjectives basées sur la
+            proximité, ou des repères locaux (&ldquo;près de&ldquo;, &ldquo;à
+            côté de&ldquo;, &ldquo;après&ldquo;, &ldquo;vers&ldquo;).
+          </li>
+        </ul>
+
+        <p className="font-bold">
+          Outil recommandé pour vous aider : utilisez{" "}
+          <a href="https://www.smappen.fr/">smappen.fr</a> ! Cet outil permet de
+          :
+        </p>
+
+        <ul className="list-inside list-disc">
+          <li>
+            vérifier concrètement : ”quelles communes ou lieux sont accessibles
+            à moins de 20 min à pied depuis le quartier (destinations proches)
+            puis à plus de 20 minutes (destinations loins)?” et définir les
+            destinations pour chaque direction (Nord-Ouest-Sud-Est). Pour cela
+            il suffit de saisir une adresse de départ dans le quartier, et
+            définir une zone par temps de trajet (20 minutes), distance, mode de
+            transport (pied)
+          </li>
+
+          <li>
+            Créer un support d’aide à l’animation les enquêteur·ices sur le
+            terrain !
           </li>
         </ul>
 
