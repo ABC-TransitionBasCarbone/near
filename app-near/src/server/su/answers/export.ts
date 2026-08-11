@@ -12,7 +12,7 @@ export const buildCSVFromSUAnswers = async (
       gender: true,
       ageCategory: true,
       professionalCategory: true,
-      su: true,
+      su: { select: { suBank: true } },
     },
   });
 
@@ -21,6 +21,6 @@ export const buildCSVFromSUAnswers = async (
     Genre: answer.gender,
     Age: answer.ageCategory,
     CSP: answer.professionalCategory,
-    SU: answer.su?.su,
+    SU: answer.su?.suBank?.name,
   }));
 };
