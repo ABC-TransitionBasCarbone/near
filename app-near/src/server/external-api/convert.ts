@@ -6,7 +6,7 @@ import {
   PurchasingStrategy,
   type SuAnswer,
   TransportationMode,
-} from ".prisma/client";
+} from "@prisma/client";
 import {
   type SuInformationToCompute,
   type SuAnswerData,

@@ -63,5 +63,35 @@ describe("create", () => {
       expect(createdData.length).toBe(1);
       expect(createdData[0]?.suId).toBe(knownSuData.id);
     });
+
+    it("should not create a duplicate when replayed with the same typeformId", async () => {
+      const answer = buildWayOfLifeAnswer(survey.id, {
+        typeformId: "typeform-1",
+        knowSu: true,
+        suId: knownSuData.id,
+      });
+
+      await handleWayOfLifeCreation(answer, survey);
+      await handleWayOfLifeCreation(answer, survey);
+
+      const createdData = await db.wayOfLifeAnswer.findMany();
+      expect(createdData.length).toBe(1);
+    });
+
+    it("should refuse to create a WayOfLifeAnswer with the default 'unknown' typeformId", async () => {
+      await expect(
+        handleWayOfLifeCreation(
+          buildWayOfLifeAnswer(survey.id, {
+            typeformId: "unknown",
+            knowSu: true,
+            suId: knownSuData.id,
+          }),
+          survey,
+        ),
+      ).rejects.toThrow("missing typeformId");
+
+      const createdData = await db.wayOfLifeAnswer.findMany();
+      expect(createdData.length).toBe(0);
+    });
   });
 });
