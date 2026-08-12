@@ -140,3 +140,6 @@ __pycache__/
 *.csv
 *.CSV
 *.zip
+
+# Backup
+*.pgsql

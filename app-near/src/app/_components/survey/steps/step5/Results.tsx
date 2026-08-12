@@ -10,6 +10,7 @@ import {
 } from "~/types/enums/resultDashboard";
 import { ButtonStyle } from "~/types/enums/button";
 import StatQuality from "./StatQuality";
+import DatavizDashboard from "~/app/_components/dataviz/DatavizDashboard";
 
 const dahboardMapping: Record<
   ResultDashboard,
@@ -67,7 +68,7 @@ const Results: React.FC = () => {
 
           <h1 className="my-4 text-3xl text-black">Résultat des enquêtes</h1>
           <div className="mt-8 flex flex-wrap gap-2">
-            {allResultDashboards.map((item) => (
+            {/* {allResultDashboards.map((item) => (
               <Button
                 key={item}
                 rounded
@@ -80,7 +81,9 @@ const Results: React.FC = () => {
               >
                 {dahboardMapping[item].label}
               </Button>
-            ))}
+            ))} */}
+
+            <DatavizDashboard />
           </div>
         </div>
       }

@@ -1,4 +1,4 @@
-import { type SuBankData } from "~/types/SuDataviz";
+import { type SuBankData } from "~/types/Dataviz";
 import { db } from "../db";
 
 export type SuBankSeed = SuBankData;

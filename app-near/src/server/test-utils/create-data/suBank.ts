@@ -1,4 +1,4 @@
-import { type SuBankData } from "~/types/SuDataviz";
+import { type SuBankData } from "~/types/Dataviz";
 
 export const buildSuBank = (data: Partial<SuBankData> & { id: number }): SuBankData => ({
   name: `su-bank-${data.id}`,
