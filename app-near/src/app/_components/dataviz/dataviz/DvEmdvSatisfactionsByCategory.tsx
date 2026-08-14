@@ -13,7 +13,7 @@ const DvEmdvSatisfactionsByCategory: React.FC<Props> = ({
   selectedSus,
   category,
 }) => {
-  const { containerRef, width, height } = useChartDimensions();
+  const { containerRef, container, width, height } = useChartDimensions();
   const svgRef = useRef<SVGSVGElement>(null);
 
   const {
@@ -50,7 +50,7 @@ const DvEmdvSatisfactionsByCategory: React.FC<Props> = ({
     const totalH = questions.length * (rowH + gap);
     const yStart = Math.max(0, (innerH - totalH) / 2);
 
-    const tooltipSel = getD3Tooltip(containerRef.current);
+    const tooltipSel = getD3Tooltip(container);
 
     questions.forEach((q, i) => {
       const g = root
@@ -75,7 +75,7 @@ const DvEmdvSatisfactionsByCategory: React.FC<Props> = ({
           .attr("fill", seg.color)
           .style("cursor", "pointer")
           .on("mousemove", function (event: MouseEvent) {
-            const rect = containerRef.current?.getBoundingClientRect();
+            const rect = container?.getBoundingClientRect();
             const px = rect
               ? event.pageX - (rect.left + window.scrollX)
               : event.pageX;
@@ -117,7 +117,7 @@ const DvEmdvSatisfactionsByCategory: React.FC<Props> = ({
         .style("fill", "#374151")
         .text(`${q.emoji} ${q.title}`);
     });
-  }, [questions, width, height, containerRef]);
+  }, [questions, width, height, container]);
 
   if (loading) {
     return (

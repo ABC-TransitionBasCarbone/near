@@ -19,7 +19,7 @@ const ROW_STEP = ROW_H + LEGEND_H + 18; // bar + legend + gap
 const MARGIN = { top: 40, right: 20, bottom: 20, left: 20 };
 
 const DvCarbonStackedBars: React.FC<Props> = ({ selectedSus }) => {
-  const { containerRef, width } = useChartDimensions();
+  const { containerRef, container, width } = useChartDimensions();
   const svgRef = useRef<SVGSVGElement>(null);
 
   const suBank = useSuBank(selectedSus);
@@ -65,10 +65,7 @@ const DvCarbonStackedBars: React.FC<Props> = ({ selectedSus }) => {
     svg.selectAll("*").remove();
     svg.attr("width", width).attr("height", svgH);
 
-    const tooltip = getD3Tooltip(containerRef.current).style(
-      "white-space",
-      "nowrap",
-    );
+    const tooltip = getD3Tooltip(container).style("white-space", "nowrap");
 
     const root = svg
       .append("g")
@@ -152,7 +149,7 @@ const DvCarbonStackedBars: React.FC<Props> = ({ selectedSus }) => {
           .attr("fill", color)
           .style("cursor", "pointer")
           .on("mousemove", function (event: MouseEvent) {
-            const rect = containerRef.current?.getBoundingClientRect();
+            const rect = container?.getBoundingClientRect();
             const px = rect
               ? event.pageX - (rect.left + window.scrollX)
               : event.pageX;
@@ -218,7 +215,7 @@ const DvCarbonStackedBars: React.FC<Props> = ({ selectedSus }) => {
 
       fo.node()!.appendChild(legendDiv);
     });
-  }, [payload, palette, mainColor, globalMax, width, containerRef]);
+  }, [payload, palette, mainColor, globalMax, width, container]);
 
   if (loading) {
     return (

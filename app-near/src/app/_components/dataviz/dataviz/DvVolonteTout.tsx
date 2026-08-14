@@ -12,7 +12,11 @@ interface Props {
 }
 
 const DvVolonteTout: React.FC<Props> = ({ selectedSus }) => {
-  const { containerRef, width: measuredWidth } = useChartDimensions();
+  const {
+    containerRef,
+    container,
+    width: measuredWidth,
+  } = useChartDimensions();
   const svgRef = useRef<SVGSVGElement | null>(null);
 
   const {
@@ -103,7 +107,7 @@ const DvVolonteTout: React.FC<Props> = ({ selectedSus }) => {
       .style("fill", "#4B5563")
       .text(`${data.data.length} questions`);
 
-    const tooltipSel = getD3Tooltip(containerRef.current);
+    const tooltipSel = getD3Tooltip(container);
 
     // Bars + Headers
     data.data.forEach((q, i) => {
@@ -139,7 +143,7 @@ const DvVolonteTout: React.FC<Props> = ({ selectedSus }) => {
           .attr("fill", fillColor)
           .style("cursor", "pointer")
           .on("mousemove", function (event: MouseEvent) {
-            const rect = containerRef.current?.getBoundingClientRect();
+            const rect = container?.getBoundingClientRect();
             const px = rect
               ? event.pageX - (rect.left + window.scrollX)
               : event.pageX;
@@ -238,7 +242,7 @@ const DvVolonteTout: React.FC<Props> = ({ selectedSus }) => {
       legendHeight +
       margin.bottom;
     svg.attr("height", height);
-  }, [data, measuredWidth, light1, allChoices, containerRef]);
+  }, [data, measuredWidth, light1, allChoices, container]);
 
   // Chargement / erreur / pas de données
   if (loading) {

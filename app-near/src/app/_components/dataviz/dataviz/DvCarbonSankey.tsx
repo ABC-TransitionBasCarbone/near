@@ -27,6 +27,7 @@ const DvCarbonSankey: React.FC<Props> = ({ selectedSus }) => {
   const svgRef = useRef<SVGSVGElement>(null);
   const {
     containerRef,
+    container,
     width: measuredWidth,
     height: measuredHeight,
   } = useChartDimensions();
@@ -118,7 +119,7 @@ const DvCarbonSankey: React.FC<Props> = ({ selectedSus }) => {
         `translate(${sideMargin + labelSpaceLeft}, ${topSpace})`,
       );
 
-    const tooltip = getD3Tooltip(containerRef.current);
+    const tooltip = getD3Tooltip(container);
 
     const nx0 = (n: D3Node) => n.x0 ?? 0;
     const nx1 = (n: D3Node) => n.x1 ?? 0;
@@ -155,7 +156,7 @@ const DvCarbonSankey: React.FC<Props> = ({ selectedSus }) => {
       .style("cursor", "pointer")
       .on("mousemove", function (event: MouseEvent, d: D3Link) {
         d3.select(this).attr("opacity", 0.9);
-        const rect = containerRef.current?.getBoundingClientRect();
+        const rect = container?.getBoundingClientRect();
         const px = rect
           ? event.pageX - (rect.left + window.scrollX)
           : event.pageX;
@@ -195,7 +196,7 @@ const DvCarbonSankey: React.FC<Props> = ({ selectedSus }) => {
       .attr("ry", 3)
       .style("cursor", "pointer")
       .on("mousemove", function (event: MouseEvent, d: D3Node) {
-        const rect = containerRef.current?.getBoundingClientRect();
+        const rect = container?.getBoundingClientRect();
         const px = rect
           ? event.pageX - (rect.left + window.scrollX)
           : event.pageX;
@@ -222,7 +223,7 @@ const DvCarbonSankey: React.FC<Props> = ({ selectedSus }) => {
         .style("fill", mainColor)
         .style("cursor", "pointer")
         .on("mousemove", function (event: MouseEvent, d: D3Node) {
-          const rect = containerRef.current?.getBoundingClientRect();
+          const rect = container?.getBoundingClientRect();
           const px = rect
             ? event.pageX - (rect.left + window.scrollX)
             : event.pageX;
@@ -277,7 +278,7 @@ const DvCarbonSankey: React.FC<Props> = ({ selectedSus }) => {
       .style("font-weight", "600")
       .style("fill", mainColor)
       .text(`☁ Empreinte individuelle moyenne : ${totalTons} t CO2e / an`);
-  }, [graph, payload, mainColor, colorLight1, containerRef]);
+  }, [graph, payload, mainColor, colorLight1, container]);
 
   if (loading) {
     return (

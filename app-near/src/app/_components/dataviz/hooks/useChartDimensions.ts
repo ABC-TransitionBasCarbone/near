@@ -1,16 +1,16 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 
 // Tracks the width/height of a container div via ResizeObserver, replacing the
 // window-resize-listener + manual re-measure pattern duplicated across every Dv* chart.
 export const useChartDimensions = () => {
-  const containerRef = useRef<HTMLDivElement>(null);
+  const [container, setContainer] = useState<HTMLDivElement | null>(null);
   const [width, setWidth] = useState<number>();
   const [height, setHeight] = useState<number>();
 
   useEffect(() => {
-    if (!containerRef.current) return;
+    if (!container) return;
 
     const observer = new ResizeObserver(([entry]) => {
       if (entry) {
@@ -18,10 +18,10 @@ export const useChartDimensions = () => {
         setHeight(entry.contentRect.height);
       }
     });
-    observer.observe(containerRef.current);
+    observer.observe(container);
 
     return () => observer.disconnect();
-  }, []);
+  }, [container]);
 
-  return { containerRef, width, height };
+  return { containerRef: setContainer, container, width, height };
 };

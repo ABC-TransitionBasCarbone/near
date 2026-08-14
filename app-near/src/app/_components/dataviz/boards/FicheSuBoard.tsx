@@ -23,40 +23,32 @@ export const FicheSuBoard: Board = {
         <p className="mt-1 text-sm text-gray">{FicheSuBoard.description}</p>
       </header>
 
-      <div className="board-grid grid flex-1 grid-cols-3 gap-4">
-        <div className="dv-container title-dist rounded-lg border border-grayLight bg-white p-3">
+      <div className="board-grid grid flex-1 grid-cols-1 gap-4 md:grid-cols-2">
+        <div className="dv-container title-dist h-[260px] rounded-lg border border-grayLight bg-white p-3">
           <DvSuTitle selectedSus={selectedSus} />
         </div>
 
-        <div className="dv-container empty-dist min-h-[260px] rounded-lg border border-grayLight bg-white p-3">
+        <div className="dv-container age-dist h-[260px] rounded-lg border border-grayLight bg-white p-3">
           <DvAgeDistribution selectedSus={selectedSus} />
         </div>
 
-        <div className="dv-container genre-dist min-h-[260px] rounded-lg border border-grayLight bg-white p-3">
+        <div className="dv-container genre-dist h-[260px] rounded-lg border border-grayLight bg-white p-3">
           <DvGenre selectedSus={selectedSus} />
         </div>
 
-        <div className="dv-container age-dist rounded-lg border border-dashed border-grayLight">
-          {/* Empty */}
-        </div>
-
-        <div className="dv-container csp-dist min-h-[260px] rounded-lg border border-grayLight bg-white p-3">
+        <div className="dv-container csp-dist h-[260px] rounded-lg border border-grayLight bg-white p-3">
           <DvCsp selectedSus={selectedSus} />
         </div>
 
-        <div className="dv-container space-dist rounded-lg border border-dashed border-grayLight">
-          {/* Empty */}
-        </div>
-
-        <div className="dv-container usages-dist min-h-[260px] rounded-lg border border-grayLight bg-white p-3">
+        <div className="dv-container usages-dist h-[520px] rounded-lg border border-grayLight bg-white p-3 md:col-span-2">
           <DvUsages selectedSus={selectedSus} />
         </div>
 
-        <div className="dv-container sankey-dist min-h-[260px] rounded-lg border border-grayLight bg-white p-3">
+        <div className="dv-container sankey-dist h-[420px] rounded-lg border border-grayLight bg-white p-3 md:col-span-2">
           <DvCarbonSankey selectedSus={selectedSus} />
         </div>
 
-        <div className="dv-container bottom-dist flex items-center justify-center">
+        <div className="dv-container bottom-dist flex items-center justify-center md:col-span-2">
           <p className="text-xs text-gray">
             Diagnostic NEAR 2025 - Porte d&#39;Orléans
           </p>
