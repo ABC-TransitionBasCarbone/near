@@ -1,38 +1,31 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef } from "react";
 import * as d3 from "d3";
 import { api } from "~/trpc/react";
 import { useSuBank } from "../hooks/useSuBank";
+import { useChartDimensions } from "../hooks/useChartDimensions";
 
 interface Props {
   selectedSus?: number[];
 }
 
 const DvMobility: React.FC<Props> = ({ selectedSus }) => {
-  const containerRef = useRef<HTMLDivElement | null>(null);
+  const {
+    containerRef,
+    width: containerWidth,
+    height: containerHeight,
+  } = useChartDimensions();
   const svgRef = useRef<SVGSVGElement | null>(null);
 
-  const [dimensions, setDimensions] = useState<{
-    width: number;
-    height: number;
-  }>({ width: 0, height: 0 });
+  const dimensions = useMemo(
+    () => ({ width: containerWidth ?? 0, height: containerHeight ?? 0 }),
+    [containerWidth, containerHeight],
+  );
   const { data: mobilityData } = api.suDataviz.getMobility.useQuery({
     selectedSus,
   });
   const suColors = useSuBank(selectedSus);
-
-  // Responsive container size
-  useEffect(() => {
-    const update = () => {
-      if (!containerRef.current) return;
-      const { clientWidth, clientHeight } = containerRef.current;
-      setDimensions({ width: clientWidth, height: clientHeight });
-    };
-    update();
-    window.addEventListener("resize", update);
-    return () => window.removeEventListener("resize", update);
-  }, []);
 
   // D3 drawing
   useEffect(() => {

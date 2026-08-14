@@ -1,5 +1,6 @@
 "use client";
 
+import React from "react";
 import { BOARD_REGISTRY } from "./boards/registry";
 
 type RightSidebarProps = {
@@ -9,58 +10,66 @@ type RightSidebarProps = {
   onToggleCollapse: () => void;
 };
 
-export default function RightSidebar({
+const RightSidebar: React.FC<RightSidebarProps> = ({
   selectedBoard,
   onBoardChange,
   isCollapsed,
   onToggleCollapse,
-}: RightSidebarProps) {
+}) => {
   return (
-    <div className="sidebar-base sidebar-right">
-      <div
-        className="collapse-trigger right"
+    <div className="relative flex h-full flex-col border-l border-grayLight bg-white">
+      <button
         onClick={onToggleCollapse}
         title={isCollapsed ? "Étendre la sidebar" : "Réduire la sidebar"}
-      />
-
-      <div
-        className={`sidebar-content ${isCollapsed ? "collapsed" : "expanded"}`}
+        className="absolute -left-3 top-4 z-10 flex h-6 w-6 items-center justify-center rounded-full border border-grayLight bg-white text-xs text-gray hover:bg-grayExtraLight"
       >
-        <div className="mb-5">
-          <h3 className="menu-main-title">📊 Que voulez-vous découvrir ?</h3>
-        </div>
-        <div className="mb-4 flex flex-col gap-2 text-[#2c3e50]">
+        {isCollapsed ? "‹" : "›"}
+      </button>
+
+      {isCollapsed ? (
+        <div className="flex flex-col items-center gap-3 overflow-y-auto py-4">
           {BOARD_REGISTRY.map((board) => (
             <button
               key={board.id}
               onClick={() => onBoardChange(board.id)}
-              className={`border-gray-300 block w-full cursor-pointer rounded-md border p-3 text-left text-sm transition-all duration-500 hover:translate-y-0 ${
+              title={board.name}
+              className={`flex h-9 w-9 items-center justify-center rounded-full text-lg ${
                 board.id === selectedBoard
-                  ? "bg-[#6e6eb9ff] text-white shadow-[0_2px_4px_rgba(0,123,255,0.3)]"
-                  : "bg-white text-[#6e6eb9ff] shadow-[0_1px_2px_rgba(0,0,0,0.1)] hover:bg-[#6e6eb9ff] hover:text-white"
-              } `}
+                  ? "bg-blue text-white"
+                  : "hover:bg-blue/10"
+              }`}
             >
-              <div className="mb-1 font-semibold">
-                {board.emoji} {board.name}
-              </div>
-              <div className="text-xs leading-tight">{board.description}</div>
+              {board.emoji}
             </button>
           ))}
         </div>
-      </div>
-
-      <div className={`collapsed-buttons ${isCollapsed ? "visible" : ""}`}>
-        {BOARD_REGISTRY.map((board) => (
-          <div
-            key={board.id}
-            className={`collapsed-button ${board.id === selectedBoard ? "active" : ""}`}
-            onClick={() => onBoardChange(board.id)}
-            title={board.name}
-          >
-            <div className="emoji">{board.emoji}</div>
+      ) : (
+        <div className="overflow-y-auto px-4 pb-4 pt-10">
+          <h3 className="mb-3 text-base font-semibold text-black">
+            📊 Que voulez-vous découvrir ?
+          </h3>
+          <div className="flex flex-col gap-2">
+            {BOARD_REGISTRY.map((board) => (
+              <button
+                key={board.id}
+                onClick={() => onBoardChange(board.id)}
+                className={`w-full rounded-md border p-3 text-left text-sm transition ${
+                  board.id === selectedBoard
+                    ? "border-blue bg-blue text-white"
+                    : "border-grayLight bg-white text-blue hover:bg-blue/5"
+                }`}
+              >
+                <div className="mb-1 font-semibold">
+                  {board.emoji} {board.name}
+                </div>
+                <div className="text-xs leading-tight">{board.description}</div>
+              </button>
+            ))}
           </div>
-        ))}
-      </div>
+        </div>
+      )}
     </div>
   );
-}
+};
+
+export default RightSidebar;

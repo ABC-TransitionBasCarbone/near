@@ -1,12 +1,23 @@
+import {
+  type SuAnswer,
+  MeatFrequency,
+  TransportationMode,
+  DigitalIntensity,
+  PurchasingStrategy,
+  AirTravelFrequency,
+  HeatSource,
+} from "@prisma/client";
 import { db } from "~/server/db";
 
-export type UsageField =
+export type UsageField = Extract<
+  keyof SuAnswer,
   | "meatFrequency"
   | "transportationMode"
   | "digitalIntensity"
   | "purchasingStrategy"
   | "airTravelFrequency"
-  | "heatSource";
+  | "heatSource"
+>;
 
 export const USAGE_QUESTIONS: Record<
   UsageField,
@@ -20,40 +31,60 @@ export const USAGE_QUESTIONS: Record<
   heatSource: { title: "Source de chauffage", emoji: "🔥" },
 };
 
-const USAGE_LABELS: Record<
-  UsageField,
-  Record<string, { label: string; emoji: string }>
-> = {
-  meatFrequency: {
-    MINOR: { label: "Peu ou pas de viande", emoji: "🥦" },
-    REGULAR: { label: "Viande occasionnelle", emoji: "🍗" },
-    MAJOR: { label: "Viande à chaque repas", emoji: "🥩" },
+type UsageLabel = { label: string; emoji: string };
+
+const MEAT_FREQUENCY_LABELS: Record<MeatFrequency, UsageLabel> = {
+  [MeatFrequency.MINOR]: { label: "Peu ou pas de viande", emoji: "🥦" },
+  [MeatFrequency.REGULAR]: { label: "Viande occasionnelle", emoji: "🍗" },
+  [MeatFrequency.MAJOR]: { label: "Viande à chaque repas", emoji: "🥩" },
+};
+
+const TRANSPORTATION_MODE_LABELS: Record<TransportationMode, UsageLabel> = {
+  [TransportationMode.CAR]: { label: "Voiture", emoji: "🚗" },
+  [TransportationMode.PUBLIC]: { label: "Transports en commun", emoji: "🚌" },
+  [TransportationMode.LIGHT]: { label: "Mobilités douces", emoji: "🚲" },
+};
+
+const DIGITAL_INTENSITY_LABELS: Record<DigitalIntensity, UsageLabel> = {
+  [DigitalIntensity.LIGHT]: { label: "Usage numérique léger", emoji: "📵" },
+  [DigitalIntensity.REGULAR]: {
+    label: "Usage numérique régulier",
+    emoji: "📱",
   },
-  transportationMode: {
-    CAR: { label: "Voiture", emoji: "🚗" },
-    PUBLIC: { label: "Transports en commun", emoji: "🚌" },
-    LIGHT: { label: "Mobilités douces", emoji: "🚲" },
+  [DigitalIntensity.INTENSE]: { label: "Usage numérique intense", emoji: "💻" },
+};
+
+const PURCHASING_STRATEGY_LABELS: Record<PurchasingStrategy, UsageLabel> = {
+  [PurchasingStrategy.NEW]: { label: "Achats neufs", emoji: "🛍️" },
+  [PurchasingStrategy.MIXED]: { label: "Achats mixtes", emoji: "🔄" },
+  [PurchasingStrategy.SECOND_HAND]: {
+    label: "Achats de seconde main",
+    emoji: "♻️",
   },
-  digitalIntensity: {
-    LIGHT: { label: "Usage numérique léger", emoji: "📵" },
-    REGULAR: { label: "Usage numérique régulier", emoji: "📱" },
-    INTENSE: { label: "Usage numérique intense", emoji: "💻" },
+};
+
+const AIR_TRAVEL_FREQUENCY_LABELS: Record<AirTravelFrequency, UsageLabel> = {
+  [AirTravelFrequency.ZERO]: { label: "Aucun vol", emoji: "🚫" },
+  [AirTravelFrequency.FROM_1_TO_3]: {
+    label: "1 à 3 vols par an",
+    emoji: "✈️",
   },
-  purchasingStrategy: {
-    NEW: { label: "Achats neufs", emoji: "🛍️" },
-    MIXED: { label: "Achats mixtes", emoji: "🔄" },
-    SECOND_HAND: { label: "Achats de seconde main", emoji: "♻️" },
-  },
-  airTravelFrequency: {
-    ZERO: { label: "Aucun vol", emoji: "🚫" },
-    FROM_1_TO_3: { label: "1 à 3 vols par an", emoji: "✈️" },
-    ABOVE_3: { label: "Plus de 3 vols par an", emoji: "🛫" },
-  },
-  heatSource: {
-    ELECTRICITY: { label: "Électricité", emoji: "🔌" },
-    GAZ: { label: "Gaz", emoji: "🔥" },
-    OIL: { label: "Fioul", emoji: "🛢️" },
-  },
+  [AirTravelFrequency.ABOVE_3]: { label: "Plus de 3 vols par an", emoji: "🛫" },
+};
+
+const HEAT_SOURCE_LABELS: Record<HeatSource, UsageLabel> = {
+  [HeatSource.ELECTRICITY]: { label: "Électricité", emoji: "🔌" },
+  [HeatSource.GAZ]: { label: "Gaz", emoji: "🔥" },
+  [HeatSource.OIL]: { label: "Fioul", emoji: "🛢️" },
+};
+
+const USAGE_LABELS: Record<UsageField, Record<string, UsageLabel>> = {
+  meatFrequency: MEAT_FREQUENCY_LABELS,
+  transportationMode: TRANSPORTATION_MODE_LABELS,
+  digitalIntensity: DIGITAL_INTENSITY_LABELS,
+  purchasingStrategy: PURCHASING_STRATEGY_LABELS,
+  airTravelFrequency: AIR_TRAVEL_FREQUENCY_LABELS,
+  heatSource: HEAT_SOURCE_LABELS,
 };
 
 export type UsageDistributionResult = {

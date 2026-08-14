@@ -3,6 +3,7 @@
 import React, { useEffect, useRef } from "react";
 import * as d3 from "d3";
 import { api } from "~/trpc/react";
+import { getD3Tooltip } from "../hooks/useD3Tooltip";
 import type { SatisfactionQuestionResult } from "~/server/su/dataviz/satisfactionDistribution";
 
 type Props = { selectedSus?: number[] };
@@ -76,24 +77,7 @@ const EmdvPieCard: React.FC<{ question: SatisfactionQuestionResult }> = ({
 
     const arcs = pie(sliceDefs);
 
-    let tooltipNode = container.querySelector<HTMLDivElement>(".pie-tooltip");
-    if (!tooltipNode) {
-      tooltipNode = document.createElement("div");
-      container.appendChild(tooltipNode);
-    }
-    const tooltip = d3
-      .select(tooltipNode)
-      .attr("class", "pie-tooltip")
-      .style("position", "absolute")
-      .style("pointer-events", "none")
-      .style("padding", "5px 7px")
-      .style("font-size", "11px")
-      .style("background", "rgba(0,0,0,0.75)")
-      .style("color", "#fff")
-      .style("border-radius", "4px")
-      .style("opacity", 0)
-      .style("white-space", "nowrap")
-      .style("z-index", "10");
+    const tooltip = getD3Tooltip(container).style("white-space", "nowrap");
 
     g.selectAll<SVGPathElement, d3.PieArcDatum<SliceDatum>>(".slice")
       .data(arcs)
@@ -161,27 +145,13 @@ const EmdvPieCard: React.FC<{ question: SatisfactionQuestionResult }> = ({
   return (
     <div
       ref={containerRef}
-      className="dv-container"
-      style={{
-        position: "relative",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        gap: 4,
-        width: CARD_SIZE + 32,
-        padding: "8px 8px 6px",
-      }}
+      className="dv-container relative flex flex-col items-center gap-1 px-2 pb-1.5 pt-2"
+      style={{ width: CARD_SIZE + 32 }}
     >
       <svg ref={svgRef} />
       <div
-        style={{
-          fontSize: 11,
-          color: "#374151",
-          textAlign: "center",
-          lineHeight: 1.3,
-          maxWidth: CARD_SIZE + 12,
-          padding: "0 4px",
-        }}
+        className="px-1 text-center text-[11px] leading-tight text-black"
+        style={{ maxWidth: CARD_SIZE + 12 }}
       >
         {question.title}
       </div>
@@ -197,46 +167,22 @@ const DvEmdvSatisfactionsPieCharts: React.FC<Props> = ({ selectedSus }) => {
   } = api.suDataviz.getSatisfactionDistribution.useQuery({ selectedSus });
   const subcategories = data?.subcategories ?? [];
 
-  if (loading)
-    return <div style={{ padding: 12, color: "#666" }}>Chargement…</div>;
+  if (loading) return <div className="p-3 text-gray">Chargement…</div>;
   if (error)
     return (
-      <div style={{ padding: 12, color: "#b00020" }}>
-        Impossible de charger les données
-      </div>
+      <div className="p-3 text-error">Impossible de charger les données</div>
     );
   if (!subcategories.length)
-    return <div style={{ padding: 12, color: "#666" }}>Aucune donnée.</div>;
+    return <div className="p-3 text-gray">Aucune donnée.</div>;
 
   return (
-    <div style={{ padding: "8px 8px 24px" }}>
+    <div className="px-2 pb-6 pt-2">
       {subcategories.map((sc) => (
-        <div
-          key={sc.subcategory}
-          className="zone-target emdv-subcategory"
-          style={{ marginBottom: 32 }}
-        >
-          <h3
-            style={{
-              fontSize: 14,
-              fontWeight: 600,
-              color: "#1f2937",
-              margin: "0 0 12px 4px",
-              paddingBottom: 6,
-              borderBottom: "1px solid #e5e7eb",
-            }}
-          >
+        <div key={sc.subcategory} className="zone-target mb-8">
+          <h3 className="mx-1 mb-3 border-b border-grayLight pb-1.5 text-sm font-semibold text-black">
             {sc.emoji} {sc.label}
           </h3>
-          <div
-            style={{
-              display: "flex",
-              flexWrap: "wrap",
-              gap: 20,
-              justifyContent: "flex-start",
-              paddingLeft: 4,
-            }}
-          >
+          <div className="flex flex-wrap justify-start gap-5 pl-1">
             {sc.questions.map((q) => (
               <EmdvPieCard key={q.field} question={q} />
             ))}

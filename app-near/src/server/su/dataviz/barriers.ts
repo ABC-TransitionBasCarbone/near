@@ -1,3 +1,9 @@
+import {
+  ReasonsUsingCar,
+  ReasonsToEatMeat,
+  ReasonsToNotBuyFrenchSeasonFood,
+  ReasonsToNotChoseSecondHand,
+} from "@prisma/client";
 import { db } from "~/server/db";
 
 export type BarrierField =
@@ -35,72 +41,119 @@ export const BARRIER_QUESTIONS: Record<
   },
 };
 
-const REASON_LABELS: Record<
-  BarrierField,
-  Record<string, { label: string; emoji: string }>
+type ReasonLabel = { label: string; emoji: string };
+
+const REASONS_USING_CAR_LABELS: Record<ReasonsUsingCar, ReasonLabel> = {
+  [ReasonsUsingCar.HANDICAP_REASONS]: {
+    label: "Raisons de handicap",
+    emoji: "♿",
+  },
+  [ReasonsUsingCar.I_NEED_CAR_FOR_SOME_ACTIONS]: {
+    label: "Besoin pour certains trajets",
+    emoji: "🚗",
+  },
+  [ReasonsUsingCar.SECURITY_REASONS]: {
+    label: "Raisons de sécurité",
+    emoji: "🔒",
+  },
+  [ReasonsUsingCar.MY_WORK]: {
+    label: "Nécessaire pour le travail",
+    emoji: "💼",
+  },
+  [ReasonsUsingCar.PROFESSIONAL_OR_PERSONAL_IMAGE]: {
+    label: "Image professionnelle ou personnelle",
+    emoji: "🎩",
+  },
+  [ReasonsUsingCar.NO_PUBLIC_TRANSPORT_AT_PROXIMITY]: {
+    label: "Pas de transport en commun à proximité",
+    emoji: "🚫🚌",
+  },
+  [ReasonsUsingCar.NOT_CONCERNED]: { label: "Non concerné·e", emoji: "🤷" },
+};
+
+const REASONS_TO_EAT_MEAT_LABELS: Record<ReasonsToEatMeat, ReasonLabel> = {
+  [ReasonsToEatMeat.WITHOUT_MEAT_IS_NOT_NOURISHING_ENOUGH]: {
+    label: "Pas assez nourrissant sans viande",
+    emoji: "🍽️",
+  },
+  [ReasonsToEatMeat.MY_FAMILY_EAT_MEAT]: {
+    label: "Ma famille mange de la viande",
+    emoji: "👨‍👩‍👧",
+  },
+  [ReasonsToEatMeat.I_DONT_KNOW_ALTERNATIVES]: {
+    label: "Je ne connais pas les alternatives",
+    emoji: "❓",
+  },
+  [ReasonsToEatMeat.I_DONT_TRUST_ALTERNATIVES]: {
+    label: "Je ne fais pas confiance aux alternatives",
+    emoji: "🚫",
+  },
+  [ReasonsToEatMeat.RESTAURANTS_DOES_NOT_OFFER_ALTERNATIVES]: {
+    label: "Peu d'alternatives au restaurant",
+    emoji: "🍽️",
+  },
+  [ReasonsToEatMeat.NOT_CONCERNED]: { label: "Non concerné·e", emoji: "🤷" },
+};
+
+const REASONS_TO_NOT_BUY_FRENCH_SEASON_FOOD_LABELS: Record<
+  ReasonsToNotBuyFrenchSeasonFood,
+  ReasonLabel
 > = {
-  reasonsToContinueUsingCar: {
-    HANDICAP_REASONS: { label: "Raisons de handicap", emoji: "♿" },
-    I_NEED_CAR_FOR_SOME_ACTIONS: {
-      label: "Besoin pour certains trajets",
-      emoji: "🚗",
-    },
-    SECURITY_REASONS: { label: "Raisons de sécurité", emoji: "🔒" },
-    MY_WORK: { label: "Nécessaire pour le travail", emoji: "💼" },
-    PROFESSIONAL_OR_PERSONAL_IMAGE: {
-      label: "Image professionnelle ou personnelle",
-      emoji: "🎩",
-    },
-    NO_PUBLIC_TRANSPORT_AT_PROXIMITY: {
-      label: "Pas de transport en commun à proximité",
-      emoji: "🚫🚌",
-    },
-    NOT_CONCERNED: { label: "Non concerné·e", emoji: "🤷" },
+  [ReasonsToNotBuyFrenchSeasonFood.PRICE]: { label: "Prix", emoji: "💰" },
+  [ReasonsToNotBuyFrenchSeasonFood.COMPLICATED_LABELS]: {
+    label: "Étiquetage compliqué",
+    emoji: "🏷️",
   },
-  reasonsToEatMeat: {
-    WITHOUT_MEAT_IS_NOT_NOURISHING_ENOUGH: {
-      label: "Pas assez nourrissant sans viande",
-      emoji: "🍽️",
-    },
-    MY_FAMILY_EAT_MEAT: { label: "Ma famille mange de la viande", emoji: "👨‍👩‍👧" },
-    I_DONT_KNOW_ALTERNATIVES: {
-      label: "Je ne connais pas les alternatives",
-      emoji: "❓",
-    },
-    I_DONT_TRUST_ALTERNATIVES: {
-      label: "Je ne fais pas confiance aux alternatives",
-      emoji: "🚫",
-    },
-    RESTAURANTS_DOES_NOT_OFFER_ALTERNATIVES: {
-      label: "Peu d'alternatives au restaurant",
-      emoji: "🍽️",
-    },
-    NOT_CONCERNED: { label: "Non concerné·e", emoji: "🤷" },
+  [ReasonsToNotBuyFrenchSeasonFood.I_DONT_KNOW_MARKET]: {
+    label: "Je ne connais pas le marché",
+    emoji: "❓",
   },
-  reasonsToNotBuyFrenchAndSeasonFood: {
-    PRICE: { label: "Prix", emoji: "💰" },
-    COMPLICATED_LABELS: { label: "Étiquetage compliqué", emoji: "🏷️" },
-    I_DONT_KNOW_MARKET: { label: "Je ne connais pas le marché", emoji: "❓" },
-    I_DONT_KNOW_SEASON_PRODUCTS: {
-      label: "Je ne connais pas les produits de saison",
-      emoji: "📅",
-    },
-    I_PREFER_EAT_OTHER_PRODUCTS: {
-      label: "Je préfère d'autres produits",
-      emoji: "🍽️",
-    },
+  [ReasonsToNotBuyFrenchSeasonFood.I_DONT_KNOW_SEASON_PRODUCTS]: {
+    label: "Je ne connais pas les produits de saison",
+    emoji: "📅",
   },
-  reasonsToNotChoseSecondHand: {
-    TRUST: { label: "Manque de confiance", emoji: "🤔" },
-    TIME_CONSUMING: { label: "Prend trop de temps", emoji: "⏱️" },
-    PROFESSIONAL_OR_PERSONAL_IMAGE: {
-      label: "Image professionnelle ou personnelle",
-      emoji: "🎩",
-    },
-    COMPETENCIES: { label: "Manque de compétences", emoji: "🧠" },
-    NO_OFFER_AT_PROXIMITY: { label: "Pas d'offre à proximité", emoji: "📍" },
-    NOT_CONCERNED: { label: "Non concerné·e", emoji: "🤷" },
+  [ReasonsToNotBuyFrenchSeasonFood.I_PREFER_EAT_OTHER_PRODUCTS]: {
+    label: "Je préfère d'autres produits",
+    emoji: "🍽️",
   },
+};
+
+const REASONS_TO_NOT_CHOSE_SECOND_HAND_LABELS: Record<
+  ReasonsToNotChoseSecondHand,
+  ReasonLabel
+> = {
+  [ReasonsToNotChoseSecondHand.TRUST]: {
+    label: "Manque de confiance",
+    emoji: "🤔",
+  },
+  [ReasonsToNotChoseSecondHand.TIME_CONSUMING]: {
+    label: "Prend trop de temps",
+    emoji: "⏱️",
+  },
+  [ReasonsToNotChoseSecondHand.PROFESSIONAL_OR_PERSONAL_IMAGE]: {
+    label: "Image professionnelle ou personnelle",
+    emoji: "🎩",
+  },
+  [ReasonsToNotChoseSecondHand.COMPETENCIES]: {
+    label: "Manque de compétences",
+    emoji: "🧠",
+  },
+  [ReasonsToNotChoseSecondHand.NO_OFFER_AT_PROXIMITY]: {
+    label: "Pas d'offre à proximité",
+    emoji: "📍",
+  },
+  [ReasonsToNotChoseSecondHand.NOT_CONCERNED]: {
+    label: "Non concerné·e",
+    emoji: "🤷",
+  },
+};
+
+const REASON_LABELS: Record<BarrierField, Record<string, ReasonLabel>> = {
+  reasonsToContinueUsingCar: REASONS_USING_CAR_LABELS,
+  reasonsToEatMeat: REASONS_TO_EAT_MEAT_LABELS,
+  reasonsToNotBuyFrenchAndSeasonFood:
+    REASONS_TO_NOT_BUY_FRENCH_SEASON_FOOD_LABELS,
+  reasonsToNotChoseSecondHand: REASONS_TO_NOT_CHOSE_SECOND_HAND_LABELS,
 };
 
 export type BarrierChoiceResult = {

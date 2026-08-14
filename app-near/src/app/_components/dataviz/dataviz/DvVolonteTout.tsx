@@ -1,40 +1,26 @@
 "use client";
 
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef } from "react";
 import * as d3 from "d3";
 import { api } from "~/trpc/react";
 import { useSuBank } from "../hooks/useSuBank";
+import { useChartDimensions } from "../hooks/useChartDimensions";
+import { getD3Tooltip } from "../hooks/useD3Tooltip";
 
 interface Props {
   selectedSus?: number[];
 }
 
 const DvVolonteTout: React.FC<Props> = ({ selectedSus }) => {
-  const containerRef = useRef<HTMLDivElement | null>(null);
+  const { containerRef, width: measuredWidth } = useChartDimensions();
   const svgRef = useRef<SVGSVGElement | null>(null);
 
-  const [dimensions, setDimensions] = useState<{
-    width: number;
-    height: number;
-  }>({ width: 0, height: 0 });
   const {
     data,
     isLoading: loading,
     error,
   } = api.suDataviz.getWillingness.useQuery({ selectedSus });
   const { colorLight1: light1 } = useSuBank(selectedSus);
-
-  // Responsive container size
-  useEffect(() => {
-    const update = () => {
-      if (!containerRef.current) return;
-      const { clientWidth, clientHeight } = containerRef.current;
-      setDimensions({ width: clientWidth, height: clientHeight });
-    };
-    update();
-    window.addEventListener("resize", update);
-    return () => window.removeEventListener("resize", update);
-  }, []);
 
   const allChoices = useMemo(() => {
     if (!data) return [] as { key: string; label: string; color: string }[];
@@ -72,7 +58,7 @@ const DvVolonteTout: React.FC<Props> = ({ selectedSus }) => {
 
     // Dimensions
     const margin = { top: 24, right: 16, bottom: 24, left: 16 };
-    const width = Math.max(280, dimensions.width || 800);
+    const width = Math.max(280, measuredWidth ?? 800);
     const innerW = Math.max(200, width - margin.left - margin.right);
     const rowH = 30;
     const gap = 24;
@@ -117,24 +103,7 @@ const DvVolonteTout: React.FC<Props> = ({ selectedSus }) => {
       .style("fill", "#4B5563")
       .text(`${data.data.length} questions`);
 
-    // Tooltip
-    let tooltipNode =
-      containerRef.current?.querySelector<HTMLDivElement>(".dv-tooltip");
-    if (!tooltipNode && containerRef.current) {
-      tooltipNode = document.createElement("div");
-      containerRef.current.appendChild(tooltipNode);
-    }
-    const tooltipSel = d3
-      .select(tooltipNode!)
-      .attr("class", "dv-tooltip")
-      .style("position", "absolute")
-      .style("pointer-events", "none")
-      .style("padding", "6px 8px")
-      .style("font-size", "12px")
-      .style("background", "rgba(0,0,0,0.75)")
-      .style("color", "#fff")
-      .style("border-radius", "4px")
-      .style("opacity", 0);
+    const tooltipSel = getD3Tooltip(containerRef.current);
 
     // Bars + Headers
     data.data.forEach((q, i) => {
@@ -269,43 +238,29 @@ const DvVolonteTout: React.FC<Props> = ({ selectedSus }) => {
       legendHeight +
       margin.bottom;
     svg.attr("height", height);
-  }, [data, dimensions.width, light1, allChoices]);
+  }, [data, measuredWidth, light1, allChoices, containerRef]);
 
   // Chargement / erreur / pas de données
   if (loading) {
     return (
-      <div
-        ref={containerRef}
-        className="dv-container"
-        style={{ width: "100%", height: "100%" }}
-      >
-        <div style={{ padding: 12, color: "#666" }}>Chargement…</div>
+      <div ref={containerRef} className="dv-container h-full w-full">
+        <div className="p-3 text-gray">Chargement…</div>
         <svg ref={svgRef} />
       </div>
     );
   }
   if (error) {
     return (
-      <div
-        ref={containerRef}
-        className="dv-container"
-        style={{ width: "100%", height: "100%" }}
-      >
-        <div style={{ padding: 12, color: "#b00020" }}>
-          Impossible de charger les données
-        </div>
+      <div ref={containerRef} className="dv-container h-full w-full">
+        <div className="p-3 text-error">Impossible de charger les données</div>
         <svg ref={svgRef} />
       </div>
     );
   }
   if (!data || data.data.length === 0) {
     return (
-      <div
-        ref={containerRef}
-        className="dv-container"
-        style={{ width: "100%", height: "100%" }}
-      >
-        <div style={{ padding: 12, color: "#666" }}>Aucune donnée.</div>
+      <div ref={containerRef} className="dv-container h-full w-full">
+        <div className="p-3 text-gray">Aucune donnée.</div>
         <svg ref={svgRef} />
       </div>
     );

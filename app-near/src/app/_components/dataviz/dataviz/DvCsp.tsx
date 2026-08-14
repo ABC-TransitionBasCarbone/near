@@ -1,9 +1,10 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import * as d3 from "d3";
 import { api } from "~/trpc/react";
 import { useSuBank, getPalette } from "../hooks/useSuBank";
+import { useChartDimensions } from "../hooks/useChartDimensions";
 
 interface DvCspProps {
   selectedSus?: number[];
@@ -14,14 +15,10 @@ const TITLE_EMOJI = "💼";
 
 const DvCsp: React.FC<DvCspProps> = ({ selectedSus }) => {
   const svgRef = useRef<SVGSVGElement>(null);
-  const svgContainer = useRef<HTMLDivElement>(null);
+  const { containerRef: svgContainer, width, height } = useChartDimensions();
   const suBank = useSuBank(selectedSus);
   const mainColor = suBank.colorMain;
   const colors = getPalette(suBank, "graph");
-
-  // State to track width and height of SVG Container
-  const [width, setWidth] = useState<number>();
-  const [height, setHeight] = useState<number>();
 
   const {
     data: result,
@@ -32,36 +29,6 @@ const DvCsp: React.FC<DvCspProps> = ({ selectedSus }) => {
     selectedSus,
   });
   const data = result?.data.filter((d) => d.count > 0);
-
-  // This function calculates width and height of the container
-  const getSvgContainerSize = () => {
-    if (svgContainer.current) {
-      const newWidth = svgContainer.current.clientWidth;
-      const newHeight = svgContainer.current.clientHeight;
-      setWidth(newWidth);
-      setHeight(newHeight);
-    }
-  };
-
-  useEffect(() => {
-    // detect 'width' and 'height' on render
-    getSvgContainerSize();
-    // listen for resize changes, and detect dimensions again when they change
-    window.addEventListener("resize", getSvgContainerSize);
-    // cleanup event listener
-    return () => window.removeEventListener("resize", getSvgContainerSize);
-  }, []);
-
-  // Additional effect to ensure dimensions are set after data loads
-  useEffect(() => {
-    if (data && svgContainer.current && (!width || !height)) {
-      // Small delay to ensure DOM is fully rendered
-      const timer = setTimeout(() => {
-        getSvgContainerSize();
-      }, 10);
-      return () => clearTimeout(timer);
-    }
-  }, [data, width, height]);
 
   // D3 Horizontal Stacked Bar Chart
   useEffect(() => {
@@ -253,14 +220,14 @@ const DvCsp: React.FC<DvCspProps> = ({ selectedSus }) => {
   if (loading) {
     return (
       <div className="flex h-64 items-center justify-center">
-        <div className="text-gray-500">Chargement des données CSP...</div>
+        <div className="text-gray">Chargement des données CSP...</div>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="text-red-500 flex h-64 items-center justify-center">
+      <div className="flex h-64 items-center justify-center text-error">
         Erreur lors du chargement des données
       </div>
     );
@@ -268,7 +235,7 @@ const DvCsp: React.FC<DvCspProps> = ({ selectedSus }) => {
 
   if (!data || data.length === 0) {
     return (
-      <div className="text-gray-500 flex h-64 items-center justify-center">
+      <div className="flex h-64 items-center justify-center text-gray">
         Aucune donnée disponible
       </div>
     );

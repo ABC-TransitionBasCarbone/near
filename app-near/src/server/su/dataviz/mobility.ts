@@ -1,9 +1,7 @@
 import { type TransportMode, type TransportTime } from "@prisma/client";
 import { db } from "~/server/db";
 
-// ===========================
-// WEIGHTS (trips/week)
-// ===========================
+// Trips per week, used to weight each purpose in the zone distribution.
 const BASE_WEIGHT_WORK = 5;
 const BASE_WEIGHT_HOBBY = 1.2;
 const BASE_WEIGHT_FOOD = 1;
@@ -30,7 +28,7 @@ export type MobilityResult = { zoneDistribution: ZoneDistribution };
  * <10min is always A; slow modes (walk/bike) stay A up to 20min; everything
  * else, or an unset mode/time, is B/NSP.
  */
-const classifyTrip = (
+export const classifyTrip = (
   mode: TransportMode | null | undefined,
   time: TransportTime | null | undefined,
 ): TripCategory => {
@@ -42,7 +40,7 @@ const classifyTrip = (
   return "B";
 };
 
-const classifyMobilityType = (
+export const classifyMobilityType = (
   mode: TransportMode | null | undefined,
 ): MobilityType | null => {
   if (!mode) return null;

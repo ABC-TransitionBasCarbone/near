@@ -5,6 +5,7 @@ import * as d3 from "d3";
 import type { ZoomTransform } from "d3";
 import { api } from "~/trpc/react";
 import { useSuBank } from "../hooks/useSuBank";
+import { useChartDimensions } from "../hooks/useChartDimensions";
 import type {
   TestimonyNode,
   TestimonyLink,
@@ -33,15 +34,13 @@ type LinkDatum = TestimonyLink;
 
 // Modal component
 // ---------------
-function Modal({
-  open,
-  onClose,
-  node,
-}: {
+type ModalProps = {
   open: boolean;
   onClose: () => void;
   node: NodeDatum | null;
-}) {
+};
+
+const Modal: React.FC<ModalProps> = ({ open, onClose, node }) => {
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
       if (e.key === "Escape") onClose();
@@ -142,7 +141,7 @@ function Modal({
             </span>
           </div>
           <button
-            className="text-gray-500 hover:text-gray-700 text-xl leading-none"
+            className="text-xl leading-none text-gray hover:text-black"
             onClick={onClose}
             aria-label="Fermer"
             title="Fermer"
@@ -153,8 +152,8 @@ function Modal({
 
         {/* Illustration placeholder*/}
         <div
-          className="text-gray-400 mx-5 mt-4 flex items-center justify-center rounded-lg border border-dashed border-white text-xs"
-          style={{ height: illustrationHeight, backgroundColor: "#f3f4f6" }}
+          className="mx-5 mt-4 flex items-center justify-center rounded-lg border border-dashed border-white bg-grayExtraLight text-xs text-gray"
+          style={{ height: illustrationHeight }}
         >
           Illustration
         </div>
@@ -170,7 +169,7 @@ function Modal({
                 &quot;{suName}&quot; :
               </div>
               <div className="rounded-lg bg-white p-4">
-                <p className="text-gray-800 italic leading-relaxed">
+                <p className="italic leading-relaxed text-gray">
                   &ldquo;{node.testimony}&rdquo;
                 </p>
               </div>
@@ -180,10 +179,10 @@ function Modal({
           {/* Parent info si témoignage */}
           {isParent && (
             <div className="mb-4">
-              <div className="text-gray-500 mb-1 text-xs uppercase tracking-wide">
+              <div className="mb-1 text-xs uppercase tracking-wide text-gray">
                 Thème
               </div>
-              <div className="bg-gray-50 flex items-center gap-3 rounded-lg border p-4">
+              <div className="flex items-center gap-3 rounded-lg border bg-grayExtraLight p-4">
                 <span className="text-2xl">{node.emoji}</span>
                 <div className="font-semibold">{node.subcategory}</div>
               </div>
@@ -193,7 +192,7 @@ function Modal({
       </div>
     </div>
   );
-}
+};
 
 // D3 Force-Directed Graph Component
 // ---------------------------------
@@ -205,7 +204,7 @@ const DvTestimonyNetwork: React.FC<DvTestimonyNetworkProps> = ({
   selectedSus,
 }) => {
   const svgRef = useRef<SVGSVGElement | null>(null);
-  const svgContainer = useRef<HTMLDivElement | null>(null);
+  const { containerRef: svgContainer, width, height } = useChartDimensions();
   const [nodes, setNodes] = useState<NodeDatum[]>([]);
   const [links, setLinks] = useState<LinkDatum[]>([]);
   const [selectedNode, setSelectedNode] = useState<NodeDatum | null>(null);
@@ -238,36 +237,6 @@ const DvTestimonyNetwork: React.FC<DvTestimonyNetworkProps> = ({
       });
     return map;
   }, [networkData?.isNeighborhood, allSus, nodes]);
-
-  // State to track width and height of SVG Container
-  const [width, setWidth] = useState<number>();
-  const [height, setHeight] = useState<number>();
-
-  // This function calculates width and height of the container
-  const getSvgContainerSize = () => {
-    if (svgContainer.current) {
-      const newWidth = svgContainer.current.clientWidth;
-      const newHeight = svgContainer.current.clientHeight;
-      setWidth(newWidth);
-      setHeight(newHeight);
-    }
-  };
-
-  useEffect(() => {
-    getSvgContainerSize();
-    // resize observer/listener
-    window.addEventListener("resize", getSvgContainerSize);
-    return () => window.removeEventListener("resize", getSvgContainerSize);
-  }, []);
-
-  useEffect(() => {
-    if (svgContainer.current && (!width || !height)) {
-      const timer = setTimeout(() => {
-        getSvgContainerSize();
-      }, 10);
-      return () => clearTimeout(timer);
-    }
-  }, [width, height]);
 
   // Sync fetched data into local D3-mutable state
   useEffect(() => {
@@ -544,18 +513,16 @@ const DvTestimonyNetwork: React.FC<DvTestimonyNetworkProps> = ({
         </h3>
         <div className="space-x-2">
           {loading && (
-            <span className="text-gray-500 px-3 py-1 text-xs">
-              Chargement...
-            </span>
+            <span className="px-3 py-1 text-xs text-gray">Chargement...</span>
           )}
           {!loading && networkData && (
-            <span className="text-gray-600 px-3 py-1 text-xs">
+            <span className="px-3 py-1 text-xs text-gray">
               {networkData.totalTestimonies} témoignages •{" "}
               {networkData.subcategories.length} thêmes
             </span>
           )}
           <button
-            className="bg-blue-600 hover:bg-blue-700 rounded px-3 py-1 text-xs text-white"
+            className="rounded bg-blue px-3 py-1 text-xs text-white hover:opacity-90"
             onClick={() => void refetch()}
             disabled={loading}
           >
@@ -574,7 +541,7 @@ const DvTestimonyNetwork: React.FC<DvTestimonyNetworkProps> = ({
         node={selectedNode}
       />
 
-      <div className="text-gray-600 px-4 pb-2 text-xs">
+      <div className="px-4 pb-2 text-xs text-gray">
         (●) Cliquez pour les détails d&apos;un témoignage. ☩ Faites glisser pour
         vous déplacer dans la carte. ↕ Scrollez pour zoomer (utilisez la molette
         de la souris).

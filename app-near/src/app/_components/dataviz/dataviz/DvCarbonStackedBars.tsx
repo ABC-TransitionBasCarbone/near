@@ -1,9 +1,11 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import * as d3 from "d3";
 import { api } from "~/trpc/react";
 import { useSuBank, getPalette } from "../hooks/useSuBank";
+import { useChartDimensions } from "../hooks/useChartDimensions";
+import { getD3Tooltip } from "../hooks/useD3Tooltip";
 import type { CarbonSankeyData } from "~/server/su/dataviz/carbonSankey";
 
 type NodeItem = CarbonSankeyData["nodes"][number];
@@ -17,25 +19,12 @@ const ROW_STEP = ROW_H + LEGEND_H + 18; // bar + legend + gap
 const MARGIN = { top: 40, right: 20, bottom: 20, left: 20 };
 
 const DvCarbonStackedBars: React.FC<Props> = ({ selectedSus }) => {
-  const containerRef = useRef<HTMLDivElement>(null);
+  const { containerRef, width } = useChartDimensions();
   const svgRef = useRef<SVGSVGElement>(null);
-  const [width, setWidth] = useState<number>();
 
   const suBank = useSuBank(selectedSus);
   const mainColor = suBank.colorMain;
   const palette = getPalette(suBank, "graph");
-
-  const measure = () => {
-    if (!containerRef.current) return;
-    const w = containerRef.current.clientWidth;
-    if (w > 0) setWidth(w);
-  };
-
-  useEffect(() => {
-    measure();
-    window.addEventListener("resize", measure);
-    return () => window.removeEventListener("resize", measure);
-  }, []);
 
   const {
     data: payload,
@@ -76,26 +65,10 @@ const DvCarbonStackedBars: React.FC<Props> = ({ selectedSus }) => {
     svg.selectAll("*").remove();
     svg.attr("width", width).attr("height", svgH);
 
-    let tooltipNode = containerRef.current?.querySelector<HTMLDivElement>(
-      ".carbon-bars-tooltip",
+    const tooltip = getD3Tooltip(containerRef.current).style(
+      "white-space",
+      "nowrap",
     );
-    if (!tooltipNode && containerRef.current) {
-      tooltipNode = document.createElement("div");
-      containerRef.current.appendChild(tooltipNode);
-    }
-    const tooltip = d3
-      .select(tooltipNode!)
-      .attr("class", "carbon-bars-tooltip")
-      .style("position", "absolute")
-      .style("pointer-events", "none")
-      .style("padding", "5px 8px")
-      .style("font-size", "12px")
-      .style("background", "rgba(0,0,0,0.78)")
-      .style("color", "#fff")
-      .style("border-radius", "4px")
-      .style("opacity", 0)
-      .style("white-space", "nowrap")
-      .style("z-index", "10");
 
     const root = svg
       .append("g")
@@ -245,28 +218,20 @@ const DvCarbonStackedBars: React.FC<Props> = ({ selectedSus }) => {
 
       fo.node()!.appendChild(legendDiv);
     });
-  }, [payload, palette, mainColor, globalMax, width]);
+  }, [payload, palette, mainColor, globalMax, width, containerRef]);
 
   if (loading) {
     return (
-      <div
-        ref={containerRef}
-        className="dv-container"
-        style={{ width: "100%", position: "relative" }}
-      >
-        <div style={{ padding: 12, color: "#666" }}>Chargement…</div>
+      <div ref={containerRef} className="dv-container relative w-full">
+        <div className="p-3 text-gray">Chargement…</div>
         <svg ref={svgRef} />
       </div>
     );
   }
   if (error) {
     return (
-      <div
-        ref={containerRef}
-        className="dv-container"
-        style={{ width: "100%", position: "relative" }}
-      >
-        <div style={{ padding: 12, color: "#b00020" }}>
+      <div ref={containerRef} className="dv-container relative w-full">
+        <div className="p-3 text-error">
           Impossible de charger les données carbone
         </div>
         <svg ref={svgRef} />
@@ -275,11 +240,7 @@ const DvCarbonStackedBars: React.FC<Props> = ({ selectedSus }) => {
   }
 
   return (
-    <div
-      ref={containerRef}
-      className="dv-container"
-      style={{ width: "100%", position: "relative" }}
-    >
+    <div ref={containerRef} className="dv-container relative w-full">
       <svg ref={svgRef} />
     </div>
   );

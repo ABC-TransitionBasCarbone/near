@@ -1,8 +1,10 @@
 "use client";
-import React, { useRef, useEffect, useState } from "react";
+import React, { useRef, useEffect } from "react";
 import * as d3 from "d3";
 import { api } from "~/trpc/react";
 import type { BarrierField } from "~/server/su/dataviz/barriers";
+import { useChartDimensions } from "../hooks/useChartDimensions";
+import { getD3Tooltip } from "../hooks/useD3Tooltip";
 
 interface DvBarrierGradientProps {
   selectedSus?: number[];
@@ -16,9 +18,7 @@ const DvBarrierGradient: React.FC<DvBarrierGradientProps> = ({
   selectedQuestionKey,
 }) => {
   const svgRef = useRef<SVGSVGElement>(null);
-  const svgContainer = useRef<HTMLDivElement>(null);
-  const [width, setWidth] = useState<number>();
-  const [height, setHeight] = useState<number>();
+  const { containerRef: svgContainer, width, height } = useChartDimensions();
   const {
     data,
     isLoading: loading,
@@ -27,34 +27,6 @@ const DvBarrierGradient: React.FC<DvBarrierGradientProps> = ({
     selectedSus,
     questionKey: selectedQuestionKey,
   });
-
-  // This function calculates width and height of the container (like DvGenre)
-  const getSvgContainerSize = () => {
-    if (svgContainer.current) {
-      const newWidth = svgContainer.current.clientWidth;
-      const newHeight = svgContainer.current.clientHeight;
-      setWidth(newWidth);
-      setHeight(newHeight);
-    }
-  };
-
-  useEffect(() => {
-    // detect 'width' and 'height' on render
-    getSvgContainerSize();
-    // listen for resize changes
-    window.addEventListener("resize", getSvgContainerSize);
-    return () => window.removeEventListener("resize", getSvgContainerSize);
-  }, []);
-
-  // Ensure dimensions after data loads (like DvGenre)
-  useEffect(() => {
-    if (data && svgContainer.current && (!width || !height)) {
-      const timer = setTimeout(() => {
-        getSvgContainerSize();
-      }, 10);
-      return () => clearTimeout(timer);
-    }
-  }, [data, width, height, selectedQuestionKey]);
 
   useEffect(() => {
     if (!svgRef.current) return;
@@ -110,26 +82,7 @@ const DvBarrierGradient: React.FC<DvBarrierGradientProps> = ({
     const totalH = visible.length * (rowH + gap);
     const yStart = Math.max(12, (innerH - totalH) / 2);
 
-    // Tooltip flottante (persistante): réutilise si déjà présente, sinon crée
-    const existingTooltip = d3
-      .select("body")
-      .select<HTMLDivElement>("div.dv-barrier-tooltip");
-    const tooltipSel = existingTooltip.empty()
-      ? d3
-          .select("body")
-          .append("div")
-          .attr("class", "tooltip dv-barrier-tooltip")
-      : existingTooltip;
-    tooltipSel
-      .style("position", "absolute")
-      .style("background", "rgba(0,0,0,0.8)")
-      .style("color", "white")
-      .style("padding", "8px")
-      .style("border-radius", "4px")
-      .style("font-size", "12px")
-      .style("pointer-events", "none")
-      .style("z-index", "9999")
-      .style("opacity", 0);
+    const tooltipSel = getD3Tooltip(document.body);
 
     const generateGradientColor = (percentage: number): string => {
       const intensity = Math.min(100, Math.max(0, percentage)) / 100;
@@ -272,20 +225,20 @@ const DvBarrierGradient: React.FC<DvBarrierGradientProps> = ({
   if (loading) {
     return (
       <div className="flex h-64 items-center justify-center">
-        <div className="text-gray-500">Chargement des données…</div>
+        <div className="text-gray">Chargement des données…</div>
       </div>
     );
   }
   if (error) {
     return (
-      <div className="text-red-500 flex h-64 items-center justify-center">
+      <div className="flex h-64 items-center justify-center text-error">
         Impossible de charger les barrières
       </div>
     );
   }
   if (!data) {
     return (
-      <div className="text-gray-500 flex h-64 items-center justify-center">
+      <div className="flex h-64 items-center justify-center text-gray">
         Aucune donnée disponible
       </div>
     );

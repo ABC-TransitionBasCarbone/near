@@ -279,19 +279,15 @@ const BoardViewer: React.FC<BoardViewerProps> = ({
   );
 
   return (
-    <div
-      className={`board-viewer${isZoneSelectMode ? "zone-select-active" : ""}`}
-      ref={wrapperRef}
-      style={{ position: "relative" }}
-    >
-      <div className="board-content">{children}</div>
+    <div className="relative h-full w-full" ref={wrapperRef}>
+      <div className="board-content h-full">{children}</div>
 
       {isZoneSelectMode && (
         <>
           {/* Overlay that intercepts hover/click */}
           <div
             ref={overlayRef}
-            className="zone-select-overlay"
+            className="absolute inset-0 z-10 cursor-crosshair"
             style={
               overlayHeight !== undefined
                 ? { height: overlayHeight }
@@ -307,7 +303,7 @@ const BoardViewer: React.FC<BoardViewerProps> = ({
           {/* Highlight box drawn over hovered zone */}
           {highlight && !isCapturing && (
             <div
-              className="zone-highlight"
+              className="pointer-events-none absolute rounded border-2 border-blue bg-blue/10"
               style={{
                 top: highlight.top,
                 left: highlight.left,
@@ -319,7 +315,7 @@ const BoardViewer: React.FC<BoardViewerProps> = ({
 
           {/* Capturing feedback */}
           {isCapturing && (
-            <div className="zone-capturing-overlay">
+            <div className="absolute inset-0 z-20 flex items-center justify-center bg-black/50 text-white">
               <span>Capture en cours…</span>
             </div>
           )}

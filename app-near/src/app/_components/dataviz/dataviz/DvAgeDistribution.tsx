@@ -1,9 +1,10 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import * as d3 from "d3";
 import { api } from "~/trpc/react";
 import { useSuBank } from "../hooks/useSuBank";
+import { useChartDimensions } from "../hooks/useChartDimensions";
 
 interface DvAgeDistributionProps {
   selectedSus?: number[];
@@ -16,13 +17,9 @@ const DvAgeDistribution: React.FC<DvAgeDistributionProps> = ({
   selectedSus,
 }) => {
   const svgRef = useRef<SVGSVGElement>(null);
-  const svgContainer = useRef<HTMLDivElement>(null);
+  const { containerRef: svgContainer, width, height } = useChartDimensions();
   const { colorMain: mainColor, colorLight3: lightColor3 } =
     useSuBank(selectedSus);
-
-  // State to track width and height of SVG Container
-  const [width, setWidth] = useState<number>();
-  const [height, setHeight] = useState<number>();
 
   const {
     data: result,
@@ -33,36 +30,6 @@ const DvAgeDistribution: React.FC<DvAgeDistributionProps> = ({
     selectedSus,
   });
   const data = result?.data.filter((d) => d.count > 0);
-
-  // This function calculates width and height of the container
-  const getSvgContainerSize = () => {
-    if (svgContainer.current) {
-      const newWidth = svgContainer.current.clientWidth;
-      const newHeight = svgContainer.current.clientHeight;
-      setWidth(newWidth);
-      setHeight(newHeight);
-    }
-  };
-
-  useEffect(() => {
-    // detect 'width' and 'height' on render
-    getSvgContainerSize();
-    // listen for resize changes, and detect dimensions again when they change
-    window.addEventListener("resize", getSvgContainerSize);
-    // cleanup event listener
-    return () => window.removeEventListener("resize", getSvgContainerSize);
-  }, []);
-
-  // Additional effect to ensure dimensions are set after data loads
-  useEffect(() => {
-    if (data && svgContainer.current && (!width || !height)) {
-      // Small delay to ensure DOM is fully rendered
-      const timer = setTimeout(() => {
-        getSvgContainerSize();
-      }, 10);
-      return () => clearTimeout(timer);
-    }
-  }, [data, width, height]);
 
   // D3 Dataviz
   useEffect(() => {
@@ -241,16 +208,14 @@ const DvAgeDistribution: React.FC<DvAgeDistributionProps> = ({
   if (loading) {
     return (
       <div className="flex h-64 items-center justify-center">
-        <div className="text-gray-500">
-          Chargement des données d&apos;âge...
-        </div>
+        <div className="text-gray">Chargement des données d&apos;âge...</div>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="text-red-500 flex h-64 items-center justify-center">
+      <div className="flex h-64 items-center justify-center text-error">
         Erreur lors du chargement des données
       </div>
     );
@@ -258,7 +223,7 @@ const DvAgeDistribution: React.FC<DvAgeDistributionProps> = ({
 
   if (!data || data.length === 0) {
     return (
-      <div className="text-gray-500 flex h-64 items-center justify-center">
+      <div className="flex h-64 items-center justify-center text-gray">
         Aucune donnée disponible
       </div>
     );

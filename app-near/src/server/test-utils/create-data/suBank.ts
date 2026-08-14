@@ -1,6 +1,8 @@
 import { type SuBankData } from "~/types/Dataviz";
 
-export const buildSuBank = (data: Partial<SuBankData> & { id: number }): SuBankData => ({
+export const buildSuBank = (
+  data: Partial<SuBankData> & { id: number },
+): SuBankData => ({
   name: `su-bank-${data.id}`,
   icon1: "",
   icon2: "",

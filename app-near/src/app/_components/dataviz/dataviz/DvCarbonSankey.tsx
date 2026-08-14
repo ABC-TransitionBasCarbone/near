@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef } from "react";
 import * as d3 from "d3";
 import {
   sankey,
@@ -11,6 +11,8 @@ import {
 } from "d3-sankey";
 import { api } from "~/trpc/react";
 import { useSuBank } from "../hooks/useSuBank";
+import { useChartDimensions } from "../hooks/useChartDimensions";
+import { getD3Tooltip } from "../hooks/useD3Tooltip";
 
 type NodeData = { id: string; name: string; emoji: string; value: number };
 type LinkData = { value: number; [k: string]: unknown };
@@ -23,25 +25,16 @@ interface Props {
 
 const DvCarbonSankey: React.FC<Props> = ({ selectedSus }) => {
   const svgRef = useRef<SVGSVGElement>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
+  const {
+    containerRef,
+    width: measuredWidth,
+    height: measuredHeight,
+  } = useChartDimensions();
 
   const { colorMain: mainColor, colorLight1 } = useSuBank(selectedSus);
 
-  const [width, setWidth] = useState<number>();
-  const [height, setHeight] = useState<number>();
-
-  const measure = () => {
-    if (!containerRef.current) return;
-    const rect = containerRef.current.getBoundingClientRect();
-    setWidth(Math.max(200, rect.width));
-    setHeight(Math.max(220, rect.height));
-  };
-
-  useEffect(() => {
-    measure();
-    window.addEventListener("resize", measure);
-    return () => window.removeEventListener("resize", measure);
-  }, []);
+  const width = measuredWidth && Math.max(200, measuredWidth);
+  const height = measuredHeight && Math.max(220, measuredHeight);
 
   const {
     data: payload,
@@ -125,19 +118,7 @@ const DvCarbonSankey: React.FC<Props> = ({ selectedSus }) => {
         `translate(${sideMargin + labelSpaceLeft}, ${topSpace})`,
       );
 
-    d3.select(containerRef.current).selectAll(".dv-tooltip").remove();
-    const tooltip = d3
-      .select(containerRef.current)
-      .append("div")
-      .attr("class", "dv-tooltip")
-      .style("position", "absolute")
-      .style("pointer-events", "none")
-      .style("padding", "6px 8px")
-      .style("font-size", "12px")
-      .style("background", "rgba(0,0,0,0.75)")
-      .style("color", "#fff")
-      .style("border-radius", "4px")
-      .style("opacity", 0);
+    const tooltip = getD3Tooltip(containerRef.current);
 
     const nx0 = (n: D3Node) => n.x0 ?? 0;
     const nx1 = (n: D3Node) => n.x1 ?? 0;
@@ -296,28 +277,20 @@ const DvCarbonSankey: React.FC<Props> = ({ selectedSus }) => {
       .style("font-weight", "600")
       .style("fill", mainColor)
       .text(`☁ Empreinte individuelle moyenne : ${totalTons} t CO2e / an`);
-  }, [graph, payload, mainColor, colorLight1]);
+  }, [graph, payload, mainColor, colorLight1, containerRef]);
 
   if (loading) {
     return (
-      <div
-        ref={containerRef}
-        className="dv-container"
-        style={{ width: "100%", height: "100%" }}
-      >
-        <div style={{ padding: 12, color: "#666" }}>Chargement du Sankey…</div>
+      <div ref={containerRef} className="dv-container h-full w-full">
+        <div className="p-3 text-gray">Chargement du Sankey…</div>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div
-        ref={containerRef}
-        className="dv-container"
-        style={{ width: "100%", height: "100%" }}
-      >
-        <div style={{ padding: 12, color: "#b00020" }}>
+      <div ref={containerRef} className="dv-container h-full w-full">
+        <div className="p-3 text-error">
           Impossible de charger les données du Sankey carbone
         </div>
       </div>
@@ -326,24 +299,14 @@ const DvCarbonSankey: React.FC<Props> = ({ selectedSus }) => {
 
   if (!payload || payload.sankeyData.nodes.length === 0) {
     return (
-      <div
-        ref={containerRef}
-        className="dv-container"
-        style={{ width: "100%", height: "100%" }}
-      >
-        <div style={{ padding: 12, color: "#666" }}>
-          Aucune donnée carbone disponible.
-        </div>
+      <div ref={containerRef} className="dv-container h-full w-full">
+        <div className="p-3 text-gray">Aucune donnée carbone disponible.</div>
       </div>
     );
   }
 
   return (
-    <div
-      ref={containerRef}
-      className="dv-container"
-      style={{ width: "100%", height: "100%", position: "relative" }}
-    >
+    <div ref={containerRef} className="dv-container relative h-full w-full">
       <svg ref={svgRef} />
     </div>
   );

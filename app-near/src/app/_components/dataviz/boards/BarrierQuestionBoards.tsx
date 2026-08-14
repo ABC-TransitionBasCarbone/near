@@ -38,16 +38,19 @@ export const BarrierQuestionBoards: Board[] = BARRIER_FIELDS.map((key) => {
     emoji,
     description: `% des répondants ayant indiqué des barrières à la transition`,
     renderComponent: ({ selectedSus }) => (
-      <div className="other-board">
-        <header className="board-header">
-          <h2 className="board-title">
+      <div className="other-board flex h-full flex-col overflow-y-auto p-4">
+        <header className="mb-4">
+          <h2 className="flex items-center gap-2 text-xl font-semibold text-black">
             {emoji} Barrières {title}
           </h2>
-          <p className="board-subtitle">
+          <p className="mt-1 text-sm text-gray">
             % de répondants ayant coché les différentes réponses
           </p>
         </header>
-        <div className="dv-container" style={{ height: 460 }}>
+        <div
+          className="dv-container rounded-lg border border-grayLight bg-white p-3"
+          style={{ height: 460 }}
+        >
           <DvBarrierGradient
             selectedSus={selectedSus}
             selectedQuestionKey={key}

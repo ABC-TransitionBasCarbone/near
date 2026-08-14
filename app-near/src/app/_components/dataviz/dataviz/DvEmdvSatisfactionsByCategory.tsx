@@ -1,9 +1,11 @@
 "use client";
 
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef } from "react";
 import * as d3 from "d3";
 import { api } from "~/trpc/react";
 import type { SatisfactionSubcategory } from "~/server/su/dataviz/satisfactionDistribution";
+import { useChartDimensions } from "../hooks/useChartDimensions";
+import { getD3Tooltip } from "../hooks/useD3Tooltip";
 
 type Props = { selectedSus?: number[]; category?: SatisfactionSubcategory };
 
@@ -11,23 +13,8 @@ const DvEmdvSatisfactionsByCategory: React.FC<Props> = ({
   selectedSus,
   category,
 }) => {
-  const containerRef = useRef<HTMLDivElement>(null);
+  const { containerRef, width, height } = useChartDimensions();
   const svgRef = useRef<SVGSVGElement>(null);
-  const [width, setWidth] = useState<number>();
-  const [height, setHeight] = useState<number>();
-
-  const measure = () => {
-    if (!containerRef.current) return;
-    const r = containerRef.current.getBoundingClientRect();
-    setWidth(Math.max(280, r.width));
-    setHeight(Math.max(220, r.height));
-  };
-
-  useEffect(() => {
-    measure();
-    window.addEventListener("resize", measure);
-    return () => window.removeEventListener("resize", measure);
-  }, []);
 
   const {
     data,
@@ -63,23 +50,7 @@ const DvEmdvSatisfactionsByCategory: React.FC<Props> = ({
     const totalH = questions.length * (rowH + gap);
     const yStart = Math.max(0, (innerH - totalH) / 2);
 
-    let tooltipNode =
-      containerRef.current?.querySelector<HTMLDivElement>(".dv-tooltip");
-    if (!tooltipNode && containerRef.current) {
-      tooltipNode = document.createElement("div");
-      containerRef.current.appendChild(tooltipNode);
-    }
-    const tooltipSel = d3
-      .select(tooltipNode!)
-      .attr("class", "dv-tooltip")
-      .style("position", "absolute")
-      .style("pointer-events", "none")
-      .style("padding", "6px 8px")
-      .style("font-size", "12px")
-      .style("background", "rgba(0,0,0,0.75)")
-      .style("color", "#fff")
-      .style("border-radius", "4px")
-      .style("opacity", 0);
+    const tooltipSel = getD3Tooltip(containerRef.current);
 
     questions.forEach((q, i) => {
       const g = root
@@ -146,28 +117,20 @@ const DvEmdvSatisfactionsByCategory: React.FC<Props> = ({
         .style("fill", "#374151")
         .text(`${q.emoji} ${q.title}`);
     });
-  }, [questions, width, height]);
+  }, [questions, width, height, containerRef]);
 
   if (loading) {
     return (
-      <div
-        ref={containerRef}
-        className="dv-container"
-        style={{ width: "100%", height: "100%" }}
-      >
-        <div style={{ padding: 12, color: "#666" }}>Chargement…</div>
+      <div ref={containerRef} className="dv-container h-full w-full">
+        <div className="p-3 text-gray">Chargement…</div>
         <svg ref={svgRef} />
       </div>
     );
   }
   if (error) {
     return (
-      <div
-        ref={containerRef}
-        className="dv-container"
-        style={{ width: "100%", height: "100%" }}
-      >
-        <div style={{ padding: 12, color: "#b00020" }}>
+      <div ref={containerRef} className="dv-container h-full w-full">
+        <div className="p-3 text-error">
           Impossible de charger les satisfactions
         </div>
         <svg ref={svgRef} />
@@ -176,22 +139,14 @@ const DvEmdvSatisfactionsByCategory: React.FC<Props> = ({
   }
   if (questions.length === 0) {
     return (
-      <div
-        ref={containerRef}
-        className="dv-container"
-        style={{ width: "100%", height: "100%" }}
-      >
-        <div style={{ padding: 12, color: "#666" }}>Aucune donnée.</div>
+      <div ref={containerRef} className="dv-container h-full w-full">
+        <div className="p-3 text-gray">Aucune donnée.</div>
         <svg ref={svgRef} />
       </div>
     );
   }
   return (
-    <div
-      ref={containerRef}
-      className="dv-container"
-      style={{ width: "100%", height: "100%", position: "relative" }}
-    >
+    <div ref={containerRef} className="dv-container relative h-full w-full">
       <svg ref={svgRef} />
     </div>
   );

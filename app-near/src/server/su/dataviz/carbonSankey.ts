@@ -1,6 +1,8 @@
+import { type CarbonFootprintAnswer } from "@prisma/client";
 import { db } from "~/server/db";
 
-type CarbonField =
+export type CarbonField = Extract<
+  keyof CarbonFootprintAnswer,
   | "transportationCar"
   | "transportationPlane"
   | "transportationBicycle"
@@ -27,7 +29,8 @@ type CarbonField =
   | "diversDigitalDevices"
   | "diversTextile"
   | "servicesPublics"
-  | "servicesMarket";
+  | "servicesMarket"
+>;
 
 type CarbonNode = {
   id: string;
@@ -251,7 +254,7 @@ const collectFields = (nodes: CarbonNode[]): CarbonField[] =>
     n.children ? collectFields(n.children) : n.field ? [n.field] : [],
   );
 
-const CARBON_FIELDS = collectFields(CARBON_TREE);
+export const CARBON_FIELDS = collectFields(CARBON_TREE);
 
 const CARBON_AVG_SELECT = Object.fromEntries(
   [...CARBON_FIELDS, "globalNote"].map((f) => [f, true]),
@@ -261,7 +264,7 @@ type CarbonAverages = Partial<
   Record<CarbonField | "globalNote", number | null>
 >;
 
-const computeNodeValue = (
+export const computeNodeValue = (
   node: CarbonNode,
   values: Record<CarbonField, number>,
 ): number =>
@@ -285,7 +288,7 @@ export type CarbonSankeyData = {
   links: CarbonSankeyLink[];
 };
 
-const buildSankeyData = (
+export const buildSankeyData = (
   values: Record<CarbonField, number>,
 ): CarbonSankeyData => {
   const nodes: CarbonSankeyNode[] = [];

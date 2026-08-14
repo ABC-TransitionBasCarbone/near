@@ -94,16 +94,12 @@ const DatavizDashboard: React.FC = () => {
     setExportZoneLabel(undefined);
   };
 
-  const getBoardContainerClass = () => {
-    return "board-container";
-  };
-
   if (isLoading) {
     return (
-      <div className="loading-container">
-        <div className="loading-content">
-          <div className="loading-spinner"></div>
-          <p className="loading-text">Chargement des données du quartier ...</p>
+      <div className="flex h-full w-full items-center justify-center">
+        <div className="flex flex-col items-center gap-3">
+          <div className="h-10 w-10 animate-spin rounded-full border-4 border-grayLight border-t-blue" />
+          <p className="text-gray">Chargement des données du quartier ...</p>
         </div>
       </div>
     );
@@ -111,15 +107,15 @@ const DatavizDashboard: React.FC = () => {
 
   if (isError) {
     return (
-      <div className="error-container">
-        <div className="error-content">
-          <div className="error-icon">❌</div>
-          <p className="error-message">
-            Nous n&apos; pas pu charger les sphères d&apos;usage
+      <div className="flex h-full w-full items-center justify-center">
+        <div className="flex flex-col items-center gap-3 text-center">
+          <div className="text-3xl">❌</div>
+          <p className="text-black">
+            Nous n&apos;avons pas pu charger les sphères d&apos;usage
           </p>
           <button
             onClick={() => window.location.reload()}
-            className="error-retry-button"
+            className="rounded bg-blue px-4 py-2 text-white transition hover:opacity-90"
           >
             Réessayer
           </button>
@@ -129,10 +125,10 @@ const DatavizDashboard: React.FC = () => {
   }
 
   return (
-    <div className="dataviz-dashboard">
-      <div className="dashboard-grid">
+    <div className="h-full w-full overflow-hidden">
+      <div className="flex h-full w-full">
         <aside
-          className={`menu-filter ${leftSidebarCollapsed ? "collapsed" : "expanded"}`}
+          className={`shrink-0 overflow-hidden transition-all duration-300 ${leftSidebarCollapsed ? "w-16" : "w-72"}`}
         >
           <LeftSidebar
             availableSus={menuState.availableSus}
@@ -146,7 +142,7 @@ const DatavizDashboard: React.FC = () => {
           />
         </aside>
 
-        <main className={getBoardContainerClass()}>
+        <main className="min-w-0 flex-1 overflow-auto">
           <BoardViewer
             isZoneSelectMode={isZoneSelectMode}
             onZoneCapture={handleZoneCapture}
@@ -157,7 +153,7 @@ const DatavizDashboard: React.FC = () => {
                 selectedSus: menuState.selectedSus,
               })
             ) : (
-              <div className="text-gray-500 p-10 text-center">
+              <div className="p-10 text-center text-gray">
                 <h2 className="mb-4 text-xl">Petit bug</h2>
                 <p>Le board ne veut pas s&apos;afficher :(.</p>
               </div>
@@ -166,7 +162,7 @@ const DatavizDashboard: React.FC = () => {
         </main>
 
         <aside
-          className={`board-selector ${rightSidebarCollapsed ? "collapsed" : "expanded"}`}
+          className={`shrink-0 overflow-hidden transition-all duration-300 ${rightSidebarCollapsed ? "w-16" : "w-80"}`}
         >
           <RightSidebar
             selectedBoard={menuState.selectedBoard}

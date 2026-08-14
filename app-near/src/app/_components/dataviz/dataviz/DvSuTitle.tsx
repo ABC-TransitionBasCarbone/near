@@ -1,21 +1,28 @@
 "use client";
 
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef } from "react";
 import * as d3 from "d3";
 import { api } from "~/trpc/react";
 import { useSuBank } from "../hooks/useSuBank";
+import { useChartDimensions } from "../hooks/useChartDimensions";
 import {
   getFallbackIcon,
   validateAndSanitizeIcon,
 } from "../../_services/sanitize/icons";
 
-type Props = {
+type DvSuTitleProps = {
   selectedSus?: number[];
 };
 
-export default function DvSuTitle({ selectedSus }: Props) {
-  const containerRef = useRef<HTMLDivElement>(null);
+const DvSuTitle: React.FC<DvSuTitleProps> = ({ selectedSus }) => {
+  const {
+    containerRef,
+    width: measuredWidth,
+    height: measuredHeight,
+  } = useChartDimensions();
   const svgRef = useRef<SVGSVGElement>(null);
+  const width = measuredWidth && Math.max(260, measuredWidth);
+  const height = measuredHeight && Math.max(100, measuredHeight);
 
   const suBank = useSuBank(selectedSus);
   const { data: allSus, isLoading: susLoading } =
@@ -23,22 +30,6 @@ export default function DvSuTitle({ selectedSus }: Props) {
   const { data: survey, isLoading: surveyLoading } =
     api.surveys.getOne.useQuery();
   const loading = susLoading || surveyLoading;
-
-  const [width, setWidth] = useState<number>();
-  const [height, setHeight] = useState<number>();
-
-  const measure = () => {
-    if (!containerRef.current) return;
-    const rect = containerRef.current.getBoundingClientRect();
-    setWidth(Math.max(260, rect.width));
-    setHeight(Math.max(100, rect.height));
-  };
-
-  useEffect(() => {
-    measure();
-    window.addEventListener("resize", measure);
-    return () => window.removeEventListener("resize", measure);
-  }, []);
 
   const isSu = selectedSus?.length === 1;
   const su = isSu ? allSus?.find((s) => s.su === selectedSus[0]) : undefined;
@@ -181,12 +172,8 @@ export default function DvSuTitle({ selectedSus }: Props) {
 
   if (loading) {
     return (
-      <div
-        ref={containerRef}
-        className="dv-container"
-        style={{ width: "100%", height: "100%" }}
-      >
-        <div style={{ padding: 12, color: "#666" }}>Chargement…</div>
+      <div ref={containerRef} className="dv-container h-full w-full">
+        <div className="p-3 text-gray">Chargement…</div>
         <svg ref={svgRef} />
       </div>
     );
@@ -194,26 +181,18 @@ export default function DvSuTitle({ selectedSus }: Props) {
 
   if (!view) {
     return (
-      <div
-        ref={containerRef}
-        className="dv-container"
-        style={{ width: "100%", height: "100%" }}
-      >
-        <div style={{ padding: 12, color: "#666" }}>
-          Aucune donnée disponible.
-        </div>
+      <div ref={containerRef} className="dv-container h-full w-full">
+        <div className="p-3 text-gray">Aucune donnée disponible.</div>
         <svg ref={svgRef} />
       </div>
     );
   }
 
   return (
-    <div
-      ref={containerRef}
-      className="dv-container"
-      style={{ width: "100%", height: "100%" }}
-    >
+    <div ref={containerRef} className="dv-container h-full w-full">
       <svg ref={svgRef} />
     </div>
   );
-}
+};
+
+export default DvSuTitle;

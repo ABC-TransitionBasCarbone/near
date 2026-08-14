@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useCallback } from "react";
+import React, { useEffect, useCallback } from "react";
 
 interface ExportModalProps {
   canvas: HTMLCanvasElement;
@@ -19,14 +19,14 @@ const slugify = (s: string) =>
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-+|-+$/g, "");
 
-export default function ExportModal({
+const ExportModal: React.FC<ExportModalProps> = ({
   canvas,
   onClose,
   onChangeVisualization,
   boardName,
   suLabel,
   zoneLabel,
-}: ExportModalProps) {
+}) => {
   const previewUrl = canvas.toDataURL("image/png");
 
   const handleDownloadPng = () => {
@@ -62,26 +62,31 @@ export default function ExportModal({
   }, [handleKeyDown]);
 
   return (
-    <div className="export-modal-backdrop" onClick={onClose}>
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
+      onClick={onClose}
+    >
       <div
-        className="export-modal"
+        className="mx-4 flex max-h-[90vh] w-full max-w-2xl flex-col overflow-hidden rounded-xl bg-white shadow-xl"
         onClick={(e) => e.stopPropagation()}
         role="dialog"
         aria-modal="true"
         aria-label="Exporter la visualisation"
       >
         {/* Header */}
-        <div className="export-modal-header">
-          <div className="export-modal-title-block">
-            <span className="export-modal-title">Aperçu de l&apos;export</span>
+        <div className="flex items-center justify-between border-b border-grayLight px-5 py-4">
+          <div className="flex flex-col">
+            <span className="font-semibold text-black">
+              Aperçu de l&apos;export
+            </span>
             {(suLabel ?? boardName ?? zoneLabel) && (
-              <span className="export-modal-subtitle">
+              <span className="text-xs text-gray">
                 {[suLabel, boardName, zoneLabel].filter(Boolean).join(" · ")}
               </span>
             )}
           </div>
           <button
-            className="export-modal-close"
+            className="text-xl leading-none text-gray hover:text-black"
             onClick={onClose}
             aria-label="Fermer"
           >
@@ -89,24 +94,24 @@ export default function ExportModal({
           </button>
         </div>
 
-        <div className="export-modal-preview-container">
+        <div className="flex-1 overflow-auto bg-grayExtraLight p-4">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={previewUrl}
             alt="Aperçu de la zone sélectionnée"
-            className="export-modal-preview"
+            className="mx-auto max-w-full rounded shadow"
           />
         </div>
 
-        <div className="export-modal-actions">
+        <div className="flex justify-end gap-3 border-t border-grayLight px-5 py-4">
           <button
-            className="export-modal-btn export-modal-btn--secondary"
+            className="rounded-lg border border-blue px-4 py-2 text-sm font-semibold text-blue transition hover:bg-blue/5"
             onClick={onChangeVisualization}
           >
             Changer de visualisation
           </button>
           <button
-            className="export-modal-btn export-modal-btn--primary"
+            className="rounded-lg bg-blue px-4 py-2 text-sm font-semibold text-white transition hover:opacity-90"
             onClick={handleDownloadPng}
           >
             ⬇️ Télécharger PNG
@@ -115,4 +120,6 @@ export default function ExportModal({
       </div>
     </div>
   );
-}
+};
+
+export default ExportModal;

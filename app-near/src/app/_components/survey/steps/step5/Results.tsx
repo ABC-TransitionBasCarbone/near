@@ -82,8 +82,9 @@ const Results: React.FC = () => {
                 {dahboardMapping[item].label}
               </Button>
             ))} */}
-
-            <DatavizDashboard />
+            <div>
+              <DatavizDashboard />
+            </div>
           </div>
         </div>
       }
