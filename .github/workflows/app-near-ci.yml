@@ -60,7 +60,7 @@ jobs:
         run: npx prisma db push
       
       - name: Test
-        run: | 
+        run: |
           npm run test:server
           npm run test:shared
           npm run test:components

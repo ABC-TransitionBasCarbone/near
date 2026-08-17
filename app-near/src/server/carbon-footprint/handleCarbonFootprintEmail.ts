@@ -33,6 +33,7 @@ export const handleCarbonFootprintEmail = async (
     });
 
     await sendPhaseTwoFormNotification(
+      result.survey.id,
       email,
       result.survey.name,
       result.su?.su,

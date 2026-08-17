@@ -20,7 +20,7 @@ export const surveySteps: Record<SurveyPhase, Step> = {
     number: 3,
   },
   [SurveyPhase.STEP_4_ADDITIONAL_SURVEY]: {
-    label: "3 enquêtes complémentaires",
+    label: "Enquêtes complémentaires",
     number: 4,
   },
   [SurveyPhase.STEP_5_RESULTS]: {

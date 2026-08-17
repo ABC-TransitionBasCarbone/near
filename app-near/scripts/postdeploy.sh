@@ -3,6 +3,8 @@ set -e
 
 npm run prisma migrate deploy
 
+npm run su-bank:init
+
 ROW_COUNT=$(psql ${SCALINGO_POSTGRESQL_URL} -t -c "SELECT count(*) FROM public.insee_iris_2021;")
 
 if [[ $ROW_COUNT -eq 0 ]]; then

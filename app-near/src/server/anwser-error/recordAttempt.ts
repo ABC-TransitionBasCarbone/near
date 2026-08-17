@@ -2,8 +2,7 @@ import { AnswerErrorStatus } from "@prisma/client";
 import { db } from "../db";
 
 type AttemptResult =
-  | { success: true }
-  | { success: false; errorMessage: string };
+  { success: true } | { success: false; errorMessage: string };
 
 export const recordAnswerErrorAttempt = async (
   id: number,
