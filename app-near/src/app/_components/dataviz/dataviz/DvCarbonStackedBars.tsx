@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useMemo, useRef } from "react";
 import * as d3 from "d3";
 import { api } from "~/trpc/react";
 import { useSuBank, getPalette } from "../hooks/useSuBank";
@@ -17,6 +17,7 @@ const ROW_H = 36;
 const LEGEND_H = 42; // flex legend — enough for ~2 wrapped lines
 const ROW_STEP = ROW_H + LEGEND_H + 18; // bar + legend + gap
 const MARGIN = { top: 40, right: 20, bottom: 20, left: 20 };
+const FALLBACK_WIDTH = 900;
 
 const DvCarbonStackedBars: React.FC<Props> = ({ selectedSus }) => {
   const { containerRef, container, width } = useChartDimensions();
@@ -24,7 +25,7 @@ const DvCarbonStackedBars: React.FC<Props> = ({ selectedSus }) => {
 
   const suBank = useSuBank(selectedSus);
   const mainColor = suBank.colorMain;
-  const palette = getPalette(suBank, "graph");
+  const palette = useMemo(() => getPalette(suBank, "graph"), [suBank]);
 
   const {
     data: payload,
@@ -34,7 +35,12 @@ const DvCarbonStackedBars: React.FC<Props> = ({ selectedSus }) => {
   const { data: globalMax } = api.suDataviz.getCarbonSankeyGlobalMax.useQuery();
 
   useEffect(() => {
-    if (!svgRef.current || !payload || !width) return;
+    if (!svgRef.current) return;
+
+    const svg = d3.select(svgRef.current);
+    svg.selectAll("*").remove();
+
+    if (!payload) return;
 
     const { nodes, links } = payload.sankeyData;
     if (!nodes.length) return;
@@ -56,14 +62,12 @@ const DvCarbonStackedBars: React.FC<Props> = ({ selectedSus }) => {
 
     if (!parentGroups.length) return;
 
-    // Shared scale: 100% width = highest parent value across ALL SUs (for cross-SU comparison)
+    const chartWidth = width ?? FALLBACK_WIDTH;
     const maxVal = globalMax ?? 1;
-    const barW = width - MARGIN.left - MARGIN.right - LABEL_W;
+    const barW = chartWidth - MARGIN.left - MARGIN.right - LABEL_W;
     const svgH = MARGIN.top + parentGroups.length * ROW_STEP + MARGIN.bottom;
 
-    const svg = d3.select(svgRef.current);
-    svg.selectAll("*").remove();
-    svg.attr("width", width).attr("height", svgH);
+    svg.attr("width", chartWidth).attr("height", svgH);
 
     const tooltip = getD3Tooltip(container).style("white-space", "nowrap");
 

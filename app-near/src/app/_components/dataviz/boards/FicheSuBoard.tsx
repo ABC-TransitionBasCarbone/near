@@ -40,11 +40,11 @@ export const FicheSuBoard: Board = {
           <DvCsp selectedSus={selectedSus} />
         </div>
 
-        <div className="dv-container usages-dist h-[520px] rounded-lg border border-grayLight bg-white p-3 md:col-span-2">
+        <div className="dv-container usages-dist h-[950px] rounded-lg border border-grayLight bg-white p-3 md:col-span-2">
           <DvUsages selectedSus={selectedSus} />
         </div>
 
-        <div className="dv-container sankey-dist h-[420px] rounded-lg border border-grayLight bg-white p-3 md:col-span-2">
+        <div className="dv-container sankey-dist h-[800px] rounded-lg border border-grayLight bg-white p-3 md:col-span-2">
           <DvCarbonSankey selectedSus={selectedSus} />
         </div>
 

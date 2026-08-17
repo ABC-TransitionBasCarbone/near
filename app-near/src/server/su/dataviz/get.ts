@@ -20,7 +20,7 @@ export const getSuInfo = async (surveyId: number): Promise<SuInfo[] | null> => {
 
   return su.map((item) => ({
     id: item.id,
-    icon: "",
+    icon: item.suBank?.icon1 ?? "",
     popPercentage: item.popPercentage,
     realPopulation: Math.round(
       (item.popPercentage / 100) * (neighborhood?.population_sum ?? 0),

@@ -32,7 +32,11 @@ const DvCarbonSankey: React.FC<Props> = ({ selectedSus }) => {
     height: measuredHeight,
   } = useChartDimensions();
 
-  const { colorMain: mainColor, colorLight1 } = useSuBank(selectedSus);
+  const {
+    colorMain: mainColor,
+    colorLight1,
+    colorDark1,
+  } = useSuBank(selectedSus);
 
   const width = measuredWidth && Math.max(200, measuredWidth);
   const height = measuredHeight && Math.max(220, measuredHeight);
@@ -61,9 +65,25 @@ const DvCarbonSankey: React.FC<Props> = ({ selectedSus }) => {
     );
     const chartHeight = Math.max(80, h - topSpace - bottomSpace);
 
+    const filteredNodes = payload.sankeyData.nodes.filter((n) => n.value > 0);
+    const idxMap = new Map<number, number>();
+    filteredNodes.forEach((n, i) => {
+      const originalIndex = payload.sankeyData.nodes.findIndex(
+        (nn) => nn.id === n.id,
+      );
+      if (originalIndex >= 0) idxMap.set(originalIndex, i);
+    });
+    const filteredLinks = payload.sankeyData.links
+      .filter((l) => idxMap.has(l.source) && idxMap.has(l.target))
+      .map((l) => ({
+        ...l,
+        source: idxMap.get(l.source) ?? 0,
+        target: idxMap.get(l.target) ?? 0,
+      }));
+
     const g: SankeyGraph<NodeData, LinkData> = {
-      nodes: payload.sankeyData.nodes.map((n) => ({ ...n })),
-      links: payload.sankeyData.links,
+      nodes: filteredNodes.map((n) => ({ ...n })),
+      links: filteredLinks,
     };
 
     const s = sankey<NodeData, LinkData>()
@@ -190,7 +210,7 @@ const DvCarbonSankey: React.FC<Props> = ({ selectedSus }) => {
       .attr("width", (d) => nodeW(d))
       .attr("height", (d) => nodeH(d))
       .attr("fill", () => nodeFillColor.formatHex())
-      .attr("stroke", mainColor)
+      .attr("stroke", colorDark1)
       .attr("stroke-width", 0.4)
       .attr("rx", 3)
       .attr("ry", 3)
@@ -278,7 +298,7 @@ const DvCarbonSankey: React.FC<Props> = ({ selectedSus }) => {
       .style("font-weight", "600")
       .style("fill", mainColor)
       .text(`☁ Empreinte individuelle moyenne : ${totalTons} t CO2e / an`);
-  }, [graph, payload, mainColor, colorLight1, container]);
+  }, [graph, payload, mainColor, colorLight1, colorDark1, container]);
 
   if (loading) {
     return (

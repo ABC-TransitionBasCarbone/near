@@ -3,15 +3,13 @@
 import { useState, useEffect } from "react";
 import ExportModal from "./ExportModal";
 import { api } from "~/trpc/react";
-import LeftSidebar from "./LeftSidebar";
+import SuTabs from "./SuTabs";
+import BoardTabs from "./BoardTabs";
 import BoardViewer from "./BoardViewer";
-import RightSidebar from "./RightSidebar";
 import { getBoardById, getDefaultBoard } from "./boards/registry";
 import { type MenuState } from "~/types/Dataviz";
 
 const DatavizDashboard: React.FC = () => {
-  const [leftSidebarCollapsed, setLeftSidebarCollapsed] = useState(false);
-  const [rightSidebarCollapsed, setRightSidebarCollapsed] = useState(false);
   const [isZoneSelectMode, setIsZoneSelectMode] = useState(false);
   const [exportCanvas, setExportCanvas] = useState<HTMLCanvasElement | null>(
     null,
@@ -62,14 +60,6 @@ const DatavizDashboard: React.FC = () => {
       ...prev,
       selectedSus: sus,
     }));
-  };
-
-  const toggleLeftSidebar = () => {
-    setLeftSidebarCollapsed((prev) => !prev);
-  };
-
-  const toggleRightSidebar = () => {
-    setRightSidebarCollapsed((prev) => !prev);
   };
 
   const toggleZoneSelectMode = () => {
@@ -125,52 +115,47 @@ const DatavizDashboard: React.FC = () => {
   }
 
   return (
-    <div className="h-full w-full overflow-hidden">
-      <div className="flex h-full w-full">
-        <aside
-          className={`shrink-0 overflow-hidden transition-all duration-300 ${leftSidebarCollapsed ? "w-16" : "w-72"}`}
-        >
-          <LeftSidebar
-            availableSus={menuState.availableSus}
-            selectedSus={menuState.selectedSus}
-            onSusChange={handleSusChange}
-            isCollapsed={leftSidebarCollapsed}
-            onToggleCollapse={toggleLeftSidebar}
-            isZoneSelectMode={isZoneSelectMode}
-            onToggleZoneSelectMode={toggleZoneSelectMode}
-            isBoardReady={isBoardReady}
-          />
-        </aside>
+    <div className="flex h-full w-full flex-col overflow-hidden">
+      <SuTabs
+        availableSus={menuState.availableSus}
+        selectedSus={menuState.selectedSus}
+        onSusChange={handleSusChange}
+      />
+      <BoardTabs
+        selectedBoard={menuState.selectedBoard}
+        onBoardChange={handleBoardChange}
+      />
 
-        <main className="min-w-0 flex-1 overflow-auto">
-          <BoardViewer
-            isZoneSelectMode={isZoneSelectMode}
-            onZoneCapture={handleZoneCapture}
-            onBoardReady={setIsBoardReady}
-          >
-            {currentBoard ? (
-              currentBoard.renderComponent({
-                selectedSus: menuState.selectedSus,
-              })
-            ) : (
-              <div className="p-10 text-center text-gray">
-                <h2 className="mb-4 text-xl">Petit bug</h2>
-                <p>Le board ne veut pas s&apos;afficher :(.</p>
-              </div>
-            )}
-          </BoardViewer>
-        </main>
-
-        <aside
-          className={`shrink-0 overflow-hidden transition-all duration-300 ${rightSidebarCollapsed ? "w-16" : "w-80"}`}
+      <div className="relative min-h-0 flex-1 overflow-auto py-5">
+        <button
+          onClick={toggleZoneSelectMode}
+          disabled={!isBoardReady}
+          title={!isBoardReady ? "En attente du chargement..." : "Sauvegarder"}
+          className={`absolute right-4 top-4 z-30 rounded-full border px-4 py-2 text-sm font-semibold shadow transition disabled:opacity-40 ${
+            isZoneSelectMode
+              ? "border-blue bg-blue text-white"
+              : "border-grayLight bg-white text-blue hover:bg-blue/5"
+          }`}
         >
-          <RightSidebar
-            selectedBoard={menuState.selectedBoard}
-            onBoardChange={handleBoardChange}
-            isCollapsed={rightSidebarCollapsed}
-            onToggleCollapse={toggleRightSidebar}
-          />
-        </aside>
+          {isBoardReady ? "📸" : "⏳"} Sauvegarder
+        </button>
+
+        <BoardViewer
+          isZoneSelectMode={isZoneSelectMode}
+          onZoneCapture={handleZoneCapture}
+          onBoardReady={setIsBoardReady}
+        >
+          {currentBoard ? (
+            currentBoard.renderComponent({
+              selectedSus: menuState.selectedSus,
+            })
+          ) : (
+            <div className="p-10 text-center text-gray">
+              <h2 className="mb-4 text-xl">Petit bug</h2>
+              <p>Le board ne veut pas s&apos;afficher :(.</p>
+            </div>
+          )}
+        </BoardViewer>
       </div>
 
       {exportCanvas && (

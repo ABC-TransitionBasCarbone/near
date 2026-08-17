@@ -128,17 +128,18 @@ export const getUsageDistribution = async (
 
   const totalResponses = counts.reduce((sum, c) => sum + c._count, 0);
   const labels = USAGE_LABELS[field];
+  const countByValue = new Map(counts.map((c) => [String(c[field]), c._count]));
 
   return {
     isNeighborhood,
     totalResponses,
-    data: counts.map((c) => {
-      const value = String(c[field]);
+    data: Object.entries(labels).map(([value, label]) => {
+      const count = countByValue.get(value) ?? 0;
       return {
         value,
-        ...(labels[value] ?? { label: value, emoji: "" }),
-        count: c._count,
-        percentage: toPercentage(c._count, totalResponses),
+        ...label,
+        count,
+        percentage: toPercentage(count, totalResponses),
       };
     }),
   };

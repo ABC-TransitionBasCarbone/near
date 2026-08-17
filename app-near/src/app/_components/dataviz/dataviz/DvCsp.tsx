@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useMemo, useRef } from "react";
 import * as d3 from "d3";
 import { api } from "~/trpc/react";
 import { useSuBank, getPalette } from "../hooks/useSuBank";
@@ -18,7 +18,7 @@ const DvCsp: React.FC<DvCspProps> = ({ selectedSus }) => {
   const { containerRef: svgContainer, width, height } = useChartDimensions();
   const suBank = useSuBank(selectedSus);
   const mainColor = suBank.colorMain;
-  const colors = getPalette(suBank, "graph");
+  const colors = useMemo(() => getPalette(suBank, "graph"), [suBank]);
 
   const {
     data: result,
@@ -30,18 +30,15 @@ const DvCsp: React.FC<DvCspProps> = ({ selectedSus }) => {
   });
   const data = result?.data.filter((d) => d.count > 0);
 
-  // D3 Horizontal Stacked Bar Chart
   useEffect(() => {
     if (!data || data.length === 0 || !svgRef.current) return;
 
     const svg = d3.select(svgRef.current);
-    svg.selectAll("*").remove(); // Clear previous content
+    svg.selectAll("*").remove();
 
-    // Use fallback dimensions if responsive dimensions not yet available
     const fallbackWidth = 400;
     const fallbackHeight = 250;
 
-    // Dimensions and margins
     const dimensions = {
       width: width ?? fallbackWidth,
       height: height ?? fallbackHeight,
@@ -53,10 +50,8 @@ const DvCsp: React.FC<DvCspProps> = ({ selectedSus }) => {
     const chartHeight =
       dimensions.height - dimensions.margins.top - dimensions.margins.bottom;
 
-    // Set SVG dimensions
     svg.attr("width", dimensions.width).attr("height", dimensions.height);
 
-    // Calculate cumulative values for stacking
     let cumulative = 0;
     const stackedData = data.map((d) => {
       const start = cumulative;
@@ -68,10 +63,9 @@ const DvCsp: React.FC<DvCspProps> = ({ selectedSus }) => {
       };
     });
 
-    // Create scales
     const xScale = d3.scaleLinear().domain([0, 100]).range([0, chartWidth]);
 
-    const barHeight = Math.min(50, chartHeight / 3); // Maximum 50px height ?? 1/3 du height disponible
+    const barHeight = Math.min(50, chartHeight / 3);
 
     const g = svg.append("g").attr(
       "transform",
@@ -81,7 +75,6 @@ const DvCsp: React.FC<DvCspProps> = ({ selectedSus }) => {
         )`,
     );
 
-    // Create stacked bars
     const bars = g
       .selectAll(".csp-bar")
       .data(stackedData)
@@ -89,7 +82,6 @@ const DvCsp: React.FC<DvCspProps> = ({ selectedSus }) => {
       .append("g")
       .attr("class", "csp-bar");
 
-    // Add rectangles
     bars
       .append("rect")
       .attr("x", (d) => xScale(d.start))
@@ -128,18 +120,14 @@ const DvCsp: React.FC<DvCspProps> = ({ selectedSus }) => {
           .style("left", `${event.pageX + 10}px`)
           .style("top", `${event.pageY - 10}px`);
 
-        // Highlight bar
         d3.select(this).attr("stroke", "#333").attr("stroke-width", 2);
       })
       .on("mouseout", function () {
-        // Remove tooltip
         d3.selectAll(".tooltip").remove();
 
-        // Reset bar style
         d3.select(this).attr("stroke", "#fff").attr("stroke-width", 1);
       });
 
-    // Add percentage labels on bars (only if segment is wide enough)
     bars
       .append("text")
       .attr("x", (d) => xScale(d.start + (d.end - d.start) / 2))
@@ -152,11 +140,9 @@ const DvCsp: React.FC<DvCspProps> = ({ selectedSus }) => {
       .style("text-shadow", "1px 1px 2px rgba(0,0,0,0.7)")
       .text((d) => {
         const segmentWidth = xScale(d.end - d.start);
-        // Only show percentage if segment is wide enough (>40px)
         return segmentWidth > 40 ? `${d.percentage.toFixed(0)}%` : "";
       });
 
-    // Create legend below the bar chart using HTML foreignObject
     const legend = svg
       .append("foreignObject")
       .attr("x", dimensions.margins.left)
@@ -173,7 +159,6 @@ const DvCsp: React.FC<DvCspProps> = ({ selectedSus }) => {
       .style("font-family", "system-ui, sans-serif")
       .style("line-height", "1.2");
 
-    // Create legend items as inline divs
     const legendItems = legendContainer
       .selectAll(".legend-item")
       .data(data)
@@ -187,7 +172,6 @@ const DvCsp: React.FC<DvCspProps> = ({ selectedSus }) => {
       .style("font-weight", "500")
       .style("color", "#333");
 
-    // Add color square to each legend item
     legendItems
       .append("xhtml:div")
       .style("width", "12px")
@@ -200,14 +184,12 @@ const DvCsp: React.FC<DvCspProps> = ({ selectedSus }) => {
         (d, i) => colors[i % colors.length] ?? colors[0] ?? mainColor,
       );
 
-    // Add emoji and text to each legend item
     legendItems.append("xhtml:span").text((d) => {
       const labelText =
         d.label.length > 25 ? `${d.label.substring(0, 25)}...` : d.label;
       return `${d.emoji || ""} ${labelText}`.trim();
     });
 
-    // Add title
     svg
       .append("text")
       .attr("x", dimensions.margins.left)

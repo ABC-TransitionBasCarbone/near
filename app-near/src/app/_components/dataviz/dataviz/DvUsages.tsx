@@ -326,15 +326,16 @@ const DvUsages: React.FC<DvUsagesProps> = ({ selectedSus }) => {
           .attr("dominant-baseline", "middle")
           .style("font-size", "11px")
           .style("font-weight", "bold")
-          .style("fill", "white")
-          .style("text-shadow", "2px 2px 2px rgba(0,0,0,0.8)")
+          .style("fill", darkColor1)
+          .style("stroke", "white")
+          .style("stroke-width", "3px")
+          .style("paint-order", "stroke fill")
           .text(
             segment.data.label.length > 10
               ? `${segment.data.label.substring(0, 10)}...`
               : segment.data.label,
           );
 
-        // Util tooltip area
         const tooltipArea = segmentGroup
           .append("rect")
           .attr("x", segment.x - 25)
@@ -348,7 +349,6 @@ const DvUsages: React.FC<DvUsagesProps> = ({ selectedSus }) => {
           .attr("fill", "transparent")
           .style("cursor", "pointer");
 
-        // Tooltip interactions
         tooltipArea
           .on("mouseover", function (event: MouseEvent) {
             const tooltip = d3

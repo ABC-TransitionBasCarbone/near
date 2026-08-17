@@ -357,25 +357,31 @@ export const getCarbonSankey = async (
     select: { id: true, popPercentage: true },
   });
 
+  const suAggregates = await Promise.all(
+    sus.map((su) =>
+      db.carbonFootprintAnswer.aggregate({
+        where: { surveyId, suId: su.id },
+        _avg: CARBON_AVG_SELECT,
+        _count: true,
+      }),
+    ),
+  );
+
   const weighted: CarbonAverages = {};
   let weightSum = 0;
 
-  for (const su of sus) {
+  sus.forEach((su, i) => {
     const weight = su.popPercentage / 100;
-    if (weight <= 0) continue;
+    if (weight <= 0) return;
 
-    const { _avg, _count } = await db.carbonFootprintAnswer.aggregate({
-      where: { surveyId, suId: su.id },
-      _avg: CARBON_AVG_SELECT,
-      _count: true,
-    });
-    if (_count === 0) continue;
+    const { _avg, _count } = suAggregates[i]!;
+    if (_count === 0) return;
 
     weightSum += weight;
     for (const field of [...CARBON_FIELDS, "globalNote"] as const) {
       weighted[field] = (weighted[field] ?? 0) + (_avg[field] ?? 0) * weight;
     }
-  }
+  });
 
   const normalized: CarbonAverages =
     weightSum > 0
@@ -391,7 +397,6 @@ export const getCarbonSankey = async (
   };
 };
 
-// Cross-SU max root (branch) value, used to give every SU the same bar scale.
 export const getCarbonSankeyGlobalMax = async (
   surveyId: number,
 ): Promise<number> => {
@@ -400,12 +405,17 @@ export const getCarbonSankeyGlobalMax = async (
     select: { id: true },
   });
 
+  const suAggregates = await Promise.all(
+    sus.map((su) =>
+      db.carbonFootprintAnswer.aggregate({
+        where: { surveyId, suId: su.id },
+        _avg: CARBON_AVG_SELECT,
+      }),
+    ),
+  );
+
   let max = 0;
-  for (const su of sus) {
-    const { _avg } = await db.carbonFootprintAnswer.aggregate({
-      where: { surveyId, suId: su.id },
-      _avg: CARBON_AVG_SELECT,
-    });
+  for (const { _avg } of suAggregates) {
     const values = toValues(_avg);
     for (const root of CARBON_TREE) {
       const value = computeNodeValue(root, values);
