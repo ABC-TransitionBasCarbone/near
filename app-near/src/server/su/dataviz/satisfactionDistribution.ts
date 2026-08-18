@@ -76,12 +76,12 @@ const SUBCATEGORIES: Record<
       {
         field: "easyBicycle",
         title: "Facile de se déplacer à vélo",
-        emoji: "🚲",
+        emoji: "🚴",
       },
       {
         field: "notTooMuchTraffic",
         title: "Pas trop de trafic routier",
-        emoji: "🚗",
+        emoji: "🚦",
       },
       {
         field: "carAnPedestriansRespect",
@@ -143,7 +143,7 @@ const SUBCATEGORIES: Record<
       {
         field: "bicycleRepairShopSatisfaction",
         title: "Réparateur de vélo à proximité",
-        emoji: "🚲",
+        emoji: "🚴",
       },
       {
         field: "secondHandShopSatisfaction",

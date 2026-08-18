@@ -1,20 +1,19 @@
 "use client";
 
-import React, { useEffect, useRef } from "react";
-import * as d3 from "d3";
+import React, { useMemo } from "react";
 import { api } from "~/trpc/react";
 import { useSuBank } from "../hooks/useSuBank";
 import { useChartDimensions } from "../hooks/useChartDimensions";
+import PieChart, { type PieSlice } from "../../_ui/PieChart";
 
 interface DvGenreProps {
   selectedSus?: number[];
 }
 
-const TITLE = "Genre";
-const TITLE_EMOJI = "🚻";
+const TITLE = "Répartition par genre";
+const TITLE_EMOJI = "👨👩";
 
 const DvGenre: React.FC<DvGenreProps> = ({ selectedSus }) => {
-  const svgRef = useRef<SVGSVGElement>(null);
   const { containerRef: svgContainer, width, height } = useChartDimensions();
   const {
     colorMain: mainColor,
@@ -32,146 +31,23 @@ const DvGenre: React.FC<DvGenreProps> = ({ selectedSus }) => {
   });
   const data = result?.data.filter((d) => d.count > 0);
 
-  // D3 Pie Chart
-  useEffect(() => {
-    if (!data || data.length === 0 || !svgRef.current) return;
+  const radius = useMemo(() => {
+    const w = width ?? 300;
+    const h = height ?? 250;
+    return Math.max(20, Math.min((w - 32) / 2, (h - 32) / 2));
+  }, [width, height]);
 
-    const svg = d3.select(svgRef.current);
-    svg.selectAll("*").remove(); // Clear previous content
-
-    // Use fallback dimensions if responsive dimensions not yet available
-    const fallbackWidth = 300;
-    const fallbackHeight = 250;
-
-    // Dimensions following ResponsiveD3 pattern
-    const dimensions = {
-      width: width ?? fallbackWidth,
-      height: height ?? fallbackHeight,
-      margins: 20,
-      containerWidth: 0,
-      containerHeight: 0,
-    };
-
-    dimensions.containerWidth = dimensions.width - dimensions.margins * 2;
-    dimensions.containerHeight = dimensions.height - dimensions.margins * 2;
-
-    // Calculate radius based on available space
-    const radius =
-      Math.min(dimensions.containerWidth, dimensions.containerHeight) * 0.5;
-
-    // Set SVG dimensions
-    svg.attr("width", dimensions.width).attr("height", dimensions.height);
-
-    const container = svg
-      .append("g")
-      .attr("class", "container")
-      .attr(
-        "transform",
-        `translate(${dimensions.margins}, ${dimensions.margins})`,
-      );
-
-    const g = container.append("g").attr(
-      "transform",
-      `translate(
-        ${dimensions.containerWidth / 2},
-        ${dimensions.containerHeight / 2 + dimensions.margins / 2}
-        )`,
-    );
-
-    // Create pie generator
-    const pie = d3
-      .pie<(typeof data)[0]>()
-      .value((d) => d.count)
-      .sort(null); // Keep original order
-
-    // Create arc generator
-    const arc = d3
-      .arc<d3.PieArcDatum<(typeof data)[0]>>()
-      .innerRadius(0)
-      .outerRadius(radius);
-
-    // Create arc data
-    const arcs = pie(data);
-
-    // Create pie slices
-    const slices = g
-      .selectAll(".slice")
-      .data(arcs)
-      .enter()
-      .append("g")
-      .attr("class", "slice");
-
-    // Add paths for pie slices
-    slices
-      .append("path")
-      .attr("d", arc)
-      .attr("fill", (d, i) => (i === 0 ? lightColor1 : darkColor1))
-      .attr("stroke", "#fff")
-      .attr("stroke-width", 2)
-      .style("cursor", "pointer")
-      .on("mouseover", function (event: MouseEvent, d) {
-        // Tooltip on hover
-        const tooltip = d3
-          .select("body")
-          .append("div")
-          .attr("class", "tooltip")
-          .style("position", "absolute")
-          .style("background", "rgba(0,0,0,0.8)")
-          .style("color", "white")
-          .style("padding", "8px")
-          .style("border-radius", "4px")
-          .style("font-size", "12px")
-          .style("pointer-events", "none")
-          .style("z-index", "9999");
-
-        tooltip
-          .html(
-            `
-          <div><strong>${d.data.label}</strong></div>
-          <div>${d.data.percentage.toFixed(1)}% (${d.data.count})</div>
-        `,
-          )
-          .style("left", `${event.pageX + 10}px`)
-          .style("top", `${event.pageY - 10}px`);
-
-        // Highlight slice
-        d3.select(this).attr("stroke", mainColor).attr("stroke-width", 3);
-      })
-      .on("mouseout", function () {
-        // Remove tooltip
-        d3.selectAll(".tooltip").remove();
-
-        // Reset slice style
-        d3.select(this).attr("stroke", "#fff").attr("stroke-width", 2);
-      });
-
-    // Add percentage labels on slices
-    slices
-      .append("text")
-      .attr("transform", (d) => {
-        const centroid = arc.centroid(d);
-        return `translate(${centroid[0]}, ${centroid[1]})`;
-      })
-      .attr("text-anchor", "middle")
-      .style("font-size", "14px")
-      .style("font-weight", "bold")
-      .style("fill", "white")
-      .style("text-shadow", "1px 1px 2px rgba(0,0,0,0.7)")
-      .text((d) =>
-        d.data.percentage > 5
-          ? `${d.data.emoji} ${d.data.percentage.toFixed(0)}%`
-          : "",
-      ); // Only show percentage if > 5%
-
-    // Add title
-    svg
-      .append("text")
-      .attr("x", dimensions.margins)
-      .attr("y", 20)
-      .attr("class", "dv-title")
-      .style("fill", mainColor)
-      .text(`${TITLE} ${TITLE_EMOJI}`);
-  }, [data, mainColor, lightColor1, darkColor1, width, height]);
+  const slices = useMemo<PieSlice[]>(() => {
+    if (!data) return [];
+    return data.map((d, i) => ({
+      key: d.label,
+      label: d.label,
+      value: d.count,
+      color: i === 0 ? lightColor1 : darkColor1,
+      emoji: d.emoji,
+      tooltip: `${d.label} : ${d.percentage.toFixed(1)}% (${d.count})`,
+    }));
+  }, [data, lightColor1, darkColor1]);
 
   if (loading) {
     return (
@@ -198,15 +74,16 @@ const DvGenre: React.FC<DvGenreProps> = ({ selectedSus }) => {
   }
 
   return (
-    <div ref={svgContainer} className="h-full w-full">
-      <svg ref={svgRef} className="h-full w-full" aria-hidden="true" />
-      <ul className="sr-only">
-        {data.map((d) => (
-          <li key={d.label}>
-            {d.label} : {d.percentage.toFixed(1)}% ({d.count})
-          </li>
-        ))}
-      </ul>
+    <div className="flex h-full w-full flex-col">
+      <div className="text-base font-bold" style={{ color: mainColor }}>
+        {TITLE} {TITLE_EMOJI}
+      </div>
+      <div
+        ref={svgContainer}
+        className="flex min-h-0 flex-1 items-center justify-center"
+      >
+        <PieChart slices={slices} radius={radius} />
+      </div>
     </div>
   );
 };

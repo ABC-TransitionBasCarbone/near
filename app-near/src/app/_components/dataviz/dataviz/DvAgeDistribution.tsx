@@ -31,18 +31,15 @@ const DvAgeDistribution: React.FC<DvAgeDistributionProps> = ({
   });
   const data = result?.data.filter((d) => d.count > 0);
 
-  // D3 Dataviz
   useEffect(() => {
     if (!data || data.length === 0 || !svgRef.current) return;
 
     const svg = d3.select(svgRef.current);
     svg.selectAll("*").remove(); // Clear previous content
 
-    // Use fallback dimensions if responsive dimensions not yet available
     const fallbackWidth = 400;
     const fallbackHeight = 200;
 
-    // Dimensions following ResponsiveD3 pattern
     const dimensions = {
       width: width ?? fallbackWidth,
       height: height ?? fallbackHeight,
@@ -56,18 +53,20 @@ const DvAgeDistribution: React.FC<DvAgeDistributionProps> = ({
       dimensions.margins.top * 2 -
       dimensions.margins.bottom * 2;
 
-    // Set SVG dimensions
-    svg.attr("width", chartWidth).attr("height", chartHeight);
+    svg
+      .attr("width", chartWidth)
+      .attr("height", chartHeight)
+      .attr("viewBox", `0 0 ${chartWidth} ${chartHeight}`)
+      .attr("preserveAspectRatio", "xMidYMid meet");
 
     const g = svg.append("g").attr(
       "transform",
       `translate(
         ${dimensions.margins.left},
-        ${dimensions.margins.top * 2.5}
+        ${dimensions.margins.top}
         )`,
     );
 
-    // Create scales for line chart
     const xScale = d3
       .scalePoint()
       .domain(data.map((d) => d.label))
@@ -79,14 +78,12 @@ const DvAgeDistribution: React.FC<DvAgeDistributionProps> = ({
       .domain([0, d3.max(data, (d) => d.percentage) ?? 100])
       .range([chartHeight, 0]);
 
-    // Create line generator
     const line = d3
       .line<(typeof data)[0]>()
       .x((d) => xScale(d.label) ?? 0)
       .y((d) => yScale(d.percentage))
       .curve(d3.curveCardinal.tension(0.3));
 
-    // Create area generator for fill
     const area = d3
       .area<(typeof data)[0]>()
       .x((d) => xScale(d.label) ?? 0)
@@ -94,7 +91,6 @@ const DvAgeDistribution: React.FC<DvAgeDistributionProps> = ({
       .y1((d) => yScale(d.percentage))
       .curve(d3.curveCardinal.tension(0.3));
 
-    // Add area fill
     g.append("path")
       .datum(data)
       .attr("class", "area")
@@ -102,7 +98,6 @@ const DvAgeDistribution: React.FC<DvAgeDistributionProps> = ({
       .attr("fill", lightColor3)
       .attr("opacity", 0.6);
 
-    // Add line
     g.append("path")
       .datum(data)
       .attr("class", "line")
@@ -113,7 +108,6 @@ const DvAgeDistribution: React.FC<DvAgeDistributionProps> = ({
       .attr("stroke-linejoin", "round")
       .attr("stroke-linecap", "round");
 
-    // Add data points
     g.selectAll(".dot")
       .data(data)
       .enter()
@@ -127,7 +121,6 @@ const DvAgeDistribution: React.FC<DvAgeDistributionProps> = ({
       .attr("stroke-width", 2)
       .style("cursor", "pointer")
       .on("mouseover", function (event: MouseEvent, d) {
-        // Tooltip on hover
         const tooltip = d3
           .select("body")
           .append("div")
@@ -151,24 +144,20 @@ const DvAgeDistribution: React.FC<DvAgeDistributionProps> = ({
           .style("left", `${event.pageX + 10}px`)
           .style("top", `${event.pageY - 10}px`);
 
-        // Highlight point
         d3.select(this)
           .attr("r", 7)
           .attr("stroke", mainColor)
           .attr("stroke-width", 3);
       })
       .on("mouseout", function () {
-        // Remove tooltip
         d3.selectAll(".tooltip").remove();
 
-        // Reset point style
         d3.select(this)
           .attr("r", 5)
           .attr("stroke", "#fff")
           .attr("stroke-width", 2);
       });
 
-    // Add percentage labels on points
     g.selectAll(".point-label")
       .data(data)
       .enter()
@@ -182,7 +171,6 @@ const DvAgeDistribution: React.FC<DvAgeDistributionProps> = ({
       .style("fill", mainColor)
       .text((d) => `${d.percentage.toFixed(0)}%`);
 
-    // Add X axis
     g.append("g")
       .attr("transform", `translate(0,${chartHeight})`)
       .call(d3.axisBottom(xScale).offset(10))
@@ -194,15 +182,6 @@ const DvAgeDistribution: React.FC<DvAgeDistributionProps> = ({
       .attr("color", mainColor)
       .attr("dx", "-.8em")
       .attr("dy", ".50em");
-
-    // Add title
-    svg
-      .append("text")
-      .attr("x", dimensions.margins.left)
-      .attr("y", 25)
-      .attr("class", "dv-title")
-      .style("fill", mainColor)
-      .text(`${TITLE} ${TITLE_EMOJI}`);
   }, [data, width, height, mainColor, lightColor3]);
 
   if (loading) {
@@ -230,15 +209,20 @@ const DvAgeDistribution: React.FC<DvAgeDistributionProps> = ({
   }
 
   return (
-    <div ref={svgContainer} className="h-full w-full">
-      <svg ref={svgRef} className="h-full w-full" aria-hidden="true" />
-      <ul className="sr-only">
-        {data.map((d) => (
-          <li key={d.label}>
-            {d.label} : {d.percentage.toFixed(1)}% ({d.count} personnes)
-          </li>
-        ))}
-      </ul>
+    <div className="flex h-full w-full flex-col">
+      <div className="text-base font-bold" style={{ color: mainColor }}>
+        {TITLE} {TITLE_EMOJI}
+      </div>
+      <div ref={svgContainer} className="min-h-0 flex-1">
+        <svg ref={svgRef} className="h-full w-full" aria-hidden="true" />
+        <ul className="sr-only">
+          {data.map((d) => (
+            <li key={d.label}>
+              {d.label} : {d.percentage.toFixed(1)}% ({d.count} personnes)
+            </li>
+          ))}
+        </ul>
+      </div>
     </div>
   );
 };

@@ -42,6 +42,16 @@ const BoardTabs: React.FC<BoardTabsProps> = ({
 
       {activeGroup?.subBoards && activeGroup.subBoards.length > 0 && (
         <div className="mt-2 flex flex-wrap gap-2 border-t border-grayLight pt-2">
+          <button
+            onClick={() => onBoardChange(activeGroup.main.id)}
+            className={`rounded-full border px-3 py-1 text-xs font-medium transition ${
+              selectedBoard === activeGroup.main.id
+                ? "border-blue bg-blue text-white"
+                : "border-grayLight text-gray hover:bg-blue/5"
+            }`}
+          >
+            {activeGroup.main.emoji} Vue d&apos;ensemble
+          </button>
           {activeGroup.subBoards.map((board) => (
             <button
               key={board.id}

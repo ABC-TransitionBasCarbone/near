@@ -5,7 +5,7 @@ import DvMobility from "../dataviz/DvMobility";
 export const MobilityBoard: Board = {
   id: "Mobility",
   name: "Mobilité",
-  emoji: "🚲",
+  emoji: "🚴",
   description: "Visualisation de la mobilité des répondants.",
   renderComponent: ({ selectedSus }: { selectedSus?: number[] }) => (
     <div className="other-board flex h-full flex-col overflow-y-auto p-4">
