@@ -15,7 +15,7 @@ const TITLE_EMOJI = "💼";
 
 const DvCsp: React.FC<DvCspProps> = ({ selectedSus }) => {
   const svgRef = useRef<SVGSVGElement>(null);
-  const { containerRef: svgContainer, width, height } = useChartDimensions();
+  const { containerRef: svgContainer, width } = useChartDimensions();
   const suBank = useSuBank(selectedSus);
   const mainColor = suBank.colorMain;
   const colors = useMemo(() => getPalette(suBank, "graph"), [suBank]);
@@ -37,20 +37,18 @@ const DvCsp: React.FC<DvCspProps> = ({ selectedSus }) => {
     svg.selectAll("*").remove();
 
     const fallbackWidth = 400;
-    const fallbackHeight = 250;
 
     const dimensions = {
       width: width ?? fallbackWidth,
-      height: height ?? fallbackHeight,
       margins: { top: 20, right: 20, bottom: 20, left: 20 },
     };
 
     const chartWidth =
       dimensions.width - dimensions.margins.left - dimensions.margins.right;
-    const chartHeight =
-      dimensions.height - dimensions.margins.top - dimensions.margins.bottom;
+    const barHeight = 40;
+    const legendGap = 12;
 
-    svg.attr("width", dimensions.width).attr("height", dimensions.height);
+    svg.attr("width", dimensions.width);
 
     let cumulative = 0;
     const stackedData = data.map((d) => {
@@ -64,8 +62,6 @@ const DvCsp: React.FC<DvCspProps> = ({ selectedSus }) => {
     });
 
     const xScale = d3.scaleLinear().domain([0, 100]).range([0, chartWidth]);
-
-    const barHeight = Math.min(50, chartHeight / 3);
 
     const g = svg.append("g").attr(
       "transform",
@@ -143,12 +139,14 @@ const DvCsp: React.FC<DvCspProps> = ({ selectedSus }) => {
         return segmentWidth > 40 ? `${d.percentage.toFixed(0)}%` : "";
       });
 
+    const legendY =
+      dimensions.margins.top + barHeight / 3 + barHeight + legendGap;
+
     const legend = svg
       .append("foreignObject")
       .attr("x", dimensions.margins.left)
-      .attr("y", chartHeight / 1.5)
-      .attr("width", chartWidth)
-      .attr("height", (chartHeight / 3) * 1 + dimensions.margins.bottom * 2);
+      .attr("y", legendY)
+      .attr("width", chartWidth);
 
     const legendContainer = legend
       .append("xhtml:div")
@@ -168,7 +166,7 @@ const DvCsp: React.FC<DvCspProps> = ({ selectedSus }) => {
       .style("display", "inline-flex")
       .style("align-items", "center")
       .style("gap", "5px")
-      .style("font-size", "10px")
+      .style("font-size", "14px")
       .style("font-weight", "500")
       .style("color", "#333");
 
@@ -190,6 +188,13 @@ const DvCsp: React.FC<DvCspProps> = ({ selectedSus }) => {
       return `${d.emoji || ""} ${labelText}`.trim();
     });
 
+    const legendHeight =
+      (legendContainer.node() as HTMLDivElement | null)?.getBoundingClientRect()
+        .height ?? 0;
+    legend.attr("height", legendHeight);
+
+    svg.attr("height", legendY + legendHeight + dimensions.margins.bottom);
+
     svg
       .append("text")
       .attr("x", dimensions.margins.left)
@@ -197,7 +202,7 @@ const DvCsp: React.FC<DvCspProps> = ({ selectedSus }) => {
       .attr("class", "dv-title")
       .style("fill", mainColor)
       .text(`${TITLE} ${TITLE_EMOJI}`);
-  }, [data, colors, mainColor, width, height, result?.isNeighborhood]);
+  }, [data, colors, mainColor, width, result?.isNeighborhood]);
 
   if (loading) {
     return (
@@ -224,8 +229,8 @@ const DvCsp: React.FC<DvCspProps> = ({ selectedSus }) => {
   }
 
   return (
-    <div ref={svgContainer} className="h-full w-full">
-      <svg ref={svgRef} className="h-full w-full" />
+    <div ref={svgContainer} className="w-full">
+      <svg ref={svgRef} className="block w-full" />
     </div>
   );
 };

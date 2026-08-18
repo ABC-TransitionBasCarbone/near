@@ -15,7 +15,7 @@ export const FicheSuBoard: Board = {
   description:
     "Découvrir la sociologie et les grandes habitudes du quartier et des différentes S.U. : âges, catégories socio-professionnelles et genre",
   renderComponent: ({ selectedSus }: { selectedSus?: number[] }) => (
-    <div className="demographie-board flex h-full flex-col overflow-y-auto p-4">
+    <div className="demographie-board flex h-full flex-col overflow-y-auto overflow-x-hidden p-4">
       <header className="mb-4">
         <h2 className="flex items-center gap-2 text-xl font-semibold text-black">
           {FicheSuBoard.emoji} {FicheSuBoard.name}
@@ -23,35 +23,34 @@ export const FicheSuBoard: Board = {
         <p className="mt-1 text-sm text-gray">{FicheSuBoard.description}</p>
       </header>
 
-      <div className="board-grid grid flex-1 grid-cols-1 gap-4 md:grid-cols-2">
-        <div className="dv-container title-dist h-[260px] rounded-lg border border-grayLight bg-white p-3">
-          <DvSuTitle selectedSus={selectedSus} />
+      {/* <div className="board-grid grid flex-1 grid-cols-1 gap-4 md:grid-cols-2"> */}
+      <div className="board-grid flex flex-col gap-4">
+        <div className="flex flex-col gap-4 md:flex-row">
+          <div className="dv-container title-dist h-[260px] min-w-0 rounded-lg border border-grayLight bg-white p-3 md:flex-1 md:basis-0">
+            <DvSuTitle selectedSus={selectedSus} />
+          </div>
+
+          <div className="dv-container age-dist h-[260px] min-w-0 rounded-lg border border-grayLight bg-white p-3 md:flex-1 md:basis-0">
+            <DvAgeDistribution selectedSus={selectedSus} />
+          </div>
+
+          <div className="dv-container genre-dist h-[260px] min-w-0 rounded-lg border border-grayLight bg-white p-3 md:flex-1 md:basis-0">
+            <DvGenre selectedSus={selectedSus} />
+          </div>
         </div>
 
-        <div className="dv-container age-dist h-[260px] rounded-lg border border-grayLight bg-white p-3">
-          <DvAgeDistribution selectedSus={selectedSus} />
-        </div>
-
-        <div className="dv-container genre-dist h-[260px] rounded-lg border border-grayLight bg-white p-3">
-          <DvGenre selectedSus={selectedSus} />
-        </div>
-
-        <div className="dv-container csp-dist h-[260px] rounded-lg border border-grayLight bg-white p-3">
+        <div className="dv-container csp-dist rounded-lg border border-grayLight bg-white p-3">
           <DvCsp selectedSus={selectedSus} />
         </div>
 
-        <div className="dv-container usages-dist h-[950px] rounded-lg border border-grayLight bg-white p-3 md:col-span-2">
-          <DvUsages selectedSus={selectedSus} />
-        </div>
+        <div className="flex flex-col gap-4 md:flex-row">
+          <div className="dv-container usages-dist h-[950px] min-w-0 rounded-lg border border-grayLight bg-white p-3 md:col-span-2 md:flex-1 md:basis-0">
+            <DvUsages selectedSus={selectedSus} />
+          </div>
 
-        <div className="dv-container sankey-dist h-[800px] rounded-lg border border-grayLight bg-white p-3 md:col-span-2">
-          <DvCarbonSankey selectedSus={selectedSus} />
-        </div>
-
-        <div className="dv-container bottom-dist flex items-center justify-center md:col-span-2">
-          <p className="text-xs text-gray">
-            Diagnostic NEAR 2025 - Porte d&#39;Orléans
-          </p>
+          <div className="dv-container sankey-dist h-[950px] min-w-0 rounded-lg border border-grayLight bg-white p-3 md:col-span-2 md:flex-1 md:basis-0">
+            <DvCarbonSankey selectedSus={selectedSus} />
+          </div>
         </div>
       </div>
     </div>

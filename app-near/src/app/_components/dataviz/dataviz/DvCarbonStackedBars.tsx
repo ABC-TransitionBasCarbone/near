@@ -14,7 +14,7 @@ type Props = { selectedSus?: number[] };
 
 const LABEL_W = 200;
 const ROW_H = 36;
-const LEGEND_H = 42; // flex legend — enough for ~2 wrapped lines
+const LEGEND_H = 52;
 const ROW_STEP = ROW_H + LEGEND_H + 18; // bar + legend + gap
 const MARGIN = { top: 40, right: 20, bottom: 20, left: 20 };
 const FALLBACK_WIDTH = 900;
@@ -45,7 +45,6 @@ const DvCarbonStackedBars: React.FC<Props> = ({ selectedSus }) => {
     const { nodes, links } = payload.sankeyData;
     if (!nodes.length) return;
 
-    // Reconstruct parent groups: roots = nodes that are never a target
     const targetSet = new Set(links.map((l) => l.target));
     const parentGroups: ParentGroup[] = nodes
       .map((node, idx) => {
@@ -81,7 +80,7 @@ const DvCarbonStackedBars: React.FC<Props> = ({ selectedSus }) => {
       .attr("x", LABEL_W + barW / 2)
       .attr("y", -18)
       .attr("text-anchor", "middle")
-      .style("font-size", "12px")
+      .style("font-size", "14px")
       .style("fill", mainColor)
       .text(`☁ Empreinte individuelle moyenne : ${totalTons} t CO₂e / an`);
 
@@ -90,7 +89,7 @@ const DvCarbonStackedBars: React.FC<Props> = ({ selectedSus }) => {
       .attr("x", LABEL_W + barW)
       .attr("y", -18)
       .attr("text-anchor", "end")
-      .style("font-size", "11px")
+      .style("font-size", "12px")
       .style("fill", "#9ca3af")
       .text("kg CO₂e / an →");
 
@@ -103,7 +102,7 @@ const DvCarbonStackedBars: React.FC<Props> = ({ selectedSus }) => {
         .attr("y", ROW_H / 2 - 6)
         .attr("text-anchor", "end")
         .attr("dominant-baseline", "central")
-        .style("font-size", "12px")
+        .style("font-size", "14px")
         .style("font-weight", "600")
         .style("fill", "#1f2937")
         .text(`${group.root.emoji} ${group.root.name}`);
@@ -113,7 +112,7 @@ const DvCarbonStackedBars: React.FC<Props> = ({ selectedSus }) => {
         .attr("y", ROW_H / 2 + 10)
         .attr("text-anchor", "end")
         .attr("dominant-baseline", "central")
-        .style("font-size", "10px")
+        .style("font-size", "12px")
         .style("fill", "#6b7280")
         .text(`${group.root.value.toFixed(0)} kg`);
 
@@ -198,7 +197,7 @@ const DvCarbonStackedBars: React.FC<Props> = ({ selectedSus }) => {
         "div",
       ) as HTMLDivElement;
       legendDiv.style.cssText =
-        "display:flex;flex-wrap:wrap;gap:3px 14px;font-size:10px;color:#4b5563;line-height:1.5;";
+        "display:flex;flex-wrap:wrap;gap:3px 14px;font-size:13px;color:#4b5563;line-height:1.5;";
 
       group.children.forEach((child, ci) => {
         const color = palette[ci % palette.length]!;
@@ -207,7 +206,7 @@ const DvCarbonStackedBars: React.FC<Props> = ({ selectedSus }) => {
           "display:inline-flex;align-items:center;gap:4px;white-space:nowrap;";
 
         const swatch = document.createElementNS(xmlns, "span");
-        swatch.style.cssText = `display:inline-block;width:9px;height:9px;border-radius:2px;background:${color};flex-shrink:0;`;
+        swatch.style.cssText = `display:inline-block;width:10px;height:10px;border-radius:2px;background:${color};flex-shrink:0;`;
         item.appendChild(swatch);
 
         const lbl = document.createElementNS(xmlns, "span");

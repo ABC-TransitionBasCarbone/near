@@ -13,7 +13,6 @@ const MARGIN = 10;
 
 type SliceDatum = { key: string; color: string; pct: number };
 
-// Count visible grapheme clusters to size the emoji correctly in the donut hole
 const getEmojiCount = (str: string): number => {
   try {
     return [...new Intl.Segmenter().segment(str)].length;
@@ -182,7 +181,7 @@ const DvEmdvSatisfactionsPieCharts: React.FC<Props> = ({ selectedSus }) => {
           <h3 className="mx-1 mb-3 border-b border-grayLight pb-1.5 text-sm font-semibold text-black">
             {sc.emoji} {sc.label}
           </h3>
-          <div className="flex flex-wrap justify-center gap-5 pl-1">
+          <div className="flex flex-wrap justify-start gap-5 pl-1">
             {sc.questions.map((q) => (
               <EmdvPieCard key={q.field} question={q} />
             ))}
