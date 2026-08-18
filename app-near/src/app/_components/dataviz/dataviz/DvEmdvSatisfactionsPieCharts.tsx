@@ -147,7 +147,14 @@ const EmdvPieCard: React.FC<{ question: SatisfactionQuestionResult }> = ({
       className="dv-container relative flex flex-col items-center gap-1 px-2 pb-1.5 pt-2"
       style={{ width: CARD_SIZE + 32 }}
     >
-      <svg ref={svgRef} />
+      <svg ref={svgRef} aria-hidden="true" />
+      <ul className="sr-only">
+        {question.responses.map((r) => (
+          <li key={r.choice}>
+            {question.title} — {r.label} : {r.percentage.toFixed(1)}%
+          </li>
+        ))}
+      </ul>
       <div
         className="px-1 text-center text-[11px] leading-tight text-black"
         style={{ maxWidth: CARD_SIZE + 12 }}

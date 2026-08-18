@@ -32,6 +32,24 @@ type NodeDatum = TestimonyNode & {
 
 type LinkDatum = TestimonyLink;
 
+const SUBCATEGORY_LABELS: Record<string, string> = {
+  Food: "Alimentation",
+  Housing: "Logement",
+  Politics: "Participation citoyenne",
+  Solidarity: "Solidarité",
+  NghLife: "Vie de quartier",
+  Parks: "Parcs et espaces verts",
+  Shopping: "Réparation / Shopping",
+  Services: "Services",
+  Mobility: "Mobilité",
+  General: "Général",
+};
+
+const labelForSubcategory = (code?: string): string => {
+  if (!code) return "Catégorie";
+  return SUBCATEGORY_LABELS[code] ?? code;
+};
+
 // Modal component
 // ---------------
 type ModalProps = {
@@ -69,25 +87,6 @@ const Modal: React.FC<ModalProps> = ({ open, onClose, node }) => {
       ? neighborhoodBank.colorLight2
       : (suBank?.colorLight2 ?? "#f3f4f6");
   const suName = suBank?.name ?? "";
-
-  // Labels nodes catégories
-  const SUBCATEGORY_LABELS: Record<string, string> = {
-    Food: "Alimentation",
-    Housing: "Logement",
-    Politics: "Participation citoyenne",
-    Solidarity: "Solidarité",
-    NghLife: "Vie de quartier",
-    Parks: "Parcs et espaces verts",
-    Shopping: "Réparation / Shopping",
-    Services: "Services",
-    Mobility: "Mobilité",
-    General: "Général",
-  };
-
-  const labelForSubcategory = (code?: string): string => {
-    if (!code) return "Catégorie";
-    return SUBCATEGORY_LABELS[code] ?? code;
-  };
 
   const formatGenderLabel = (value?: string): string => {
     if (!value) return "—";
@@ -244,6 +243,22 @@ const DvTestimonyNetwork: React.FC<DvTestimonyNetworkProps> = ({
     setNodes(networkData.nodes.map((node) => ({ ...node })));
     setLinks(networkData.links);
   }, [networkData]);
+
+  const themeCounts = useMemo(() => {
+    const counts = new Map<string, number>();
+    nodes
+      .filter((n) => n.type === "child" && n.group)
+      .forEach((n) => {
+        counts.set(n.group!, (counts.get(n.group!) ?? 0) + 1);
+      });
+    return Array.from(counts.entries())
+      .map(([code, count]) => ({
+        code,
+        label: labelForSubcategory(code),
+        count,
+      }))
+      .sort((a, b) => b.count - a.count);
+  }, [nodes]);
 
   useEffect(() => {
     if (!svgRef.current) return;
@@ -532,8 +547,21 @@ const DvTestimonyNetwork: React.FC<DvTestimonyNetworkProps> = ({
       </div>
 
       <div className="flex-1 px-4 pb-4">
-        <svg ref={svgRef} className="h-full w-full rounded-lg border" />
+        <svg
+          ref={svgRef}
+          className="h-full w-full rounded-lg border"
+          aria-hidden="true"
+        />
       </div>
+      {themeCounts.length > 0 && (
+        <ul className="sr-only">
+          {themeCounts.map((t) => (
+            <li key={t.code}>
+              {t.label} : {t.count} témoignage{t.count > 1 ? "s" : ""}
+            </li>
+          ))}
+        </ul>
+      )}
 
       <Modal
         open={isModalOpen}

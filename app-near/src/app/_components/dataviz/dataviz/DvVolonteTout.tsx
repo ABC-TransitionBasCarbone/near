@@ -277,7 +277,25 @@ const DvVolonteTout: React.FC<Props> = ({ selectedSus }) => {
       style={{ position: "relative" }}
     >
       <div className="flex-1 px-2 pb-2">
-        <svg ref={svgRef} className="w-full" />
+        <svg ref={svgRef} className="w-full" aria-hidden="true" />
+      </div>
+      <div className="sr-only">
+        <ul>
+          {data.data.map((q) => (
+            <li key={q.title}>
+              {q.title}
+              <ul>
+                {q.responses
+                  .filter((r) => r.percentage > 0)
+                  .map((r) => (
+                    <li key={r.choice}>
+                      {r.label} : {r.percentage.toFixed(1)}%
+                    </li>
+                  ))}
+              </ul>
+            </li>
+          ))}
+        </ul>
       </div>
     </div>
   );

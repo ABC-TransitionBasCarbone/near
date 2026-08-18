@@ -190,7 +190,11 @@ const DvSuTitle: React.FC<DvSuTitleProps> = ({ selectedSus }) => {
 
   return (
     <div ref={containerRef} className="dv-container h-full w-full">
-      <svg ref={svgRef} />
+      <svg ref={svgRef} aria-hidden="true" />
+      <p className="sr-only">
+        {view.subtitle} — {view.nameFr} : {view.popPercentage.toFixed(1)}% de la
+        population totale
+      </p>
     </div>
   );
 };

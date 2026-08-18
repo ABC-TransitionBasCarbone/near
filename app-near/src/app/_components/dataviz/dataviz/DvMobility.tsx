@@ -27,6 +27,25 @@ const DvMobility: React.FC<Props> = ({ selectedSus }) => {
   });
   const suColors = useSuBank(selectedSus);
 
+  const mobilitySummary = useMemo(() => {
+    const zones = mobilityData?.zoneDistribution;
+    if (!zones) return null;
+    const entries = Object.values(zones);
+    if (!entries.length) return null;
+    const totalWeight =
+      entries.reduce((sum, z) => sum + z.respondentCount, 0) || 1;
+    const weightedPct = (pick: (z: (typeof entries)[number]) => number) =>
+      entries.reduce((sum, z) => sum + pick(z) * z.respondentCount, 0) /
+      totalWeight;
+    return {
+      zoneCount: entries.length,
+      foot: weightedPct((z) => z.mobilityTypeBreakdown.pct.FOOT),
+      bike: weightedPct((z) => z.mobilityTypeBreakdown.pct.BIKE),
+      trans: weightedPct((z) => z.mobilityTypeBreakdown.pct.TRANS),
+      car: weightedPct((z) => z.mobilityTypeBreakdown.pct.CAR),
+    };
+  }, [mobilityData]);
+
   // D3 drawing
   useEffect(() => {
     const { width, height } = dimensions;
@@ -506,7 +525,19 @@ const DvMobility: React.FC<Props> = ({ selectedSus }) => {
         viewBox={`0 0 ${dimensions.width} ${dimensions.height}`}
         width={dimensions.width}
         height={dimensions.height}
+        aria-hidden="true"
       />
+      {mobilitySummary && (
+        <p className="sr-only">
+          Diagramme de mobilité : répartition des modes de déplacement entre le
+          quartier et {mobilitySummary.zoneCount} zones environnantes, dans un
+          rayon d&apos;environ 20 minutes à pied. Répartition moyenne des modes
+          — Marche : {mobilitySummary.foot.toFixed(0)}%, Vélo :{" "}
+          {mobilitySummary.bike.toFixed(0)}%, Transports en commun :{" "}
+          {mobilitySummary.trans.toFixed(0)}%, Voiture :{" "}
+          {mobilitySummary.car.toFixed(0)}%.
+        </p>
+      )}
     </div>
   );
 };

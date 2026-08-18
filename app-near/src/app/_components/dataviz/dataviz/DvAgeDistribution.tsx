@@ -231,7 +231,14 @@ const DvAgeDistribution: React.FC<DvAgeDistributionProps> = ({
 
   return (
     <div ref={svgContainer} className="h-full w-full">
-      <svg ref={svgRef} className="h-full w-full" />
+      <svg ref={svgRef} className="h-full w-full" aria-hidden="true" />
+      <ul className="sr-only">
+        {data.map((d) => (
+          <li key={d.label}>
+            {d.label} : {d.percentage.toFixed(1)}% ({d.count} personnes)
+          </li>
+        ))}
+      </ul>
     </div>
   );
 };

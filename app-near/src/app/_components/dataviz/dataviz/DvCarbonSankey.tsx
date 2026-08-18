@@ -196,6 +196,16 @@ const DvCarbonSankey: React.FC<Props> = ({ selectedSus }) => {
     }
   }, [payload, width, height]);
 
+  const categorySummaries = useMemo(() => {
+    if (!payload) return [];
+    const { nodes, links } = payload.sankeyData;
+    const targetSet = new Set(links.map((l) => l.target));
+    return nodes
+      .filter((n, idx) => !targetSet.has(idx) && n.value > 0)
+      .map((n) => ({ id: n.id, name: n.name, value: n.value }))
+      .sort((a, b) => b.value - a.value);
+  }, [payload]);
+
   // Render
   useEffect(() => {
     if (!svgRef.current) return;
@@ -393,9 +403,24 @@ const DvCarbonSankey: React.FC<Props> = ({ selectedSus }) => {
     );
   }
 
+  const totalTons = (payload.totalValue / 1000).toFixed(1);
+
   return (
     <div ref={containerRef} className="dv-container relative h-full w-full">
-      <svg ref={svgRef} />
+      <svg ref={svgRef} aria-hidden="true" />
+      <div className="sr-only">
+        <p>
+          Empreinte individuelle moyenne : {totalTons} t CO2e par an, répartie
+          en {categorySummaries.length} catégories.
+        </p>
+        <ul>
+          {categorySummaries.map((c) => (
+            <li key={c.id}>
+              {c.name} : {(c.value / 1000).toFixed(2)} t CO2e
+            </li>
+          ))}
+        </ul>
+      </div>
     </div>
   );
 };

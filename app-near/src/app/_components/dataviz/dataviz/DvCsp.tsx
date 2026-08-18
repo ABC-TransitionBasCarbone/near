@@ -230,7 +230,15 @@ const DvCsp: React.FC<DvCspProps> = ({ selectedSus }) => {
 
   return (
     <div ref={svgContainer} className="w-full">
-      <svg ref={svgRef} className="block w-full" />
+      <svg ref={svgRef} className="block w-full" aria-hidden="true" />
+      <ul className="sr-only">
+        {data.map((d) => (
+          <li key={d.label}>
+            {d.label} : {d.percentage.toFixed(1)}% ({d.count}{" "}
+            {result?.isNeighborhood ? "habitants" : "réponses"})
+          </li>
+        ))}
+      </ul>
     </div>
   );
 };

@@ -34,19 +34,12 @@ const DvCarbonStackedBars: React.FC<Props> = ({ selectedSus }) => {
   } = api.suDataviz.getCarbonSankey.useQuery({ selectedSus });
   const { data: globalMax } = api.suDataviz.getCarbonSankeyGlobalMax.useQuery();
 
-  useEffect(() => {
-    if (!svgRef.current) return;
-
-    const svg = d3.select(svgRef.current);
-    svg.selectAll("*").remove();
-
-    if (!payload) return;
-
+  const parentGroups = useMemo<ParentGroup[]>(() => {
+    if (!payload) return [];
     const { nodes, links } = payload.sankeyData;
-    if (!nodes.length) return;
-
+    if (!nodes.length) return [];
     const targetSet = new Set(links.map((l) => l.target));
-    const parentGroups: ParentGroup[] = nodes
+    return nodes
       .map((node, idx) => {
         if (targetSet.has(idx)) return null;
         const children = links
@@ -58,8 +51,15 @@ const DvCarbonStackedBars: React.FC<Props> = ({ selectedSus }) => {
       })
       .filter((g): g is ParentGroup => g !== null)
       .sort((a, b) => b.root.value - a.root.value);
+  }, [payload]);
 
-    if (!parentGroups.length) return;
+  useEffect(() => {
+    if (!svgRef.current) return;
+
+    const svg = d3.select(svgRef.current);
+    svg.selectAll("*").remove();
+
+    if (!payload || !parentGroups.length) return;
 
     const chartWidth = width ?? FALLBACK_WIDTH;
     const maxVal = globalMax ?? 1;
@@ -218,7 +218,7 @@ const DvCarbonStackedBars: React.FC<Props> = ({ selectedSus }) => {
 
       fo.node()!.appendChild(legendDiv);
     });
-  }, [payload, palette, mainColor, globalMax, width, container]);
+  }, [payload, parentGroups, palette, mainColor, globalMax, width, container]);
 
   if (loading) {
     return (
@@ -241,7 +241,29 @@ const DvCarbonStackedBars: React.FC<Props> = ({ selectedSus }) => {
 
   return (
     <div ref={containerRef} className="dv-container relative w-full">
-      <svg ref={svgRef} />
+      <svg ref={svgRef} aria-hidden="true" />
+      {payload && parentGroups.length > 0 && (
+        <div className="sr-only">
+          <p>
+            Empreinte individuelle moyenne :{" "}
+            {(payload.totalValue / 1000).toFixed(1)} t CO₂e par an.
+          </p>
+          <ul>
+            {parentGroups.map((g) => (
+              <li key={g.root.id}>
+                {g.root.name} : {g.root.value.toFixed(0)} kg CO₂e
+                <ul>
+                  {g.children.map((c) => (
+                    <li key={c.id}>
+                      {c.name} : {c.value.toFixed(0)} kg CO₂e
+                    </li>
+                  ))}
+                </ul>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
     </div>
   );
 };

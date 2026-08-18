@@ -243,9 +243,25 @@ const DvBarrierGradient: React.FC<DvBarrierGradientProps> = ({
       </div>
     );
   }
+
+  const srItems = data.choices
+    .filter((c) => c.percentage > 0 && c.label !== "Non concerné")
+    .slice()
+    .sort((a, b) => b.percentage - a.percentage);
+
   return (
     <div ref={svgContainer} className="h-full w-full">
-      <svg ref={svgRef} className="h-full w-full" />
+      <svg ref={svgRef} className="h-full w-full" aria-hidden="true" />
+      <div className="sr-only">
+        <p>{data.title}</p>
+        <ul>
+          {srItems.map((c) => (
+            <li key={c.label}>
+              {c.label} : {c.percentage.toFixed(1)}%
+            </li>
+          ))}
+        </ul>
+      </div>
     </div>
   );
 };

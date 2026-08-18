@@ -147,7 +147,23 @@ const DvEmdvSatisfactionsByCategory: React.FC<Props> = ({
   }
   return (
     <div ref={containerRef} className="dv-container relative h-full w-full">
-      <svg ref={svgRef} />
+      <svg ref={svgRef} aria-hidden="true" />
+      <div className="sr-only">
+        <ul>
+          {questions.map((q) => (
+            <li key={q.field}>
+              {q.title}
+              <ul>
+                {q.responses.map((r) => (
+                  <li key={r.choice}>
+                    {r.label} : {r.percentage.toFixed(1)}%
+                  </li>
+                ))}
+              </ul>
+            </li>
+          ))}
+        </ul>
+      </div>
     </div>
   );
 };
