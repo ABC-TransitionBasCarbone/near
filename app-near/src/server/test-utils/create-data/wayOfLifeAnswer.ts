@@ -25,6 +25,7 @@ import {
   VoluntaryWork,
   WishesChoices,
   YesNo,
+  ZoneSelection,
   type WayOfLifeAnswer,
 } from "@prisma/client";
 import { faker } from "@faker-js/faker";
@@ -65,7 +66,7 @@ export const buildWayOfLifeAnswer = (
   electronicRepairShopSatisfaction: faker.helpers.arrayElement(
     Object.values(YesNo),
   ),
-  foodMarketZone: faker.lorem.word(),
+  foodMarketZone: faker.helpers.arrayElement(Object.values(ZoneSelection)),
   gender: faker.helpers.arrayElement(Object.values(Gender)),
   giveFreeTimeToHelp: faker.helpers.arrayElement(
     Object.values(GiveFreeTimeToHelp),
@@ -78,7 +79,7 @@ export const buildWayOfLifeAnswer = (
   ),
   heatSource: faker.helpers.arrayElement(Object.values(HeatSource)),
   hobbiesSpaces: faker.helpers.arrayElement(Object.values(YesNo)),
-  hobbyZone: faker.lorem.word(),
+  hobbyZone: faker.helpers.arrayElement(Object.values(ZoneSelection)),
   homeDeliveryFoodStoreFrequency: faker.helpers.arrayElement(
     Object.values(FoodFrequency),
   ),
@@ -191,7 +192,7 @@ export const buildWayOfLifeAnswer = (
   wantToReduceMeatAndFish: faker.helpers.arrayElement(
     Object.values(WishesChoices),
   ),
-  workZone: faker.lorem.word(),
+  workZone: faker.helpers.arrayElement(Object.values(ZoneSelection)),
   yourVoluntaryWork: faker.helpers.arrayElements(Object.values(VoluntaryWork)),
   distanceToBarycenter: faker.number.float(),
   emailApiCalled: false,

@@ -5,6 +5,7 @@ import * as d3 from "d3";
 import { api } from "~/trpc/react";
 import { useSuBank } from "../hooks/useSuBank";
 import { useChartDimensions } from "../hooks/useChartDimensions";
+import { getD3Tooltip } from "../hooks/useD3Tooltip";
 
 interface Props {
   selectedSus?: number[];
@@ -13,6 +14,7 @@ interface Props {
 const DvMobility: React.FC<Props> = ({ selectedSus }) => {
   const {
     containerRef,
+    container,
     width: containerWidth,
     height: containerHeight,
   } = useChartDimensions();
@@ -46,7 +48,6 @@ const DvMobility: React.FC<Props> = ({ selectedSus }) => {
     };
   }, [mobilityData]);
 
-  // D3 drawing
   useEffect(() => {
     const { width, height } = dimensions;
     if (!svgRef.current || width === 0 || height === 0) return;
@@ -54,21 +55,19 @@ const DvMobility: React.FC<Props> = ({ selectedSus }) => {
     const svg = d3.select(svgRef.current);
     svg.selectAll("*").remove();
 
+    const tooltip = getD3Tooltip(container);
+
     const colorMain = suColors?.colorMain ?? "#1565c0";
     const colorLight = suColors?.colorLight4 ?? "#90caf9";
 
     const cx = width / 2;
     const cy = height / 2;
-    const unit = Math.min(width, height); // symetrie responsive
+    const unit = Math.min(width, height);
     const r = unit / 14;
     const posAx = 0.27 * unit;
     const posBx = 0.4 * unit;
     const posABy = 0.075 * unit;
 
-    //y = up/down
-    //x = L/R
-
-    // Cercle de légende : Rayon de 20 mins à pieds
     const ringRadius = posAx + r - r * 0.15;
     const ringG = svg.append("g").attr("id", "20-min-ring");
 
@@ -83,7 +82,6 @@ const DvMobility: React.FC<Props> = ({ selectedSus }) => {
       .attr("stroke-width", 1)
       .attr("stroke-dasharray", "6 4");
 
-    // Texte sur la partie basse du ring
     const arcR = ringRadius - 12; //offset du texte "20 mins"
     const arcId = "20-min-ring-arc-path";
     ringG
@@ -108,7 +106,6 @@ const DvMobility: React.FC<Props> = ({ selectedSus }) => {
       .attr("text-anchor", "middle")
       .text("~20 mins à pieds");
 
-    //Placement des cercles :
     const circles: { id: string; x: number; y: number }[] = [
       { id: "circle-center", x: cx, y: cy },
       { id: "circle-up-a", x: cx - posABy, y: cy - posAx },
@@ -121,24 +118,10 @@ const DvMobility: React.FC<Props> = ({ selectedSus }) => {
       { id: "circle-right-b", x: cx + posBx, y: cy + posABy },
     ];
 
-    /*
-    const circleCenter = circles[0]!
-    svg
-      .append('g')
-      .attr('id', circleCenter.id)
-      .append('text')
-      .attr('font-family', 'Outfit')
-      .attr('font-size', 12)
-      .text('Quartier')
-      .attr('z-index', 2)
-      .attr('color', '#1565c0')
-    */
-
-    // Lignes courbes en paquets de 4 — dessinées avant les cercles
-    const n = 15; // espacement centre à centre
+    const n = 15;
     const spacing = n;
     const lineCount = 4;
-    const bowRatio = 0.2; //Math.random() * 0.30         // courbure
+    const bowRatio = 0.2;
 
     const modes: { id: string }[] = [
       { id: "foot" },
@@ -147,7 +130,6 @@ const DvMobility: React.FC<Props> = ({ selectedSus }) => {
       { id: "car" },
     ];
 
-    // Icône par mode (partagée entre toutes les lignes du même mode)
     const modeIcon: Record<string, string> = {
       foot: "🚶",
       bike: "🚲",
@@ -155,7 +137,6 @@ const DvMobility: React.FC<Props> = ({ selectedSus }) => {
       car: "🚗",
     };
 
-    // Mapping circle → zone key (up=A/nord, right=B/est, down=C/sud, left=D/ouest)
     const circleToZone: Record<string, string> = {
       "circle-center": "ZONE_PORTE_ORLEANS",
       "circle-up-a": "ZONE_A_A",
@@ -190,17 +171,14 @@ const DvMobility: React.FC<Props> = ({ selectedSus }) => {
     const fmtPct = (pct: number | null) =>
       pct != null ? `${Math.round(pct)}%` : "–";
 
-    // strokeWidth et lineLabel : calculés depuis mobilityTypeBreakdown.pct de la zone cible
     const lineStrokeWidth: Record<string, number> = {};
     const lineLabel: Record<string, string> = {};
-    // Satellite rings autour du centre — ZONE_PORTE_ORLEANS
     for (const mode of modes) {
       const mtKey = modeToMtKey[mode.id]!;
       const pct = getMtPct("ZONE_PORTE_ORLEANS", mtKey);
       lineStrokeWidth[`circle-center-${mode.id}`] = strokeFromPct(pct);
       lineLabel[`circle-center-${mode.id}`] = fmtPct(pct);
     }
-    // Lignes vers les cercles satellites — zone de la cible
     for (const { id: targetId } of circles.slice(1)) {
       const zoneKey = circleToZone[targetId];
       for (const mode of modes) {
@@ -211,7 +189,6 @@ const DvMobility: React.FC<Props> = ({ selectedSus }) => {
       }
     }
 
-    // Targets whose path goes right-to-left/bottom-to-top → reverse def path for legible text
     const reversedTextTargets = new Set([
       "circle-down-b",
       "circle-left-a",
@@ -219,7 +196,6 @@ const DvMobility: React.FC<Props> = ({ selectedSus }) => {
       "circle-up-a",
     ]);
 
-    // startOffset du texte par paquet (cible)
     const targetStartOffset: Record<string, string> = {
       "circle-up-a": "35%",
       "circle-up-b": "70%",
@@ -256,7 +232,6 @@ const DvMobility: React.FC<Props> = ({ selectedSus }) => {
         const lineId = `${mode.id}-to-${targetId}`;
         const pathDefId = `path-def-${lineId}`;
 
-        // Path dans defs pour le textPath — inversé si le trajet va R→L / bas→haut
         const reversed = reversedTextTargets.has(targetId);
         lineDefs
           .append("path")
@@ -277,7 +252,6 @@ const DvMobility: React.FC<Props> = ({ selectedSus }) => {
           .attr("stroke-width", lineStrokeWidth[lineId] ?? 2)
           .attr("opacity", 0.7);
 
-        // Icône + texte qui suivent la courbe --> % de mode / desti
         linesG
           .append("text")
           .attr("font-size", 12)
@@ -292,15 +266,25 @@ const DvMobility: React.FC<Props> = ({ selectedSus }) => {
       }
     });
 
-    // Icônes usage en triangle à l'intérieur de chaque cercle
     const USAGE_ICON_SIZE_MIN = 10;
     const USAGE_ICON_SIZE_MAX = 25;
     const usageTriangleR = r * 0.45;
-    const usages: { id: string; icon: string; angle: number }[] = [
-      { id: "hobby", icon: "🪁", angle: -Math.PI / 2 },
-      { id: "work", icon: "💼", angle: -Math.PI / 2 + (2 * Math.PI) / 3 },
-      { id: "food", icon: "🛒", angle: -Math.PI / 2 + (4 * Math.PI) / 3 },
-    ];
+    const usages: { id: string; icon: string; label: string; angle: number }[] =
+      [
+        { id: "hobby", icon: "🏸", label: "Loisirs", angle: -Math.PI / 2 },
+        {
+          id: "work",
+          icon: "💼",
+          label: "Travail",
+          angle: -Math.PI / 2 + (2 * Math.PI) / 3,
+        },
+        {
+          id: "food",
+          icon: "🥕",
+          label: "Alimentation",
+          angle: -Math.PI / 2 + (4 * Math.PI) / 3,
+        },
+      ];
     const usageToPctKey: Record<string, "work" | "hobby" | "buyFood"> = {
       work: "work",
       hobby: "hobby",
@@ -309,6 +293,7 @@ const DvMobility: React.FC<Props> = ({ selectedSus }) => {
 
     // Taille par icône : calculée depuis zoneDistribution[zone].pct.{work|hobby|buyFood}
     const usageIconSize: Record<string, number> = {};
+    const usagePct: Record<string, number | null> = {};
     for (const { id: circleId } of circles) {
       const zoneKey = circleToZone[circleId];
       const cell = zoneKey
@@ -317,6 +302,7 @@ const DvMobility: React.FC<Props> = ({ selectedSus }) => {
       for (const usage of usages) {
         const pctKey = usageToPctKey[usage.id];
         const pct = cell && pctKey ? cell.pct[pctKey] : null;
+        usagePct[`${circleId}-${usage.id}`] = pct;
         usageIconSize[`${circleId}-${usage.id}`] =
           pct != null
             ? USAGE_ICON_SIZE_MIN +
@@ -325,7 +311,6 @@ const DvMobility: React.FC<Props> = ({ selectedSus }) => {
       }
     }
 
-    // Font-weight et stroke-width des cercles satellites : pilotés par pctOfTotal de leur zone
     const FONT_WEIGHT_MIN = 200;
     const FONT_WEIGHT_MAX = 2000;
     const CIRCLE_STROKE_MIN = 1;
@@ -361,7 +346,6 @@ const DvMobility: React.FC<Props> = ({ selectedSus }) => {
           : r;
     }
 
-    // Fond blanc couvrant la zone centrale (sur les lignes, sous les cercles)
     svg
       .append("circle")
       .attr("cx", cx)
@@ -377,7 +361,7 @@ const DvMobility: React.FC<Props> = ({ selectedSus }) => {
         .attr("cx", x)
         .attr("cy", y)
         .attr("r", radiusForCircle[id] ?? r)
-        .attr("fill", colorLight)
+        .attr("fill", "white")
         .attr("stroke", colorMain)
         .attr("stroke-width", strokeForCircle[id] ?? 2);
 
@@ -394,7 +378,6 @@ const DvMobility: React.FC<Props> = ({ selectedSus }) => {
           .text("Quartier");
       }
 
-      // 3 icônes usage en triangle
       usages.forEach((usage) => {
         const ux = x + usageTriangleR * Math.cos(usage.angle);
         const uy = y + usageTriangleR * Math.sin(usage.angle);
@@ -405,6 +388,7 @@ const DvMobility: React.FC<Props> = ({ selectedSus }) => {
             usageIconSize[`${id}-${usage.id}`] ?? usageIconSize[usage.id] ?? 14,
           ),
         );
+        const pct = usagePct[`${id}-${usage.id}`] ?? null;
         g.append("text")
           .attr("id", `usage-${id}-${usage.id}`)
           .attr("x", ux)
@@ -412,22 +396,37 @@ const DvMobility: React.FC<Props> = ({ selectedSus }) => {
           .attr("text-anchor", "middle")
           .attr("dominant-baseline", "central")
           .attr("font-size", sz)
-          .attr("pointer-events", "none")
-          .text(usage.icon);
+          .style("cursor", "pointer")
+          .text(usage.icon)
+          .on("mousemove", function (event: MouseEvent) {
+            const rect = container?.getBoundingClientRect();
+            const px = rect
+              ? event.pageX - (rect.left + window.scrollX)
+              : event.pageX;
+            const py = rect
+              ? event.pageY - (rect.top + window.scrollY)
+              : event.pageY;
+            tooltip
+              .style("left", `${px + 10}px`)
+              .style("top", `${py - 24}px`)
+              .style("opacity", 1)
+              .text(
+                `${usage.label} : ${pct != null ? `${pct.toFixed(1)}%` : "–"}`,
+              );
+          })
+          .on("mouseout", () => tooltip.style("opacity", 0));
       });
     });
 
-    // Labels satellites : texte de légende pour chaque cercle destination
-    // Paramétrage indépendant par cercle : texte + offset (dx, dy) depuis le centre du cercle correspondant
     const destLabelText: Record<string, string> = {
-      "circle-up-a": "Vers zone N A",
-      "circle-up-b": "Vers zone N B",
-      "circle-down-a": "Vers zone S A",
-      "circle-down-b": "Vers zone S B",
-      "circle-left-a": "Vers zone L A",
-      "circle-left-b": "Vers zone L B",
-      "circle-right-a": "Vers zone R A",
-      "circle-right-b": "Vers zone R B",
+      "circle-up-a": "Vers zone Nord A",
+      "circle-up-b": "Vers zone Nord B",
+      "circle-down-a": "Vers zone Sud A",
+      "circle-down-b": "Vers zone Sud B",
+      "circle-left-a": "Vers zone Ouest A",
+      "circle-left-b": "Vers zone Ouest B",
+      "circle-right-a": "Vers zone Est A",
+      "circle-right-b": "Vers zone Est B",
     };
 
     const destLabelOffset: Record<
@@ -462,7 +461,6 @@ const DvMobility: React.FC<Props> = ({ selectedSus }) => {
         .text(destLabelText[id] ?? id);
     });
 
-    // 4 cercles concentriques autour de circle-center (même cx/cy, rayon croissant)
     const satSpacing = spacing;
     const satelliteCircles: { id: string; mode: string; index: number }[] = [
       { id: "circle-center-foot", mode: "foot", index: 1 },
@@ -485,7 +483,6 @@ const DvMobility: React.FC<Props> = ({ selectedSus }) => {
         .attr("stroke", colorLight)
         .attr("stroke-width", lineStrokeWidth[satId] ?? 2);
 
-      // Arc du dessus pour le texte (sens antihoraire : 9h → 12h → 3h)
       const satArcId = `arc-def-${satId}`;
       const satArcOffset = satR;
       satG
@@ -497,15 +494,11 @@ const DvMobility: React.FC<Props> = ({ selectedSus }) => {
           `M ${cx - satArcOffset} ${cy} A ${satArcOffset} ${satArcOffset} 0 1 1 ${cx + satArcOffset} ${cy}`,
         );
 
-      // Légende + % dans les cercles concentriques Quartier
       satG
         .append("text")
         .attr("font-size", 12)
         .attr("font-family", "Outfit")
         .attr("fill", colorMain)
-        //.attr("stroke", "white") // tentative pour highlighter
-        //.attr("stroke-width", 0.5)
-        //.attr("stroke-linejoin", "round")
         .attr("dy", "3")
         .append("textPath")
         .attr("href", `#${satArcId}`)
@@ -516,28 +509,46 @@ const DvMobility: React.FC<Props> = ({ selectedSus }) => {
         .attr("background-color", "white")
         .attr("padding", "0.1em 0.2em");
     });
-  }, [dimensions, mobilityData, suColors]);
+  }, [dimensions, mobilityData, suColors, container]);
 
   return (
-    <div ref={containerRef} style={{ width: "100%", height: "100%" }}>
-      <svg
-        ref={svgRef}
-        viewBox={`0 0 ${dimensions.width} ${dimensions.height}`}
-        width={dimensions.width}
-        height={dimensions.height}
-        aria-hidden="true"
-      />
-      {mobilitySummary && (
-        <p className="sr-only">
-          Diagramme de mobilité : répartition des modes de déplacement entre le
-          quartier et {mobilitySummary.zoneCount} zones environnantes, dans un
-          rayon d&apos;environ 20 minutes à pied. Répartition moyenne des modes
-          — Marche : {mobilitySummary.foot.toFixed(0)}%, Vélo :{" "}
-          {mobilitySummary.bike.toFixed(0)}%, Transports en commun :{" "}
-          {mobilitySummary.trans.toFixed(0)}%, Voiture :{" "}
-          {mobilitySummary.car.toFixed(0)}%.
-        </p>
-      )}
+    <div className="flex h-full w-full flex-col">
+      <div ref={containerRef} className="relative min-h-0 flex-1">
+        <svg
+          ref={svgRef}
+          viewBox={`0 0 ${dimensions.width} ${dimensions.height}`}
+          width={dimensions.width}
+          height={dimensions.height}
+          aria-hidden="true"
+        />
+        {mobilitySummary && (
+          <p className="sr-only">
+            Diagramme de mobilité : répartition des modes de déplacement entre
+            le quartier et {mobilitySummary.zoneCount} zones environnantes, dans
+            un rayon d&apos;environ 20 minutes à pied. Répartition moyenne des
+            modes — Marche : {mobilitySummary.foot.toFixed(0)}%, Vélo :{" "}
+            {mobilitySummary.bike.toFixed(0)}%, Transports en commun :{" "}
+            {mobilitySummary.trans.toFixed(0)}%, Voiture :{" "}
+            {mobilitySummary.car.toFixed(0)}%.
+          </p>
+        )}
+      </div>
+      <div className="mt-1 flex flex-wrap items-center gap-x-4 gap-y-1 border-t border-grayLight pt-2 text-xs text-gray">
+        <span className="flex items-center gap-1">
+          <span aria-hidden="true">🏸</span> Loisirs
+        </span>
+        <span className="flex items-center gap-1">
+          <span aria-hidden="true">💼</span> Travail
+        </span>
+        <span className="flex items-center gap-1">
+          <span aria-hidden="true">🥕</span> Alimentation
+        </span>
+        <span>
+          — la taille de l&apos;icône reflète la part de ce motif pour la zone ;
+          la taille du cercle reflète la part totale des déplacements vers la
+          zone.
+        </span>
+      </div>
     </div>
   );
 };
