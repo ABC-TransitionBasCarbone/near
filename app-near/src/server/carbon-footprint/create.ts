@@ -10,6 +10,13 @@ export const createCarbonFooprintAnswer = async (
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { su, neighborhood, ...createQuery } = answer;
 
+  const existing = await db.carbonFootprintAnswer.findUnique({
+    where: { externalId: createQuery.externalId },
+  });
+  if (existing) {
+    return existing;
+  }
+
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { suName, ...calculatedSuParams } = await getCalculatedSuParams(
     survey,

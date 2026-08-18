@@ -11,12 +11,12 @@ export const buildCSVFromWayOfLifeAnswers = async (
       email: true,
       ageCategory: true,
       gender: true,
-      su: true,
+      su: { select: { suBank: true } },
     },
   });
 
   return buildCsv(answers, (answer) => ({
-    SU: answer.su?.su,
+    SU: answer.su?.suBank?.name,
     Email: answer.email,
     Age: answer.ageCategory,
     Genre: answer.gender,

@@ -27,8 +27,18 @@ describe("buildCSVFromWayOfLifeAnswers", () => {
       data: buildWayOfLifeAnswer(otherSurvey.id, { email: "other@mail.com" }),
     });
 
+    const suBank = await db.suBank.create({
+      data: { name: "bank-a", colorMain: "#111111" },
+    });
     await db.suData.create({
-      data: { id: 1, surveyId, su: 11, popPercentage: 0.11, barycenter: {} },
+      data: {
+        id: 1,
+        surveyId,
+        su: 11,
+        suBankId: suBank.id,
+        popPercentage: 0.11,
+        barycenter: {},
+      },
     });
 
     await db.wayOfLifeAnswer.createMany({
@@ -56,7 +66,7 @@ describe("buildCSVFromWayOfLifeAnswers", () => {
       [
         "SU,Email,Age,Genre",
         ",first@mail.com,FROM_15_TO_29,MAN",
-        "11,second@mail.com,ABOVE_75,WOMAN",
+        `${suBank.name},second@mail.com,ABOVE_75,WOMAN`,
       ].join("\r\n"),
     );
   });

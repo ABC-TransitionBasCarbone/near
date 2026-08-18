@@ -27,6 +27,7 @@ interface GaugeProps {
   valueColor?: string;
   unitLabel?: string;
   valueFormatter?: (value: number) => string;
+  legendTitle?: string;
 }
 
 const PADDING = 16;
@@ -75,13 +76,14 @@ const Gauge: React.FC<GaugeProps> = ({
   min = 0,
   startAngle = -90,
   endAngle = 90,
-  radius = 96,
-  trackWidth = 30,
+  radius = 120,
+  trackWidth = 38,
   needleColor = colors.black,
   tickLabelColor = colors.gray,
   valueColor = colors.black,
   unitLabel,
   valueFormatter = (v) => v.toLocaleString("fr-FR"),
+  legendTitle,
 }) => {
   const svgRef = useRef<SVGSVGElement>(null);
   const maxValue = zones[zones.length - 1]?.to ?? min;
@@ -229,21 +231,31 @@ const Gauge: React.FC<GaugeProps> = ({
         {currentZoneLabel ? ` (zone : ${currentZoneLabel})` : ""}
       </p>
       {legendZones.length > 0 && (
-        <ul className="flex flex-wrap justify-center gap-x-3 gap-y-1">
-          {legendZones.map((zone) => (
-            <li
-              key={zone.legendLabel}
-              className="flex items-center gap-1.5 text-xs"
+        <>
+          {legendTitle && (
+            <p
+              className="text-xs font-semibold"
               style={{ color: tickLabelColor }}
             >
-              <span
-                className="inline-block h-2.5 w-2.5 rounded-full"
-                style={{ backgroundColor: zone.color }}
-              />
-              {zone.legendLabel}
-            </li>
-          ))}
-        </ul>
+              {legendTitle}
+            </p>
+          )}
+          <ul className="flex flex-wrap justify-center gap-x-3 gap-y-1">
+            {legendZones.map((zone) => (
+              <li
+                key={zone.legendLabel}
+                className="flex items-center gap-1.5 text-xs"
+                style={{ color: tickLabelColor }}
+              >
+                <span
+                  className="inline-block h-2.5 w-2.5 rounded-full"
+                  style={{ backgroundColor: zone.color }}
+                />
+                {zone.legendLabel}
+              </li>
+            ))}
+          </ul>
+        </>
       )}
     </div>
   );

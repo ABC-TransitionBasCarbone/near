@@ -10,6 +10,8 @@ import {
   type NgcWebhookPayload,
 } from "~/types/CarbonFootprint";
 import { createAnswerError } from "../anwser-error/create";
+import { getErrorMessage } from "../anwser-error/getErrorMessage";
+import { resolveAnswerErrorsByExternalId } from "../anwser-error/resolve";
 import { getSurveyInformations } from "../typeform/helpers";
 import { isValidSignature, SignatureType } from "../typeform/signature";
 import { convertCarbonFootprintBody } from "./convert";
@@ -25,12 +27,18 @@ export const handleCarbonFootprintAnswer = async (
   req: NextRequest,
 ): Promise<NextResponse> => {
   const body = await req.text();
+  let rawBody: unknown = null;
+  let externalId: string | undefined = undefined;
 
   try {
+    rawBody = JSON.parse(body);
+    externalId =
+      typeof (rawBody as { id?: unknown })?.id === "string"
+        ? (rawBody as { id: string }).id
+        : undefined;
+
     // could throw zod exception from zod parsing
-    const parsedBody: NgcWebhookPayload = NgcWebhookSchema.parse(
-      JSON.parse(body),
-    );
+    const parsedBody: NgcWebhookPayload = NgcWebhookSchema.parse(rawBody);
 
     if (!isValidSignature(req, body, SignatureType.NGC_FORM)) {
       return unauthorizedResponse();
@@ -50,12 +58,22 @@ export const handleCarbonFootprintAnswer = async (
 
     await createCarbonFooprintAnswer(parsedAnswer, survey);
 
+    await resolveAnswerErrorsByExternalId(
+      externalId,
+      AnswerType.CARBON_FOOTPRINT,
+    );
+
     return NextResponse.json({ message: "created" }, { status: 201 });
   } catch (error) {
-    await createAnswerError(JSON.parse(body), AnswerType.CARBON_FOOTPRINT);
+    await createAnswerError(
+      rawBody ?? body,
+      AnswerType.CARBON_FOOTPRINT,
+      getErrorMessage(error),
+      externalId,
+    );
     if (error instanceof z.ZodError) {
       console.error(
-        "[whebhook]",
+        "[webhook]",
         CarbonFootprintType.CARBON_FOOTPRINT,
         "ZOD ERROR :",
         error,
@@ -79,7 +97,7 @@ export const handleCarbonFootprintAnswer = async (
 
     if (error instanceof Error) {
       console.error(
-        "[whebhook]",
+        "[webhook]",
         CarbonFootprintType.CARBON_FOOTPRINT,
         "ERROR :",
         error.message,
@@ -88,7 +106,7 @@ export const handleCarbonFootprintAnswer = async (
     }
 
     console.error(
-      "[whebhook]",
+      "[webhook]",
       CarbonFootprintType.CARBON_FOOTPRINT,
       "UNKNOWN ERROR:",
       error,

@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import { type Survey, SurveyPhase } from "@prisma/client";
+import { AnswerErrorStatus, type Survey, SurveyPhase } from "@prisma/client";
 import { db } from "~/server/db";
 import { ErrorCode } from "~/types/enums/error";
 import apiSuService from "../external-api/api-su";
-import { getValideCarbonFootprintPayload } from "../test-utils/carbonFootprint";
+import { getValidCarbonFootprintPayload } from "../test-utils/carbonFootprint";
 import { clearAlldata } from "../test-utils/clear";
 import { expectFailedPayloadIsSaved } from "../test-utils/expects/answerError";
-import { buildRequest } from "../test-utils/request/buildRequest";
+import { buildRequest } from "../utils/buildRequest";
 import { SignatureType, signPayload } from "../typeform/signature";
 import { handleCarbonFootprintAnswer } from "./handleCarbonFootprintAnswer";
 
@@ -54,7 +54,7 @@ describe("handleCarbonFootprintAnswer", () => {
   });
 
   it("should return 401 when signature is invalid", async () => {
-    const payload = getValideCarbonFootprintPayload(neighborhoodName);
+    const payload = getValidCarbonFootprintPayload(neighborhoodName);
 
     const response = await handleCarbonFootprintAnswer(
       // @ts-expect-error allow partial for test
@@ -67,7 +67,7 @@ describe("handleCarbonFootprintAnswer", () => {
   });
 
   it("should return 400 when transformed data is invalid", async () => {
-    const payload = getValideCarbonFootprintPayload(neighborhoodName);
+    const payload = getValidCarbonFootprintPayload(neighborhoodName);
 
     // @ts-expect-error pas string rather than number for test purpose
     payload.calculatedResults.alimentation = "should be number";
@@ -86,7 +86,7 @@ describe("handleCarbonFootprintAnswer", () => {
   });
 
   it("should return 404 when no survey found by name", async () => {
-    const payload = getValideCarbonFootprintPayload(neighborhoodName);
+    const payload = getValidCarbonFootprintPayload(neighborhoodName);
 
     payload.neighborhoodId = "unknown";
     const signature = signPayload(
@@ -112,7 +112,7 @@ describe("handleCarbonFootprintAnswer", () => {
       where: { name: neighborhoodName },
     });
 
-    const payload = getValideCarbonFootprintPayload(neighborhoodName);
+    const payload = getValidCarbonFootprintPayload(neighborhoodName);
     const signature = signPayload(
       JSON.stringify(payload),
       SignatureType.NGC_FORM,
@@ -151,7 +151,7 @@ describe("handleCarbonFootprintAnswer", () => {
       },
     });
 
-    const payload = getValideCarbonFootprintPayload(
+    const payload = getValidCarbonFootprintPayload(
       neighborhoodName,
       suNameFromNGC,
     );
@@ -177,7 +177,7 @@ describe("handleCarbonFootprintAnswer", () => {
   });
 
   it("should return 400 when neighborhood is not defined", async () => {
-    const payload = getValideCarbonFootprintPayload(neighborhoodName);
+    const payload = getValidCarbonFootprintPayload(neighborhoodName);
 
     payload.neighborhoodId = "";
     const signature = signPayload(
@@ -197,6 +197,116 @@ describe("handleCarbonFootprintAnswer", () => {
     await expectFailedPayloadIsSaved(payload);
   });
 
+  it("should not create a duplicate when replayed with the same payload", async () => {
+    await db.survey.update({
+      data: { phase: SurveyPhase.STEP_4_ADDITIONAL_SURVEY },
+      where: { name: neighborhoodName },
+    });
+
+    const payload = getValidCarbonFootprintPayload(neighborhoodName);
+    const signature = signPayload(
+      JSON.stringify(payload),
+      SignatureType.NGC_FORM,
+    );
+
+    const firstResponse = await handleCarbonFootprintAnswer(
+      // @ts-expect-error allow partial for test
+      buildRequest(payload, signature),
+    );
+    const secondResponse = await handleCarbonFootprintAnswer(
+      // @ts-expect-error allow partial for test
+      buildRequest(payload, signature),
+    );
+
+    expect(firstResponse.status).toBe(201);
+    expect(secondResponse.status).toBe(201);
+
+    const data = await db.carbonFootprintAnswer.findMany();
+    expect(data.length).toBe(1);
+  });
+
+  it("should not create a duplicate error row when the same payload fails again (Typeform retry)", async () => {
+    await db.survey.update({
+      data: { phase: SurveyPhase.STEP_4_ADDITIONAL_SURVEY },
+      where: { name: neighborhoodName },
+    });
+
+    jest.spyOn(apiSuService, "assignSu").mockReturnValue(
+      Promise.resolve({
+        distanceToBarycenter: 1234,
+        su: 19, // su not existing in db
+      }),
+    );
+
+    const payload = getValidCarbonFootprintPayload(neighborhoodName);
+    const signature = signPayload(
+      JSON.stringify(payload),
+      SignatureType.NGC_FORM,
+    );
+
+    await handleCarbonFootprintAnswer(
+      // @ts-expect-error allow partial for test
+      buildRequest(payload, signature),
+    );
+    await handleCarbonFootprintAnswer(
+      // @ts-expect-error allow partial for test
+      buildRequest(payload, signature),
+    );
+
+    const data = await db.rawAnswerError.findMany();
+    expect(data.length).toBe(1);
+    expect(data[0]?.retryCount).toBe(1);
+    expect(data[0]?.externalId).toBe(payload.id);
+  });
+
+  it("should resolve a previous error for the same payload once a retry succeeds", async () => {
+    await db.survey.update({
+      data: { phase: SurveyPhase.STEP_4_ADDITIONAL_SURVEY },
+      where: { name: neighborhoodName },
+    });
+
+    const payload = getValidCarbonFootprintPayload(neighborhoodName);
+    const signature = signPayload(
+      JSON.stringify(payload),
+      SignatureType.NGC_FORM,
+    );
+
+    jest.spyOn(apiSuService, "assignSu").mockReturnValue(
+      Promise.resolve({
+        distanceToBarycenter: 1234,
+        su: 19, // su not existing in db, first attempt fails
+      }),
+    );
+
+    await handleCarbonFootprintAnswer(
+      // @ts-expect-error allow partial for test
+      buildRequest(payload, signature),
+    );
+
+    const errorsBefore = await db.rawAnswerError.findMany();
+    expect(errorsBefore.length).toBe(1);
+    expect(errorsBefore[0]?.status).toBe(AnswerErrorStatus.ACTIVE);
+
+    jest.spyOn(apiSuService, "assignSu").mockReturnValue(
+      Promise.resolve({
+        distanceToBarycenter: 1234,
+        su, // retry succeeds
+      }),
+    );
+
+    const response = await handleCarbonFootprintAnswer(
+      // @ts-expect-error allow partial for test
+      buildRequest(payload, signature),
+    );
+
+    expect(response.status).toBe(201);
+
+    const errorsAfter = await db.rawAnswerError.findMany();
+    expect(errorsAfter.length).toBe(1);
+    expect(errorsAfter[0]?.status).toBe(AnswerErrorStatus.RESOLVED);
+    expect(errorsAfter[0]?.comment).toBeTruthy();
+  });
+
   it("should return 404 when calculated su is not found", async () => {
     jest.spyOn(apiSuService, "assignSu").mockReturnValue(
       Promise.resolve({
@@ -210,7 +320,7 @@ describe("handleCarbonFootprintAnswer", () => {
       where: { name: neighborhoodName },
     });
 
-    const payload = getValideCarbonFootprintPayload(neighborhoodName);
+    const payload = getValidCarbonFootprintPayload(neighborhoodName);
     const signature = signPayload(
       JSON.stringify(payload),
       SignatureType.NGC_FORM,

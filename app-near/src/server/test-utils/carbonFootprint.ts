@@ -1,4 +1,4 @@
-export const getValideCarbonFootprintPayload = (
+export const getValidCarbonFootprintPayload = (
   surveyName: string,
   suName?: string,
 ) => {

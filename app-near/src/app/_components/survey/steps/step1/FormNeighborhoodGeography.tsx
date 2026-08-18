@@ -176,68 +176,65 @@ const FormNeighborhoodGeography: React.FC<FormNeighborhoodGeographyProps> = ({
         {!isCompleted && (
           <p className="text-sm italic text-gray">
             Tant que ce formulaire n&apos;est pas complété pour les 4
-            directions, un rappel s&apos;affichera à l&apos;étape &quot;Enquêtes
-            complémentaires&quot;.
+            directions, un rappel s&apos;affichera avant de passer à
+            l&apos;étape &quot;Enquêtes complémentaires&quot;.
           </p>
         )}
 
         <p>
-          Ce questionnaire vous accompagne dans la définition des destinations
-          phares de votre quartier, c&apos;est-à-dire les lieux et zones vers
-          lesquels les habitant·es se déplacent le plus souvent. Ces
-          destinations, organisées par direction (nord, sud, est, ouest) et par
-          proximité (proche - loin) avec le quartier, seront intégrées
-          directement dans le questionnaire Espace et Mode De Vie du quartier de
-          votre quartier. Elles permettront de produire des résultats sur
-          mesure, ancrés dans la réalité géographique et les habitudes de
-          déplacement des habitant·es (travailler, faire les courses ou encore
-          pratiquer des loisirs).
+          Ce questionnaire vous aide à définir les destinations phares du
+          quartier, par direction (nord, sud, est, ouest) et par proximité
+          (proche / loin). Elles seront intégrées au questionnaire Espace et
+          Mode de Vie pour produire des résultats ancrés dans la réalité
+          géographique des habitant·es (travail, courses, loisirs).
         </p>
 
-        <p>
-          Dans le questionnaire Espaces et Mode de vie, les répondant·es doivent
-          indiquer :
-        </p>
+        <p>Pour chaque direction, indiquez :</p>
         <ul className="list-inside list-disc">
           <li>
-            <strong>le mode de transport</strong> utilisé pour mener une
-            activité (travail, loisirs, courses)
+            les <strong>destinations proches</strong> : à moins de 20 minutes à
+            pied, en dehors du quartier ;
           </li>
           <li>
-            <strong>le temps de trajet</strong> estimé.
-          </li>
-          <li>
-            <strong>la direction</strong> du déplacement (nord, est, sud,
-            ouest).
+            les <strong>destinations éloignées</strong> : au-delà de 20 minutes
+            à pied (villes voisines, communes de l&apos;agglomération…).
           </li>
         </ul>
 
-        <p>
-          Pour que les répondant·es puissent facilement se repérer, il faut
-          préparer en amont une <strong>liste des destinations</strong> propre à
-          votre quartier.
-        </p>
-
-        <p>
-          Chaque direction doit être exemplifiée par une liste de destinations,
-          comprises dans des zones proches ou loins du quartier.
-        </p>
-
-        <p>
-          Ici vous allez donc nommer pour chaque direction (Nord, est, sud,
-          ouest):
-        </p>
-
+        <p className="font-bold">Contraintes de saisie</p>
         <ul className="list-inside list-disc">
           <li>
-            les <strong>destinations proches</strong> à 20 minutes à pied du
-            quartier, à proximité immédiate (et qui ne sont pas dans le
-            quartier).
+            Privilégiez des destinations attractives, fréquentées et connues, du
+            plus proche au plus éloigné.
+          </li>
+          <li>Séparez les destinations par des virgules.</li>
+          <li>
+            Évitez les repères subjectifs ou approximatifs (&ldquo;près
+            de&ldquo;, &ldquo;à côté de&ldquo;, &ldquo;après&ldquo;,
+            &ldquo;vers&ldquo;).
+          </li>
+        </ul>
+
+        <p className="font-bold">
+          Outil recommandé :{" "}
+          <a
+            href="https://www.smappen.fr/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            smappen.fr
+            <span className="sr-only">(ouvre dans un nouvel onglet)</span>
+          </a>
+        </p>
+        <ul className="list-inside list-disc">
+          <li>
+            Saisissez l&apos;adresse du quartier et définissez une zone à 20
+            minutes à pied pour identifier précisément les destinations proches
+            et éloignées dans chaque direction.
           </li>
           <li>
-            Les <strong>destinations éloignées</strong> : destinations/communes
-            connues du plus ou moins proches au delà de 20 minutes à pied (zones
-            de proximité, villes voisines, communes en agglomération… ).
+            Utile aussi comme support d&apos;animation pour les enquêteur·ices
+            sur le terrain.
           </li>
         </ul>
 

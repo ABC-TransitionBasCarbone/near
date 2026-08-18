@@ -1,5 +1,5 @@
 import { handleCarbonFootprintEmail } from "./handleCarbonFootprintEmail";
-import { buildRequest } from "../test-utils/request/buildRequest";
+import { buildRequest } from "../utils/buildRequest";
 import { signPayload } from "../typeform/signature";
 import { SignatureType } from "../typeform/signature";
 import { db } from "../db";

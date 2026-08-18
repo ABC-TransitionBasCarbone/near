@@ -34,6 +34,8 @@ import {
 import { typeformSchemaMapper } from "./schema";
 import { isValidSignature, SignatureType } from "./signature";
 import { createAnswerError } from "../anwser-error/create";
+import { getErrorMessage } from "../anwser-error/getErrorMessage";
+import { resolveAnswerErrorsByExternalId } from "../anwser-error/resolve";
 import { mapProfessionalCategoryFromSituation } from "~/shared/services/su-answers/mapProfessionalCategory";
 
 export const handleTypeformAnswer = async (
@@ -41,17 +43,25 @@ export const handleTypeformAnswer = async (
 ): Promise<NextResponse> => {
   let formId: string | undefined = undefined;
   let webhookId: string | undefined = undefined;
+  let externalId: string | undefined = undefined;
 
   const body = await req.text();
+  let rawBody: unknown = null;
   try {
-    const parsedBody: TypeformWebhookPayload = TypeformWebhookSchema.parse(
-      JSON.parse(body),
-    );
+    rawBody = JSON.parse(body);
+    externalId =
+      typeof (rawBody as { form_response?: { token?: unknown } })?.form_response
+        ?.token === "string"
+        ? (rawBody as { form_response: { token: string } }).form_response.token
+        : undefined;
+
+    const parsedBody: TypeformWebhookPayload =
+      TypeformWebhookSchema.parse(rawBody);
     formId = parsedBody.form_response.form_id;
     webhookId = parsedBody.event_id;
     const typeformType = getFormIdType(formId);
 
-    console.debug("[whebhook]", typeformType, body);
+    console.debug("[webhook]", typeformType, body);
 
     if (!isValidSignature(req, body, SignatureType.TYPEFORM)) {
       throw new TRPCError({
@@ -63,7 +73,7 @@ export const handleTypeformAnswer = async (
     const referencesMapping = getReferencesMapping(typeformType);
 
     const answers = convertFormToAnswer(parsedBody, referencesMapping);
-    console.debug("[whebhook]", typeformType, JSON.stringify(answers));
+    console.debug("[webhook]", typeformType, JSON.stringify(answers));
 
     if (isNotPartOfNeighborhood(answers)) {
       return okResponse("user should live in neighborhood");
@@ -87,13 +97,19 @@ export const handleTypeformAnswer = async (
       typeformType,
     );
 
+    const validSuPhases = [
+      SurveyPhase.STEP_1_NEIGHBORHOOD_INFORMATION,
+      SurveyPhase.STEP_2_SU_SURVERY,
+    ];
+
     if (
       typeformType === TypeformType.SU &&
-      isNotInPhase(survey, SurveyPhase.STEP_2_SU_SURVERY)
+      isNotInPhase(survey, validSuPhases)
     ) {
       return notInPhaseSuSurveyResponse(
         surveyName,
-        SurveyPhase.STEP_2_SU_SURVERY,
+        survey.phase,
+        validSuPhases,
       );
     }
 
@@ -147,13 +163,20 @@ export const handleTypeformAnswer = async (
       }
     }
 
+    await resolveAnswerErrorsByExternalId(externalId, getAnswerType(formId));
+
     return NextResponse.json({ message: "created" }, { status: 201 });
   } catch (error) {
-    await createAnswerError(JSON.parse(body), getAnswerType(formId));
+    await createAnswerError(
+      rawBody ?? body,
+      getAnswerType(formId),
+      getErrorMessage(error),
+      externalId,
+    );
 
     if (error instanceof z.ZodError) {
       console.error(
-        "[whebhook]",
+        "[webhook]",
         formId,
         webhookId,
         "ZOD ERROR :",
@@ -177,11 +200,11 @@ export const handleTypeformAnswer = async (
     }
 
     if (error instanceof Error) {
-      console.error("[whebhook]", formId, webhookId, "ERROR :", error.message);
+      console.error("[webhook]", formId, webhookId, "ERROR :", error.message);
       return NextResponse.json({ error: error.message }, { status: 400 });
     }
 
-    console.error("[whebhook]", formId, webhookId, "UNKNOWN ERROR:", error);
+    console.error("[webhook]", formId, webhookId, "UNKNOWN ERROR:", error);
     return NextResponse.json(
       { error: "Internal Server Error" },
       { status: 500 },

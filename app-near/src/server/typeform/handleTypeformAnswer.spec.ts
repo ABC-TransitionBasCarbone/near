@@ -1,7 +1,9 @@
 import {
+  AnswerErrorStatus,
   BroadcastChannel,
   ProfessionalCategory,
   ProfessionalSituation,
+  SurveyPhase,
   type Survey,
 } from "@prisma/client";
 import { TemplateId } from "~/types/enums/brevo";
@@ -13,7 +15,7 @@ import apiSuService from "../external-api/api-su";
 import { clearAlldata } from "../test-utils/clear";
 import { buildSuAnswer } from "../test-utils/create-data/suAnswer";
 import { buildWayOfLifeAnswer } from "../test-utils/create-data/wayOfLifeAnswer";
-import { buildRequest } from "../test-utils/request/buildRequest";
+import { buildRequest } from "../utils/buildRequest";
 import { valideSuSurveyPayload } from "../test-utils/suSurvey";
 import { valideWayOfLifeSurveyPayload } from "../test-utils/wayOfLifeSurvey";
 import { handleTypeformAnswer } from "./handleTypeformAnswer";
@@ -265,6 +267,62 @@ describe("handleAnswer", () => {
       expect(sendEmailMock).not.toHaveBeenCalled();
       await expectFailedPayloadIsNotSaved();
     });
+
+    it("should return 200 with current and valid phases when SU survey is not in a valid phase", async () => {
+      await db.survey.update({
+        data: { phase: SurveyPhase.STEP_3_SU_EXPLORATION },
+        where: { name: neighborhoodName },
+      });
+
+      // eslint-disable-next-line
+      const payload = JSON.parse(
+        JSON.stringify(valideSuSurveyPayload),
+      ) as TypeformWebhookPayload;
+
+      payload.form_response.hidden = {
+        neighborhood: neighborhoodName,
+        broadcast_channel: BroadcastChannel.mail_campaign,
+        broadcast_id: broadcastId,
+      };
+
+      const signature = signPayload(
+        JSON.stringify(payload),
+        SignatureType.TYPEFORM,
+      );
+      const response = await handleTypeformAnswer(
+        // @ts-expect-error allow partial for test
+        buildRequest(payload, signature),
+      );
+      expect(response.status).toBe(200);
+      const text = await response.text();
+      expect(text).toContain(
+        `survey ${neighborhoodName} is in phase ${SurveyPhase.STEP_3_SU_EXPLORATION}`,
+      );
+      expect(text).toContain(
+        `valid phases are: ${SurveyPhase.STEP_1_NEIGHBORHOOD_INFORMATION}, ${SurveyPhase.STEP_2_SU_SURVERY}`,
+      );
+
+      expect(sendEmailMock).not.toHaveBeenCalled();
+      await expectFailedPayloadIsNotSaved();
+    });
+
+    it("should not create a duplicate error row when the same payload fails again (Typeform retry)", async () => {
+      await handleTypeformAnswer(
+        // @ts-expect-error allow partial for test
+        buildRequest(valideSuSurveyPayload, "wrong-signature"),
+      );
+      await handleTypeformAnswer(
+        // @ts-expect-error allow partial for test
+        buildRequest(valideSuSurveyPayload, "wrong-signature"),
+      );
+
+      const data = await db.rawAnswerError.findMany();
+      expect(data.length).toBe(1);
+      expect(data[0]?.retryCount).toBe(1);
+      expect(data[0]?.externalId).toBe(
+        valideSuSurveyPayload.form_response.token,
+      );
+    });
   });
 
   describe.each(Object.values(TypeformType))("When %s", (typeformType) => {
@@ -405,6 +463,95 @@ describe("handleAnswer", () => {
         expect(sendEmailMock).not.toHaveBeenCalled();
         expect(apiSuServiceMock).not.toHaveBeenCalled();
       }
+    });
+
+    it("should not create a duplicate when replayed with the same payload", async () => {
+      await db.survey.update({
+        data: { phase: validSurveyPhase },
+        where: { name: neighborhoodName },
+      });
+
+      // eslint-disable-next-line
+      let payload = JSON.parse(
+        JSON.stringify(validSurveyPayload),
+      ) as TypeformWebhookPayload;
+
+      payload.form_response.hidden = {
+        neighborhood: neighborhoodName,
+        broadcast_channel: BroadcastChannel.mail_campaign,
+        broadcast_id: broadcastId,
+      };
+
+      payload = replaceSu(payload, su);
+
+      const signature = signPayload(
+        JSON.stringify(payload),
+        SignatureType.TYPEFORM,
+      );
+
+      const firstResponse = await handleTypeformAnswer(
+        // @ts-expect-error allow partial for test
+        buildRequest(payload, signature),
+      );
+      const secondResponse = await handleTypeformAnswer(
+        // @ts-expect-error allow partial for test
+        buildRequest(payload, signature),
+      );
+
+      expect(firstResponse.status).toBe(201);
+      expect(secondResponse.status).toBe(201);
+
+      // @ts-expect-error model is a union of two incompatible Prisma delegates
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      const data = await model.findMany();
+      expect(data.length).toBe(1);
+    });
+
+    it("should resolve a previous error for the same payload once a retry succeeds", async () => {
+      await db.survey.update({
+        data: { phase: validSurveyPhase },
+        where: { name: neighborhoodName },
+      });
+
+      // eslint-disable-next-line
+      let payload = JSON.parse(
+        JSON.stringify(validSurveyPayload),
+      ) as TypeformWebhookPayload;
+
+      payload.form_response.hidden = {
+        neighborhood: neighborhoodName,
+        broadcast_channel: BroadcastChannel.mail_campaign,
+        broadcast_id: broadcastId,
+      };
+
+      payload = replaceSu(payload, su);
+
+      // first attempt fails (simulates a Typeform-side transient failure)
+      await handleTypeformAnswer(
+        // @ts-expect-error allow partial for test
+        buildRequest(payload, "wrong-signature"),
+      );
+
+      const errorsBefore = await db.rawAnswerError.findMany();
+      expect(errorsBefore.length).toBe(1);
+      expect(errorsBefore[0]?.status).toBe(AnswerErrorStatus.ACTIVE);
+
+      // Typeform retries the same event and it succeeds this time
+      const signature = signPayload(
+        JSON.stringify(payload),
+        SignatureType.TYPEFORM,
+      );
+      const response = await handleTypeformAnswer(
+        // @ts-expect-error allow partial for test
+        buildRequest(payload, signature),
+      );
+
+      expect(response.status).toBe(201);
+
+      const errorsAfter = await db.rawAnswerError.findMany();
+      expect(errorsAfter.length).toBe(1);
+      expect(errorsAfter[0]?.status).toBe(AnswerErrorStatus.RESOLVED);
+      expect(errorsAfter[0]?.comment).toBeTruthy();
     });
 
     it("should return 201 for suAnswer when email already exist", async () => {
@@ -816,6 +963,56 @@ describe("handleAnswer", () => {
       expect(savedAnswers[0]?.professionalSituation).toBe(
         ProfessionalSituation.STUDENT,
       );
+    });
+  });
+
+  describe("SU - easyHealthAccess optional", () => {
+    const removeAnswerByRef = (
+      object: TypeformWebhookPayload,
+      ref: string,
+    ): TypeformWebhookPayload => {
+      if (
+        object?.form_response &&
+        Array.isArray(object.form_response.answers)
+      ) {
+        object.form_response.answers = object.form_response.answers.filter(
+          (answer) => answer.field.ref !== ref,
+        );
+      }
+      return object;
+    };
+
+    it("should return 201 and save a null easyHealthAccess when not answered", async () => {
+      await db.survey.update({
+        data: { phase: getValidSurveyPhase(TypeformType.SU) },
+        where: { name: neighborhoodName },
+      });
+
+      // eslint-disable-next-line
+      let payload = JSON.parse(
+        JSON.stringify(valideSuSurveyPayload),
+      ) as TypeformWebhookPayload;
+
+      payload.form_response.hidden = {
+        neighborhood: neighborhoodName,
+        broadcast_channel: BroadcastChannel.mail_campaign,
+        broadcast_id: broadcastId,
+      };
+
+      payload = removeAnswerByRef(payload, "easyHealthAccess");
+
+      const signature = signPayload(
+        JSON.stringify(payload),
+        SignatureType.TYPEFORM,
+      );
+      const response = await handleTypeformAnswer(
+        // @ts-expect-error allow partial for test
+        buildRequest(payload, signature),
+      );
+
+      expect(response.status).toBe(201);
+      const savedAnswers = await db.suAnswer.findMany();
+      expect(savedAnswers[0]?.easyHealthAccess).toBeNull();
     });
   });
 });

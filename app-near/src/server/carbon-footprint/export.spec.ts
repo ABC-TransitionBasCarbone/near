@@ -24,8 +24,18 @@ describe("buildCSVFromCarbonFootprintAnswers", () => {
       "survey-test-export-carbon-footprint-other",
     );
 
+    const suBank = await db.suBank.create({
+      data: { name: "bank-a", colorMain: "#111111" },
+    });
     await db.suData.create({
-      data: { id: 1, surveyId, su: 11, popPercentage: 0.11, barycenter: {} },
+      data: {
+        id: 1,
+        surveyId,
+        su: 11,
+        suBankId: suBank.id,
+        popPercentage: 0.11,
+        barycenter: {},
+      },
     });
     await db.suData.create({
       data: {
@@ -66,7 +76,11 @@ describe("buildCSVFromCarbonFootprintAnswers", () => {
     const csv = await buildCSVFromCarbonFootprintAnswers(surveyId);
 
     expect(csv).toBe(
-      ["SU,Email", "11,first@mail.com", "11,second@mail.com"].join("\r\n"),
+      [
+        "SU,Email",
+        `${suBank.name},first@mail.com`,
+        `${suBank.name},second@mail.com`,
+      ].join("\r\n"),
     );
   });
 });

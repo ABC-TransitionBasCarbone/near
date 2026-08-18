@@ -25,8 +25,18 @@ describe("buildCSVFromSUAnswers", () => {
       data: buildSuAnswer(otherSurvey.id, { email: "other@mail.com" }),
     });
 
+    const suBank = await db.suBank.create({
+      data: { name: "bank-a", colorMain: "#111111" },
+    });
     await db.suData.create({
-      data: { id: 1, surveyId, su: 11, popPercentage: 0.11, barycenter: {} },
+      data: {
+        id: 1,
+        surveyId,
+        su: 11,
+        suBankId: suBank.id,
+        popPercentage: 0.11,
+        barycenter: {},
+      },
     });
 
     await db.suAnswer.createMany({
@@ -56,7 +66,7 @@ describe("buildCSVFromSUAnswers", () => {
       [
         "Email,Genre,Age,CSP,SU",
         "first@mail.com,MAN,FROM_15_TO_29,CS3,",
-        "second@mail.com,WOMAN,ABOVE_75,CS1,11",
+        `second@mail.com,WOMAN,ABOVE_75,CS1,${suBank.name}`,
       ].join("\r\n"),
     );
   });
