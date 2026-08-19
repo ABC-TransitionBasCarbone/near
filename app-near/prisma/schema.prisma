@@ -407,14 +407,6 @@ enum TransportTime {
   ABOVE_45_MIN
 }
 
-enum ZoneSelection {
-  ZONE_A
-  ZONE_B
-  ZONE_C
-  ZONE_D
-  ZONE_QUARTIER
-}
-
 model WayOfLifeAnswer {
   id          Int         @id @default(autoincrement())
   email       String?

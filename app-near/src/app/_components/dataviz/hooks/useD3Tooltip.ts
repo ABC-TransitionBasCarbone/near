@@ -8,7 +8,7 @@ export const getD3Tooltip = (
   container: HTMLElement | null,
 ): d3.Selection<HTMLDivElement, unknown, null, undefined> => {
   const root = d3.select(container ?? document.body);
-  const existing = root.select<HTMLDivElement>(`div.${TOOLTIP_CLASS}`);
+  const existing = root.select<HTMLDivElement>(`:scope > div.${TOOLTIP_CLASS}`);
   const tooltip = existing.empty()
     ? root.append<HTMLDivElement>("div").attr("class", TOOLTIP_CLASS)
     : existing;

@@ -1,9 +1,6 @@
-import {
-  TransportMode,
-  TransportTime,
-  type ZoneSelection,
-} from "@prisma/client";
+import { TransportMode, TransportTime } from "@prisma/client";
 import { db } from "~/server/db";
+import { type ZoneSelection } from "~/types/enums/zoneSelection";
 import {
   buildZoneCellKey,
   ZONE_SELECTIONS,

@@ -2,10 +2,7 @@
 import React, { useRef, useEffect } from "react";
 import * as d3 from "d3";
 import { api } from "~/trpc/react";
-import {
-  type BarrierField,
-  NOT_CONCERNED_KEY,
-} from "~/shared/services/dataviz/barriers";
+import { type BarrierField } from "~/shared/services/dataviz/barriers";
 import { useChartDimensions } from "../hooks/useChartDimensions";
 import { getD3Tooltip } from "../hooks/useD3Tooltip";
 
@@ -71,16 +68,17 @@ const DvBarrierGradient: React.FC<DvBarrierGradientProps> = ({
       percentage: number;
       emoji: string;
     };
-    const allItems: RowItem[] = data.choices.map((c) => ({
-      key: c.key,
-      label: c.label,
-      percentage: c.percentage,
-      emoji: c.emoji,
-    }));
+    const allItems: RowItem[] = data.choices
+      .filter((c) => !c.isNotConcerned)
+      .map((c) => ({
+        key: c.key,
+        label: c.label,
+        percentage: c.percentage,
+        emoji: c.emoji,
+      }));
 
     const filtered = allItems.filter(
-      (c) =>
-        c.percentage > 0 && c.percentage < 100 && c.key !== NOT_CONCERNED_KEY,
+      (c) => c.percentage > 0 && c.percentage < 100,
     );
     const sorted = [...filtered].sort((a, b) => b.percentage - a.percentage);
     const visible = sorted.slice(0, maxBarsCount);
@@ -244,7 +242,7 @@ const DvBarrierGradient: React.FC<DvBarrierGradientProps> = ({
   }
 
   const srItems = data.choices
-    .filter((c) => c.percentage > 0 && c.key !== NOT_CONCERNED_KEY)
+    .filter((c) => c.percentage > 0 && !c.isNotConcerned)
     .slice()
     .sort((a, b) => b.percentage - a.percentage);
 

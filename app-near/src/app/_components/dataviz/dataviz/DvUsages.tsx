@@ -6,6 +6,7 @@ import { api } from "~/trpc/react";
 import { USAGE_FIELDS, USAGE_QUESTIONS } from "~/shared/services/dataviz/usage";
 import { useSuBank } from "../hooks/useSuBank";
 import { useChartDimensions } from "../hooks/useChartDimensions";
+import { getD3Tooltip } from "../hooks/useD3Tooltip";
 
 interface DvUsagesProps {
   selectedSus?: number[];
@@ -14,6 +15,7 @@ interface DvUsagesProps {
 interface UsageData {
   value: string;
   label: string;
+  shortLabel: string;
   emoji: string;
   count: number;
   percentage: number;
@@ -78,6 +80,7 @@ const DvUsages: React.FC<DvUsagesProps> = ({ selectedSus }) => {
 
     const svg = d3.select(svgRef.current);
     svg.selectAll("*").remove();
+    const tooltip = getD3Tooltip(document.body);
 
     const fallbackWidth = 300;
     const fallbackHeight = 250;
@@ -290,43 +293,27 @@ const DvUsages: React.FC<DvUsagesProps> = ({ selectedSus }) => {
           .style("stroke", "white")
           .style("stroke-width", "3px")
           .style("paint-order", "stroke fill")
-          .text(
-            segment.data.label.length > 10
-              ? `${segment.data.label.substring(0, 10)}...`
-              : segment.data.label,
-          );
+          .text(segment.data.shortLabel);
 
+        const bbox = (segmentGroup.node() as SVGGraphicsElement).getBBox();
+        const tooltipPadding = 6;
+        const minTooltipAreaWidth = 60;
+        const tooltipAreaWidth = Math.max(
+          bbox.width + tooltipPadding * 2,
+          minTooltipAreaWidth,
+        );
+        const tooltipAreaCenterX = bbox.x + bbox.width / 2;
         const tooltipArea = segmentGroup
           .append("rect")
-          .attr("x", segment.x - 25)
-          .attr("y", Math.min(horizonY - segment.height - 20, 0))
-          .attr("width", 50)
-          .attr(
-            "height",
-            Math.abs(horizonY - segment.height - 20) +
-              Math.abs(horizonY + segment.height + 25),
-          )
+          .attr("x", tooltipAreaCenterX - tooltipAreaWidth / 2)
+          .attr("y", bbox.y - tooltipPadding)
+          .attr("width", tooltipAreaWidth)
+          .attr("height", bbox.height + tooltipPadding * 2)
           .attr("fill", "transparent")
           .style("cursor", "pointer");
 
         tooltipArea
           .on("mouseover", function (event: MouseEvent) {
-            const tooltip = d3
-              .select("body")
-              .append("div")
-              .attr("class", "segment-tooltip")
-              .style("position", "absolute")
-              .style("background", "rgba(0,0,0,0.8)")
-              .style("color", "white")
-              .style("padding", "8px")
-              .style("border-radius", "4px")
-              .style("font-size", "12px")
-              .style("pointer-events", "none")
-              .style("z-index", "9999")
-              .style("opacity", 0);
-
-            tooltip.transition().duration(200).style("opacity", 1);
-
             tooltip
               .html(
                 `
@@ -338,14 +325,12 @@ const DvUsages: React.FC<DvUsagesProps> = ({ selectedSus }) => {
               .style("left", `${event.pageX + 10}px`)
               .style("top", `${event.pageY - 10}px`);
 
+            tooltip.transition().duration(200).style("opacity", 1);
+
             d3.select(segmentGroup.node()).select("line").attr("opacity", 0.3);
           })
           .on("mouseout", function () {
-            d3.selectAll(".segment-tooltip")
-              .transition()
-              .duration(200)
-              .style("opacity", 0)
-              .remove();
+            tooltip.transition().duration(200).style("opacity", 0);
 
             d3.select(segmentGroup.node()).select("line").attr("opacity", 0);
           });

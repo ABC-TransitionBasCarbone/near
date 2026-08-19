@@ -5,7 +5,7 @@ import {
   SATISFACTION_SUBCATEGORIES,
 } from "~/shared/services/dataviz/satisfaction";
 import { toPercentage } from "~/shared/services/dataviz/percentage";
-import { resolveSuId } from "~/server/su/dataviz/suSelection";
+import { resolveSuId, getWeightedSus } from "~/server/su/dataviz/suSelection";
 
 export type { SatisfactionSubcategory };
 
@@ -53,12 +53,12 @@ const SUBCATEGORIES: Record<
     questions: [
       {
         field: "notColdHouse",
-        title: "Logement pas trop froid en hiver",
+        title: "Isolation hiver",
         emoji: "❄️",
       },
       {
         field: "confortHouseWhenHot",
-        title: "Logement confortable en cas de forte chaleur",
+        title: "Confort du logement l'été",
         emoji: "☀️",
       },
     ],
@@ -68,32 +68,32 @@ const SUBCATEGORIES: Record<
     questions: [
       {
         field: "easyPublicTransports",
-        title: "Transports en commun facilement accessibles",
+        title: "Transports en commun",
         emoji: "🚌",
       },
       {
         field: "easyWalking",
-        title: "Facile de se déplacer à pied",
+        title: "Mobilité piétonne",
         emoji: "🚶",
       },
       {
         field: "easyBicycle",
-        title: "Facile de se déplacer à vélo",
+        title: "Déplacement à vélo",
         emoji: "🚴",
       },
       {
         field: "notTooMuchTraffic",
-        title: "Pas trop de trafic routier",
+        title: "Circulation",
         emoji: "🚦",
       },
       {
         field: "carAnPedestriansRespect",
-        title: "Respect entre automobilistes et piétons",
+        title: "Respect voiture/vélo/piéton",
         emoji: "🤝",
       },
       {
         field: "easyToLeaveCityWithTranports",
-        title: "Facile de quitter le quartier en transports",
+        title: "Faciliter à sortir de la ville",
         emoji: "🚉",
       },
     ],
@@ -103,27 +103,27 @@ const SUBCATEGORIES: Record<
     questions: [
       {
         field: "neighborhoodOrganicMarketSatisfaction",
-        title: "Marché bio satisfaisant à proximité",
+        title: "Offre alimentaire",
         emoji: "🥕",
       },
       {
         field: "neighborhoodSeasonFruitAndVegetablesSatisfaction",
-        title: "Fruits et légumes de saison accessibles",
+        title: "Offre de fruits et légumes de saison",
         emoji: "🍎",
       },
       {
         field: "neighborhoodOrganicProductsSatisfaction",
-        title: "Produits bio accessibles",
+        title: "Offre d'alimentation bio",
         emoji: "🌱",
       },
       {
         field: "privateOrShareFieldToFarm",
-        title: "Accès à un terrain privé ou partagé pour cultiver",
+        title: "Jardins",
         emoji: "🌾",
       },
       {
         field: "accessToShortFoodCircuitSatisfaction",
-        title: "Accès aux circuits courts alimentaires",
+        title: "Alimentation en circuits courts",
         emoji: "🧺",
       },
     ],
@@ -133,37 +133,37 @@ const SUBCATEGORIES: Record<
     questions: [
       {
         field: "electronicRepairShopSatisfaction",
-        title: "Réparateur d'électronique à proximité",
+        title: "Réparation électronique et électroménager",
         emoji: "🔌",
       },
       {
         field: "clothesRepairShopSatisfaction",
-        title: "Retoucherie / couturier à proximité",
+        title: "Réparation de vêtements",
         emoji: "🧵",
       },
       {
         field: "bicycleRepairShopSatisfaction",
-        title: "Réparateur de vélo à proximité",
+        title: "Réparation de vélo",
         emoji: "🚴",
       },
       {
         field: "secondHandShopSatisfaction",
-        title: "Magasin de seconde main à proximité",
+        title: "Ressourceries et fripes",
         emoji: "♻️",
       },
       {
         field: "localShopsToMeetYourNeeds",
-        title: "Commerces de proximité suffisants",
+        title: "Commerces",
         emoji: "🏪",
       },
       {
         field: "servicesToShareOrRentObjects",
-        title: "Services de partage ou location d'objets",
+        title: "Location et partage d'objets",
         emoji: "🔄",
       },
       {
         field: "publicServicesPresence",
-        title: "Présence de services publics",
+        title: "Services publics",
         emoji: "🏛️",
       },
     ],
@@ -172,28 +172,23 @@ const SUBCATEGORIES: Record<
     ...SATISFACTION_SUBCATEGORIES.nghLife,
     questions: [
       {
-        field: "associativeActivity",
-        title: "Vie associative dynamique",
-        emoji: "🤝",
-      },
-      {
         field: "culturalActivity",
-        title: "Offre culturelle satisfaisante",
+        title: "Culture",
         emoji: "🎭",
       },
       {
         field: "hobbiesSpaces",
-        title: "Espaces pour les loisirs",
+        title: "Sports et loisirs",
         emoji: "🎨",
       },
       {
         field: "neighborhoodLife",
-        title: "Bonne ambiance de quartier",
+        title: "Vie de quartier",
         emoji: "🏘️",
       },
       {
         field: "vegetalParksSatisfaction",
-        title: "Espaces verts satisfaisants",
+        title: "Espaces verts",
         emoji: "🌳",
       },
     ],
@@ -202,13 +197,18 @@ const SUBCATEGORIES: Record<
     ...SATISFACTION_SUBCATEGORIES.politics,
     questions: [
       {
+        field: "associativeActivity",
+        title: "Vie associative",
+        emoji: "🤝",
+      },
+      {
         field: "noInformationOnCitizenParticipation",
         title: "Manque d'information sur la participation citoyenne",
         emoji: "📢",
       },
       {
         field: "wantToParticipateToCivicInitiatives",
-        title: "Envie de participer aux initiatives citoyennes",
+        title: "Volonté de participer aux initiatives citoyennes",
         emoji: "🗳️",
       },
     ],
@@ -253,17 +253,69 @@ export type SatisfactionDistributionResult = {
   isNeighborhood: boolean;
 };
 
+type FieldCounts = Record<SatisfactionField, Record<YesNo, number>>;
+
+const emptyFieldCounts = (): FieldCounts =>
+  Object.fromEntries(
+    Object.keys(SATISFACTION_SELECT).map((field) => [
+      field,
+      { YES: 0, NO: 0, DONT_KNOW: 0 },
+    ]),
+  ) as FieldCounts;
+
+const countAnswers = (
+  answers: Pick<WayOfLifeAnswer, SatisfactionField>[],
+): FieldCounts => {
+  const counts = emptyFieldCounts();
+  for (const answer of answers) {
+    for (const field of Object.keys(
+      SATISFACTION_SELECT,
+    ) as SatisfactionField[]) {
+      counts[field][answer[field]]++;
+    }
+  }
+  return counts;
+};
+
+const toResult = (
+  counts: FieldCounts,
+  subcategoryEntries: [
+    SatisfactionSubcategory,
+    (typeof SUBCATEGORIES)[SatisfactionSubcategory],
+  ][],
+  isNeighborhood: boolean,
+): SatisfactionDistributionResult => ({
+  isNeighborhood,
+  subcategories: subcategoryEntries.map(([key, sub]) => ({
+    subcategory: key,
+    label: sub.label,
+    emoji: sub.emoji,
+    questions: sub.questions.map((q) => {
+      const fieldCounts = counts[q.field];
+      const totalResponses =
+        fieldCounts.YES + fieldCounts.NO + fieldCounts.DONT_KNOW;
+      return {
+        field: q.field,
+        title: q.title,
+        emoji: q.emoji,
+        totalResponses,
+        responses: (Object.keys(YES_NO_LABELS) as YesNo[]).map((choice) => ({
+          choice,
+          ...YES_NO_LABELS[choice],
+          count: fieldCounts[choice],
+          percentage: toPercentage(fieldCounts[choice], totalResponses),
+        })),
+      };
+    }),
+  })),
+});
+
 export const getSatisfactionDistribution = async (
   surveyId: number,
   selectedSus?: number[],
   subcategory?: SatisfactionSubcategory,
 ): Promise<SatisfactionDistributionResult> => {
   const { isNeighborhood, suId } = await resolveSuId(surveyId, selectedSus);
-
-  const answers = await db.wayOfLifeAnswer.findMany({
-    where: isNeighborhood ? { surveyId } : { surveyId, suId },
-    select: SATISFACTION_SELECT,
-  });
 
   const subcategoryEntries = (
     Object.entries(SUBCATEGORIES) as [
@@ -272,31 +324,41 @@ export const getSatisfactionDistribution = async (
     ][]
   ).filter(([key]) => !subcategory || key === subcategory);
 
-  return {
-    isNeighborhood,
-    subcategories: subcategoryEntries.map(([key, sub]) => ({
-      subcategory: key,
-      label: sub.label,
-      emoji: sub.emoji,
-      questions: sub.questions.map((q) => {
-        const counts: Record<YesNo, number> = { YES: 0, NO: 0, DONT_KNOW: 0 };
-        for (const answer of answers) {
-          counts[answer[q.field]]++;
-        }
-        const totalResponses = counts.YES + counts.NO + counts.DONT_KNOW;
-        return {
-          field: q.field,
-          title: q.title,
-          emoji: q.emoji,
-          totalResponses,
-          responses: (Object.keys(YES_NO_LABELS) as YesNo[]).map((choice) => ({
-            choice,
-            ...YES_NO_LABELS[choice],
-            count: counts[choice],
-            percentage: toPercentage(counts[choice], totalResponses),
-          })),
-        };
-      }),
-    })),
-  };
+  if (!isNeighborhood) {
+    const answers = await db.wayOfLifeAnswer.findMany({
+      where: { surveyId, suId },
+      select: SATISFACTION_SELECT,
+    });
+    return toResult(countAnswers(answers), subcategoryEntries, false);
+  }
+
+  const weightedSus = await getWeightedSus(surveyId);
+  const weighted = emptyFieldCounts();
+
+  for (const su of weightedSus) {
+    const answers = await db.wayOfLifeAnswer.findMany({
+      where: { surveyId, suId: su.id },
+      select: SATISFACTION_SELECT,
+    });
+    if (answers.length === 0) continue;
+    const suCounts = countAnswers(answers);
+    for (const field of Object.keys(
+      SATISFACTION_SELECT,
+    ) as SatisfactionField[]) {
+      for (const choice of Object.keys(YES_NO_LABELS) as YesNo[]) {
+        weighted[field][choice] += suCounts[field][choice] * su.weight;
+      }
+    }
+  }
+
+  const rounded = Object.fromEntries(
+    Object.entries(weighted).map(([field, counts]) => [
+      field,
+      Object.fromEntries(
+        Object.entries(counts).map(([choice, n]) => [choice, Math.round(n)]),
+      ),
+    ]),
+  ) as FieldCounts;
+
+  return toResult(rounded, subcategoryEntries, true);
 };

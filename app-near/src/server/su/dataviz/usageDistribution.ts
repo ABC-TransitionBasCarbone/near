@@ -17,51 +17,106 @@ import { resolveSuId } from "~/server/su/dataviz/suSelection";
 export type { UsageField };
 export { USAGE_QUESTIONS };
 
-type UsageLabel = { label: string; emoji: string };
+type UsageLabel = { label: string; shortLabel: string; emoji: string };
 
 const MEAT_FREQUENCY_LABELS: Record<MeatFrequency, UsageLabel> = {
-  [MeatFrequency.MINOR]: { label: "Peu ou pas de viande", emoji: "🥦" },
-  [MeatFrequency.REGULAR]: { label: "Viande occasionnelle", emoji: "🍗" },
-  [MeatFrequency.MAJOR]: { label: "Viande à chaque repas", emoji: "🥩" },
+  [MeatFrequency.MINOR]: {
+    label: "0 à 4 repas de viande par semaine",
+    shortLabel: "0-4",
+    emoji: "🥦",
+  },
+  [MeatFrequency.REGULAR]: {
+    label: "4 à 9 repas de viande par semaine",
+    shortLabel: "4-9",
+    emoji: "🍗",
+  },
+  [MeatFrequency.MAJOR]: {
+    label: "10 repas de viande ou plus par semaine",
+    shortLabel: "≥ 10",
+    emoji: "🥩",
+  },
 };
 
 const TRANSPORTATION_MODE_LABELS: Record<TransportationMode, UsageLabel> = {
-  [TransportationMode.CAR]: { label: "Voiture", emoji: "🚗" },
-  [TransportationMode.PUBLIC]: { label: "Transports en commun", emoji: "🚌" },
-  [TransportationMode.LIGHT]: { label: "Mobilités douces", emoji: "🚲" },
+  [TransportationMode.LIGHT]: {
+    label: "Marche, vélo...",
+    shortLabel: "Marche, vélo...",
+    emoji: "🚲",
+  },
+  [TransportationMode.PUBLIC]: {
+    label: "Transports en commun",
+    shortLabel: "Transp. en commun",
+    emoji: "🚌",
+  },
+  [TransportationMode.CAR]: {
+    label: "Voiture",
+    shortLabel: "Voiture",
+    emoji: "🚗",
+  },
 };
 
 const DIGITAL_INTENSITY_LABELS: Record<DigitalIntensity, UsageLabel> = {
-  [DigitalIntensity.LIGHT]: { label: "Usage numérique léger", emoji: "📵" },
+  [DigitalIntensity.LIGHT]: {
+    label: "Moins de 2h d'écran par jour",
+    shortLabel: "< 2h",
+    emoji: "📵",
+  },
   [DigitalIntensity.REGULAR]: {
-    label: "Usage numérique régulier",
+    label: "2 à 4h d'écran par jour",
+    shortLabel: "2-4h",
     emoji: "📱",
   },
-  [DigitalIntensity.INTENSE]: { label: "Usage numérique intense", emoji: "💻" },
+  [DigitalIntensity.INTENSE]: {
+    label: "Plus de 4h d'écran par jour",
+    shortLabel: "> 4h",
+    emoji: "💻",
+  },
 };
 
 const PURCHASING_STRATEGY_LABELS: Record<PurchasingStrategy, UsageLabel> = {
-  [PurchasingStrategy.NEW]: { label: "Achats neufs", emoji: "🛍️" },
-  [PurchasingStrategy.MIXED]: { label: "Achats mixtes", emoji: "🔄" },
   [PurchasingStrategy.SECOND_HAND]: {
-    label: "Achats de seconde main",
+    label: "Occasion",
+    shortLabel: "Occasion",
     emoji: "♻️",
+  },
+  [PurchasingStrategy.MIXED]: {
+    label: "Mixte",
+    shortLabel: "Mixte",
+    emoji: "🔄",
+  },
+  [PurchasingStrategy.NEW]: {
+    label: "Neuf",
+    shortLabel: "Neuf",
+    emoji: "🛍️",
   },
 };
 
 const AIR_TRAVEL_FREQUENCY_LABELS: Record<AirTravelFrequency, UsageLabel> = {
-  [AirTravelFrequency.ZERO]: { label: "Aucun vol", emoji: "🚫" },
+  [AirTravelFrequency.ZERO]: {
+    label: "Moins d'1 vol par an",
+    shortLabel: "< 1",
+    emoji: "🚫",
+  },
   [AirTravelFrequency.FROM_1_TO_3]: {
     label: "1 à 3 vols par an",
+    shortLabel: "1-3",
     emoji: "✈️",
   },
-  [AirTravelFrequency.ABOVE_3]: { label: "Plus de 3 vols par an", emoji: "🛫" },
+  [AirTravelFrequency.ABOVE_3]: {
+    label: "Plus de 3 vols par an",
+    shortLabel: "> 3",
+    emoji: "🛫",
+  },
 };
 
 const HEAT_SOURCE_LABELS: Record<HeatSource, UsageLabel> = {
-  [HeatSource.ELECTRICITY]: { label: "Électricité", emoji: "🔌" },
-  [HeatSource.GAZ]: { label: "Gaz", emoji: "🔥" },
-  [HeatSource.OIL]: { label: "Fioul", emoji: "🛢️" },
+  [HeatSource.ELECTRICITY]: {
+    label: "Élec, bois, réseau de chaleur",
+    shortLabel: "Élec, bois...",
+    emoji: "🔌",
+  },
+  [HeatSource.GAZ]: { label: "Gaz", shortLabel: "Gaz", emoji: "🔥" },
+  [HeatSource.OIL]: { label: "Fioul", shortLabel: "Fioul", emoji: "🛢️" },
 };
 
 const USAGE_LABELS: Record<UsageField, Record<string, UsageLabel>> = {
@@ -77,6 +132,7 @@ export type UsageDistributionResult = {
   data: {
     value: string;
     label: string;
+    shortLabel: string;
     emoji: string;
     count: number;
     percentage: number;

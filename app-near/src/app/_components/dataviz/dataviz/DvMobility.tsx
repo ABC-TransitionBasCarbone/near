@@ -2,8 +2,8 @@
 
 import React, { useEffect, useMemo, useRef } from "react";
 import * as d3 from "d3";
-import { ZoneSelection } from "@prisma/client";
 import { api } from "~/trpc/react";
+import { ZoneSelection } from "~/types/enums/zoneSelection";
 import {
   buildZoneCellKey,
   type MobilityType,

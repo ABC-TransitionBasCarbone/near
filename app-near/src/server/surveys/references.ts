@@ -27,9 +27,9 @@ import {
   VoluntaryWork,
   WishesChoices,
   YesNo,
-  ZoneSelection,
 } from "@prisma/client";
 import { TypeformType } from "~/types/Typeform";
+import { ZoneSelection } from "~/types/enums/zoneSelection";
 
 export const surveySUReferencesMapping: Record<string, string | boolean> = {
   // isNeighborhoodResident

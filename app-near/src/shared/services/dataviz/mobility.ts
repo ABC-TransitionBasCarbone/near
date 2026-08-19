@@ -1,4 +1,4 @@
-import { ZoneSelection } from "@prisma/client";
+import { ZoneSelection } from "~/types/enums/zoneSelection";
 
 export type MobilityType = "FOOT" | "BIKE" | "TRANS" | "CAR";
 

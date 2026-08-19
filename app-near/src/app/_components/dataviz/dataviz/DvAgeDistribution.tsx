@@ -5,6 +5,7 @@ import * as d3 from "d3";
 import { api } from "~/trpc/react";
 import { useSuBank } from "../hooks/useSuBank";
 import { useChartDimensions } from "../hooks/useChartDimensions";
+import { getD3Tooltip } from "../hooks/useD3Tooltip";
 
 interface DvAgeDistributionProps {
   selectedSus?: number[];
@@ -36,6 +37,7 @@ const DvAgeDistribution: React.FC<DvAgeDistributionProps> = ({
 
     const svg = d3.select(svgRef.current);
     svg.selectAll("*").remove();
+    const tooltip = getD3Tooltip(document.body);
     const fallbackWidth = 400;
     const fallbackHeight = 200;
 
@@ -48,14 +50,12 @@ const DvAgeDistribution: React.FC<DvAgeDistributionProps> = ({
     const chartWidth =
       dimensions.width - dimensions.margins.left - dimensions.margins.right;
     const chartHeight =
-      dimensions.height -
-      dimensions.margins.top * 2 -
-      dimensions.margins.bottom * 2;
+      dimensions.height - dimensions.margins.top - dimensions.margins.bottom;
 
     svg
-      .attr("width", chartWidth)
-      .attr("height", chartHeight)
-      .attr("viewBox", `0 0 ${chartWidth} ${chartHeight}`)
+      .attr("width", dimensions.width)
+      .attr("height", dimensions.height)
+      .attr("viewBox", `0 0 ${dimensions.width} ${dimensions.height}`)
       .attr("preserveAspectRatio", "xMidYMid meet");
 
     const g = svg.append("g").attr(
@@ -120,19 +120,6 @@ const DvAgeDistribution: React.FC<DvAgeDistributionProps> = ({
       .attr("stroke-width", 2)
       .style("cursor", "pointer")
       .on("mouseover", function (event: MouseEvent, d) {
-        const tooltip = d3
-          .select("body")
-          .append("div")
-          .attr("class", "tooltip")
-          .style("position", "absolute")
-          .style("background", "rgba(0,0,0,0.8)")
-          .style("color", "white")
-          .style("padding", "8px")
-          .style("border-radius", "4px")
-          .style("font-size", "12px")
-          .style("pointer-events", "none")
-          .style("z-index", "9999");
-
         tooltip
           .html(
             `
@@ -141,7 +128,8 @@ const DvAgeDistribution: React.FC<DvAgeDistributionProps> = ({
         `,
           )
           .style("left", `${event.pageX + 10}px`)
-          .style("top", `${event.pageY - 10}px`);
+          .style("top", `${event.pageY - 10}px`)
+          .style("opacity", 1);
 
         d3.select(this)
           .attr("r", 7)
@@ -149,7 +137,7 @@ const DvAgeDistribution: React.FC<DvAgeDistributionProps> = ({
           .attr("stroke-width", 3);
       })
       .on("mouseout", function () {
-        d3.selectAll(".tooltip").remove();
+        tooltip.style("opacity", 0);
 
         d3.select(this)
           .attr("r", 5)

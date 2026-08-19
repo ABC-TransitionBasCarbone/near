@@ -25,9 +25,9 @@ import {
   VoluntaryWork,
   WishesChoices,
   YesNo,
-  ZoneSelection,
   type WayOfLifeAnswer,
 } from "@prisma/client";
+import { ZoneSelection } from "~/types/enums/zoneSelection";
 import { faker } from "@faker-js/faker";
 import { type BuilderWayOfLifeAnswer } from "~/types/WayOfLifeAnswer";
 
