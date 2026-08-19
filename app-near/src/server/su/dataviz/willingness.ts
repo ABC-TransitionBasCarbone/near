@@ -1,5 +1,7 @@
 import { WishesChoices } from "@prisma/client";
 import { db } from "~/server/db";
+import { toPercentage } from "~/shared/services/dataviz/percentage";
+import { resolveSuId, getWeightedSus } from "~/server/su/dataviz/suSelection";
 
 type WillingnessField =
   | "wantToReduceCarUsage"
@@ -45,9 +47,6 @@ export type WillingnessResult = {
   data: WillingnessQuestionResult[];
   isNeighborhood: boolean;
 };
-
-const toPercentage = (count: number, total: number) =>
-  total > 0 ? Math.round((count / total) * 1000) / 10 : 0;
 
 const countByField = (
   answers: Record<WillingnessField, WishesChoices>[],
@@ -101,15 +100,11 @@ export const getWillingness = async (
   surveyId: number,
   selectedSus?: number[],
 ): Promise<WillingnessResult> => {
-  const isNeighborhood = selectedSus?.length !== 1;
+  const { isNeighborhood, suId } = await resolveSuId(surveyId, selectedSus);
 
   if (!isNeighborhood) {
-    const su = await db.suData.findFirst({
-      where: { surveyId, su: selectedSus[0] },
-      select: { id: true },
-    });
     const answers = await db.wayOfLifeAnswer.findMany({
-      where: { surveyId, suId: su?.id },
+      where: { surveyId, suId },
       select: WILLINGNESS_SELECT,
     });
     return {
@@ -119,10 +114,7 @@ export const getWillingness = async (
   }
 
   // Neighborhood view: population-weighted average of each SU's own counts.
-  const sus = await db.suData.findMany({
-    where: { surveyId },
-    select: { id: true, popPercentage: true },
-  });
+  const weightedSus = await getWeightedSus(surveyId);
 
   const weighted = Object.fromEntries(
     Object.keys(QUESTIONS).map((field) => [
@@ -131,9 +123,7 @@ export const getWillingness = async (
     ]),
   ) as Record<WillingnessField, Record<WishesChoices, number>>;
 
-  for (const su of sus) {
-    const weight = su.popPercentage / 100;
-    if (weight <= 0) continue;
+  for (const su of weightedSus) {
     const answers = await db.wayOfLifeAnswer.findMany({
       where: { surveyId, suId: su.id },
       select: WILLINGNESS_SELECT,
@@ -142,7 +132,7 @@ export const getWillingness = async (
     const suCounts = countByField(answers);
     for (const field of Object.keys(QUESTIONS) as WillingnessField[]) {
       for (const choice of Object.values(WishesChoices) as WishesChoices[]) {
-        weighted[field][choice] += suCounts[field][choice] * weight;
+        weighted[field][choice] += suCounts[field][choice] * su.weight;
       }
     }
   }

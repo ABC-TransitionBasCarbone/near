@@ -3,18 +3,13 @@
 import React from "react";
 import { api } from "~/trpc/react";
 import type { SatisfactionQuestionResult } from "~/server/su/dataviz/satisfactionDistribution";
+import { YES_NO_COLORS } from "~/shared/services/dataviz/satisfaction";
 import PieChart, { type PieSlice } from "../../_ui/PieChart";
 
 type Props = { selectedSus?: number[] };
 
 const CARD_SIZE = 150;
 const MARGIN = 10;
-
-const SLICE_COLOR: Record<string, string> = {
-  NO: "#ffcdd2",
-  DONT_KNOW: "#e0e0e0",
-  YES: "#c8e6c9",
-};
 
 const getEmojiCount = (str: string): number => {
   try {
@@ -42,7 +37,7 @@ const EmdvPieCard: React.FC<{ question: SatisfactionQuestionResult }> = ({
     key: r.choice,
     label: r.label,
     value: r.percentage,
-    color: SLICE_COLOR[r.choice] ?? "#e0e0e0",
+    color: YES_NO_COLORS[r.choice],
   }));
 
   return (

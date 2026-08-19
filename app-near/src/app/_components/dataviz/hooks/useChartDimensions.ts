@@ -2,8 +2,6 @@
 
 import { useEffect, useState } from "react";
 
-// Tracks the width/height of a container div via ResizeObserver, replacing the
-// window-resize-listener + manual re-measure pattern duplicated across every Dv* chart.
 export const useChartDimensions = () => {
   const [container, setContainer] = useState<HTMLDivElement | null>(null);
   const [width, setWidth] = useState<number>();

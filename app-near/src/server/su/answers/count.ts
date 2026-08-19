@@ -1,5 +1,6 @@
 import { db } from "../../db";
 import { type CategoryStat, enumValueToCategoryStat } from "~/types/SuAnswer";
+import { type SuAnswerCategoryField } from "~/shared/services/dataviz/suAnswerCategory";
 
 export const countAnswers = async (surveyId: number): Promise<number> => {
   return db.suAnswer.count({ where: { surveyId } });
@@ -7,7 +8,7 @@ export const countAnswers = async (surveyId: number): Promise<number> => {
 
 export const countAnswersByCategories = async (
   surveyId: number,
-  category: "ageCategory" | "gender" | "professionalCategory",
+  category: SuAnswerCategoryField,
 ) => {
   const result = await db.suAnswer.groupBy({
     by: [category],

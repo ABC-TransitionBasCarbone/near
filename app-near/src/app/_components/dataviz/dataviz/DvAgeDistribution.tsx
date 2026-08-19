@@ -35,8 +35,7 @@ const DvAgeDistribution: React.FC<DvAgeDistributionProps> = ({
     if (!data || data.length === 0 || !svgRef.current) return;
 
     const svg = d3.select(svgRef.current);
-    svg.selectAll("*").remove(); // Clear previous content
-
+    svg.selectAll("*").remove();
     const fallbackWidth = 400;
     const fallbackHeight = 200;
 

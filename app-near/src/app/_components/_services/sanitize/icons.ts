@@ -1,7 +1,7 @@
 import { type IconValidationResult } from "~/types/Dataviz";
 
 const VALIDATION_CONFIG = {
-  maxLength: 10000, // Taille max d'un SVG (10KB)
+  maxLength: 10000,
   allowedTags: [
     "svg",
     "g",
@@ -81,14 +81,12 @@ export function validateAndSanitizeIcon(
     warnings: [],
   };
 
-  // Vérification de base
   if (!iconHtml || typeof iconHtml !== "string") {
     result.isValid = false;
     result.errors.push("Icône manquante ou invalide");
     return result;
   }
 
-  // Vérification de la taille
   if (iconHtml.length > VALIDATION_CONFIG.maxLength) {
     result.isValid = false;
     result.errors.push(
@@ -97,10 +95,8 @@ export function validateAndSanitizeIcon(
     return result;
   }
 
-  // Nettoyage initial
   let cleanIcon = iconHtml.trim();
 
-  // Vérification du format SVG
   if (!cleanIcon.toLowerCase().startsWith("<svg")) {
     result.isValid = false;
     result.errors.push("L'icône doit être un SVG valide commençant par <svg>");
@@ -113,7 +109,6 @@ export function validateAndSanitizeIcon(
     return result;
   }
 
-  // Vérification des balises interdites
   for (const forbiddenTag of VALIDATION_CONFIG.forbiddenTags) {
     const tagRegex = new RegExp(`<${forbiddenTag}[^>]*>`, "gi");
     if (tagRegex.test(cleanIcon)) {
@@ -122,7 +117,6 @@ export function validateAndSanitizeIcon(
     }
   }
 
-  // Vérification des attributs d'événements
   for (const forbiddenAttr of VALIDATION_CONFIG.forbiddenAttributes) {
     const attrRegex = new RegExp(`${forbiddenAttr}\\s*=`, "gi");
     if (attrRegex.test(cleanIcon)) {
@@ -131,7 +125,6 @@ export function validateAndSanitizeIcon(
     }
   }
 
-  // Vérification des protocoles dangereux
   for (const protocol of VALIDATION_CONFIG.forbiddenProtocols) {
     if (cleanIcon.toLowerCase().includes(protocol)) {
       result.isValid = false;
@@ -139,7 +132,6 @@ export function validateAndSanitizeIcon(
     }
   }
 
-  // Vérification des URLs suspectes
   const urlRegex = /(?:href|src|xlink:href|action)\s*=\s*["']([^"']+)["']/gi;
   let match;
   while ((match = urlRegex.exec(cleanIcon)) !== null) {
@@ -149,15 +141,11 @@ export function validateAndSanitizeIcon(
     }
   }
 
-  // Nettoyage des commentaires HTML (peuvent contenir du code malveillant)
   cleanIcon = cleanIcon.replace(/<!--[\s\S]*?-->/g, "");
 
-  // Nettoyage des espaces multiples
   cleanIcon = cleanIcon.replace(/\s+/g, " ").trim();
 
-  // Validation finale du XML/SVG
   try {
-    // Test basique de parsing XML
     if (typeof DOMParser !== "undefined") {
       const parser = new DOMParser();
       const doc = parser.parseFromString(cleanIcon, "image/svg+xml");
@@ -171,7 +159,6 @@ export function validateAndSanitizeIcon(
     result.warnings.push("Impossible de valider le XML côté serveur");
   }
 
-  // Si tout est valide, retourner l'icône nettoyée
   if (result.isValid && result.errors.length === 0) {
     result.sanitizedIcon = cleanIcon;
   } else {

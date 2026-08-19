@@ -1,13 +1,24 @@
-import { type TransportMode, type TransportTime } from "@prisma/client";
+import {
+  TransportMode,
+  TransportTime,
+  type ZoneSelection,
+} from "@prisma/client";
 import { db } from "~/server/db";
+import {
+  buildZoneCellKey,
+  ZONE_SELECTIONS,
+  type MobilityType,
+  type ZoneProximity,
+} from "~/shared/services/dataviz/mobility";
+import { resolveSuId, getWeightedSus } from "~/server/su/dataviz/suSelection";
 
-// Trips per week, used to weight each purpose in the zone distribution.
+export type { MobilityType };
+
 const BASE_WEIGHT_WORK = 5;
 const BASE_WEIGHT_HOBBY = 1.2;
 const BASE_WEIGHT_FOOD = 1;
 
-type TripCategory = "A" | "B" | "NSP";
-type MobilityType = "FOOT" | "BIKE" | "TRANS" | "CAR";
+type TripCategory = ZoneProximity | "NSP";
 
 export type MobilityTypeBreakdown = {
   pct: { FOOT: number; BIKE: number; TRANS: number; CAR: number };
@@ -23,20 +34,20 @@ export type ZoneCellBreakdown = {
 export type ZoneDistribution = Record<string, ZoneCellBreakdown>;
 export type MobilityResult = { zoneDistribution: ZoneDistribution };
 
-/**
- * Classifies a trip into A/B/NSP from its mode and duration:
- * <10min is always A; slow modes (walk/bike) stay A up to 20min; everything
- * else, or an unset mode/time, is B/NSP.
- */
 export const classifyTrip = (
   mode: TransportMode | null | undefined,
   time: TransportTime | null | undefined,
 ): TripCategory => {
   if (!mode || !time) return "NSP";
-  if (mode === "NONE_I_DONT_MOVE") return "NSP";
-  if (time === "LESS_THAN_10_MIN") return "A";
-  const slowModes = new Set(["WALKING", "PERSONAL_BICYCLE", "SHARED_BICYCLE"]);
-  if (time === "BETWEEN_10_AND_20_MIN" && slowModes.has(mode)) return "A";
+  if (mode === TransportMode.NONE_I_DONT_MOVE) return "NSP";
+  if (time === TransportTime.LESS_THAN_10_MIN) return "A";
+  const slowModes = new Set<TransportMode>([
+    TransportMode.WALKING,
+    TransportMode.PERSONAL_BICYCLE,
+    TransportMode.SHARED_BICYCLE,
+  ]);
+  if (time === TransportTime.BETWEEN_10_AND_20_MIN && slowModes.has(mode))
+    return "A";
   return "B";
 };
 
@@ -44,28 +55,28 @@ export const classifyMobilityType = (
   mode: TransportMode | null | undefined,
 ): MobilityType | null => {
   if (!mode) return null;
-  if (mode === "WALKING") return "FOOT";
-  if (mode === "PERSONAL_BICYCLE" || mode === "SHARED_BICYCLE") return "BIKE";
-  if (mode === "PUBLIC_TRANSPORT") return "TRANS";
-  if (mode === "CAR" || mode === "ELECTRIC_CAR" || mode === "TAXI_VTC")
+  if (mode === TransportMode.WALKING) return "FOOT";
+  if (
+    mode === TransportMode.PERSONAL_BICYCLE ||
+    mode === TransportMode.SHARED_BICYCLE
+  )
+    return "BIKE";
+  if (mode === TransportMode.PUBLIC_TRANSPORT) return "TRANS";
+  if (
+    mode === TransportMode.CAR ||
+    mode === TransportMode.ELECTRIC_CAR ||
+    mode === TransportMode.TAXI_VTC
+  )
     return "CAR";
-  return null; // NONE_I_DONT_MOVE + unknown
+  return null;
 };
 
-const QUARTIER_ZONE_KEY = "ZONE_PORTE_ORLEANS";
-const KNOWN_ZONES = new Set([
-  "ZONE_PORTE_ORLEANS",
-  "ZONE_A",
-  "ZONE_B",
-  "ZONE_C",
-  "ZONE_D",
-]);
+const KNOWN_ZONES = new Set<string>(ZONE_SELECTIONS);
 
 const getCellKey = (zone: string, category: TripCategory): string | null => {
   if (category === "NSP") return null;
   if (!KNOWN_ZONES.has(zone)) return null;
-  if (zone === QUARTIER_ZONE_KEY) return QUARTIER_ZONE_KEY;
-  return `${zone}_${category}`;
+  return buildZoneCellKey(zone as ZoneSelection, category);
 };
 
 type MobilityAnswer = {
@@ -240,30 +251,20 @@ export const getMobility = async (
   surveyId: number,
   selectedSus?: number[],
 ): Promise<MobilityResult> => {
-  const isNeighborhood = selectedSus?.length !== 1;
+  const { isNeighborhood, suId } = await resolveSuId(surveyId, selectedSus);
 
   if (!isNeighborhood) {
-    const su = await db.suData.findFirst({
-      where: { surveyId, su: selectedSus[0] },
-      select: { id: true },
-    });
     const answers = await db.wayOfLifeAnswer.findMany({
-      where: { surveyId, suId: su?.id },
+      where: { surveyId, suId },
       select: MOBILITY_SELECT,
     });
     return { zoneDistribution: buildZoneDistribution(toEntries(answers)) };
   }
 
-  // Neighborhood view: population-weighted average of each SU's own zone distribution.
-  const sus = await db.suData.findMany({
-    where: { surveyId },
-    select: { id: true, popPercentage: true },
-  });
+  const weightedSus = await getWeightedSus(surveyId);
 
   const perSu: { zoneDistribution: ZoneDistribution; weight: number }[] = [];
-  for (const su of sus) {
-    const weight = su.popPercentage / 100;
-    if (weight <= 0) continue;
+  for (const su of weightedSus) {
     const answers = await db.wayOfLifeAnswer.findMany({
       where: { surveyId, suId: su.id },
       select: MOBILITY_SELECT,
@@ -271,7 +272,7 @@ export const getMobility = async (
     if (answers.length === 0) continue;
     perSu.push({
       zoneDistribution: buildZoneDistribution(toEntries(answers)),
-      weight,
+      weight: su.weight,
     });
   }
 

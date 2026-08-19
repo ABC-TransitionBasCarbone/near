@@ -18,7 +18,6 @@ describe("getUsageDistribution", () => {
       data: { surveyId: survey.id, su: 1, popPercentage: 100, barycenter: {} },
     });
 
-    // Every response picks CAR: groupBy alone would return a single row, not three.
     await db.suAnswer.createMany({
       data: [
         buildSuAnswer(survey.id, {

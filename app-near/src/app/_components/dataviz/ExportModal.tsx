@@ -34,7 +34,7 @@ const ExportModal: React.FC<ExportModalProps> = ({
       if (!blob) return;
       const url = URL.createObjectURL(blob);
       const link = document.createElement("a");
-      const ts = new Date().toISOString().slice(0, 10); // YYYY-MM-DD
+      const ts = new Date().toISOString().slice(0, 10);
       const parts = ["near-dataviz"];
       if (suLabel) parts.push(slugify(suLabel));
       if (boardName) parts.push(slugify(boardName));
@@ -73,7 +73,6 @@ const ExportModal: React.FC<ExportModalProps> = ({
         aria-modal="true"
         aria-label="Exporter la visualisation"
       >
-        {/* Header */}
         <div className="flex items-center justify-between border-b border-grayLight px-5 py-4">
           <div className="flex flex-col">
             <span className="font-semibold text-black">

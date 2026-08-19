@@ -10,18 +10,13 @@ import type {
   TestimonyNode,
   TestimonyLink,
 } from "~/server/su/dataviz/testimonyNetwork";
+import { TESTIMONY_SUBCATEGORIES } from "~/shared/services/dataviz/testimony";
 
-// D3 event interfaces for better type safety
 interface D3ZoomEvent {
   transform: ZoomTransform;
 }
 
-// (drag event typing handled via d3.D3DragEvent in callbacks to avoid TS friction)
-
-// Types
-// -----
 type NodeDatum = TestimonyNode & {
-  // Additional D3 properties for positioning
   x?: number;
   y?: number;
   fx?: number | null;
@@ -32,26 +27,14 @@ type NodeDatum = TestimonyNode & {
 
 type LinkDatum = TestimonyLink;
 
-const SUBCATEGORY_LABELS: Record<string, string> = {
-  Food: "Alimentation",
-  Housing: "Logement",
-  Politics: "Participation citoyenne",
-  Solidarity: "Solidarité",
-  NghLife: "Vie de quartier",
-  Parks: "Parcs et espaces verts",
-  Shopping: "Réparation / Shopping",
-  Services: "Services",
-  Mobility: "Mobilité",
-  General: "Général",
-};
-
 const labelForSubcategory = (code?: string): string => {
   if (!code) return "Catégorie";
-  return SUBCATEGORY_LABELS[code] ?? code;
+  return (
+    TESTIMONY_SUBCATEGORIES[code as keyof typeof TESTIMONY_SUBCATEGORIES]
+      ?.label ?? code
+  );
 };
 
-// Modal component
-// ---------------
 type ModalProps = {
   open: boolean;
   onClose: () => void;
@@ -67,8 +50,7 @@ const Modal: React.FC<ModalProps> = ({ open, onClose, node }) => {
     return () => window.removeEventListener("keydown", onKey);
   }, [open, onClose]);
 
-  // Card sizing
-  const cardWidth = 384; // ~w-96
+  const cardWidth = 384;
   const cardHeight = 560;
   const illustrationHeight = Math.round(cardHeight / 3);
 
@@ -127,7 +109,6 @@ const Modal: React.FC<ModalProps> = ({ open, onClose, node }) => {
           backgroundColor: bgColor,
         }}
       >
-        {/* Top bar */}
         <div className="flex items-center justify-between px-5 py-3">
           <div className="flex items-center gap-2 text-sm text-white">
             {isParent && <span className="text-xl">{node.emoji}</span>}
@@ -149,7 +130,6 @@ const Modal: React.FC<ModalProps> = ({ open, onClose, node }) => {
           </button>
         </div>
 
-        {/* Illustration placeholder*/}
         <div
           className="mx-5 mt-4 flex items-center justify-center rounded-lg border border-dashed border-white bg-grayExtraLight text-xs text-gray"
           style={{ height: illustrationHeight }}
@@ -157,9 +137,7 @@ const Modal: React.FC<ModalProps> = ({ open, onClose, node }) => {
           Illustration
         </div>
 
-        {/* Main */}
         <div className="h-[calc(100%-theme(spacing.12)-theme(spacing.4)-theme(spacing.5)-theme(spacing.5))] overflow-y-auto px-5 pb-5 pt-4">
-          {/* Testimony */}
           {isChild && node.testimony && (
             <div className="mb-4">
               <div className="mb-1 text-xs tracking-wide text-white">
@@ -175,7 +153,6 @@ const Modal: React.FC<ModalProps> = ({ open, onClose, node }) => {
             </div>
           )}
 
-          {/* Parent info si témoignage */}
           {isParent && (
             <div className="mb-4">
               <div className="mb-1 text-xs uppercase tracking-wide text-gray">
@@ -193,8 +170,6 @@ const Modal: React.FC<ModalProps> = ({ open, onClose, node }) => {
   );
 };
 
-// D3 Force-Directed Graph Component
-// ---------------------------------
 interface DvTestimonyNetworkProps {
   selectedSus?: number[]; //
 }
@@ -215,7 +190,6 @@ const DvTestimonyNetwork: React.FC<DvTestimonyNetworkProps> = ({
     refetch,
   } = api.suDataviz.getTestimonyNetwork.useQuery({ selectedSus });
 
-  // colors
   const {
     colorMain: mainColor,
     colorLight1,
@@ -223,7 +197,6 @@ const DvTestimonyNetwork: React.FC<DvTestimonyNetworkProps> = ({
   } = useSuBank(selectedSus);
   const { colorMain: quartierMainColor } = useSuBank();
 
-  // Consistance couleurs par Su pour les Nodes dans la vue quartier
   const { data: allSus } = api.suDataviz.getSuInfo.useQuery();
   const suColorMap = useMemo(() => {
     const map: Record<number, string> = {};
@@ -237,7 +210,6 @@ const DvTestimonyNetwork: React.FC<DvTestimonyNetworkProps> = ({
     return map;
   }, [networkData?.isNeighborhood, allSus, nodes]);
 
-  // Sync fetched data into local D3-mutable state
   useEffect(() => {
     if (!networkData) return;
     setNodes(networkData.nodes.map((node) => ({ ...node })));
@@ -263,28 +235,23 @@ const DvTestimonyNetwork: React.FC<DvTestimonyNetworkProps> = ({
   useEffect(() => {
     if (!svgRef.current) return;
 
-    // fallback dimensions
     const fallbackWidth = 960;
     const fallbackHeight = 600;
 
-    // Dimensions
     const dimensions = {
       width: width ?? fallbackWidth,
       height: height ?? fallbackHeight,
       margins: { top: 20, right: 20, bottom: 20, left: 20 },
     };
 
-    // deep copy / mutating props
     const nodesCopy = nodes.map((d) => ({ ...d }));
     const linksCopy = links.map((d) => ({ ...d }));
 
     const svg = d3.select(svgRef.current);
-    svg.selectAll("*").remove(); // clear before redraw
+    svg.selectAll("*").remove();
 
-    // Set SVG dimensions
     svg.attr("width", dimensions.width).attr("height", dimensions.height - 80);
 
-    // arrowheads
     const defs = svg.append("defs");
     defs
       .append("marker")
@@ -299,10 +266,8 @@ const DvTestimonyNetwork: React.FC<DvTestimonyNetworkProps> = ({
       .attr("d", "M0,-5L10,0L0,5")
       .attr("fill", colorLight3);
 
-    // container for zoom
     const g = svg.append("g").attr("class", "g-zoom-root");
 
-    // zoom behavior
     const zoom = d3
       .zoom<SVGSVGElement, unknown>()
       .scaleExtent([0.1, 8])
@@ -312,13 +277,11 @@ const DvTestimonyNetwork: React.FC<DvTestimonyNetworkProps> = ({
 
     svg.call(zoom);
 
-    // Prepare link force with proper id accessor and safe cast to Force<NodeDatum, undefined>
     const linkForce = d3
       .forceLink<NodeDatum, LinkDatum>(linksCopy)
       .id((d: NodeDatum) => d.id)
       .distance(150) as unknown as d3.Force<NodeDatum, undefined>;
 
-    // Create force simulation early so drag handlers can reference it
     const simulation = d3
       .forceSimulation<NodeDatum>(nodesCopy)
       .force("link", linkForce)
@@ -329,7 +292,6 @@ const DvTestimonyNetwork: React.FC<DvTestimonyNetworkProps> = ({
       )
       .force("collision", d3.forceCollide().radius(50));
 
-    // Build adjacency map for hover highlighting
     const neighborMap = new Map<string, Set<string>>();
     type D3Linkish = { source: unknown; target: unknown };
     const hasId = (x: unknown): x is { id: string | number } =>
@@ -353,7 +315,6 @@ const DvTestimonyNetwork: React.FC<DvTestimonyNetworkProps> = ({
       }
     });
 
-    // link lines
     const link = g
       .append("g")
       .attr("class", "links")
@@ -365,7 +326,6 @@ const DvTestimonyNetwork: React.FC<DvTestimonyNetworkProps> = ({
       .attr("stroke-width", 1.5)
       .attr("marker-end", "url(#arrow)");
 
-    // node groups
     const node = g
       .append("g")
       .attr("class", "nodes")
@@ -427,14 +387,12 @@ const DvTestimonyNetwork: React.FC<DvTestimonyNetworkProps> = ({
         link.attr("stroke-opacity", 0.6);
       })
       .on("click", function (event: MouseEvent, d: NodeDatum) {
-        // Stop propagation to prevent the SVG background click from closing the modal immediately
         if (typeof event.stopPropagation === "function")
           event.stopPropagation();
         setSelectedNode(d);
         setIsModalOpen(true);
       });
 
-    // circles
     node
       .append("circle")
       .attr("r", (d) => (d.type === "parent" ? 40 : 14))
@@ -450,7 +408,6 @@ const DvTestimonyNetwork: React.FC<DvTestimonyNetworkProps> = ({
       .attr("stroke-width", 1.5)
       .attr("cursor", "pointer");
 
-    // Side labels for child nodes
     node
       .filter((d) => d.type !== "parent")
       .append("text")
@@ -461,7 +418,6 @@ const DvTestimonyNetwork: React.FC<DvTestimonyNetworkProps> = ({
       .attr("pointer-events", "auto")
       .attr("cursor", "pointer");
 
-    // Emoji inside parent nodes (ensure these are appended last for stacking)
     node
       .filter((d) => d.type === "parent")
       .append("text")
@@ -471,7 +427,6 @@ const DvTestimonyNetwork: React.FC<DvTestimonyNetworkProps> = ({
       .attr("pointer-events", "none")
       .text((d) => d.emoji ?? "💬");
 
-    // tick handler after elements exist
     type NodePosish = { x?: number; y?: number };
     const hasXY = (v: unknown): v is NodePosish =>
       typeof v === "object" && v !== null && ("x" in v || "y" in v);
@@ -496,13 +451,11 @@ const DvTestimonyNetwork: React.FC<DvTestimonyNetworkProps> = ({
       );
     });
 
-    // on click background to deselect
     svg.on("click", () => {
       setSelectedNode(null);
       setIsModalOpen(false);
     });
 
-    // cleanup on unmount
     return () => {
       simulation.stop();
       svg.selectAll("*").remove();

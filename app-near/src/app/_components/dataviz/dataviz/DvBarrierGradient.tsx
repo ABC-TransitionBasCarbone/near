@@ -2,7 +2,10 @@
 import React, { useRef, useEffect } from "react";
 import * as d3 from "d3";
 import { api } from "~/trpc/react";
-import type { BarrierField } from "~/server/su/dataviz/barriers";
+import {
+  type BarrierField,
+  NOT_CONCERNED_KEY,
+} from "~/shared/services/dataviz/barriers";
 import { useChartDimensions } from "../hooks/useChartDimensions";
 import { getD3Tooltip } from "../hooks/useD3Tooltip";
 
@@ -39,12 +42,10 @@ const DvBarrierGradient: React.FC<DvBarrierGradientProps> = ({
     const innerH = Math.max(140, height - margin.top - margin.bottom);
     svg.attr("width", width).attr("height", height);
 
-    // Groupe racine
     const root = svg
       .append("g")
       .attr("transform", `translate(${margin.left}, ${margin.top})`);
 
-    // Titre (au-dessus des barres) avec emoji de la question
     root
       .append("text")
       .attr("x", 0)
@@ -54,7 +55,6 @@ const DvBarrierGradient: React.FC<DvBarrierGradientProps> = ({
       .style("font-weight", "600")
       .text(`${data.emoji ? `${data.emoji} ` : ""}${data.title}`);
 
-    // Légende verticale à droite
     const legendWidth = Math.max(16, innerW * 0.08);
     const legendHeight = Math.min(innerH * 0.6, 150);
     const barsAreaW = innerW - (legendWidth + 16);
@@ -65,8 +65,14 @@ const DvBarrierGradient: React.FC<DvBarrierGradientProps> = ({
     const availableHForBars = innerH - 20 - explanatoryH; // -20 for title padding
     const maxBarsCount = Math.floor((availableHForBars + gap) / (rowH + gap));
 
-    type RowItem = { label: string; percentage: number; emoji: string };
+    type RowItem = {
+      key: string;
+      label: string;
+      percentage: number;
+      emoji: string;
+    };
     const allItems: RowItem[] = data.choices.map((c) => ({
+      key: c.key,
       label: c.label,
       percentage: c.percentage,
       emoji: c.emoji,
@@ -74,7 +80,7 @@ const DvBarrierGradient: React.FC<DvBarrierGradientProps> = ({
 
     const filtered = allItems.filter(
       (c) =>
-        c.percentage > 0 && c.percentage < 100 && c.label !== "Non concerné",
+        c.percentage > 0 && c.percentage < 100 && c.key !== NOT_CONCERNED_KEY,
     );
     const sorted = [...filtered].sort((a, b) => b.percentage - a.percentage);
     const visible = sorted.slice(0, maxBarsCount);
@@ -92,7 +98,6 @@ const DvBarrierGradient: React.FC<DvBarrierGradientProps> = ({
       return `rgb(${r}, ${g}, ${b})`;
     };
 
-    // Barres
     const rows = root
       .append("g")
       .attr("transform", `translate(0, ${yStart})`)
@@ -126,12 +131,10 @@ const DvBarrierGradient: React.FC<DvBarrierGradientProps> = ({
         tooltipSel.style("opacity", 0);
       });
 
-    // Masquer le tooltip quand la souris sort du SVG
     svg.on("mouseleave", () => {
       tooltipSel.style("opacity", 0);
     });
 
-    // Labels catégorie
     rows
       .append("text")
       .attr("x", 8)
@@ -142,7 +145,6 @@ const DvBarrierGradient: React.FC<DvBarrierGradientProps> = ({
       .style("fill", "#0f172a")
       .text((d: RowItem) => `${d.emoji} ${d.label}`);
 
-    // Pourcentage à droite
     rows
       .append("text")
       .attr("x", barsAreaW - 8)
@@ -154,7 +156,6 @@ const DvBarrierGradient: React.FC<DvBarrierGradientProps> = ({
       .style("font-weight", "700")
       .text((d: RowItem) => `${d.percentage.toFixed(1)}%`);
 
-    // Texte explicatif
     root
       .append("text")
       .attr("x", barsAreaW)
@@ -165,7 +166,6 @@ const DvBarrierGradient: React.FC<DvBarrierGradientProps> = ({
       .style("font-size", "11px")
       .text("(% des répondants ayant coché une réponse dans cette catégorie)");
 
-    // Légende verticale (100% en haut -> 0% en bas)
     const legendGroup = root
       .append("g")
       .attr(
@@ -195,7 +195,6 @@ const DvBarrierGradient: React.FC<DvBarrierGradientProps> = ({
       .style("filter", "drop-shadow(0 2px 4px rgba(0,0,0,0.1))")
       .style("fill", "url(#barrierLegendGradient)");
 
-    // Define gradient
     const defs = svg.append("defs");
     const lg = defs
       .append("linearGradient")
@@ -245,7 +244,7 @@ const DvBarrierGradient: React.FC<DvBarrierGradientProps> = ({
   }
 
   const srItems = data.choices
-    .filter((c) => c.percentage > 0 && c.label !== "Non concerné")
+    .filter((c) => c.percentage > 0 && c.key !== NOT_CONCERNED_KEY)
     .slice()
     .sort((a, b) => b.percentage - a.percentage);
 

@@ -206,7 +206,6 @@ const DvCarbonSankey: React.FC<Props> = ({ selectedSus }) => {
       .sort((a, b) => b.value - a.value);
   }, [payload]);
 
-  // Render
   useEffect(() => {
     if (!svgRef.current) return;
     const svg = d3.select(svgRef.current);

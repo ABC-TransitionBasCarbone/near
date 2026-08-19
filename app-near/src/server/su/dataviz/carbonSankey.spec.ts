@@ -16,33 +16,23 @@ describe("computeNodeValue", () => {
     const values = { ...zeroValues(), transportationCar: 42 };
 
     const result = computeNodeValue(
-      {
-        id: "transportationCar",
-        name: "Voiture",
-        emoji: "🚗",
-        field: "transportationCar",
-      },
+      { id: "transportationCar", name: "Voiture", emoji: "🚗" },
       values,
     );
 
     expect(result).toBe(42);
   });
 
-  it("should return 0 for a leaf node whose field isn't set", () => {
+  it("should return 0 for a leaf node whose value isn't set", () => {
     const result = computeNodeValue(
-      {
-        id: "transportationCar",
-        name: "Voiture",
-        emoji: "🚗",
-        field: "transportationCar",
-      },
+      { id: "transportationCar", name: "Voiture", emoji: "🚗" },
       zeroValues(),
     );
 
     expect(result).toBe(0);
   });
 
-  it("should sum children for a node that has them, ignoring its own field", () => {
+  it("should sum children for a node that has them, ignoring its own id", () => {
     const values = {
       ...zeroValues(),
       transportationCar: 10,
@@ -55,8 +45,8 @@ describe("computeNodeValue", () => {
         name: "Transport",
         emoji: "🚗",
         children: [
-          { id: "a", name: "a", emoji: "", field: "transportationCar" },
-          { id: "b", name: "b", emoji: "", field: "transportationPlane" },
+          { id: "transportationCar", name: "Voiture", emoji: "🚗" },
+          { id: "transportationPlane", name: "Avion", emoji: "✈️" },
         ],
       },
       values,
@@ -83,8 +73,8 @@ describe("computeNodeValue", () => {
             name: "Numérique",
             emoji: "",
             children: [
-              { id: "a", name: "a", emoji: "", field: "diversDigitalInternet" },
-              { id: "b", name: "b", emoji: "", field: "diversDigitalDevices" },
+              { id: "diversDigitalInternet", name: "Internet", emoji: "" },
+              { id: "diversDigitalDevices", name: "Devices", emoji: "" },
             ],
           },
         ],

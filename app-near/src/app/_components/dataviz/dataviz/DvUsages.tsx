@@ -3,6 +3,7 @@
 import React, { useEffect, useRef } from "react";
 import * as d3 from "d3";
 import { api } from "~/trpc/react";
+import { USAGE_FIELDS, USAGE_QUESTIONS } from "~/shared/services/dataviz/usage";
 import { useSuBank } from "../hooks/useSuBank";
 import { useChartDimensions } from "../hooks/useChartDimensions";
 
@@ -23,19 +24,6 @@ interface UsageQuestion {
   emoji: string;
   data: UsageData[];
 }
-
-const USAGE_QUESTIONS: { field: string; title: string; emoji: string }[] = [
-  { field: "meatFrequency", title: "Consommation de viande", emoji: "🥩" },
-  { field: "transportationMode", title: "Mode de transport", emoji: "🚗" },
-  { field: "digitalIntensity", title: "Intensité numérique", emoji: "📱" },
-  { field: "purchasingStrategy", title: "Stratégie d'achat", emoji: "🛍️" },
-  {
-    field: "airTravelFrequency",
-    title: "Fréquence de voyage aérien",
-    emoji: "✈️",
-  },
-  { field: "heatSource", title: "Source de chauffage", emoji: "🔥" },
-];
 
 const DvUsages: React.FC<DvUsagesProps> = ({ selectedSus }) => {
   const svgRef = useRef<SVGSVGElement>(null);
@@ -79,24 +67,21 @@ const DvUsages: React.FC<DvUsagesProps> = ({ selectedSus }) => {
   const loading = queries.some((q) => q.isLoading);
   const error = queries.some((q) => q.error);
 
-  const data: UsageQuestion[] = USAGE_QUESTIONS.map((question, i) => ({
-    title: question.title,
-    emoji: question.emoji,
+  const data: UsageQuestion[] = USAGE_FIELDS.map((field, i) => ({
+    title: USAGE_QUESTIONS[field].title,
+    emoji: USAGE_QUESTIONS[field].emoji,
     data: queries[i]?.data?.data ?? [],
   })).filter((question) => question.data.length > 0);
 
-  // D3 Violin Chart
   useEffect(() => {
     if (!data || data.length === 0 || !svgRef.current) return;
 
     const svg = d3.select(svgRef.current);
-    svg.selectAll("*").remove(); // Clear previous content
+    svg.selectAll("*").remove();
 
-    // fallback dimensions
     const fallbackWidth = 300;
     const fallbackHeight = 250;
 
-    // Dimensions (ResponsiveD3 pattern)
     const dimensions = {
       width: width ?? fallbackWidth,
       height: height ?? fallbackHeight,
@@ -108,7 +93,6 @@ const DvUsages: React.FC<DvUsagesProps> = ({ selectedSus }) => {
     dimensions.containerWidth = dimensions.width - dimensions.margins * 2;
     dimensions.containerHeight = dimensions.height - dimensions.margins * 2;
 
-    // Set SVG dimensions
     svg.attr("width", dimensions.width).attr("height", dimensions.height);
 
     const container = svg
@@ -119,7 +103,6 @@ const DvUsages: React.FC<DvUsagesProps> = ({ selectedSus }) => {
         `translate(${dimensions.margins}, ${dimensions.margins})`,
       );
 
-    // Add main title
     svg
       .append("text")
       .attr("x", dimensions.margins)
@@ -128,34 +111,31 @@ const DvUsages: React.FC<DvUsagesProps> = ({ selectedSus }) => {
       .style("fill", mainColor)
       .text("🔮 Habitudes de consommation");
 
-    // Calculate layout for each usage category
-    const titleHeight = 30; // Space for main title
-    const gapBetweenSections = 15; // Gap entre chaque section sous-titre + violin
+    const titleHeight = 30;
+    const gapBetweenSections = 15;
     const availableHeight =
       dimensions.containerHeight -
       titleHeight -
       gapBetweenSections * (data.length - 1);
     const categoryHeight = availableHeight / data.length;
-    const subtitleHeight = 25; // Espace pour le sous-titre
-    const emojiHeight = 15; // Hauteur approximative des emojis (font-size: 12px + marge)
-    const percentageHeight = 12; // Hauteur approximative des pourcentages (font-size: 10px + marge)
-    const spacingBetweenSubtitleAndViolin = 10 + emojiHeight; // Espace supplémentaire incluant la taille des emojis
-    const spacingAfterViolin = percentageHeight + 10; // Espace après les violins pour % seulement (labels sur horizon)
+    const subtitleHeight = 25;
+    const emojiHeight = 15;
+    const percentageHeight = 12;
+    const spacingBetweenSubtitleAndViolin = 10 + emojiHeight;
+    const spacingAfterViolin = percentageHeight + 10;
     const violinAreaHeight =
       categoryHeight -
       subtitleHeight -
       spacingBetweenSubtitleAndViolin -
       spacingAfterViolin;
-    const violinWidth = dimensions.containerWidth * 0.8; // 80% of width for violin
+    const violinWidth = dimensions.containerWidth * 0.8;
     const violinStartX = (dimensions.containerWidth - violinWidth) / 2;
 
-    // Calcul max percentage pour toutes questions (échelle commune)
     const globalMaxPercentage =
       d3.max(
         data.flatMap((question) => question.data.map((d) => d.percentage)),
       ) ?? 100;
 
-    // violin chart pour chaque catégorie d'usage / question
     data.forEach((question, questionIndex) => {
       const categoryY =
         titleHeight + questionIndex * (categoryHeight + gapBetweenSections);
@@ -164,7 +144,6 @@ const DvUsages: React.FC<DvUsagesProps> = ({ selectedSus }) => {
         .attr("class", "usage-category")
         .attr("transform", `translate(0, ${categoryY})`);
 
-      // Sous-titres par question
       categoryGroup
         .append("text")
         .attr("x", dimensions.containerWidth / 2)
@@ -177,7 +156,6 @@ const DvUsages: React.FC<DvUsagesProps> = ({ selectedSus }) => {
         .style("dominant-baseline", "middle")
         .text(`${question.emoji} ${question.title}`);
 
-      // Attend 3 points de données pour le ventre/violon (gauche, centre, droite)
       const violinData = question.data.slice(0, 3);
       if (violinData.length !== 3) {
         return;
@@ -191,33 +169,26 @@ const DvUsages: React.FC<DvUsagesProps> = ({ selectedSus }) => {
           `translate(0, ${subtitleHeight + spacingBetweenSubtitleAndViolin})`,
         );
 
-      // Positions des segments
       const segmentSpacing = violinWidth / 2;
       const leftX = violinStartX;
       const centerX = violinStartX + segmentSpacing;
       const rightX = violinStartX + violinWidth;
 
-      // Utilise le max global pour l'échelle de hauteur
       const heightScale = d3
         .scaleLinear()
         .domain([0, globalMaxPercentage])
         .range([0, violinAreaHeight / 2]);
 
-      // Utils ligne d'horizon, non affichée, positionne les labels
       const horizonY = violinAreaHeight / 2;
 
-      // Calculate segment heights
       const leftHeight = heightScale(violinData[0]?.percentage ?? 0);
       const centerHeight = heightScale(violinData[1]?.percentage ?? 0);
       const rightHeight = heightScale(violinData[2]?.percentage ?? 0);
 
-      // Create violin shape using path with Bézier curves
       const violinPath = d3.path();
 
-      // Début top-left
       violinPath.moveTo(leftX, horizonY - leftHeight);
 
-      // Bézier vers top-center
       violinPath.bezierCurveTo(
         leftX + segmentSpacing * 0.3,
         horizonY - leftHeight,
@@ -227,7 +198,6 @@ const DvUsages: React.FC<DvUsagesProps> = ({ selectedSus }) => {
         horizonY - centerHeight,
       );
 
-      // Bézier vers top-right
       violinPath.bezierCurveTo(
         centerX + segmentSpacing * 0.3,
         horizonY - centerHeight,
@@ -237,10 +207,8 @@ const DvUsages: React.FC<DvUsagesProps> = ({ selectedSus }) => {
         horizonY - rightHeight,
       );
 
-      // Segment bas droite
       violinPath.lineTo(rightX, horizonY + rightHeight);
 
-      // Bézier vers bottom-center
       violinPath.bezierCurveTo(
         rightX - segmentSpacing * 0.3,
         horizonY + rightHeight,
@@ -250,7 +218,6 @@ const DvUsages: React.FC<DvUsagesProps> = ({ selectedSus }) => {
         horizonY + centerHeight,
       );
 
-      // Bézier vers bottom-left
       violinPath.bezierCurveTo(
         centerX - segmentSpacing * 0.3,
         horizonY + centerHeight,
@@ -260,10 +227,8 @@ const DvUsages: React.FC<DvUsagesProps> = ({ selectedSus }) => {
         horizonY + leftHeight,
       );
 
-      // Close path
       violinPath.closePath();
 
-      // violinShape à partir du path
       violinGroup
         .append("path")
         .attr("d", violinPath.toString())
@@ -272,19 +237,17 @@ const DvUsages: React.FC<DvUsagesProps> = ({ selectedSus }) => {
         .attr("stroke", darkColor1)
         .attr("stroke-width", 1);
 
-      // Segments verticaux + emojis + labels + pourcentages
       const segments = [
         { x: leftX, height: leftHeight, data: violinData[0] },
         { x: centerX, height: centerHeight, data: violinData[1] },
         { x: rightX, height: rightHeight, data: violinData[2] },
-      ].filter((segment) => segment.data); // Filter out undefined data
+      ].filter((segment) => segment.data);
 
       segments.forEach((segment) => {
         const segmentGroup = violinGroup
           .append("g")
           .attr("class", "segment-group");
 
-        // Utils lingne verticale au centre du segment (non affichée)
         segmentGroup
           .append("line")
           .attr("x1", segment.x)
@@ -293,11 +256,10 @@ const DvUsages: React.FC<DvUsagesProps> = ({ selectedSus }) => {
           .attr("y2", horizonY + segment.height)
           .attr("stroke", darkColor1)
           .attr("stroke-width", 2)
-          .attr("opacity", 0); // Masqué - seule l'aire est visible
+          .attr("opacity", 0);
 
         if (!segment.data) return;
 
-        // Emoji
         segmentGroup
           .append("text")
           .attr("x", segment.x)
@@ -306,7 +268,6 @@ const DvUsages: React.FC<DvUsagesProps> = ({ selectedSus }) => {
           .style("font-size", "12px")
           .text(segment.data.emoji);
 
-        // %
         segmentGroup
           .append("text")
           .attr("x", segment.x)
@@ -317,7 +278,6 @@ const DvUsages: React.FC<DvUsagesProps> = ({ selectedSus }) => {
           .style("fill", darkColor1)
           .text(`${segment.data.percentage.toFixed(0)}%`);
 
-        // Label
         segmentGroup
           .append("text")
           .attr("x", segment.x)

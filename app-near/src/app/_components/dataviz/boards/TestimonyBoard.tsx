@@ -1,5 +1,3 @@
-// Testimony Board - Network graph visualization for testimony network analysis
-
 import { type Board } from "~/types/Dataviz";
 import DvTestimonyNetwork from "../dataviz/DvTestimonyNetwork";
 

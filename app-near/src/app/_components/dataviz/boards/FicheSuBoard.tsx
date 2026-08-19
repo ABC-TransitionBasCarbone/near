@@ -1,5 +1,3 @@
-// Demographie Board - Age, CSP, genre des échantillons par SU + données INSEE pour le quartier
-
 import { type Board } from "~/types/Dataviz";
 import DvSuTitle from "../dataviz/DvSuTitle";
 import DvAgeDistribution from "../dataviz/DvAgeDistribution";
@@ -23,7 +21,6 @@ export const FicheSuBoard: Board = {
         <p className="mt-1 text-sm text-gray">{FicheSuBoard.description}</p>
       </header>
 
-      {/* <div className="board-grid grid flex-1 grid-cols-1 gap-4 md:grid-cols-2"> */}
       <div className="board-grid flex flex-col gap-4">
         <div className="flex flex-col gap-4 md:flex-row">
           <div className="dv-container title-dist h-[260px] min-w-0 rounded-lg border border-grayLight bg-white p-3 md:flex-1 md:basis-0">

@@ -4,9 +4,11 @@ import {
   categoryStatQuartierMap,
   enumValueToCategoryStat,
 } from "~/types/SuAnswer";
+import { type SuAnswerCategoryField } from "~/shared/services/dataviz/suAnswerCategory";
+import { toPercentage } from "~/shared/services/dataviz/percentage";
+import { resolveSuId } from "~/server/su/dataviz/suSelection";
 
-export type SuAnswerCategoryField =
-  "ageCategory" | "gender" | "professionalCategory";
+export type { SuAnswerCategoryField };
 
 const FIELD_CATEGORIES: Record<SuAnswerCategoryField, CategoryStat[]> = {
   ageCategory: [
@@ -69,30 +71,21 @@ export type SuAnswerDistributionResult = {
   totalResponses: number;
 };
 
-const toPercentage = (count: number, total: number) =>
-  total > 0 ? Math.round((count / total) * 1000) / 10 : 0;
-
 export const getSuAnswerDistribution = async (
   surveyId: number,
   field: SuAnswerCategoryField,
   selectedSus?: number[],
 ): Promise<SuAnswerDistributionResult> => {
   const categories = FIELD_CATEGORIES[field];
-  const isNeighborhood = selectedSus?.length !== 1;
+  const { isNeighborhood, suId } = await resolveSuId(surveyId, selectedSus);
 
   if (!isNeighborhood) {
-    const su = await db.suData.findFirst({
-      where: { surveyId, su: selectedSus[0] },
-      select: { id: true },
-    });
-
     const counts = await db.suAnswer.groupBy({
       by: [field],
-      where: { surveyId, suId: su?.id },
+      where: { surveyId, suId },
       _count: true,
     });
 
-    // professionalCategory has several raw values collapsing onto the same CategoryStat
     const totals = new Map<CategoryStat, number>();
     for (const c of counts) {
       const category = enumValueToCategoryStat[c[field]];

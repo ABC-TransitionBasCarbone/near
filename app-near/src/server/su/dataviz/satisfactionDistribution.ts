@@ -1,5 +1,13 @@
 import { YesNo, type WayOfLifeAnswer } from "@prisma/client";
 import { db } from "~/server/db";
+import {
+  type SatisfactionSubcategory,
+  SATISFACTION_SUBCATEGORIES,
+} from "~/shared/services/dataviz/satisfaction";
+import { toPercentage } from "~/shared/services/dataviz/percentage";
+import { resolveSuId } from "~/server/su/dataviz/suSelection";
+
+export type { SatisfactionSubcategory };
 
 type SatisfactionField = Extract<
   keyof WayOfLifeAnswer,
@@ -32,9 +40,6 @@ type SatisfactionField = Extract<
   | "wantToParticipateToCivicInitiatives"
 >;
 
-export type SatisfactionSubcategory =
-  "housing" | "mobility" | "food" | "services" | "nghLife" | "politics";
-
 const SUBCATEGORIES: Record<
   SatisfactionSubcategory,
   {
@@ -44,8 +49,7 @@ const SUBCATEGORIES: Record<
   }
 > = {
   housing: {
-    label: "Logement",
-    emoji: "🏠",
+    ...SATISFACTION_SUBCATEGORIES.housing,
     questions: [
       {
         field: "notColdHouse",
@@ -60,8 +64,7 @@ const SUBCATEGORIES: Record<
     ],
   },
   mobility: {
-    label: "Mobilité",
-    emoji: "🚌",
+    ...SATISFACTION_SUBCATEGORIES.mobility,
     questions: [
       {
         field: "easyPublicTransports",
@@ -96,8 +99,7 @@ const SUBCATEGORIES: Record<
     ],
   },
   food: {
-    label: "Alimentation",
-    emoji: "🍽️",
+    ...SATISFACTION_SUBCATEGORIES.food,
     questions: [
       {
         field: "neighborhoodOrganicMarketSatisfaction",
@@ -127,8 +129,7 @@ const SUBCATEGORIES: Record<
     ],
   },
   services: {
-    label: "Services",
-    emoji: "🏢",
+    ...SATISFACTION_SUBCATEGORIES.services,
     questions: [
       {
         field: "electronicRepairShopSatisfaction",
@@ -168,8 +169,7 @@ const SUBCATEGORIES: Record<
     ],
   },
   nghLife: {
-    label: "Vie de quartier",
-    emoji: "🏘️",
+    ...SATISFACTION_SUBCATEGORIES.nghLife,
     questions: [
       {
         field: "associativeActivity",
@@ -199,8 +199,7 @@ const SUBCATEGORIES: Record<
     ],
   },
   politics: {
-    label: "Politique",
-    emoji: "🏛️",
+    ...SATISFACTION_SUBCATEGORIES.politics,
     questions: [
       {
         field: "noInformationOnCitizenParticipation",
@@ -254,24 +253,12 @@ export type SatisfactionDistributionResult = {
   isNeighborhood: boolean;
 };
 
-const toPercentage = (count: number, total: number) =>
-  total > 0 ? Math.round((count / total) * 1000) / 10 : 0;
-
 export const getSatisfactionDistribution = async (
   surveyId: number,
   selectedSus?: number[],
   subcategory?: SatisfactionSubcategory,
 ): Promise<SatisfactionDistributionResult> => {
-  const isNeighborhood = selectedSus?.length !== 1;
-
-  let suId: number | undefined;
-  if (!isNeighborhood) {
-    const su = await db.suData.findFirst({
-      where: { surveyId, su: selectedSus[0] },
-      select: { id: true },
-    });
-    suId = su?.id;
-  }
+  const { isNeighborhood, suId } = await resolveSuId(surveyId, selectedSus);
 
   const answers = await db.wayOfLifeAnswer.findMany({
     where: isNeighborhood ? { surveyId } : { surveyId, suId },

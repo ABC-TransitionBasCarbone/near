@@ -1,5 +1,4 @@
 import {
-  type SuAnswer,
   MeatFrequency,
   TransportationMode,
   DigitalIntensity,
@@ -8,28 +7,15 @@ import {
   HeatSource,
 } from "@prisma/client";
 import { db } from "~/server/db";
+import {
+  type UsageField,
+  USAGE_QUESTIONS,
+} from "~/shared/services/dataviz/usage";
+import { toPercentage } from "~/shared/services/dataviz/percentage";
+import { resolveSuId } from "~/server/su/dataviz/suSelection";
 
-export type UsageField = Extract<
-  keyof SuAnswer,
-  | "meatFrequency"
-  | "transportationMode"
-  | "digitalIntensity"
-  | "purchasingStrategy"
-  | "airTravelFrequency"
-  | "heatSource"
->;
-
-export const USAGE_QUESTIONS: Record<
-  UsageField,
-  { title: string; emoji: string }
-> = {
-  meatFrequency: { title: "Consommation de viande", emoji: "🥩" },
-  transportationMode: { title: "Mode de transport", emoji: "🚗" },
-  digitalIntensity: { title: "Intensité numérique", emoji: "📱" },
-  purchasingStrategy: { title: "Stratégie d'achat", emoji: "🛍️" },
-  airTravelFrequency: { title: "Fréquence de voyage aérien", emoji: "✈️" },
-  heatSource: { title: "Source de chauffage", emoji: "🔥" },
-};
+export type { UsageField };
+export { USAGE_QUESTIONS };
 
 type UsageLabel = { label: string; emoji: string };
 
@@ -99,26 +85,12 @@ export type UsageDistributionResult = {
   totalResponses: number;
 };
 
-const toPercentage = (count: number, total: number) =>
-  total > 0 ? Math.round((count / total) * 1000) / 10 : 0;
-
-// Usage questions have no INSEE equivalent: the neighborhood view is simply the
-// aggregate over every SuAnswer of the survey, unfiltered by suId.
 export const getUsageDistribution = async (
   surveyId: number,
   field: UsageField,
   selectedSus?: number[],
 ): Promise<UsageDistributionResult> => {
-  const isNeighborhood = selectedSus?.length !== 1;
-
-  let suId: number | undefined;
-  if (!isNeighborhood) {
-    const su = await db.suData.findFirst({
-      where: { surveyId, su: selectedSus[0] },
-      select: { id: true },
-    });
-    suId = su?.id;
-  }
+  const { isNeighborhood, suId } = await resolveSuId(surveyId, selectedSus);
 
   const counts = await db.suAnswer.groupBy({
     by: [field],

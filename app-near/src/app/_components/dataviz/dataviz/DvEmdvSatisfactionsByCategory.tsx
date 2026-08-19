@@ -1,18 +1,14 @@
 "use client";
 
 import React, { useMemo } from "react";
-import { YesNo } from "@prisma/client";
 import { api } from "~/trpc/react";
-import type { SatisfactionSubcategory } from "~/server/su/dataviz/satisfactionDistribution";
+import {
+  type SatisfactionSubcategory,
+  YES_NO_COLORS,
+} from "~/shared/services/dataviz/satisfaction";
 import StackedBarList, { type StackedBarRow } from "../../_ui/StackedBarList";
 
 type Props = { selectedSus?: number[]; category?: SatisfactionSubcategory };
-
-const COLOR_BY_CHOICE: Record<YesNo, string> = {
-  [YesNo.NO]: "#ffcdd2",
-  [YesNo.DONT_KNOW]: "#f5f5f5",
-  [YesNo.YES]: "#c8e6c9",
-};
 
 const DvEmdvSatisfactionsByCategory: React.FC<Props> = ({
   selectedSus,
@@ -42,7 +38,7 @@ const DvEmdvSatisfactionsByCategory: React.FC<Props> = ({
           key: r.choice,
           label: r.label,
           percentage: r.percentage,
-          color: COLOR_BY_CHOICE[r.choice],
+          color: YES_NO_COLORS[r.choice],
         })),
       })),
     [questions],

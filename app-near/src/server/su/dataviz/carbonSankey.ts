@@ -1,5 +1,6 @@
 import { type CarbonFootprintAnswer } from "@prisma/client";
 import { db } from "~/server/db";
+import { resolveSuId, getWeightedSus } from "~/server/su/dataviz/suSelection";
 
 export type CarbonField = Extract<
   keyof CarbonFootprintAnswer,
@@ -32,70 +33,45 @@ export type CarbonField = Extract<
   | "servicesMarket"
 >;
 
-type CarbonNode = {
-  id: string;
-  name: string;
-  emoji: string;
-  field?: CarbonField;
-  children?: CarbonNode[];
-};
+type CarbonBranchId =
+  | "transportation"
+  | "alimentation"
+  | "logement"
+  | "divers"
+  | "diversDigital"
+  | "servicesSocietal";
 
-// Static equivalent of the source project's MetaCarbon.json node hierarchy
-// (is_node: true entries only — detail/helper fields are not individually shown).
+type CarbonNode =
+  | {
+      id: CarbonBranchId;
+      name: string;
+      emoji: string;
+      children: CarbonNode[];
+    }
+  | { id: CarbonField; name: string; emoji: string };
+
 const CARBON_TREE: CarbonNode[] = [
   {
     id: "transportation",
     name: "Transport",
     emoji: "🚗",
     children: [
-      {
-        id: "transportationCar",
-        name: "Voiture",
-        emoji: "🚗",
-        field: "transportationCar",
-      },
-      {
-        id: "transportationPlane",
-        name: "Avion",
-        emoji: "✈️",
-        field: "transportationPlane",
-      },
-      {
-        id: "transportationBicycle",
-        name: "2 roues",
-        emoji: "🛵",
-        field: "transportationBicycle",
-      },
+      { id: "transportationCar", name: "Voiture", emoji: "🚗" },
+      { id: "transportationPlane", name: "Avion", emoji: "✈️" },
+      { id: "transportationBicycle", name: "2 roues", emoji: "🛵" },
       {
         id: "transportationSoftMobility",
         name: "Marche, vélo, ...",
         emoji: "🚶‍♂️🚲🛴",
-        field: "transportationSoftMobility",
       },
-      {
-        id: "transportationTrain",
-        name: "Train",
-        emoji: "🚅",
-        field: "transportationTrain",
-      },
+      { id: "transportationTrain", name: "Train", emoji: "🚅" },
       {
         id: "transportationPublicTransport",
         name: "Transp. en commun",
         emoji: "🚏🚋",
-        field: "transportationPublicTransport",
       },
-      {
-        id: "transportationHollidays",
-        name: "Vacances",
-        emoji: "🏖️🚗",
-        field: "transportationHollidays",
-      },
-      {
-        id: "transportationFerry",
-        name: "Ferry",
-        emoji: "⛴️",
-        field: "transportationFerry",
-      },
+      { id: "transportationHollidays", name: "Vacances", emoji: "🏖️🚗" },
+      { id: "transportationFerry", name: "Ferry", emoji: "⛴️" },
     ],
   },
   {
@@ -107,32 +83,11 @@ const CARBON_TREE: CarbonNode[] = [
         id: "alimentationLunchDinner",
         name: "Plats (dont viande)",
         emoji: "🥩🥦",
-        field: "alimentationLunchDinner",
       },
-      {
-        id: "alimentationAnnualBreakfast",
-        name: "Petit dej'",
-        emoji: "🥐",
-        field: "alimentationAnnualBreakfast",
-      },
-      {
-        id: "alimentationDeforestation",
-        name: "Déforestation",
-        emoji: "🪵🪓",
-        field: "alimentationDeforestation",
-      },
-      {
-        id: "alimentationDrinks",
-        name: "Boissons",
-        emoji: "🥤🧃",
-        field: "alimentationDrinks",
-      },
-      {
-        id: "alimentationWaste",
-        name: "Déchets",
-        emoji: "🚮",
-        field: "alimentationWaste",
-      },
+      { id: "alimentationAnnualBreakfast", name: "Petit dej'", emoji: "🥐" },
+      { id: "alimentationDeforestation", name: "Déforestation", emoji: "🪵🪓" },
+      { id: "alimentationDrinks", name: "Boissons", emoji: "🥤🧃" },
+      { id: "alimentationWaste", name: "Déchets", emoji: "🚮" },
     ],
   },
   {
@@ -140,48 +95,13 @@ const CARBON_TREE: CarbonNode[] = [
     name: "Logement",
     emoji: "🏠",
     children: [
-      {
-        id: "logementConstruction",
-        name: "Construction",
-        emoji: "🏗️",
-        field: "logementConstruction",
-      },
-      {
-        id: "logementElectricity",
-        name: "Electricité",
-        emoji: "🔋⚡",
-        field: "logementElectricity",
-      },
-      {
-        id: "logementHeating",
-        name: "Chauffage",
-        emoji: "♨️🏠",
-        field: "logementHeating",
-      },
-      {
-        id: "logementAirConditioning",
-        name: "Climatisation",
-        emoji: "🌀🏠",
-        field: "logementAirConditioning",
-      },
-      {
-        id: "logementSwimmingPool",
-        name: "Piscine",
-        emoji: "🏊",
-        field: "logementSwimmingPool",
-      },
-      {
-        id: "logementOutdor",
-        name: "Jardin, terrasse",
-        emoji: "🌳🏡",
-        field: "logementOutdor",
-      },
-      {
-        id: "logementHollidays",
-        name: "Vacances",
-        emoji: "🏖️🏡",
-        field: "logementHollidays",
-      },
+      { id: "logementConstruction", name: "Construction", emoji: "🏗️" },
+      { id: "logementElectricity", name: "Electricité", emoji: "🔋⚡" },
+      { id: "logementHeating", name: "Chauffage", emoji: "♨️🏠" },
+      { id: "logementAirConditioning", name: "Climatisation", emoji: "🌀🏠" },
+      { id: "logementSwimmingPool", name: "Piscine", emoji: "🏊" },
+      { id: "logementOutdor", name: "Jardin, terrasse", emoji: "🌳🏡" },
+      { id: "logementHollidays", name: "Vacances", emoji: "🏖️🏡" },
     ],
   },
   {
@@ -193,39 +113,22 @@ const CARBON_TREE: CarbonNode[] = [
         id: "diversHouseholdAppliances",
         name: "Électroménager",
         emoji: "🔌🧺",
-        field: "diversHouseholdAppliances",
       },
-      {
-        id: "diversFurniture",
-        name: "Meubles",
-        emoji: "🪑🛏️🛋️",
-        field: "diversFurniture",
-      },
+      { id: "diversFurniture", name: "Meubles", emoji: "🪑🛏️🛋️" },
       {
         id: "diversDigital",
         name: "Numérique",
         emoji: "👨‍💻",
         children: [
-          {
-            id: "diversDigitalInternet",
-            name: "Internet",
-            emoji: "🌐📡",
-            field: "diversDigitalInternet",
-          },
+          { id: "diversDigitalInternet", name: "Internet", emoji: "🌐📡" },
           {
             id: "diversDigitalDevices",
             name: "Ordis, téléphones, TV, ...",
             emoji: "📱💻🖥️",
-            field: "diversDigitalDevices",
           },
         ],
       },
-      {
-        id: "diversTextile",
-        name: "Textile",
-        emoji: "👕👗",
-        field: "diversTextile",
-      },
+      { id: "diversTextile", name: "Textile", emoji: "👕👗" },
     ],
   },
   {
@@ -233,26 +136,14 @@ const CARBON_TREE: CarbonNode[] = [
     name: "Services sociétaux",
     emoji: "🏛️",
     children: [
-      {
-        id: "servicesPublics",
-        name: "Services publics",
-        emoji: "🏥🏫🚒",
-        field: "servicesPublics",
-      },
-      {
-        id: "servicesMarket",
-        name: "Services marchands",
-        emoji: "🛍️🏬",
-        field: "servicesMarket",
-      },
+      { id: "servicesPublics", name: "Services publics", emoji: "🏥🏫🚒" },
+      { id: "servicesMarket", name: "Services marchands", emoji: "🛍️🏬" },
     ],
   },
 ];
 
 const collectFields = (nodes: CarbonNode[]): CarbonField[] =>
-  nodes.flatMap((n) =>
-    n.children ? collectFields(n.children) : n.field ? [n.field] : [],
-  );
+  nodes.flatMap((n) => ("children" in n ? collectFields(n.children) : [n.id]));
 
 export const CARBON_FIELDS = collectFields(CARBON_TREE);
 
@@ -268,9 +159,9 @@ export const computeNodeValue = (
   node: CarbonNode,
   values: Record<CarbonField, number>,
 ): number =>
-  node.children
+  "children" in node
     ? node.children.reduce((sum, c) => sum + computeNodeValue(c, values), 0)
-    : ((node.field ? values[node.field] : undefined) ?? 0);
+    : (values[node.id] ?? 0);
 
 export type CarbonSankeyNode = {
   id: string;
@@ -302,11 +193,13 @@ export const buildSankeyData = (
       emoji: node.emoji,
       value: computeNodeValue(node, values),
     });
-    for (const child of node.children ?? []) {
-      const childValue = computeNodeValue(child, values);
-      if (childValue <= 0) continue;
-      const childIdx = addNode(child);
-      links.push({ source: idx, target: childIdx, value: childValue });
+    if ("children" in node) {
+      for (const child of node.children) {
+        const childValue = computeNodeValue(child, values);
+        if (childValue <= 0) continue;
+        const childIdx = addNode(child);
+        links.push({ source: idx, target: childIdx, value: childValue });
+      }
     }
     return idx;
   };
@@ -334,15 +227,11 @@ export const getCarbonSankey = async (
   surveyId: number,
   selectedSus?: number[],
 ): Promise<CarbonSankeyResult> => {
-  const isNeighborhood = selectedSus?.length !== 1;
+  const { isNeighborhood, suId } = await resolveSuId(surveyId, selectedSus);
 
   if (!isNeighborhood) {
-    const su = await db.suData.findFirst({
-      where: { surveyId, su: selectedSus[0] },
-      select: { id: true },
-    });
     const { _avg } = await db.carbonFootprintAnswer.aggregate({
-      where: { surveyId, suId: su?.id },
+      where: { surveyId, suId },
       _avg: CARBON_AVG_SELECT,
     });
     return {
@@ -352,13 +241,10 @@ export const getCarbonSankey = async (
     };
   }
 
-  const sus = await db.suData.findMany({
-    where: { surveyId },
-    select: { id: true, popPercentage: true },
-  });
+  const weightedSus = await getWeightedSus(surveyId);
 
   const suAggregates = await Promise.all(
-    sus.map((su) =>
+    weightedSus.map((su) =>
       db.carbonFootprintAnswer.aggregate({
         where: { surveyId, suId: su.id },
         _avg: CARBON_AVG_SELECT,
@@ -370,16 +256,13 @@ export const getCarbonSankey = async (
   const weighted: CarbonAverages = {};
   let weightSum = 0;
 
-  sus.forEach((su, i) => {
-    const weight = su.popPercentage / 100;
-    if (weight <= 0) return;
-
+  weightedSus.forEach((su, i) => {
     const { _avg, _count } = suAggregates[i]!;
     if (_count === 0) return;
 
-    weightSum += weight;
+    weightSum += su.weight;
     for (const field of [...CARBON_FIELDS, "globalNote"] as const) {
-      weighted[field] = (weighted[field] ?? 0) + (_avg[field] ?? 0) * weight;
+      weighted[field] = (weighted[field] ?? 0) + (_avg[field] ?? 0) * su.weight;
     }
   });
 

@@ -5,41 +5,15 @@ import {
   ReasonsToNotChoseSecondHand,
 } from "@prisma/client";
 import { db } from "~/server/db";
+import {
+  type BarrierField,
+  BARRIER_FIELDS,
+  BARRIER_QUESTIONS,
+} from "~/shared/services/dataviz/barriers";
+import { resolveSuId } from "~/server/su/dataviz/suSelection";
 
-export type BarrierField =
-  | "reasonsToContinueUsingCar"
-  | "reasonsToEatMeat"
-  | "reasonsToNotBuyFrenchAndSeasonFood"
-  | "reasonsToNotChoseSecondHand";
-
-const BARRIER_FIELDS: BarrierField[] = [
-  "reasonsToContinueUsingCar",
-  "reasonsToEatMeat",
-  "reasonsToNotBuyFrenchAndSeasonFood",
-  "reasonsToNotChoseSecondHand",
-];
-
-export const BARRIER_QUESTIONS: Record<
-  BarrierField,
-  { title: string; emoji: string }
-> = {
-  reasonsToContinueUsingCar: {
-    title: "Pourquoi continuez-vous à utiliser la voiture ?",
-    emoji: "🚗",
-  },
-  reasonsToEatMeat: {
-    title: "Pourquoi continuez-vous à manger de la viande ?",
-    emoji: "🥩",
-  },
-  reasonsToNotBuyFrenchAndSeasonFood: {
-    title: "Pourquoi n'achetez-vous pas plus local et de saison ?",
-    emoji: "🥕",
-  },
-  reasonsToNotChoseSecondHand: {
-    title: "Pourquoi ne choisissez-vous pas la seconde main ?",
-    emoji: "♻️",
-  },
-};
+export type { BarrierField };
+export { BARRIER_QUESTIONS };
 
 type ReasonLabel = { label: string; emoji: string };
 
@@ -217,16 +191,7 @@ export const getBarrierQuestion = async (
   selectedSus: number[] | undefined,
   questionKey: BarrierField | "all",
 ): Promise<BarrierQuestionResult> => {
-  const isNeighborhood = selectedSus?.length !== 1;
-
-  let suId: number | undefined;
-  if (!isNeighborhood) {
-    const su = await db.suData.findFirst({
-      where: { surveyId, su: selectedSus[0] },
-      select: { id: true },
-    });
-    suId = su?.id;
-  }
+  const { isNeighborhood, suId } = await resolveSuId(surveyId, selectedSus);
 
   const answers = await db.wayOfLifeAnswer.findMany({
     where: isNeighborhood ? { surveyId } : { surveyId, suId },

@@ -2,7 +2,12 @@
 
 import React, { useEffect, useMemo, useRef } from "react";
 import * as d3 from "d3";
+import { ZoneSelection } from "@prisma/client";
 import { api } from "~/trpc/react";
+import {
+  buildZoneCellKey,
+  type MobilityType,
+} from "~/shared/services/dataviz/mobility";
 import { useSuBank } from "../hooks/useSuBank";
 import { useChartDimensions } from "../hooks/useChartDimensions";
 import { getD3Tooltip } from "../hooks/useD3Tooltip";
@@ -78,7 +83,6 @@ const DvMobility: React.FC<Props> = ({ selectedSus }) => {
       .attr("r", ringRadius)
       .attr("fill", "none")
       .attr("stroke", colorMain)
-      //.attr('background-opacity', 0)
       .attr("stroke-width", 1)
       .attr("stroke-dasharray", "6 4");
 
@@ -97,7 +101,6 @@ const DvMobility: React.FC<Props> = ({ selectedSus }) => {
       .append("text")
       .attr("font-family", "Outfit")
       .attr("font-size", 12)
-      //.attr('transform', 'scale(-1, 1)')
       .attr("fill", colorMain)
       .attr("letter-spacing", 1)
       .append("textPath")
@@ -138,17 +141,17 @@ const DvMobility: React.FC<Props> = ({ selectedSus }) => {
     };
 
     const circleToZone: Record<string, string> = {
-      "circle-center": "ZONE_PORTE_ORLEANS",
-      "circle-up-a": "ZONE_A_A",
-      "circle-up-b": "ZONE_A_B",
-      "circle-right-a": "ZONE_B_A",
-      "circle-right-b": "ZONE_B_B",
-      "circle-down-a": "ZONE_C_A",
-      "circle-down-b": "ZONE_C_B",
-      "circle-left-a": "ZONE_D_A",
-      "circle-left-b": "ZONE_D_B",
+      "circle-center": ZoneSelection.ZONE_QUARTIER,
+      "circle-up-a": buildZoneCellKey(ZoneSelection.ZONE_A, "A"),
+      "circle-up-b": buildZoneCellKey(ZoneSelection.ZONE_A, "B"),
+      "circle-right-a": buildZoneCellKey(ZoneSelection.ZONE_B, "A"),
+      "circle-right-b": buildZoneCellKey(ZoneSelection.ZONE_B, "B"),
+      "circle-down-a": buildZoneCellKey(ZoneSelection.ZONE_C, "A"),
+      "circle-down-b": buildZoneCellKey(ZoneSelection.ZONE_C, "B"),
+      "circle-left-a": buildZoneCellKey(ZoneSelection.ZONE_D, "A"),
+      "circle-left-b": buildZoneCellKey(ZoneSelection.ZONE_D, "B"),
     };
-    const modeToMtKey: Record<string, "FOOT" | "BIKE" | "TRANS" | "CAR"> = {
+    const modeToMtKey: Record<string, MobilityType> = {
       foot: "FOOT",
       bike: "BIKE",
       trans: "TRANS",
@@ -158,7 +161,7 @@ const DvMobility: React.FC<Props> = ({ selectedSus }) => {
     const LINE_STROKE_MAX = 15;
     const getMtPct = (
       zoneKey: string | undefined,
-      mtKey: "FOOT" | "BIKE" | "TRANS" | "CAR",
+      mtKey: MobilityType,
     ): number | null => {
       if (!zoneKey) return null;
       const cell = mobilityData?.zoneDistribution[zoneKey];
@@ -175,7 +178,7 @@ const DvMobility: React.FC<Props> = ({ selectedSus }) => {
     const lineLabel: Record<string, string> = {};
     for (const mode of modes) {
       const mtKey = modeToMtKey[mode.id]!;
-      const pct = getMtPct("ZONE_PORTE_ORLEANS", mtKey);
+      const pct = getMtPct(ZoneSelection.ZONE_QUARTIER, mtKey);
       lineStrokeWidth[`circle-center-${mode.id}`] = strokeFromPct(pct);
       lineLabel[`circle-center-${mode.id}`] = fmtPct(pct);
     }
@@ -291,7 +294,6 @@ const DvMobility: React.FC<Props> = ({ selectedSus }) => {
       food: "buyFood",
     };
 
-    // Taille par icône : calculée depuis zoneDistribution[zone].pct.{work|hobby|buyFood}
     const usageIconSize: Record<string, number> = {};
     const usagePct: Record<string, number | null> = {};
     for (const { id: circleId } of circles) {
@@ -315,8 +317,8 @@ const DvMobility: React.FC<Props> = ({ selectedSus }) => {
     const FONT_WEIGHT_MAX = 2000;
     const CIRCLE_STROKE_MIN = 1;
     const CIRCLE_STROKE_MAX = 30;
-    const CIRCLE_RADIUS_FACTOR_MIN = 0.85; // r × 0.85 au minimum
-    const CIRCLE_RADIUS_FACTOR_MAX = 1.15; // r × 1.15 au maximum
+    const CIRCLE_RADIUS_FACTOR_MIN = 0.85;
+    const CIRCLE_RADIUS_FACTOR_MAX = 1.15;
     const fontWeightForCircle: Record<string, number> = {};
     const strokeForCircle: Record<string, number> = {};
     const radiusForCircle: Record<string, number> = {};

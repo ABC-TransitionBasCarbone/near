@@ -1,5 +1,10 @@
 import { type WayOfLifeAnswer } from "@prisma/client";
 import { db } from "~/server/db";
+import {
+  TESTIMONY_SUBCATEGORIES,
+  type TestimonySubcategory,
+} from "~/shared/services/dataviz/testimony";
+import { resolveSuId } from "~/server/su/dataviz/suSelection";
 
 type TestimonyField = Extract<
   keyof WayOfLifeAnswer,
@@ -18,7 +23,7 @@ type TestimonyField = Extract<
 
 const TESTIMONY_FIELDS: Record<
   TestimonyField,
-  { subcategory: string; questionShort: string }
+  { subcategory: TestimonySubcategory; questionShort: string }
 > = {
   otherFoodFrequencyInformation: {
     subcategory: "Food",
@@ -63,19 +68,6 @@ const TESTIMONY_FIELDS: Record<
   comment: { subcategory: "General", questionShort: "Commentaire général" },
 };
 
-const SUBCATEGORY_EMOJI: Record<string, string> = {
-  Food: "🍝🗣️",
-  Housing: "🏘️🗣️",
-  Politics: "🙋‍♂️🗣️",
-  Solidarity: "🧑‍🤝‍🧑🗣️",
-  NghLife: "🏙️🗣️",
-  Parks: "🌳🗣️",
-  Shopping: "🔧🗣️",
-  Services: "🏛️🗣️",
-  Mobility: "🚦🗣️",
-  General: "🏙️💬",
-};
-
 export type TestimonyNode = {
   id: string;
   label?: string;
@@ -86,7 +78,7 @@ export type TestimonyNode = {
   respondentGender?: string;
   respondentAge?: string;
   questionShort?: string;
-  subcategory?: string;
+  subcategory?: TestimonySubcategory;
   emoji?: string;
 };
 
@@ -97,7 +89,7 @@ export type TestimonyNetworkResult = {
   links: TestimonyLink[];
   isNeighborhood: boolean;
   totalTestimonies: number;
-  subcategories: string[];
+  subcategories: TestimonySubcategory[];
 };
 
 const TESTIMONY_SELECT = {
@@ -128,16 +120,7 @@ export const getTestimonyNetwork = async (
   surveyId: number,
   selectedSus?: number[],
 ): Promise<TestimonyNetworkResult> => {
-  const isNeighborhood = selectedSus?.length !== 1;
-
-  let suId: number | undefined;
-  if (!isNeighborhood) {
-    const su = await db.suData.findFirst({
-      where: { surveyId, su: selectedSus[0] },
-      select: { id: true },
-    });
-    suId = su?.id;
-  }
+  const { isNeighborhood, suId } = await resolveSuId(surveyId, selectedSus);
 
   const [answers, sus] = await Promise.all([
     db.wayOfLifeAnswer.findMany({
@@ -155,12 +138,12 @@ export const getTestimonyNetwork = async (
   const suNumberById = new Map(sus.map((s) => [s.id, s.su]));
 
   const testimonies: TestimonyNode[] = [];
-  const subcategoriesFound = new Set<string>();
+  const subcategoriesFound = new Set<TestimonySubcategory>();
 
   answers.forEach((answer, idx) => {
     for (const [field, meta] of Object.entries(TESTIMONY_FIELDS) as [
       TestimonyField,
-      { subcategory: string; questionShort: string },
+      { subcategory: TestimonySubcategory; questionShort: string },
     ][]) {
       const raw = answer[field];
       if (!raw || !isMeaningful(raw)) continue;
@@ -189,11 +172,11 @@ export const getTestimonyNetwork = async (
 
   const parentNodes: TestimonyNode[] = subcategories.map((subcategory) => ({
     id: `parent_${subcategory}`,
-    label: SUBCATEGORY_EMOJI[subcategory] ?? "🗣️",
+    label: TESTIMONY_SUBCATEGORIES[subcategory]?.emoji ?? "🗣️",
     group: subcategory,
     type: "parent",
     subcategory,
-    emoji: SUBCATEGORY_EMOJI[subcategory] ?? "🗣️",
+    emoji: TESTIMONY_SUBCATEGORIES[subcategory]?.emoji ?? "🗣️",
   }));
 
   const links: TestimonyLink[] = testimonies.map((t) => ({

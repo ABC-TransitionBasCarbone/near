@@ -412,7 +412,7 @@ enum ZoneSelection {
   ZONE_B
   ZONE_C
   ZONE_D
-  ZONE_PORTE_ORLEANS
+  ZONE_QUARTIER
 }
 
 model WayOfLifeAnswer {

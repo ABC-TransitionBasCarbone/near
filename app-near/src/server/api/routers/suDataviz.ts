@@ -11,7 +11,14 @@ import { getSuAnswerDistribution } from "~/server/su/dataviz/suAnswerDistributio
 import { getTestimonyNetwork } from "~/server/su/dataviz/testimonyNetwork";
 import { getUsageDistribution } from "~/server/su/dataviz/usageDistribution";
 import { getWillingness } from "~/server/su/dataviz/willingness";
+import { BARRIER_FIELDS } from "~/shared/services/dataviz/barriers";
+import { USAGE_FIELDS } from "~/shared/services/dataviz/usage";
+import { SATISFACTION_SUBCATEGORY_KEYS } from "~/shared/services/dataviz/satisfaction";
+import { SU_ANSWER_CATEGORY_FIELDS } from "~/shared/services/dataviz/suAnswerCategory";
 import { createTRPCRouter, surveyProtectedProcedure } from "../trpc";
+
+const toZodEnum = <T extends string>(values: T[]) =>
+  z.enum(values as [T, ...T[]]);
 
 export const suDatavizRouter = createTRPCRouter({
   getSuInfo: surveyProtectedProcedure.query(async ({ ctx }) => {
@@ -20,7 +27,7 @@ export const suDatavizRouter = createTRPCRouter({
   getSuAnswerDistribution: surveyProtectedProcedure
     .input(
       z.object({
-        field: z.enum(["ageCategory", "gender", "professionalCategory"]),
+        field: toZodEnum(SU_ANSWER_CATEGORY_FIELDS),
         selectedSus: z.array(z.number()).optional(),
       }),
     )
@@ -34,14 +41,7 @@ export const suDatavizRouter = createTRPCRouter({
   getUsageDistribution: surveyProtectedProcedure
     .input(
       z.object({
-        field: z.enum([
-          "meatFrequency",
-          "transportationMode",
-          "digitalIntensity",
-          "purchasingStrategy",
-          "airTravelFrequency",
-          "heatSource",
-        ]),
+        field: toZodEnum(USAGE_FIELDS),
         selectedSus: z.array(z.number()).optional(),
       }),
     )
@@ -55,16 +55,7 @@ export const suDatavizRouter = createTRPCRouter({
   getSatisfactionDistribution: surveyProtectedProcedure
     .input(
       z.object({
-        subcategory: z
-          .enum([
-            "housing",
-            "mobility",
-            "food",
-            "services",
-            "nghLife",
-            "politics",
-          ])
-          .optional(),
+        subcategory: toZodEnum(SATISFACTION_SUBCATEGORY_KEYS).optional(),
         selectedSus: z.array(z.number()).optional(),
       }),
     )
@@ -101,13 +92,7 @@ export const suDatavizRouter = createTRPCRouter({
   getBarrierQuestion: surveyProtectedProcedure
     .input(
       z.object({
-        questionKey: z.enum([
-          "reasonsToContinueUsingCar",
-          "reasonsToEatMeat",
-          "reasonsToNotBuyFrenchAndSeasonFood",
-          "reasonsToNotChoseSecondHand",
-          "all",
-        ]),
+        questionKey: toZodEnum([...BARRIER_FIELDS, "all"] as const),
         selectedSus: z.array(z.number()).optional(),
       }),
     )

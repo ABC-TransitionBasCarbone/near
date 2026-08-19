@@ -154,14 +154,9 @@ const BoardViewer: React.FC<BoardViewerProps> = ({
             ? window.devicePixelRatio
             : 2;
 
-        // On capture toujours l'intégralité du board-content pour éviter le clipping
-        // lié au scroll/overflow sur les sous-éléments.
         const boardContent =
           wrapper.querySelector<HTMLElement>(".board-content") ?? wrapper;
 
-        // On utilise la hauteur visuelle plutôt que scrollHeight : les boards avec
-        // other-board (height:100% + overflow:visible) ont scrollHeight = 100vh,
-        // ce qui tronquerait le contenu sous la ligne de flottaison (ex. EmdvPieCharts).
         const captureHeight = measureVisualHeight(wrapper);
 
         const fullCanvas = await html2canvas(boardContent, {
@@ -171,21 +166,12 @@ const BoardViewer: React.FC<BoardViewerProps> = ({
           logging: false,
           width: boardContent.offsetWidth,
           height: captureHeight,
-          // On utilise la taille RÉELLE du viewport pour que les unités vh/vw du clone
-          // se résolvent de façon identique au DOM affiché. La hauteur du canvas de sortie
-          // est contrôlée séparément par `height: captureHeight` ; windowHeight n'affecte
-          // que le calcul CSS — si on le fixait à captureHeight, chaque élément 100vh
-          // deviendrait captureHeight px dans le clone, décalant toutes les positions.
           windowWidth: window.innerWidth,
           windowHeight: window.innerHeight,
           onclone: (_doc: Document, clonedEl: HTMLElement) => {
-            // Parcours tous les ancêtres depuis board-viewer jusqu'au <body> pour supprimer
-            // tout clipping par overflow. Notamment .dataviz-dashboard (overflow:hidden)
-            // et .dashboard-grid (height:100vh) tronqueraient le rendu à ~100vh.
             let node: HTMLElement | null = clonedEl.parentElement;
             while (node && node.tagName !== "BODY") {
               if (node === clonedEl.parentElement) {
-                // board-viewer : on l'étend à la hauteur de capture complète
                 node.style.height = `${captureHeight}px`;
               }
               node.style.overflow = "visible";
@@ -194,8 +180,6 @@ const BoardViewer: React.FC<BoardViewerProps> = ({
               node.style.minHeight = `${captureHeight}px`;
               node = node.parentElement;
             }
-            // On libère height:100% sur les éléments de mise en page pour que le contenu
-            // se développe naturellement
             clonedEl
               .querySelectorAll<HTMLElement>(".other-board, .demographie-board")
               .forEach((b) => {
@@ -208,14 +192,8 @@ const BoardViewer: React.FC<BoardViewerProps> = ({
         let resultCanvas: HTMLCanvasElement;
 
         if (target === boardContent || target === wrapper) {
-          // Board entier sélectionné — on utilise le canvas directement
           resultCanvas = fullCanvas;
         } else {
-          // Recadrage sur les limites de l'élément cible.
-          // getBoundingClientRect() est relatif au viewport pour les deux rects.
-          // boardRect.top reflète déjà le scroll (il devient négatif quand board-viewer
-          // défile), donc targetRect.top - boardRect.top donne directement le bon offset
-          // depuis le haut du boardContent dans le canvas complet.
           const boardRect = boardContent.getBoundingClientRect();
           const targetRect = target.getBoundingClientRect();
 
@@ -242,9 +220,6 @@ const BoardViewer: React.FC<BoardViewerProps> = ({
           resultCanvas = croppedCanvas;
         }
 
-        // Dérivation d'un libellé lisible pour le nom de fichier.
-        // 1. Cherche un <svg> <title> ou un titre dans l'élément.
-        // 2. Repli sur la classe de zone (ex. "usages-dist").
         let zoneLabel: string | undefined;
         if (target !== boardContent && target !== wrapper) {
           const heading = target.querySelector<HTMLElement>(
@@ -254,7 +229,6 @@ const BoardViewer: React.FC<BoardViewerProps> = ({
           if (headingText && headingText.length < 60) {
             zoneLabel = headingText;
           } else {
-            // Classe de zone : on retire les classes marqueurs et on prend la première restante
             const areaClass = Array.from(target.classList).find(
               (c) => c !== "dv-container" && c !== "zone-target",
             );
@@ -284,7 +258,6 @@ const BoardViewer: React.FC<BoardViewerProps> = ({
 
       {isZoneSelectMode && (
         <>
-          {/* Overlay that intercepts hover/click */}
           <div
             ref={overlayRef}
             className="absolute inset-0 z-10 cursor-crosshair"
@@ -300,7 +273,6 @@ const BoardViewer: React.FC<BoardViewerProps> = ({
             }}
           />
 
-          {/* Highlight box drawn over hovered zone */}
           {highlight && !isCapturing && (
             <div
               className="pointer-events-none absolute rounded border-2 border-blue bg-blue/10"
@@ -313,7 +285,6 @@ const BoardViewer: React.FC<BoardViewerProps> = ({
             />
           )}
 
-          {/* Capturing feedback */}
           {isCapturing && (
             <div className="absolute inset-0 z-20 flex items-center justify-center bg-black/50 text-white">
               <span>Capture en cours…</span>

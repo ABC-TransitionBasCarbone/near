@@ -62,7 +62,6 @@ const DvSuTitle: React.FC<DvSuTitleProps> = ({ selectedSus }) => {
     return { margin, iconSize, contentX, barWidth };
   }, [width, height]);
 
-  // Render SVG
   useEffect(() => {
     const svgEl = svgRef.current;
     if (!svgEl) return;
@@ -82,7 +81,6 @@ const DvSuTitle: React.FC<DvSuTitleProps> = ({ selectedSus }) => {
     const helperBaselineY = iconSize;
     const barY = helperBaselineY - 24;
 
-    // Left icon area (rounded rect background + ornament)
     const iconGroup = root.append("g");
     iconGroup
       .append("rect")
@@ -119,7 +117,6 @@ const DvSuTitle: React.FC<DvSuTitleProps> = ({ selectedSus }) => {
       // Ignore sizing failures, keep the ornament at its default position
     }
 
-    // Line 1: small subtitle
     root
       .append("text")
       .attr("x", contentX)
@@ -128,7 +125,6 @@ const DvSuTitle: React.FC<DvSuTitleProps> = ({ selectedSus }) => {
       .style("fill", "#6b7280")
       .text(view.subtitle);
 
-    // Line 2: main name
     root
       .append("text")
       .attr("x", contentX)
@@ -138,7 +134,6 @@ const DvSuTitle: React.FC<DvSuTitleProps> = ({ selectedSus }) => {
       .style("fill", mainColor)
       .text(view.nameFr);
 
-    // Line 3: progress bar
     root
       .append("rect")
       .attr("x", contentX)
@@ -160,7 +155,6 @@ const DvSuTitle: React.FC<DvSuTitleProps> = ({ selectedSus }) => {
       .attr("rx", 5)
       .attr("ry", 5);
 
-    // Line 4: helper text
     root
       .append("text")
       .attr("x", contentX)

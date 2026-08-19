@@ -42,7 +42,6 @@ export const getPalette = (bank: SuBankData, type: PaletteType): string[] => {
   }
 };
 
-// Reuses the getSuInfo cache already populated by DatavizDashboard, so no extra request is fired.
 export const useSuBank = (selectedSus?: number[]): SuBankData => {
   const { data: allSus } = api.suDataviz.getSuInfo.useQuery();
 
