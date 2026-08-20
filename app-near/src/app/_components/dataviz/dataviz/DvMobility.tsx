@@ -41,9 +41,13 @@ const DvMobility: React.FC<Props> = ({ selectedSus }) => {
     if (!entries.length) return null;
     const totalWeight =
       entries.reduce((sum, zone) => sum + zone.respondentCount, 0) || 1;
-    const weightedPct = (pick: (z: (typeof entries)[number]) => number) =>
-      entries.reduce((sum, z) => sum + pick(z) * z.respondentCount, 0) /
-      totalWeight;
+    const weightedPct = (pick: (z: (typeof entries)[number]) => number) => {
+      const weightedSum = entries.reduce(
+        (sum, z) => sum + pick(z) * z.respondentCount,
+        0,
+      );
+      return weightedSum / totalWeight;
+    };
     return {
       zoneCount: entries.length,
       foot: weightedPct((z) => z.mobilityTypeBreakdown.pct.FOOT),
