@@ -40,7 +40,7 @@ const DvMobility: React.FC<Props> = ({ selectedSus }) => {
     const entries = Object.values(zones);
     if (!entries.length) return null;
     const totalWeight =
-      entries.reduce((sum, z) => sum + z.respondentCount, 0) || 1;
+      entries.reduce((sum, zone) => sum + zone.respondentCount, 0) || 1;
     const weightedPct = (pick: (z: (typeof entries)[number]) => number) =>
       entries.reduce((sum, z) => sum + pick(z) * z.respondentCount, 0) /
       totalWeight;
