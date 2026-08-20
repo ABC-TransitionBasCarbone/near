@@ -152,7 +152,7 @@ export const getTestimonyNetwork = async (
       subcategoriesFound.add(meta.subcategory);
       testimonies.push({
         id: `testimony_${idx}_${field}`,
-        label: clean.length > 100 ? `${clean.slice(0, 100)}...` : clean,
+        label: clean.length > 100 ? `${clean.slice(0, 97)}...` : clean,
         group: meta.subcategory,
         type: "child",
         testimony: clean,
