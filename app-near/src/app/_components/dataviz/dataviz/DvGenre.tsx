@@ -12,6 +12,8 @@ interface DvGenreProps {
 
 const TITLE = "Répartition par genre";
 const TITLE_EMOJI = "👨👩";
+const DEFAULT_WIDTH = 300;
+const DEFAULT_HEIGHT = 250;
 
 const DvGenre: React.FC<DvGenreProps> = ({ selectedSus }) => {
   const { containerRef: svgContainer, width, height } = useChartDimensions();
@@ -32,8 +34,8 @@ const DvGenre: React.FC<DvGenreProps> = ({ selectedSus }) => {
   const data = result?.data.filter((d) => d.count > 0);
 
   const radius = useMemo(() => {
-    const w = width ?? 300;
-    const h = height ?? 250;
+    const w = width ?? DEFAULT_WIDTH;
+    const h = height ?? DEFAULT_HEIGHT;
     return Math.max(20, Math.min((w - 32) / 2, (h - 32) / 2));
   }, [width, height]);
 
