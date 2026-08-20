@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useCallback } from "react";
+import { slugify } from "~/shared/utils/slugify";
 
 interface ExportModalProps {
   canvas: HTMLCanvasElement;
@@ -10,14 +11,6 @@ interface ExportModalProps {
   suLabel?: string;
   zoneLabel?: string;
 }
-
-const slugify = (s: string) =>
-  s
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-+|-+$/g, "");
 
 const ExportModal: React.FC<ExportModalProps> = ({
   canvas,
