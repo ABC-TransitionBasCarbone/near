@@ -1,10 +1,5 @@
+import { type SuBankData } from "~/types/Dataviz";
 import { db } from "../db";
-
-export type SuBankSeed = {
-  id: number;
-  name: string;
-  colorMain: string;
-};
 
 const freeUpName = async (name: string, id: number) => {
   const conflictingSuBank = await db.suBank.findUnique({ where: { name } });
@@ -30,20 +25,21 @@ const freeUpColorMain = async (colorMain: string, id: number) => {
   }
 };
 
-export const upsertSuBanks = async (suBankSeeds: SuBankSeed[]) => {
-  for (const { id, name, colorMain } of suBankSeeds) {
+export const upsertSuBanks = async (suBankSeeds: SuBankData[]) => {
+  for (const suBankSeed of suBankSeeds) {
+    const { id, name, colorMain } = suBankSeed;
     await freeUpName(name, id);
     await freeUpColorMain(colorMain, id);
 
     await db.suBank.upsert({
       where: { id },
-      update: { name, colorMain },
-      create: { id, name, colorMain },
+      update: suBankSeed,
+      create: suBankSeed,
     });
   }
 };
 
-export const deleteRemovedSuBanks = async (suBankSeeds: SuBankSeed[]) => {
+export const deleteRemovedSuBanks = async (suBankSeeds: SuBankData[]) => {
   await db.suBank.deleteMany({
     where: { id: { notIn: suBankSeeds.map(({ id }) => id) } },
   });

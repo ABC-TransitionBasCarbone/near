@@ -37,8 +37,10 @@ const QRCodeModal: React.FC<QRCodeModalProps> = ({ onClose, link }) => {
         <button
           className="text-gray-500 absolute right-2 top-2"
           onClick={onClose}
+          aria-label="Fermer"
+          title="Fermer"
         >
-          ✖
+          <span aria-hidden="true">✖</span>
         </button>
         <p className="mt-2">Scanner le QR code pour remplir le questionnaire</p>
         <canvas ref={canvasRef} className="m-auto" />

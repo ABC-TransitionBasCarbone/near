@@ -4,6 +4,7 @@ import { countBySu } from "./count";
 import { createNeighborhood } from "~/server/test-utils/create-data/neighborhood";
 import { buildCarbonFootprintAnswer } from "~/server/test-utils/create-data/carbonFootprintAnswer";
 import { buildWayOfLifeAnswer } from "~/server/test-utils/create-data/wayOfLifeAnswer";
+import { buildSuBank } from "~/server/test-utils/create-data/suBank";
 import { clearAlldata } from "~/server/test-utils/clear";
 
 describe("countBySu", () => {
@@ -25,8 +26,8 @@ describe("countBySu", () => {
   it("should return the su, popPercentage and answer counts for each su segment", async () => {
     const [suBank1, suBank2] = await db.suBank.createManyAndReturn({
       data: [
-        { id: 1, name: "bank-a", colorMain: "#111111" },
-        { id: 2, name: "bank-b", colorMain: "#222222" },
+        buildSuBank({ id: 1, name: "bank-a", colorMain: "#111111" }),
+        buildSuBank({ id: 2, name: "bank-b", colorMain: "#222222" }),
       ],
     });
     const suData1 = await db.suData.create({
@@ -92,7 +93,7 @@ describe("countBySu", () => {
 
   it("should return answer counts of 0 for su segments without any answer", async () => {
     const suBank = await db.suBank.create({
-      data: { id: 1, name: "bank-a", colorMain: "#111111" },
+      data: buildSuBank({ id: 1, name: "bank-a", colorMain: "#111111" }),
     });
     const suData = await db.suData.create({
       data: {

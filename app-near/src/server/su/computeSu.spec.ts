@@ -11,6 +11,7 @@ import { TRPCError } from "@trpc/server";
 import { type SuComputationData } from "~/types/SuDetection";
 import { db } from "../db";
 import { buildSuAnswer } from "../test-utils/create-data/suAnswer";
+import { buildSuBank } from "../test-utils/create-data/suBank";
 import { computeSu } from "./computeSu";
 import apiSuService from "../external-api/api-su";
 import { ErrorCode } from "~/types/enums/error";
@@ -173,9 +174,9 @@ const createSurvey = (surveyId: number) =>
 const createSuBanks = () =>
   db.suBank.createManyAndReturn({
     data: [
-      { id: 1, name: "bank-a", colorMain: "#111111" },
-      { id: 2, name: "bank-b", colorMain: "#222222" },
-      { id: 3, name: "bank-c", colorMain: "#333333" },
+      buildSuBank({ id: 1, name: "bank-a", colorMain: "#111111" }),
+      buildSuBank({ id: 2, name: "bank-b", colorMain: "#222222" }),
+      buildSuBank({ id: 3, name: "bank-c", colorMain: "#333333" }),
     ],
   });
 

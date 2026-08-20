@@ -6,6 +6,7 @@ import {
   Gender,
   HeatSource,
   MeatFrequency,
+  ProfessionalCategory,
   ProfessionalSituation,
   PurchasingStrategy,
   type Quartier,
@@ -85,4 +86,29 @@ export const categoryStatQuartierMap: Record<CategoryStat, keyof Quartier> = {
   [CategoryStat.cs6]: "c21_pop15p_cs6_sum",
   [CategoryStat.cs7]: "c21_pop15p_cs7_sum",
   [CategoryStat.cs8]: "c21_pop15p_cs8_sum",
+};
+
+export const enumValueToCategoryStat: Record<
+  AgeCategory | Gender | ProfessionalCategory,
+  CategoryStat | undefined
+> = {
+  [AgeCategory.ABOVE_75]: CategoryStat.above_75,
+  [AgeCategory.FROM_15_TO_29]: CategoryStat.from_15_to_29,
+  [AgeCategory.FROM_30_TO_44]: CategoryStat.from_30_to_44,
+  [AgeCategory.FROM_45_TO_59]: CategoryStat.from_45_to_59,
+  [AgeCategory.FROM_60_TO_74]: CategoryStat.from_60_to_74,
+  [Gender.MAN]: CategoryStat.man,
+  [Gender.WOMAN]: CategoryStat.woman,
+  [Gender.OTHER]: undefined, // Insee has no target for this category
+  [ProfessionalCategory.CS1]: CategoryStat.cs1,
+  [ProfessionalCategory.CS2]: CategoryStat.cs2,
+  [ProfessionalCategory.CS2_platform_entrepreneurship]: CategoryStat.cs2,
+  [ProfessionalCategory.CS3]: CategoryStat.cs3,
+  [ProfessionalCategory.CS4]: CategoryStat.cs4,
+  [ProfessionalCategory.CS5]: CategoryStat.cs5,
+  [ProfessionalCategory.CS6]: CategoryStat.cs6,
+  [ProfessionalCategory.CS7]: CategoryStat.cs7,
+  [ProfessionalCategory.CS8_student]: CategoryStat.cs8,
+  [ProfessionalCategory.CS8_unemployed]: CategoryStat.cs8,
+  [ProfessionalCategory.CS8_home]: CategoryStat.cs8,
 };

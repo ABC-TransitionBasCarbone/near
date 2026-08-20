@@ -27,9 +27,9 @@ import {
   VoluntaryWork,
   WishesChoices,
   YesNo,
-  ZoneSelection,
 } from "@prisma/client";
 import { TypeformType } from "~/types/Typeform";
+import { ZoneSelection } from "~/types/enums/zoneSelection";
 
 export const surveySUReferencesMapping: Record<string, string | boolean> = {
   // isNeighborhoodResident
@@ -424,7 +424,7 @@ export const surveyWayOfLifeReferencesMapping: Record<
   ["e62c8117-73a5-427e-a54f-1ca8f52f05a7"]: ZoneSelection.ZONE_B,
   ["e8664932-6e40-4a95-a2d4-64f3aac8e978"]: ZoneSelection.ZONE_C,
   ["c5c7e26c-debe-4035-aee2-021ed473e76b"]: ZoneSelection.ZONE_D,
-  ["783f80db-54a7-43cb-9b74-2a65d2cef45b"]: ZoneSelection.ZONE_PORTE_ORLEANS,
+  ["783f80db-54a7-43cb-9b74-2a65d2cef45b"]: ZoneSelection.ZONE_QUARTIER,
   // transportModeToHobby
   ["fac71077-f5fe-43fb-b174-82e8a249663e"]: TransportMode.WALKING,
   ["832528fb-4f64-485c-b5ca-cbe51508792e"]: TransportMode.PERSONAL_BICYCLE,
@@ -445,7 +445,7 @@ export const surveyWayOfLifeReferencesMapping: Record<
   ["ab29dd44-8e55-49a1-9d68-67285d617b7f"]: ZoneSelection.ZONE_B,
   ["174d42cc-1b6c-49b8-b483-38601425f28f"]: ZoneSelection.ZONE_C,
   ["0717cfad-9fa5-4dad-a3b8-ce90b037dd73"]: ZoneSelection.ZONE_D,
-  ["44c07993-0f36-4152-9020-ae579c0b256b"]: ZoneSelection.ZONE_PORTE_ORLEANS,
+  ["44c07993-0f36-4152-9020-ae579c0b256b"]: ZoneSelection.ZONE_QUARTIER,
   // remoteWorkingWeeklyFrequency -> (opinion_scale)
   // transportModeToWork
   ["5458fc0a-bc52-4ef2-97ba-613862c46079"]: TransportMode.WALKING,
@@ -467,7 +467,7 @@ export const surveyWayOfLifeReferencesMapping: Record<
   ["238e3e22-855f-418b-959d-a011a95340e4"]: ZoneSelection.ZONE_B,
   ["8318aabc-bb97-46e3-bdab-5aa24539825f"]: ZoneSelection.ZONE_C,
   ["cae0f28c-799f-449c-9eb5-22b58d00f710"]: ZoneSelection.ZONE_D,
-  ["0fdf04f7-411a-4db1-b5c3-29e4c7f1fc18"]: ZoneSelection.ZONE_PORTE_ORLEANS,
+  ["0fdf04f7-411a-4db1-b5c3-29e4c7f1fc18"]: ZoneSelection.ZONE_QUARTIER,
   // transportModeToTravel
   ["0bebf356-b5bd-435a-b5c4-c50dbc4914c4"]:
     TransportModeToTravel.PUBLIC_TRANSPORT,
