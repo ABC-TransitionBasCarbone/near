@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useId } from "react";
 
 type BoardSectionProps = {
   title: React.ReactNode;
@@ -12,21 +12,31 @@ export const BoardSection: React.FC<BoardSectionProps> = ({
   description,
   containerStyle,
   children,
-}) => (
-  <div className="other-board flex h-full flex-col overflow-y-auto p-4">
-    <header className="mb-4">
-      <h2 className="flex items-center gap-2 text-xl font-semibold text-black">
-        {title}
-      </h2>
-      <p className="mt-1 text-sm text-gray">{description}</p>
-    </header>
-    <div
-      className="dv-container rounded-lg border border-grayLight bg-white p-3"
-      style={containerStyle}
+}) => {
+  const titleId = useId();
+
+  return (
+    <section
+      aria-labelledby={titleId}
+      className="other-board flex h-full flex-col overflow-y-auto p-4"
     >
-      {children}
-    </div>
-  </div>
-);
+      <header className="mb-4">
+        <h2
+          id={titleId}
+          className="flex items-center gap-2 text-xl font-semibold text-black"
+        >
+          {title}
+        </h2>
+        <p className="mt-1 text-sm text-gray">{description}</p>
+      </header>
+      <div
+        className="dv-container rounded-lg border border-grayLight bg-white p-3"
+        style={containerStyle}
+      >
+        {children}
+      </div>
+    </section>
+  );
+};
 
 export default BoardSection;
