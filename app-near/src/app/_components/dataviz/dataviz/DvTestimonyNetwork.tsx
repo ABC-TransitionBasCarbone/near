@@ -126,7 +126,7 @@ const Modal: React.FC<ModalProps> = ({ open, onClose, node }) => {
             aria-label="Fermer"
             title="Fermer"
           >
-            ✕
+            <span aria-hidden="true">✕</span>
           </button>
         </div>
 
