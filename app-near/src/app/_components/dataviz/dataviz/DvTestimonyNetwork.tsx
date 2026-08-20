@@ -486,7 +486,7 @@ const DvTestimonyNetwork: React.FC<DvTestimonyNetworkProps> = ({
           {!loading && networkData && (
             <span className="px-3 py-1 text-xs text-gray">
               {networkData.totalTestimonies} témoignages •{" "}
-              {networkData.subcategories.length} thêmes
+              {networkData.subcategories.length} thèmes
             </span>
           )}
           <button
