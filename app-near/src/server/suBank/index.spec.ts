@@ -1,10 +1,10 @@
 import { db } from "~/server/db";
 import { clearAlldata } from "~/server/test-utils/clear";
 import { buildSuBank } from "~/server/test-utils/create-data/suBank";
+import { type SuBankData } from "~/types/Dataviz";
 import {
   assignSuBanksInRoundRobin,
   deleteRemovedSuBanks,
-  type SuBankSeed,
   upsertSuBanks,
 } from ".";
 
@@ -12,7 +12,7 @@ describe("suBank", () => {
   const surveyName = "survey-test-su-bank-index";
   let surveyId: number;
 
-  const suBankSeeds: SuBankSeed[] = [
+  const suBankSeeds: SuBankData[] = [
     buildSuBank({ id: 0, name: "bank-a", colorMain: "#111111" }),
     buildSuBank({ id: 1, name: "bank-b", colorMain: "#222222" }),
     buildSuBank({ id: 2, name: "bank-c", colorMain: "#333333" }),

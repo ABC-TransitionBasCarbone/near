@@ -1,12 +1,12 @@
+import { type SuBankData } from "~/types/Dataviz";
 import { db } from "~/server/db";
 import {
   assignSuBanksInRoundRobin,
   deleteRemovedSuBanks,
-  type SuBankSeed,
   upsertSuBanks,
 } from ".";
 
-export const assignSuBanksToSuData = async (suBankSeeds: SuBankSeed[]) => {
+export const assignSuBanksToSuData = async (suBankSeeds: SuBankData[]) => {
   const suBanks = await Promise.all(
     suBankSeeds.map(({ id }) => db.suBank.findUniqueOrThrow({ where: { id } })),
   );
@@ -14,7 +14,7 @@ export const assignSuBanksToSuData = async (suBankSeeds: SuBankSeed[]) => {
   await assignSuBanksInRoundRobin(suBanks.map(({ id }) => id));
 };
 
-export const initSuBank = async (suBankSeeds: SuBankSeed[]) => {
+export const initSuBank = async (suBankSeeds: SuBankData[]) => {
   await upsertSuBanks(suBankSeeds);
   await deleteRemovedSuBanks(suBankSeeds);
   await assignSuBanksToSuData(suBankSeeds);
