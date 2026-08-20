@@ -12,7 +12,8 @@ export const MobilityBoard: Board = {
     <BoardSection
       title={
         <>
-          {MobilityBoard.emoji} {MobilityBoard.name}
+          <span aria-hidden="true">{MobilityBoard.emoji}</span>{" "}
+          {MobilityBoard.name}
         </>
       }
       description={MobilityBoard.description}

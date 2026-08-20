@@ -11,7 +11,12 @@ export const CarbonBoard: Board = {
     "Bilan de l'empreinte carbone par grande catégorie (barres empilées)",
   renderComponent: ({ selectedSus }: { selectedSus?: number[] }) => (
     <BoardSection
-      title="🌍 Empreinte carbone — Bilan par catégorie"
+      title={
+        <>
+          <span aria-hidden="true">🌍</span> Empreinte carbone — Bilan par
+          catégorie
+        </>
+      }
       description="Empreinte moyenne par personne et par an, décomposée par sous-catégorie"
       containerStyle={{ height: "auto", overflow: "visible" }}
     >

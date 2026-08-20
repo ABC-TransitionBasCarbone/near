@@ -111,7 +111,11 @@ const Modal: React.FC<ModalProps> = ({ open, onClose, node }) => {
       >
         <div className="flex items-center justify-between px-5 py-3">
           <div className="flex items-center gap-2 text-sm text-white">
-            {isParent && <span className="text-xl">{node.emoji}</span>}
+            {isParent && (
+              <span className="text-xl" aria-hidden="true">
+                {node.emoji}
+              </span>
+            )}
             <span className="max-w-[260px] truncate font-semibold">
               {isParent
                 ? labelForSubcategory(node.subcategory)
@@ -159,7 +163,9 @@ const Modal: React.FC<ModalProps> = ({ open, onClose, node }) => {
                 Thème
               </div>
               <div className="flex items-center gap-3 rounded-lg border bg-grayExtraLight p-4">
-                <span className="text-2xl">{node.emoji}</span>
+                <span className="text-2xl" aria-hidden="true">
+                  {node.emoji}
+                </span>
                 <div className="font-semibold">{node.subcategory}</div>
               </div>
             </div>

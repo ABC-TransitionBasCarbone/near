@@ -16,7 +16,8 @@ export const FicheSuBoard: Board = {
     <div className="demographie-board flex h-full flex-col overflow-y-auto overflow-x-hidden p-4">
       <header className="mb-4">
         <h2 className="flex items-center gap-2 text-xl font-semibold text-black">
-          {FicheSuBoard.emoji} {FicheSuBoard.name}
+          <span aria-hidden="true">{FicheSuBoard.emoji}</span>{" "}
+          {FicheSuBoard.name}
         </h2>
         <p className="mt-1 text-sm text-gray">{FicheSuBoard.description}</p>
       </header>

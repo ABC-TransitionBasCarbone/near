@@ -19,13 +19,16 @@ export const EmdvByCategoryBoards: Board[] = SATISFACTION_SUBCATEGORY_KEYS.map(
         <BoardSection
           title={
             <>
-              {emoji} Avis sur le cadre de vie - {label}
+              <span aria-hidden="true">{emoji}</span> Avis sur le cadre de vie -{" "}
+              {label}
             </>
           }
           description={
             <>
-              Répartition entre 🟥 Avis négatifs, 🔲Pas d&apos;avis et 🟩 Avis
-              positifs, pour différentes questions liées au thème {label}.
+              Répartition entre <span aria-hidden="true">🟥</span> Avis
+              négatifs, <span aria-hidden="true">🔲</span>Pas d&apos;avis et{" "}
+              <span aria-hidden="true">🟩</span> Avis positifs, pour différentes
+              questions liées au thème {label}.
             </>
           }
           containerStyle={{ height: 520 }}

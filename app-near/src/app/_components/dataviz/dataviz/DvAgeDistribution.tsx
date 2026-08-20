@@ -182,7 +182,7 @@ const DvAgeDistribution: React.FC<DvAgeDistributionProps> = ({
     >
       <div className="flex h-full w-full flex-col">
         <div className="text-base font-bold" style={{ color: mainColor }}>
-          {TITLE} {TITLE_EMOJI}
+          {TITLE} <span aria-hidden="true">{TITLE_EMOJI}</span>
         </div>
         <div ref={svgContainer} className="min-h-0 flex-1">
           <svg ref={svgRef} className="h-full w-full" aria-hidden="true" />

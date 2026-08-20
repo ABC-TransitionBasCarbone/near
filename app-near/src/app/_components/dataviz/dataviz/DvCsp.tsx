@@ -56,7 +56,11 @@ const DvCsp: React.FC<DvCspProps> = ({ selectedSus }) => {
     >
       <StackedBarList
         rows={rows}
-        title={`${TITLE} ${TITLE_EMOJI}`}
+        title={
+          <>
+            {TITLE} <span aria-hidden="true">{TITLE_EMOJI}</span>
+          </>
+        }
         titleColor={mainColor}
         barHeight={40}
         showLegend

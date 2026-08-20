@@ -11,7 +11,8 @@ export const TestimonyBoard: Board = {
     <div className="demographie-board flex h-full flex-col overflow-y-auto p-4">
       <header className="mb-4">
         <h2 className="flex items-center gap-2 text-xl font-semibold text-black">
-          {TestimonyBoard.emoji} {TestimonyBoard.name}
+          <span aria-hidden="true">{TestimonyBoard.emoji}</span>{" "}
+          {TestimonyBoard.name}
         </h2>
         <p className="mt-1 text-sm text-gray">{TestimonyBoard.description}</p>
       </header>

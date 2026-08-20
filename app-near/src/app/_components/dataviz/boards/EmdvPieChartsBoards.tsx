@@ -11,11 +11,16 @@ export const EmdvPieChartsBoard: Board = {
     "Vue d'ensemble des avis sur le cadre de vie (format camemberts)",
   renderComponent: ({ selectedSus }: { selectedSus?: number[] }) => (
     <BoardSection
-      title="👍 Les avis sur le cadre de vie"
+      title={
+        <>
+          <span aria-hidden="true">👍</span> Les avis sur le cadre de vie
+        </>
+      }
       description={
         <>
-          Répartition des avis par question — 🟥 Avis négatifs · ⬜ Pas
-          d&apos;avis · 🟩 Avis positifs
+          Répartition des avis par question — <span aria-hidden="true">🟥</span>{" "}
+          Avis négatifs · <span aria-hidden="true">⬜</span> Pas d&apos;avis ·{" "}
+          <span aria-hidden="true">🟩</span> Avis positifs
         </>
       }
       containerStyle={{

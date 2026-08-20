@@ -51,7 +51,11 @@ const DvVolonteTout: React.FC<Props> = ({ selectedSus }) => {
         <div className="flex-1 px-2 pb-2">
           <StackedBarList
             rows={rows}
-            title="📊 Volontés de changement"
+            title={
+              <>
+                <span aria-hidden="true">📊</span> Volontés de changement
+              </>
+            }
             headerRight={`${data?.data.length ?? 0} questions`}
             normalize
             minSegmentWidthForLabel={30}

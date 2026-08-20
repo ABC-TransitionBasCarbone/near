@@ -13,7 +13,8 @@ export const VolonteBoard: Board = {
     <BoardSection
       title={
         <>
-          {VolonteBoard.emoji} {VolonteBoard.name}
+          <span aria-hidden="true">{VolonteBoard.emoji}</span>{" "}
+          {VolonteBoard.name}
         </>
       }
       description={VolonteBoard.description}

@@ -62,7 +62,7 @@ const DvGenre: React.FC<DvGenreProps> = ({ selectedSus }) => {
     >
       <div className="flex h-full w-full flex-col">
         <div className="text-base font-bold" style={{ color: mainColor }}>
-          {TITLE} {TITLE_EMOJI}
+          {TITLE} <span aria-hidden="true">{TITLE_EMOJI}</span>
         </div>
         <div
           ref={svgContainer}
