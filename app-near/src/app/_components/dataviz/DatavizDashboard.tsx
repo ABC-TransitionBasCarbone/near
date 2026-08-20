@@ -99,7 +99,9 @@ const DatavizDashboard: React.FC = () => {
     return (
       <div className="flex h-full w-full items-center justify-center">
         <div className="flex flex-col items-center gap-3 text-center">
-          <div className="text-3xl">❌</div>
+          <div className="text-3xl" aria-hidden="true">
+            ❌
+          </div>
           <p className="text-black">
             Nous n&apos;avons pas pu charger les sphères d&apos;usage
           </p>
@@ -137,7 +139,8 @@ const DatavizDashboard: React.FC = () => {
               : "border-grayLight bg-white text-blue hover:bg-blue/5"
           }`}
         >
-          {isBoardReady ? "📸" : "⏳"} Sauvegarder
+          <span aria-hidden="true">{isBoardReady ? "📸" : "⏳"}</span>{" "}
+          Sauvegarder
         </button>
 
         <BoardViewer

@@ -35,7 +35,8 @@ const SuTabs: React.FC<SuTabsProps> = ({
   return (
     <div className="border-b border-grayLight bg-white px-4 py-5">
       <h3 className="mb-2 text-sm font-semibold text-black">
-        🔍 Sur qui souhaitez-vous découvrir des choses ?
+        <span aria-hidden="true">🔍</span> Sur qui souhaitez-vous découvrir des
+        choses ?
       </h3>
       <div className="flex flex-wrap gap-2">
         <button

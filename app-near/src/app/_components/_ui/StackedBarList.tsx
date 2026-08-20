@@ -23,7 +23,7 @@ export interface StackedBarRow {
 
 interface StackedBarListProps {
   rows: StackedBarRow[];
-  title?: string;
+  title?: React.ReactNode;
   titleColor?: string;
   headerRight?: string;
   barHeight?: number;

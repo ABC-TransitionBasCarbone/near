@@ -22,7 +22,7 @@ const BoardTabs: React.FC<BoardTabsProps> = ({
   return (
     <div className="border-b border-grayLight bg-white px-4 py-5">
       <h3 className="mb-2 text-sm font-semibold text-black">
-        📊 Que voulez-vous découvrir ?
+        <span aria-hidden="true">📊</span> Que voulez-vous découvrir ?
       </h3>
       <div className="flex flex-wrap gap-2">
         {BOARD_GROUPS.map((group) => (
@@ -35,7 +35,7 @@ const BoardTabs: React.FC<BoardTabsProps> = ({
                 : "border-grayLight text-blue hover:bg-blue/5"
             }`}
           >
-            {group.main.emoji} {group.main.name}
+            <span aria-hidden="true">{group.main.emoji}</span> {group.main.name}
           </button>
         ))}
       </div>
@@ -50,7 +50,8 @@ const BoardTabs: React.FC<BoardTabsProps> = ({
                 : "border-grayLight text-gray hover:bg-blue/5"
             }`}
           >
-            {activeGroup.main.emoji} Vue d&apos;ensemble
+            <span aria-hidden="true">{activeGroup.main.emoji}</span> Vue
+            d&apos;ensemble
           </button>
           {activeGroup.subBoards.map((board) => (
             <button
@@ -62,7 +63,7 @@ const BoardTabs: React.FC<BoardTabsProps> = ({
                   : "border-grayLight text-gray hover:bg-blue/5"
               }`}
             >
-              {board.emoji} {board.name}
+              <span aria-hidden="true">{board.emoji}</span> {board.name}
             </button>
           ))}
         </div>

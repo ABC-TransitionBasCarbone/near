@@ -17,7 +17,11 @@ export const BarrierQuestionBoards: Board[] = BARRIER_FIELDS.map((key) => {
     description: `% des répondants ayant indiqué des barrières à la transition`,
     renderComponent: ({ selectedSus }) => (
       <BoardSection
-        title={`${emoji} Barrières ${title}`}
+        title={
+          <>
+            <span aria-hidden="true">{emoji}</span> Barrières {title}
+          </>
+        }
         description="% de répondants ayant coché les différentes réponses"
         containerStyle={{ height: 460 }}
       >

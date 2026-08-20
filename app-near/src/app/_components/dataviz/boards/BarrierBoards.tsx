@@ -11,7 +11,11 @@ export const BarrierBoards: Board[] = [
     description: "Les barrières pour différents usages, agrégées ensembles",
     renderComponent: ({ selectedSus }) => (
       <BoardSection
-        title="🚧 Barrières à la transition"
+        title={
+          <>
+            <span aria-hidden="true">🚧</span> Barrières à la transition
+          </>
+        }
         description="% de répondants ayant coché une réponse dans chaque famille de barrière"
         containerStyle={{ height: 420 }}
       >
