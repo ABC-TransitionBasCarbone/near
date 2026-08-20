@@ -31,6 +31,8 @@ interface StackedBarListProps {
   normalize?: boolean;
   minSegmentWidthForLabel?: number;
   showLegend?: boolean;
+  rowTitleColor?: string;
+  segmentLabelColor?: string;
 }
 
 const PADDING = 16;
@@ -46,6 +48,8 @@ const StackedBarList: React.FC<StackedBarListProps> = ({
   normalize = false,
   minSegmentWidthForLabel = 32,
   showLegend = false,
+  rowTitleColor = colors.black,
+  segmentLabelColor = colors.white,
 }) => {
   const svgRef = useRef<SVGSVGElement>(null);
   const { containerRef, tooltip, showTooltip, hideTooltip } = useMouseTooltip();
@@ -105,7 +109,7 @@ const StackedBarList: React.FC<StackedBarListProps> = ({
           .attr("x", 0)
           .attr("y", -6)
           .style("font-size", "12px")
-          .style("fill", "#374151")
+          .style("fill", rowTitleColor)
           .text(row.titleEmoji ? `${row.titleEmoji} ${row.title}` : row.title);
       }
 
@@ -139,7 +143,7 @@ const StackedBarList: React.FC<StackedBarListProps> = ({
             .attr("dominant-baseline", "central")
             .style("font-size", "11px")
             .style("font-weight", 700)
-            .style("fill", "#ffffff")
+            .style("fill", segmentLabelColor)
             .style("paint-order", "stroke fill")
             .style("stroke", "rgba(0,0,0,0.35)")
             .style("stroke-width", "3px")
@@ -158,6 +162,8 @@ const StackedBarList: React.FC<StackedBarListProps> = ({
     rowGap,
     normalize,
     minSegmentWidthForLabel,
+    rowTitleColor,
+    segmentLabelColor,
     showTooltip,
     hideTooltip,
   ]);

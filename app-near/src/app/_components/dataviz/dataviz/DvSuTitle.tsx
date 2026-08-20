@@ -12,9 +12,13 @@ import {
 
 type DvSuTitleProps = {
   selectedSus?: number[];
+  subtitleColor?: string;
 };
 
-const DvSuTitle: React.FC<DvSuTitleProps> = ({ selectedSus }) => {
+const DvSuTitle: React.FC<DvSuTitleProps> = ({
+  selectedSus,
+  subtitleColor = "#6b7280",
+}) => {
   const {
     containerRef,
     width: measuredWidth,
@@ -122,7 +126,7 @@ const DvSuTitle: React.FC<DvSuTitleProps> = ({ selectedSus }) => {
       .attr("x", contentX)
       .attr("y", 12)
       .style("font-size", "11px")
-      .style("fill", "#6b7280")
+      .style("fill", subtitleColor)
       .text(view.subtitle);
 
     root
@@ -160,9 +164,9 @@ const DvSuTitle: React.FC<DvSuTitleProps> = ({ selectedSus }) => {
       .attr("x", contentX)
       .attr("y", barY + 24)
       .style("font-size", "11px")
-      .style("fill", "#6b7280")
+      .style("fill", subtitleColor)
       .text(`${view.popPercentage.toFixed(1)}% de la population totale`);
-  }, [view, layout, width, height, suBank]);
+  }, [view, layout, width, height, suBank, subtitleColor]);
 
   if (loading) {
     return (

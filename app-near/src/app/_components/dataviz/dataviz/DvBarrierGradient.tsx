@@ -11,11 +11,15 @@ interface DvBarrierGradientProps {
   selectedQuestionKey: BarrierField | "all";
   onQuestionChange?: (questionKey: string) => void;
   showHamburger?: boolean;
+  labelColor?: string;
+  captionColor?: string;
 }
 
 const DvBarrierGradient: React.FC<DvBarrierGradientProps> = ({
   selectedSus,
   selectedQuestionKey,
+  labelColor = "#0f172a",
+  captionColor = "#334155",
 }) => {
   const svgRef = useRef<SVGSVGElement>(null);
   const { containerRef: svgContainer, width, height } = useChartDimensions();
@@ -140,7 +144,7 @@ const DvBarrierGradient: React.FC<DvBarrierGradientProps> = ({
       .attr("dominant-baseline", "central")
       .attr("class", "p2-labels")
       .style("font-size", "11px")
-      .style("fill", "#0f172a")
+      .style("fill", labelColor)
       .text((d: RowItem) => `${d.emoji} ${d.label}`);
 
     rows
@@ -160,7 +164,7 @@ const DvBarrierGradient: React.FC<DvBarrierGradientProps> = ({
       .attr("y", yStart + totalH + 12)
       .attr("text-anchor", "end")
       .attr("class", "p3-labels")
-      .style("fill", "#334155")
+      .style("fill", captionColor)
       .style("font-size", "11px")
       .text("(% des répondants ayant coché une réponse dans cette catégorie)");
 
@@ -217,7 +221,7 @@ const DvBarrierGradient: React.FC<DvBarrierGradientProps> = ({
       .style("font-size", "10px")
       .style("font-weight", "700")
       .text("0%");
-  }, [data, width, height, selectedQuestionKey]);
+  }, [data, width, height, selectedQuestionKey, labelColor, captionColor]);
 
   if (loading) {
     return (

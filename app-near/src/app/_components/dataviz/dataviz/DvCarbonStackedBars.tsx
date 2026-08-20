@@ -10,7 +10,13 @@ import type { CarbonSankeyData } from "~/server/su/dataviz/carbonSankey";
 
 type NodeItem = CarbonSankeyData["nodes"][number];
 type ParentGroup = { root: NodeItem; children: NodeItem[] };
-type Props = { selectedSus?: number[] };
+type Props = {
+  selectedSus?: number[];
+  axisLabelColor?: string;
+  rowTitleColor?: string;
+  rowValueColor?: string;
+  legendTextColor?: string;
+};
 
 const LABEL_W = 200;
 const ROW_H = 36;
@@ -19,7 +25,13 @@ const ROW_STEP = ROW_H + LEGEND_H + 18; // bar + legend + gap
 const MARGIN = { top: 40, right: 20, bottom: 20, left: 20 };
 const FALLBACK_WIDTH = 900;
 
-const DvCarbonStackedBars: React.FC<Props> = ({ selectedSus }) => {
+const DvCarbonStackedBars: React.FC<Props> = ({
+  selectedSus,
+  axisLabelColor = "#9ca3af",
+  rowTitleColor = "#1f2937",
+  rowValueColor = "#6b7280",
+  legendTextColor = "#4b5563",
+}) => {
   const { containerRef, container, width } = useChartDimensions();
   const svgRef = useRef<SVGSVGElement>(null);
 
@@ -90,7 +102,7 @@ const DvCarbonStackedBars: React.FC<Props> = ({ selectedSus }) => {
       .attr("y", -18)
       .attr("text-anchor", "end")
       .style("font-size", "12px")
-      .style("fill", "#9ca3af")
+      .style("fill", axisLabelColor)
       .text("kg CO₂e / an →");
 
     parentGroups.forEach((group, gi) => {
@@ -104,7 +116,7 @@ const DvCarbonStackedBars: React.FC<Props> = ({ selectedSus }) => {
         .attr("dominant-baseline", "central")
         .style("font-size", "14px")
         .style("font-weight", "600")
-        .style("fill", "#1f2937")
+        .style("fill", rowTitleColor)
         .text(`${group.root.emoji} ${group.root.name}`);
 
       g.append("text")
@@ -113,7 +125,7 @@ const DvCarbonStackedBars: React.FC<Props> = ({ selectedSus }) => {
         .attr("text-anchor", "end")
         .attr("dominant-baseline", "central")
         .style("font-size", "12px")
-        .style("fill", "#6b7280")
+        .style("fill", rowValueColor)
         .text(`${group.root.value.toFixed(0)} kg`);
 
       g.append("rect")
@@ -196,8 +208,7 @@ const DvCarbonStackedBars: React.FC<Props> = ({ selectedSus }) => {
         xmlns,
         "div",
       ) as HTMLDivElement;
-      legendDiv.style.cssText =
-        "display:flex;flex-wrap:wrap;gap:3px 14px;font-size:13px;color:#4b5563;line-height:1.5;";
+      legendDiv.style.cssText = `display:flex;flex-wrap:wrap;gap:3px 14px;font-size:13px;color:${legendTextColor};line-height:1.5;`;
 
       group.children.forEach((child, ci) => {
         const color = palette[ci % palette.length]!;
@@ -218,7 +229,19 @@ const DvCarbonStackedBars: React.FC<Props> = ({ selectedSus }) => {
 
       fo.node()!.appendChild(legendDiv);
     });
-  }, [payload, parentGroups, palette, mainColor, globalMax, width, container]);
+  }, [
+    payload,
+    parentGroups,
+    palette,
+    mainColor,
+    globalMax,
+    width,
+    container,
+    axisLabelColor,
+    rowTitleColor,
+    rowValueColor,
+    legendTextColor,
+  ]);
 
   if (loading) {
     return (
