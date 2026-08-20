@@ -6,6 +6,7 @@ import { api } from "~/trpc/react";
 import { useSuBank, getPalette } from "../hooks/useSuBank";
 import { useChartDimensions } from "../hooks/useChartDimensions";
 import { getD3Tooltip } from "../hooks/useD3Tooltip";
+import DvAsync from "./DvAsync";
 import type { CarbonSankeyData } from "~/server/su/dataviz/carbonSankey";
 
 type NodeItem = CarbonSankeyData["nodes"][number];
@@ -243,51 +244,39 @@ const DvCarbonStackedBars: React.FC<Props> = ({
     legendTextColor,
   ]);
 
-  if (loading) {
-    return (
-      <div ref={containerRef} className="dv-container relative w-full">
-        <div className="p-3 text-gray">Chargement…</div>
-        <svg ref={svgRef} />
-      </div>
-    );
-  }
-  if (error) {
-    return (
-      <div ref={containerRef} className="dv-container relative w-full">
-        <div className="p-3 text-error">
-          Impossible de charger les données carbone
-        </div>
-        <svg ref={svgRef} />
-      </div>
-    );
-  }
-
   return (
-    <div ref={containerRef} className="dv-container relative w-full">
-      <svg ref={svgRef} aria-hidden="true" />
-      {payload && parentGroups.length > 0 && (
-        <div className="sr-only">
-          <p>
-            Empreinte individuelle moyenne :{" "}
-            {(payload.totalValue / 1000).toFixed(1)} t CO₂e par an.
-          </p>
-          <ul>
-            {parentGroups.map((g) => (
-              <li key={g.root.id}>
-                {g.root.name} : {g.root.value.toFixed(0)} kg CO₂e
-                <ul>
-                  {g.children.map((c) => (
-                    <li key={c.id}>
-                      {c.name} : {c.value.toFixed(0)} kg CO₂e
-                    </li>
-                  ))}
-                </ul>
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
-    </div>
+    <DvAsync
+      loading={loading}
+      error={error}
+      isEmpty={false}
+      messages={{ error: "Impossible de charger les données carbone" }}
+    >
+      <div ref={containerRef} className="dv-container relative w-full">
+        <svg ref={svgRef} aria-hidden="true" />
+        {payload && parentGroups.length > 0 && (
+          <div className="sr-only">
+            <p>
+              Empreinte individuelle moyenne :{" "}
+              {(payload.totalValue / 1000).toFixed(1)} t CO₂e par an.
+            </p>
+            <ul>
+              {parentGroups.map((g) => (
+                <li key={g.root.id}>
+                  {g.root.name} : {g.root.value.toFixed(0)} kg CO₂e
+                  <ul>
+                    {g.children.map((c) => (
+                      <li key={c.id}>
+                        {c.name} : {c.value.toFixed(0)} kg CO₂e
+                      </li>
+                    ))}
+                  </ul>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+      </div>
+    </DvAsync>
   );
 };
 

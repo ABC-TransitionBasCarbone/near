@@ -5,6 +5,7 @@ import { api } from "~/trpc/react";
 import { type BarrierField } from "~/shared/services/dataviz/barriers";
 import { useChartDimensions } from "../hooks/useChartDimensions";
 import { getD3Tooltip } from "../hooks/useD3Tooltip";
+import DvAsync from "./DvAsync";
 
 interface DvBarrierGradientProps {
   selectedSus?: number[];
@@ -223,47 +224,33 @@ const DvBarrierGradient: React.FC<DvBarrierGradientProps> = ({
       .text("0%");
   }, [data, width, height, selectedQuestionKey, labelColor, captionColor]);
 
-  if (loading) {
-    return (
-      <div className="flex h-64 items-center justify-center">
-        <div className="text-gray">Chargement des données…</div>
-      </div>
-    );
-  }
-  if (error) {
-    return (
-      <div className="flex h-64 items-center justify-center text-error">
-        Impossible de charger les barrières
-      </div>
-    );
-  }
-  if (!data) {
-    return (
-      <div className="flex h-64 items-center justify-center text-gray">
-        Aucune donnée disponible
-      </div>
-    );
-  }
-
-  const srItems = data.choices
+  const srItems = (data?.choices ?? [])
     .filter((c) => c.percentage > 0 && !c.isNotConcerned)
     .slice()
     .sort((a, b) => b.percentage - a.percentage);
 
   return (
-    <div ref={svgContainer} className="h-full w-full">
-      <svg ref={svgRef} className="h-full w-full" aria-hidden="true" />
-      <div className="sr-only">
-        <p>{data.title}</p>
-        <ul>
-          {srItems.map((c) => (
-            <li key={c.label}>
-              {c.label} : {c.percentage.toFixed(1)}%
-            </li>
-          ))}
-        </ul>
+    <DvAsync
+      loading={loading}
+      error={error}
+      isEmpty={!data}
+      messages={{ error: "Impossible de charger les barrières" }}
+      centered
+    >
+      <div ref={svgContainer} className="h-full w-full">
+        <svg ref={svgRef} className="h-full w-full" aria-hidden="true" />
+        <div className="sr-only">
+          <p>{data?.title}</p>
+          <ul>
+            {srItems.map((c) => (
+              <li key={c.label}>
+                {c.label} : {c.percentage.toFixed(1)}%
+              </li>
+            ))}
+          </ul>
+        </div>
       </div>
-    </div>
+    </DvAsync>
   );
 };
 

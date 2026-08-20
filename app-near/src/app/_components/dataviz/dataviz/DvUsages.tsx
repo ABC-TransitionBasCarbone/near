@@ -7,6 +7,7 @@ import { USAGE_FIELDS, USAGE_QUESTIONS } from "~/shared/services/dataviz/usage";
 import { useSuBank } from "../hooks/useSuBank";
 import { useChartDimensions } from "../hooks/useChartDimensions";
 import { getD3Tooltip } from "../hooks/useD3Tooltip";
+import DvAsync from "./DvAsync";
 
 interface DvUsagesProps {
   selectedSus?: number[];
@@ -338,50 +339,37 @@ const DvUsages: React.FC<DvUsagesProps> = ({ selectedSus }) => {
     });
   }, [data, mainColor, darkColor1, width, height]);
 
-  if (loading) {
-    return (
-      <div className="flex h-64 items-center justify-center">
-        <div className="text-gray">Chargement des données d&apos;usage...</div>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="flex h-64 items-center justify-center text-error">
-        Erreur lors du chargement des données
-      </div>
-    );
-  }
-
-  if (!data || data.length === 0) {
-    return (
-      <div className="flex h-64 items-center justify-center text-gray">
-        Aucune donnée d&apos;usage disponible
-      </div>
-    );
-  }
-
   return (
-    <div ref={svgContainer} className="h-full w-full">
-      <svg ref={svgRef} className="h-full w-full" aria-hidden="true" />
-      <div className="sr-only">
-        <ul>
-          {data.map((question) => (
-            <li key={question.title}>
-              {question.title}
-              <ul>
-                {question.data.map((d) => (
-                  <li key={d.value}>
-                    {d.label} : {d.percentage.toFixed(1)}% ({d.count})
-                  </li>
-                ))}
-              </ul>
-            </li>
-          ))}
-        </ul>
+    <DvAsync
+      loading={loading}
+      error={error}
+      isEmpty={!data || data.length === 0}
+      messages={{
+        loading: "Chargement des données d’usage…",
+        empty: "Aucune donnée d’usage disponible",
+      }}
+      centered
+    >
+      <div ref={svgContainer} className="h-full w-full">
+        <svg ref={svgRef} className="h-full w-full" aria-hidden="true" />
+        <div className="sr-only">
+          <ul>
+            {data?.map((question) => (
+              <li key={question.title}>
+                {question.title}
+                <ul>
+                  {question.data.map((d) => (
+                    <li key={d.value}>
+                      {d.label} : {d.percentage.toFixed(1)}% ({d.count})
+                    </li>
+                  ))}
+                </ul>
+              </li>
+            ))}
+          </ul>
+        </div>
       </div>
-    </div>
+    </DvAsync>
   );
 };
 

@@ -6,6 +6,7 @@ import { api } from "~/trpc/react";
 import { useSuBank } from "../hooks/useSuBank";
 import { useChartDimensions } from "../hooks/useChartDimensions";
 import { getD3Tooltip } from "../hooks/useD3Tooltip";
+import DvAsync from "./DvAsync";
 
 interface DvAgeDistributionProps {
   selectedSus?: number[];
@@ -171,46 +172,30 @@ const DvAgeDistribution: React.FC<DvAgeDistributionProps> = ({
       .attr("dy", ".50em");
   }, [data, width, height, mainColor, lightColor3]);
 
-  if (loading) {
-    return (
-      <div className="flex h-64 items-center justify-center">
-        <div className="text-gray">Chargement des données d&apos;âge...</div>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="flex h-64 items-center justify-center text-error">
-        Erreur lors du chargement des données
-      </div>
-    );
-  }
-
-  if (!data || data.length === 0) {
-    return (
-      <div className="flex h-64 items-center justify-center text-gray">
-        Aucune donnée disponible
-      </div>
-    );
-  }
-
   return (
-    <div className="flex h-full w-full flex-col">
-      <div className="text-base font-bold" style={{ color: mainColor }}>
-        {TITLE} {TITLE_EMOJI}
+    <DvAsync
+      loading={loading}
+      error={error}
+      isEmpty={!data || data.length === 0}
+      messages={{ loading: "Chargement des données d’âge…" }}
+      centered
+    >
+      <div className="flex h-full w-full flex-col">
+        <div className="text-base font-bold" style={{ color: mainColor }}>
+          {TITLE} {TITLE_EMOJI}
+        </div>
+        <div ref={svgContainer} className="min-h-0 flex-1">
+          <svg ref={svgRef} className="h-full w-full" aria-hidden="true" />
+          <ul className="sr-only">
+            {data?.map((d) => (
+              <li key={d.label}>
+                {d.label} : {d.percentage.toFixed(1)}% ({d.count} personnes)
+              </li>
+            ))}
+          </ul>
+        </div>
       </div>
-      <div ref={svgContainer} className="min-h-0 flex-1">
-        <svg ref={svgRef} className="h-full w-full" aria-hidden="true" />
-        <ul className="sr-only">
-          {data.map((d) => (
-            <li key={d.label}>
-              {d.label} : {d.percentage.toFixed(1)}% ({d.count} personnes)
-            </li>
-          ))}
-        </ul>
-      </div>
-    </div>
+    </DvAsync>
   );
 };
 

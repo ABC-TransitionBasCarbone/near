@@ -5,6 +5,7 @@ import { api } from "~/trpc/react";
 import type { SatisfactionQuestionResult } from "~/server/su/dataviz/satisfactionDistribution";
 import { YES_NO_COLORS } from "~/shared/services/dataviz/satisfaction";
 import PieChart, { type PieSlice } from "../../_ui/PieChart";
+import DvAsync from "./DvAsync";
 
 type Props = { selectedSus?: number[] };
 
@@ -73,29 +74,23 @@ const DvEmdvSatisfactionsPieCharts: React.FC<Props> = ({ selectedSus }) => {
   } = api.suDataviz.getSatisfactionDistribution.useQuery({ selectedSus });
   const subcategories = data?.subcategories ?? [];
 
-  if (loading) return <div className="p-3 text-gray">Chargement…</div>;
-  if (error)
-    return (
-      <div className="p-3 text-error">Impossible de charger les données</div>
-    );
-  if (!subcategories.length)
-    return <div className="p-3 text-gray">Aucune donnée.</div>;
-
   return (
-    <div className="px-2 pb-6 pt-2">
-      {subcategories.map((sc) => (
-        <div key={sc.subcategory} className="zone-target mb-8">
-          <h3 className="mx-1 mb-3 border-b border-grayLight pb-1.5 text-sm font-semibold text-black">
-            {sc.emoji} {sc.label}
-          </h3>
-          <div className="flex flex-wrap justify-start gap-5 pl-1">
-            {sc.questions.map((q) => (
-              <EmdvPieCard key={q.field} question={q} />
-            ))}
+    <DvAsync loading={loading} error={error} isEmpty={!subcategories.length}>
+      <div className="px-2 pb-6 pt-2">
+        {subcategories.map((sc) => (
+          <div key={sc.subcategory} className="zone-target mb-8">
+            <h3 className="mx-1 mb-3 border-b border-grayLight pb-1.5 text-sm font-semibold text-black">
+              {sc.emoji} {sc.label}
+            </h3>
+            <div className="flex flex-wrap justify-start gap-5 pl-1">
+              {sc.questions.map((q) => (
+                <EmdvPieCard key={q.field} question={q} />
+              ))}
+            </div>
           </div>
-        </div>
-      ))}
-    </div>
+        ))}
+      </div>
+    </DvAsync>
   );
 };
 

@@ -4,6 +4,7 @@ import React, { useMemo } from "react";
 import { WishesChoices } from "@prisma/client";
 import { api } from "~/trpc/react";
 import StackedBarList, { type StackedBarRow } from "../../_ui/StackedBarList";
+import DvAsync from "./DvAsync";
 
 interface Props {
   selectedSus?: number[];
@@ -40,41 +41,25 @@ const DvVolonteTout: React.FC<Props> = ({ selectedSus }) => {
     }));
   }, [data]);
 
-  if (loading) {
-    return (
-      <div className="dv-container h-full w-full">
-        <div className="p-3 text-gray">Chargement…</div>
-      </div>
-    );
-  }
-  if (error) {
-    return (
-      <div className="dv-container h-full w-full">
-        <div className="p-3 text-error">Impossible de charger les données</div>
-      </div>
-    );
-  }
-  if (!data || data.data.length === 0) {
-    return (
-      <div className="dv-container h-full w-full">
-        <div className="p-3 text-gray">Aucune donnée.</div>
-      </div>
-    );
-  }
-
   return (
-    <div className="flex h-full w-full flex-col">
-      <div className="flex-1 px-2 pb-2">
-        <StackedBarList
-          rows={rows}
-          title="📊 Volontés de changement"
-          headerRight={`${data.data.length} questions`}
-          normalize
-          minSegmentWidthForLabel={30}
-          showLegend
-        />
+    <DvAsync
+      loading={loading}
+      error={error}
+      isEmpty={!data || data.data.length === 0}
+    >
+      <div className="flex h-full w-full flex-col">
+        <div className="flex-1 px-2 pb-2">
+          <StackedBarList
+            rows={rows}
+            title="📊 Volontés de changement"
+            headerRight={`${data?.data.length ?? 0} questions`}
+            normalize
+            minSegmentWidthForLabel={30}
+            showLegend
+          />
+        </div>
       </div>
-    </div>
+    </DvAsync>
   );
 };
 

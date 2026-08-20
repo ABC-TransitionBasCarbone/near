@@ -13,6 +13,7 @@ import {
 import { api } from "~/trpc/react";
 import { useSuBank } from "../hooks/useSuBank";
 import { useChartDimensions } from "../hooks/useChartDimensions";
+import DvAsync from "./DvAsync";
 import { getD3Tooltip } from "../hooks/useD3Tooltip";
 
 type NodeData = { id: string; name: string; emoji: string; value: number };
@@ -376,51 +377,36 @@ const DvCarbonSankey: React.FC<Props> = ({ selectedSus }) => {
       .text(`☁ Empreinte individuelle moyenne : ${totalTons} t CO2e / an`);
   }, [graph, payload, mainColor, colorLight1, colorDark1, container]);
 
-  if (loading) {
-    return (
-      <div ref={containerRef} className="dv-container h-full w-full">
-        <div className="p-3 text-gray">Chargement du Sankey…</div>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div ref={containerRef} className="dv-container h-full w-full">
-        <div className="p-3 text-error">
-          Impossible de charger les données du Sankey carbone
-        </div>
-      </div>
-    );
-  }
-
-  if (!payload || payload.sankeyData.nodes.length === 0) {
-    return (
-      <div ref={containerRef} className="dv-container h-full w-full">
-        <div className="p-3 text-gray">Aucune donnée carbone disponible.</div>
-      </div>
-    );
-  }
-
-  const totalTons = (payload.totalValue / 1000).toFixed(1);
+  const totalTons = ((payload?.totalValue ?? 0) / 1000).toFixed(1);
 
   return (
-    <div ref={containerRef} className="dv-container relative h-full w-full">
-      <svg ref={svgRef} aria-hidden="true" />
-      <div className="sr-only">
-        <p>
-          Empreinte individuelle moyenne : {totalTons} t CO2e par an, répartie
-          en {categorySummaries.length} catégories.
-        </p>
-        <ul>
-          {categorySummaries.map((c) => (
-            <li key={c.id}>
-              {c.name} : {(c.value / 1000).toFixed(2)} t CO2e
-            </li>
-          ))}
-        </ul>
+    <DvAsync
+      loading={loading}
+      error={error}
+      isEmpty={!payload || payload.sankeyData.nodes.length === 0}
+      messages={{
+        loading: "Chargement du Sankey…",
+        error: "Impossible de charger les données du Sankey carbone",
+        empty: "Aucune donnée carbone disponible",
+      }}
+    >
+      <div ref={containerRef} className="dv-container relative h-full w-full">
+        <svg ref={svgRef} aria-hidden="true" />
+        <div className="sr-only">
+          <p>
+            Empreinte individuelle moyenne : {totalTons} t CO2e par an, répartie
+            en {categorySummaries.length} catégories.
+          </p>
+          <ul>
+            {categorySummaries.map((c) => (
+              <li key={c.id}>
+                {c.name} : {(c.value / 1000).toFixed(2)} t CO2e
+              </li>
+            ))}
+          </ul>
+        </div>
       </div>
-    </div>
+    </DvAsync>
   );
 };
 

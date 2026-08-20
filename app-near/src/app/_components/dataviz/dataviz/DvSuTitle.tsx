@@ -9,6 +9,7 @@ import {
   getFallbackIcon,
   validateAndSanitizeIcon,
 } from "../../_services/sanitize/icons";
+import DvAsync from "./DvAsync";
 
 type DvSuTitleProps = {
   selectedSus?: number[];
@@ -168,32 +169,16 @@ const DvSuTitle: React.FC<DvSuTitleProps> = ({
       .text(`${view.popPercentage.toFixed(1)}% de la population totale`);
   }, [view, layout, width, height, suBank, subtitleColor]);
 
-  if (loading) {
-    return (
-      <div ref={containerRef} className="dv-container h-full w-full">
-        <div className="p-3 text-gray">Chargement…</div>
-        <svg ref={svgRef} />
-      </div>
-    );
-  }
-
-  if (!view) {
-    return (
-      <div ref={containerRef} className="dv-container h-full w-full">
-        <div className="p-3 text-gray">Aucune donnée disponible.</div>
-        <svg ref={svgRef} />
-      </div>
-    );
-  }
-
   return (
-    <div ref={containerRef} className="dv-container h-full w-full">
-      <svg ref={svgRef} aria-hidden="true" />
-      <p className="sr-only">
-        {view.subtitle} — {view.nameFr} : {view.popPercentage.toFixed(1)}% de la
-        population totale
-      </p>
-    </div>
+    <DvAsync loading={loading} error={undefined} isEmpty={!view}>
+      <div ref={containerRef} className="dv-container h-full w-full">
+        <svg ref={svgRef} aria-hidden="true" />
+        <p className="sr-only">
+          {view?.subtitle} — {view?.nameFr} : {view?.popPercentage.toFixed(1)}%
+          de la population totale
+        </p>
+      </div>
+    </DvAsync>
   );
 };
 

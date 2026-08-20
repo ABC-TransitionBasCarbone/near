@@ -4,6 +4,7 @@ import React, { useMemo } from "react";
 import { api } from "~/trpc/react";
 import { useSuBank, getPalette } from "../hooks/useSuBank";
 import StackedBarList, { type StackedBarRow } from "../../_ui/StackedBarList";
+import DvAsync from "./DvAsync";
 
 interface DvCspProps {
   selectedSus?: number[];
@@ -45,38 +46,22 @@ const DvCsp: React.FC<DvCspProps> = ({ selectedSus }) => {
     ];
   }, [data, colors, mainColor, unit]);
 
-  if (loading) {
-    return (
-      <div className="flex h-64 items-center justify-center">
-        <div className="text-gray">Chargement des données CSP...</div>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="flex h-64 items-center justify-center text-error">
-        Erreur lors du chargement des données
-      </div>
-    );
-  }
-
-  if (!data || data.length === 0) {
-    return (
-      <div className="flex h-64 items-center justify-center text-gray">
-        Aucune donnée disponible
-      </div>
-    );
-  }
-
   return (
-    <StackedBarList
-      rows={rows}
-      title={`${TITLE} ${TITLE_EMOJI}`}
-      titleColor={mainColor}
-      barHeight={40}
-      showLegend
-    />
+    <DvAsync
+      loading={loading}
+      error={error}
+      isEmpty={!data || data.length === 0}
+      messages={{ loading: "Chargement des données CSP…" }}
+      centered
+    >
+      <StackedBarList
+        rows={rows}
+        title={`${TITLE} ${TITLE_EMOJI}`}
+        titleColor={mainColor}
+        barHeight={40}
+        showLegend
+      />
+    </DvAsync>
   );
 };
 

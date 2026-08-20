@@ -5,6 +5,7 @@ import { api } from "~/trpc/react";
 import { useSuBank } from "../hooks/useSuBank";
 import { useChartDimensions } from "../hooks/useChartDimensions";
 import PieChart, { type PieSlice } from "../../_ui/PieChart";
+import DvAsync from "./DvAsync";
 
 interface DvGenreProps {
   selectedSus?: number[];
@@ -51,42 +52,26 @@ const DvGenre: React.FC<DvGenreProps> = ({ selectedSus }) => {
     }));
   }, [data, lightColor1, darkColor1]);
 
-  if (loading) {
-    return (
-      <div className="flex h-64 items-center justify-center">
-        <div className="text-gray">Chargement des données de genre...</div>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="flex h-64 items-center justify-center text-error">
-        Erreur lors du chargement des données
-      </div>
-    );
-  }
-
-  if (!data || data.length === 0) {
-    return (
-      <div className="flex h-64 items-center justify-center text-gray">
-        Aucune donnée disponible
-      </div>
-    );
-  }
-
   return (
-    <div className="flex h-full w-full flex-col">
-      <div className="text-base font-bold" style={{ color: mainColor }}>
-        {TITLE} {TITLE_EMOJI}
+    <DvAsync
+      loading={loading}
+      error={error}
+      isEmpty={!data || data.length === 0}
+      messages={{ loading: "Chargement des données de genre…" }}
+      centered
+    >
+      <div className="flex h-full w-full flex-col">
+        <div className="text-base font-bold" style={{ color: mainColor }}>
+          {TITLE} {TITLE_EMOJI}
+        </div>
+        <div
+          ref={svgContainer}
+          className="flex min-h-0 flex-1 items-center justify-center"
+        >
+          <PieChart slices={slices} radius={radius} />
+        </div>
       </div>
-      <div
-        ref={svgContainer}
-        className="flex min-h-0 flex-1 items-center justify-center"
-      >
-        <PieChart slices={slices} radius={radius} />
-      </div>
-    </div>
+    </DvAsync>
   );
 };
 

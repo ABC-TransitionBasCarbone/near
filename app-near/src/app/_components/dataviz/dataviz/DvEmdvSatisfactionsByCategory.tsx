@@ -7,6 +7,7 @@ import {
   YES_NO_COLORS,
 } from "~/shared/services/dataviz/satisfaction";
 import StackedBarList, { type StackedBarRow } from "../../_ui/StackedBarList";
+import DvAsync from "./DvAsync";
 
 type Props = { selectedSus?: number[]; category?: SatisfactionSubcategory };
 
@@ -44,34 +45,17 @@ const DvEmdvSatisfactionsByCategory: React.FC<Props> = ({
     [questions],
   );
 
-  if (loading) {
-    return (
-      <div className="dv-container h-full w-full">
-        <div className="p-3 text-gray">Chargement…</div>
-      </div>
-    );
-  }
-  if (error) {
-    return (
-      <div className="dv-container h-full w-full">
-        <div className="p-3 text-error">
-          Impossible de charger les satisfactions
-        </div>
-      </div>
-    );
-  }
-  if (questions.length === 0) {
-    return (
-      <div className="dv-container h-full w-full">
-        <div className="p-3 text-gray">Aucune donnée.</div>
-      </div>
-    );
-  }
-
   return (
-    <div className="dv-container h-full w-full">
-      <StackedBarList rows={rows} minSegmentWidthForLabel={30} />
-    </div>
+    <DvAsync
+      loading={loading}
+      error={error}
+      isEmpty={questions.length === 0}
+      messages={{ error: "Impossible de charger les satisfactions" }}
+    >
+      <div className="dv-container h-full w-full">
+        <StackedBarList rows={rows} minSegmentWidthForLabel={30} />
+      </div>
+    </DvAsync>
   );
 };
 
