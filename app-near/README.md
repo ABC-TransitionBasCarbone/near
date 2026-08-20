@@ -241,6 +241,18 @@ npm run webhooks:replay-from-file -- file=<chemin du json> all=true
 npm run webhooks:replay-from-file -- file=<chemin du json> surveyName=<surveyName>
 ```
 
+## Conventions et abréviations
+
+Quelques préfixes/abréviations utilisés dans le code (composants, variables, routes) et pas forcément explicites :
+
+- **Dv** (ex. `DvSuTitle`, `DvCarbonStackedBars`) : "Dataviz" — composants de visualisation de données dans `src/app/_components/dataviz/dataviz`, affichés via les "boards" du dossier `src/app/_components/dataviz/boards`.
+- **SU** (ex. `su`, `useSuBank`, `getSuInfo`) : "Sphère d'Usage".
+- **NGC** (ex. `/api/ngcform`, `carbon-footprint`) : "Nos Gestes Climat", le calculateur d'empreinte carbone utilisé pour le questionnaire.
+- **EMDV** (ex. `EmdvByCategoryBoards`, `EmdvPieChartsBoards`) : "Espace et Mode de Vie".
+- **CSP** (ex. `DvCsp.tsx`) : "Catégorie Socio-Professionnelle".
+
+Si vous introduisez une nouvelle abréviation dans le code, merci de l'ajouter à cette liste.
+
 ## Comment jouer les seeds
 
 Pour lister les différents scopes (scénario de seed) possibles :
