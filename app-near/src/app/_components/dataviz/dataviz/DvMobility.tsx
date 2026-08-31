@@ -16,6 +16,20 @@ interface Props {
   selectedSus?: number[];
 }
 
+const CIRCLE = {
+  center: "circle-center",
+  northClose: "circle-up-a",
+  northDistant: "circle-up-b",
+  eastClose: "circle-right-a",
+  eastDistant: "circle-right-b",
+  southClose: "circle-down-a",
+  southDistant: "circle-down-b",
+  westClose: "circle-left-a",
+  westDistant: "circle-left-b",
+} as const;
+
+type CircleId = (typeof CIRCLE)[keyof typeof CIRCLE];
+
 const DvMobility: React.FC<Props> = ({ selectedSus }) => {
   const {
     containerRef,
@@ -32,6 +46,8 @@ const DvMobility: React.FC<Props> = ({ selectedSus }) => {
   const { data: mobilityData } = api.suDataviz.getMobility.useQuery({
     selectedSus,
   });
+  const { data: neighborhoodConfig } =
+    api.neighborhoodsConfigs.getOne.useQuery();
   const suColors = useSuBank(selectedSus);
 
   const mobilitySummary = useMemo(() => {
@@ -113,16 +129,16 @@ const DvMobility: React.FC<Props> = ({ selectedSus }) => {
       .attr("text-anchor", "middle")
       .text("~20 mins à pieds");
 
-    const circles: { id: string; x: number; y: number }[] = [
-      { id: "circle-center", x: cx, y: cy },
-      { id: "circle-up-a", x: cx - posABy, y: cy - posAx },
-      { id: "circle-up-b", x: cx + posABy, y: cy - posBx },
-      { id: "circle-down-a", x: cx + posABy, y: cy + posAx },
-      { id: "circle-down-b", x: cx - posABy, y: cy + posBx },
-      { id: "circle-left-a", x: cx - posAx, y: cy + posABy },
-      { id: "circle-left-b", x: cx - posBx, y: cy - posABy },
-      { id: "circle-right-a", x: cx + posAx, y: cy - posABy },
-      { id: "circle-right-b", x: cx + posBx, y: cy + posABy },
+    const circles: { id: CircleId; x: number; y: number }[] = [
+      { id: CIRCLE.center, x: cx, y: cy },
+      { id: CIRCLE.northClose, x: cx - posABy, y: cy - posAx },
+      { id: CIRCLE.northDistant, x: cx + posABy, y: cy - posBx },
+      { id: CIRCLE.southClose, x: cx + posABy, y: cy + posAx },
+      { id: CIRCLE.southDistant, x: cx - posABy, y: cy + posBx },
+      { id: CIRCLE.westClose, x: cx - posAx, y: cy + posABy },
+      { id: CIRCLE.westDistant, x: cx - posBx, y: cy - posABy },
+      { id: CIRCLE.eastClose, x: cx + posAx, y: cy - posABy },
+      { id: CIRCLE.eastDistant, x: cx + posBx, y: cy + posABy },
     ];
 
     const n = 15;
@@ -145,15 +161,15 @@ const DvMobility: React.FC<Props> = ({ selectedSus }) => {
     };
 
     const circleToZone: Record<string, string> = {
-      "circle-center": ZoneSelection.ZONE_QUARTIER,
-      "circle-up-a": buildZoneCellKey(ZoneSelection.ZONE_A, "A"),
-      "circle-up-b": buildZoneCellKey(ZoneSelection.ZONE_A, "B"),
-      "circle-right-a": buildZoneCellKey(ZoneSelection.ZONE_B, "A"),
-      "circle-right-b": buildZoneCellKey(ZoneSelection.ZONE_B, "B"),
-      "circle-down-a": buildZoneCellKey(ZoneSelection.ZONE_C, "A"),
-      "circle-down-b": buildZoneCellKey(ZoneSelection.ZONE_C, "B"),
-      "circle-left-a": buildZoneCellKey(ZoneSelection.ZONE_D, "A"),
-      "circle-left-b": buildZoneCellKey(ZoneSelection.ZONE_D, "B"),
+      [CIRCLE.center]: ZoneSelection.ZONE_QUARTIER,
+      [CIRCLE.northClose]: buildZoneCellKey(ZoneSelection.ZONE_A, "A"),
+      [CIRCLE.northDistant]: buildZoneCellKey(ZoneSelection.ZONE_A, "B"),
+      [CIRCLE.eastClose]: buildZoneCellKey(ZoneSelection.ZONE_B, "A"),
+      [CIRCLE.eastDistant]: buildZoneCellKey(ZoneSelection.ZONE_B, "B"),
+      [CIRCLE.southClose]: buildZoneCellKey(ZoneSelection.ZONE_C, "A"),
+      [CIRCLE.southDistant]: buildZoneCellKey(ZoneSelection.ZONE_C, "B"),
+      [CIRCLE.westClose]: buildZoneCellKey(ZoneSelection.ZONE_D, "A"),
+      [CIRCLE.westDistant]: buildZoneCellKey(ZoneSelection.ZONE_D, "B"),
     };
     const modeToMtKey: Record<string, MobilityType> = {
       foot: "FOOT",
@@ -196,22 +212,22 @@ const DvMobility: React.FC<Props> = ({ selectedSus }) => {
       }
     }
 
-    const reversedTextTargets = new Set([
-      "circle-down-b",
-      "circle-left-a",
-      "circle-left-b",
-      "circle-up-a",
+    const reversedTextTargets = new Set<CircleId>([
+      CIRCLE.southDistant,
+      CIRCLE.westClose,
+      CIRCLE.westDistant,
+      CIRCLE.northClose,
     ]);
 
     const targetStartOffset: Record<string, string> = {
-      "circle-up-a": "35%",
-      "circle-up-b": "70%",
-      "circle-down-a": "65%",
-      "circle-down-b": "30%",
-      "circle-left-a": "35%",
-      "circle-left-b": "35%",
-      "circle-right-a": "65%",
-      "circle-right-b": "70%",
+      [CIRCLE.northClose]: "35%",
+      [CIRCLE.northDistant]: "70%",
+      [CIRCLE.southClose]: "65%",
+      [CIRCLE.southDistant]: "30%",
+      [CIRCLE.westClose]: "35%",
+      [CIRCLE.westDistant]: "35%",
+      [CIRCLE.eastClose]: "65%",
+      [CIRCLE.eastDistant]: "70%",
     };
 
     const center = circles[0]!;
@@ -371,7 +387,7 @@ const DvMobility: React.FC<Props> = ({ selectedSus }) => {
         .attr("stroke", colorMain)
         .attr("stroke-width", strokeForCircle[id] ?? 2);
 
-      if (id === "circle-center") {
+      if (id === CIRCLE.center) {
         g.append("text")
           .attr("x", x)
           .attr("y", y)
@@ -424,35 +440,60 @@ const DvMobility: React.FC<Props> = ({ selectedSus }) => {
       });
     });
 
-    const destLabelText: Record<string, string> = {
-      "circle-up-a": "Vers zone Nord A",
-      "circle-up-b": "Vers zone Nord B",
-      "circle-down-a": "Vers zone Sud A",
-      "circle-down-b": "Vers zone Sud B",
-      "circle-left-a": "Vers zone Ouest A",
-      "circle-left-b": "Vers zone Ouest B",
-      "circle-right-a": "Vers zone Est A",
-      "circle-right-b": "Vers zone Est B",
+    const destLabelLines: Record<string, [string, string]> = {
+      [CIRCLE.northClose]: ["Vers zone", "Nord proche"],
+      [CIRCLE.northDistant]: ["Vers zone", "Nord éloignée"],
+      [CIRCLE.southClose]: ["Vers zone", "Sud proche"],
+      [CIRCLE.southDistant]: ["Vers zone", "Sud éloignée"],
+      [CIRCLE.westClose]: ["Vers zone", "Ouest proche"],
+      [CIRCLE.westDistant]: ["Vers zone", "Ouest éloignée"],
+      [CIRCLE.eastClose]: ["Vers zone", "Est proche"],
+      [CIRCLE.eastDistant]: ["Vers zone", "Est éloignée"],
+    };
+
+    const destConfigKey: Record<
+      string,
+      keyof NonNullable<typeof neighborhoodConfig>
+    > = {
+      [CIRCLE.northClose]: "northCloseLocations",
+      [CIRCLE.northDistant]: "northDistantLocations",
+      [CIRCLE.southClose]: "southCloseLocations",
+      [CIRCLE.southDistant]: "southDistantLocations",
+      [CIRCLE.westClose]: "westCloseLocations",
+      [CIRCLE.westDistant]: "westDistantLocations",
+      [CIRCLE.eastClose]: "eastCloseLocations",
+      [CIRCLE.eastDistant]: "eastDistantLocations",
     };
 
     const destLabelOffset: Record<
       string,
       { dx: number; dy: number; anchor: string }
     > = {
-      "circle-up-a": { dx: -r - 4, dy: 0, anchor: "end" },
-      "circle-up-b": { dx: r + 4, dy: 0, anchor: "start" },
-      "circle-down-a": { dx: r + 4, dy: 0, anchor: "start" },
-      "circle-down-b": { dx: -r - 4, dy: 0, anchor: "end" },
-      "circle-left-a": { dx: -r - 4, dy: 0, anchor: "end" },
-      "circle-left-b": { dx: -r - 4, dy: 0, anchor: "end" },
-      "circle-right-a": { dx: r + 4, dy: 0, anchor: "start" },
-      "circle-right-b": { dx: r + 4, dy: 0, anchor: "start" },
+      [CIRCLE.northClose]: { dx: -r - 4, dy: 0, anchor: "end" },
+      [CIRCLE.northDistant]: { dx: r + 4, dy: 0, anchor: "start" },
+      [CIRCLE.southClose]: { dx: r + 4, dy: 0, anchor: "start" },
+      [CIRCLE.southDistant]: { dx: -r - 4, dy: 0, anchor: "end" },
+      [CIRCLE.westClose]: { dx: -r - 4, dy: 0, anchor: "end" },
+      [CIRCLE.westDistant]: { dx: -r - 4, dy: 0, anchor: "end" },
+      [CIRCLE.eastClose]: { dx: r + 4, dy: 0, anchor: "start" },
+      [CIRCLE.eastDistant]: { dx: r + 4, dy: 0, anchor: "start" },
     };
 
     circles.slice(1).forEach(({ id, x, y }) => {
       const cfg = destLabelOffset[id];
       if (!cfg) return;
-      svg
+
+      const configKey = destConfigKey[id];
+      const configValue = configKey ? neighborhoodConfig?.[configKey] : null;
+      const configText =
+        typeof configValue === "string" && configValue.trim().length > 0
+          ? configValue.trim()
+          : null;
+
+      const lines = destLabelLines[id] ?? [id, ""];
+      const fullLabel = lines.join(" ").trim();
+
+      const label = svg
         .append("text")
         .attr("id", `dest-${id}`)
         .attr("x", x + cfg.dx)
@@ -463,8 +504,40 @@ const DvMobility: React.FC<Props> = ({ selectedSus }) => {
         .attr("font-size", 12)
         .attr("font-weight", fontWeightForCircle[id] ?? 400)
         .attr("fill", colorMain)
-        .attr("pointer-events", "none")
-        .text(destLabelText[id] ?? id);
+        .attr("pointer-events", configText ? "auto" : "none");
+
+      label
+        .append("tspan")
+        .attr("x", x + cfg.dx)
+        .attr("dy", "-0.5em")
+        .text(lines[0]);
+      label
+        .append("tspan")
+        .attr("x", x + cfg.dx)
+        .attr("dy", "1.1em")
+        .text(lines[1]);
+
+      if (!configText) return;
+
+      label
+        .style("cursor", "pointer")
+        .on("mousemove", function (event: MouseEvent) {
+          const rect = container?.getBoundingClientRect();
+          const px = rect
+            ? event.pageX - (rect.left + window.scrollX)
+            : event.pageX;
+          const py = rect
+            ? event.pageY - (rect.top + window.scrollY)
+            : event.pageY;
+          tooltip
+            .style("left", `${px + 10}px`)
+            .style("top", `${py - 24}px`)
+            .style("max-width", "260px")
+            .style("white-space", "normal")
+            .style("opacity", 1)
+            .text(`${fullLabel} : ${configText}`);
+        })
+        .on("mouseout", () => tooltip.style("opacity", 0));
     });
 
     const satSpacing = spacing;
@@ -515,7 +588,7 @@ const DvMobility: React.FC<Props> = ({ selectedSus }) => {
         .attr("background-color", "white")
         .attr("padding", "0.1em 0.2em");
     });
-  }, [dimensions, mobilityData, suColors, container]);
+  }, [dimensions, mobilityData, neighborhoodConfig, suColors, container]);
 
   return (
     <div className="flex h-full w-full flex-col">
