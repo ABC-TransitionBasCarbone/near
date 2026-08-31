@@ -12,9 +12,9 @@ interface ZoneConfig {
 
 const ZONE_CONFIG: ZoneConfig[] = [
   { color: "#FEFEE3", legendLabel: ">5 %" },
-  { color: "#FFC9B9", legendLabel: "<5 %" },
-  { color: "#DDDF03", legendLabel: "<4,5 %" },
-  { color: "#ABCC02", legendLabel: "<4 %" },
+  { color: "#D6E788", legendLabel: "<5 %" },
+  { color: "#AFD65A", legendLabel: "<4,5 %" },
+  { color: "#85CC02", legendLabel: "<4 %" },
   { color: "#55A630", legendLabel: "<3 %" },
 ];
 
