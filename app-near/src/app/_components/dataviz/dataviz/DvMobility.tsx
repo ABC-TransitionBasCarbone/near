@@ -440,17 +440,6 @@ const DvMobility: React.FC<Props> = ({ selectedSus }) => {
       });
     });
 
-    const destLabelLines: Record<string, [string, string]> = {
-      [CIRCLE.northClose]: ["Vers zone", "Nord proche"],
-      [CIRCLE.northDistant]: ["Vers zone", "Nord éloignée"],
-      [CIRCLE.southClose]: ["Vers zone", "Sud proche"],
-      [CIRCLE.southDistant]: ["Vers zone", "Sud éloignée"],
-      [CIRCLE.westClose]: ["Vers zone", "Ouest proche"],
-      [CIRCLE.westDistant]: ["Vers zone", "Ouest éloignée"],
-      [CIRCLE.eastClose]: ["Vers zone", "Est proche"],
-      [CIRCLE.eastDistant]: ["Vers zone", "Est éloignée"],
-    };
-
     const destConfigKey: Record<
       string,
       keyof NonNullable<typeof neighborhoodConfig>
@@ -479,6 +468,85 @@ const DvMobility: React.FC<Props> = ({ selectedSus }) => {
       [CIRCLE.eastDistant]: { dx: r + 4, dy: 0, anchor: "start" },
     };
 
+    const DEST_FONT_SIZE = 11;
+    const DEST_LINE_PITCH = 13;
+    const DEST_MAX_LINES = 5;
+    const DEST_EDGE_MARGIN = 8;
+    const DEST_MAX_WIDTH_CAP = 220;
+
+    const destMeasureText = svg
+      .append("text")
+      .attr("font-family", "Outfit")
+      .attr("font-size", DEST_FONT_SIZE)
+      .style("visibility", "hidden")
+      .attr("x", -9999)
+      .attr("y", -9999);
+    const destMeasureNode = destMeasureText.node();
+
+    const measureDestText = (value: string): number => {
+      if (!destMeasureNode) return 0;
+      destMeasureNode.textContent = value;
+      return destMeasureNode.getComputedTextLength();
+    };
+
+    const splitLongWord = (word: string, maxWidth: number): string[] => {
+      const chunks: string[] = [];
+      let chunk = "";
+      for (const char of word) {
+        const candidate = chunk + char;
+        if (chunk.length > 0 && measureDestText(candidate) > maxWidth) {
+          chunks.push(chunk);
+          chunk = char;
+        } else {
+          chunk = candidate;
+        }
+      }
+      if (chunk.length > 0) chunks.push(chunk);
+      return chunks;
+    };
+
+    const wrapDestinationText = (value: string, maxWidth: number): string[] => {
+      if (!destMeasureNode) return [value];
+      const words = value.split(/\s+/).filter(Boolean);
+      const lines: string[] = [];
+      let current = "";
+
+      for (const word of words) {
+        const candidate = current ? `${current} ${word}` : word;
+        if (measureDestText(candidate) <= maxWidth) {
+          current = candidate;
+          continue;
+        }
+        if (current) {
+          lines.push(current);
+          current = "";
+        }
+        if (measureDestText(word) <= maxWidth) {
+          current = word;
+        } else {
+          const wordChunks = splitLongWord(word, maxWidth);
+          const lastChunk = wordChunks.pop();
+          lines.push(...wordChunks);
+          current = lastChunk ?? "";
+        }
+      }
+      if (current) lines.push(current);
+
+      if (lines.length <= DEST_MAX_LINES) return lines;
+
+      const truncated = lines.slice(0, DEST_MAX_LINES);
+      const lastIndex = truncated.length - 1;
+      let lastLine = truncated[lastIndex]!;
+      while (
+        lastLine.length > 0 &&
+        measureDestText(`${lastLine}…`) > maxWidth
+      ) {
+        lastLine = lastLine.slice(0, -1);
+      }
+      truncated[lastIndex] = `${lastLine}…`;
+      return truncated;
+    };
+
     circles.slice(1).forEach(({ id, x, y }) => {
       const cfg = destLabelOffset[id];
       if (!cfg) return;
@@ -489,56 +557,43 @@ const DvMobility: React.FC<Props> = ({ selectedSus }) => {
         typeof configValue === "string" && configValue.trim().length > 0
           ? configValue.trim()
           : null;
+      if (!configText) return;
 
-      const lines = destLabelLines[id] ?? [id, ""];
-      const fullLabel = lines.join(" ").trim();
+      const labelX = x + cfg.dx;
+
+      const availableWidth =
+        cfg.anchor === "end"
+          ? labelX - DEST_EDGE_MARGIN
+          : width - DEST_EDGE_MARGIN - labelX;
+      const maxWidth = Math.min(DEST_MAX_WIDTH_CAP, availableWidth);
+      if (maxWidth <= 20) return;
+
+      const detailLines = wrapDestinationText(configText, maxWidth);
+      const firstDy = -((detailLines.length - 1) / 2) * DEST_LINE_PITCH;
 
       const label = svg
         .append("text")
         .attr("id", `dest-${id}`)
-        .attr("x", x + cfg.dx)
+        .attr("x", labelX)
         .attr("y", y + cfg.dy)
         .attr("text-anchor", cfg.anchor)
         .attr("dominant-baseline", "central")
         .attr("font-family", "Outfit")
-        .attr("font-size", 12)
+        .attr("font-size", DEST_FONT_SIZE)
         .attr("font-weight", fontWeightForCircle[id] ?? 400)
         .attr("fill", colorMain)
-        .attr("pointer-events", configText ? "auto" : "none");
+        .attr("pointer-events", "none");
 
-      label
-        .append("tspan")
-        .attr("x", x + cfg.dx)
-        .attr("dy", "-0.5em")
-        .text(lines[0]);
-      label
-        .append("tspan")
-        .attr("x", x + cfg.dx)
-        .attr("dy", "1.1em")
-        .text(lines[1]);
-
-      if (!configText) return;
-
-      label
-        .style("cursor", "pointer")
-        .on("mousemove", function (event: MouseEvent) {
-          const rect = container?.getBoundingClientRect();
-          const px = rect
-            ? event.pageX - (rect.left + window.scrollX)
-            : event.pageX;
-          const py = rect
-            ? event.pageY - (rect.top + window.scrollY)
-            : event.pageY;
-          tooltip
-            .style("left", `${px + 10}px`)
-            .style("top", `${py - 24}px`)
-            .style("max-width", "260px")
-            .style("white-space", "normal")
-            .style("opacity", 1)
-            .text(`${fullLabel} : ${configText}`);
-        })
-        .on("mouseout", () => tooltip.style("opacity", 0));
+      detailLines.forEach((line, index) => {
+        label
+          .append("tspan")
+          .attr("x", labelX)
+          .attr("dy", index === 0 ? firstDy : DEST_LINE_PITCH)
+          .text(line);
+      });
     });
+
+    destMeasureText.remove();
 
     const satSpacing = spacing;
     const satelliteCircles: { id: string; mode: string; index: number }[] = [
