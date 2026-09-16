@@ -170,7 +170,15 @@ const FormNeighborhoodGeography: React.FC<FormNeighborhoodGeographyProps> = ({
                 : "bg-error/10 text-error"
             }`}
           >
-            {isCompleted ? "✓ Complet" : "● À compléter"}
+            {isCompleted ? (
+              <>
+                <span aria-hidden="true">✓</span> Complet
+              </>
+            ) : (
+              <>
+                <span aria-hidden="true">●</span> À compléter
+              </>
+            )}
           </span>
         </div>
         {!isCompleted && (

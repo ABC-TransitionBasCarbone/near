@@ -2,7 +2,7 @@ import { auth } from "~/server/auth";
 import { buildCSVFromCarbonFootprintAnswers } from "~/server/carbon-footprint/export";
 import { buildCSVFromSUAnswers } from "~/server/su/answers/export";
 import { buildCSVFromWayOfLifeAnswers } from "~/server/way-of-life/export";
-import { sanitizeForFilename } from "~/server/utils/filename";
+import { slugify } from "~/shared/utils/slugify";
 import { AnswerType } from "~/types/enums/AnswerType";
 
 export async function GET(
@@ -34,7 +34,7 @@ export async function GET(
       break;
   }
 
-  const filename = `export-${type}-${sanitizeForFilename(surveyName)}.csv`;
+  const filename = `export-${type}-${slugify(surveyName)}.csv`;
 
   return new Response(csv, {
     headers: {

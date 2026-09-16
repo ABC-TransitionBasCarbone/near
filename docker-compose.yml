@@ -12,6 +12,11 @@ services:
     volumes:
       - app-near-postgresql-data:/var/lib/postgresql
     command: postgres -c max_connections=30
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d app-near"]
+      interval: 2s
+      timeout: 3s
+      retries: 20
 
   app-near-web:
     image: node:24.18-alpine
@@ -45,7 +50,8 @@ services:
     volumes:
       - ./app-near:/app
     depends_on:
-      - database
+      database:
+        condition: service_healthy
 
   api-su:
     image: python:3.13-slim

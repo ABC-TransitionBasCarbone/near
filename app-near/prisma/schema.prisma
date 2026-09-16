@@ -221,10 +221,50 @@ model SuData {
 }
 
 model SuBank {
-  id        Int      @id @default(autoincrement())
-  name      String   @unique
-  colorMain String   @unique @map("color_main")
-  suData    SuData[]
+  id                  Int      @id @default(autoincrement())
+  name                String   @unique
+  icon1               String   @default("")
+  icon2               String   @default("")
+  ornement            String   @default("")
+  background          String   @default("")
+  colorMain           String   @unique @map("color_main")
+  colorDark1          String   @default("") @map("color_dark1")
+  colorDark2          String   @default("") @map("color_dark2")
+  colorDark3          String   @default("") @map("color_dark3")
+  colorDark4          String   @default("") @map("color_dark4")
+  colorDark5          String   @default("") @map("color_dark5")
+  colorLight1         String   @default("") @map("color_light1")
+  colorLight2         String   @default("") @map("color_light2")
+  colorLight3         String   @default("") @map("color_light3")
+  colorLight4         String   @default("") @map("color_light4")
+  colorLight5         String   @default("") @map("color_light5")
+  colorComp1          String   @default("") @map("color_comp1")
+  colorComp2          String   @default("") @map("color_comp2")
+  colorGraph1         String   @default("") @map("color_graph1")
+  colorGraph2         String   @default("") @map("color_graph2")
+  colorGraph3         String   @default("") @map("color_graph3")
+  colorGraph4         String   @default("") @map("color_graph4")
+  colorGraph5         String   @default("") @map("color_graph5")
+  colorGraph6         String   @default("") @map("color_graph6")
+  colorGraph7         String   @default("") @map("color_graph7")
+  colorGraph8         String   @default("") @map("color_graph8")
+  colorGraph9         String   @default("") @map("color_graph9")
+  colorGraph10        String   @default("") @map("color_graph10")
+  position            String   @default("")
+  icon1Link           String   @default("") @map("icon1_link")
+  icon1Source         String   @default("") @map("icon1_source")
+  icon1Attribution    String   @default("") @map("icon1_attribution")
+  icon2Link           String   @default("") @map("icon2_link")
+  icon2Source         String   @default("") @map("icon2_source")
+  icon2Attribution    String   @default("") @map("icon2_attribution")
+  ornementLink        String   @default("") @map("ornement_link")
+  ornementSource      String   @default("") @map("ornement_source")
+  ornementAttribution String   @default("") @map("ornement_attribution")
+  backgroundBin       String   @default("") @map("background_bin")
+  backgroundFilepath  String   @default("") @map("background_filepath")
+  backgroundLink      String   @default("") @map("background_link")
+  backgroundSource    String   @default("") @map("background_source")
+  suData              SuData[]
 
   @@map("su_bank")
 }
@@ -365,14 +405,6 @@ enum TransportTime {
   BETWEEN_20_AND_30_MIN
   BETWEEN_30_AND_45_MIN
   ABOVE_45_MIN
-}
-
-enum ZoneSelection {
-  ZONE_A
-  ZONE_B
-  ZONE_C
-  ZONE_D
-  ZONE_PORTE_ORLEANS
 }
 
 model WayOfLifeAnswer {
