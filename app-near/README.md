@@ -32,10 +32,10 @@ nvm install
 nvm use
 ```
 
-Le projet utilise Node **24.22.2**, également utilisé par Docker et la CI (qui lit `.nvmrc`). Pour en faire la version par défaut des nouveaux shells :
+Le projet utilise la ligne Node **24.22**, également utilisée par Docker et la CI (qui lit `.nvmrc`). Pour en faire la version par défaut des nouveaux shells :
 
 ```sh
-nvm alias default 24.22.2
+nvm alias default 24.22
 ```
 
 Installer des dépendances :
