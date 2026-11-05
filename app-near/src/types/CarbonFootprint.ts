@@ -216,7 +216,7 @@ export const convertedCarbonFootprintAnswer = z.object({
   heatSource: z.nativeEnum(HeatSource).optional(),
   digitalIntensity: z.nativeEnum(DigitalIntensity).optional(),
 
-  answers: z.record(z.any()),
+  answers: z.record(z.string(), z.any()),
 });
 
 export type ConvertedCarbonFootprintAnswer = z.infer<

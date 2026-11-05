@@ -79,7 +79,7 @@ export const handleCarbonFootprintAnswer = async (
         error,
       );
       return NextResponse.json(
-        { error: "Invalid payload", details: error.errors },
+        { error: "Invalid payload", details: error.issues },
         { status: 400 },
       );
     }

@@ -3,7 +3,7 @@ import { z } from "zod";
 
 export const getErrorMessage = (error: unknown): string => {
   if (error instanceof z.ZodError) {
-    return JSON.stringify(error.errors);
+    return JSON.stringify(error.issues);
   }
 
   if (error instanceof TRPCError) {

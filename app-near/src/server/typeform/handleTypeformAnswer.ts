@@ -180,10 +180,10 @@ export const handleTypeformAnswer = async (
         formId,
         webhookId,
         "ZOD ERROR :",
-        error.errors,
+        error.issues,
       );
       return NextResponse.json(
-        { error: "Invalid payload", details: error.errors },
+        { error: "Invalid payload", details: error.issues },
         { status: 400 },
       );
     }
