@@ -28,7 +28,14 @@ Pour lancer l'ensemble de la stack (base + app + api-su) d'un coup, voir [Instal
 Utiliser la bonne version de node avec nvm (voir `.nvmrc`) :
 
 ```sh
+nvm install
 nvm use
+```
+
+Le projet utilise Node **24.22.2**, également utilisé par Docker et la CI (qui lit `.nvmrc`). Pour en faire la version par défaut des nouveaux shells :
+
+```sh
+nvm alias default 24.22.2
 ```
 
 Installer des dépendances :
@@ -540,7 +547,7 @@ npx npm-check-updates -i   # (optionnel) choix interactif, y compris les montée
 
 ### Mise à jour de Node
 
-La version de Node est déclarée à plusieurs endroits à garder alignés : `.nvmrc`, `engines.node` dans `package.json`, l'image `node:` du [docker-compose.yml](../docker-compose.yml), la version de la CI ([app-near-ci.yml](../.github/workflows/app-near-ci.yml)) et la version configurée sur Scalingo (lue depuis `engines`). Mettre à jour les trois premiers au même moment et vérifier le dernier.
+La version de Node est déclarée à plusieurs endroits à garder alignés : `.nvmrc`, `engines.node` dans `package.json` et `package-lock.json`, et l'image `node:` du [docker-compose.yml](../docker-compose.yml). La CI ([app-near-ci.yml](../.github/workflows/app-near-ci.yml)) lit directement `.nvmrc`. Mettre à jour ces fichiers au même moment et vérifier la version configurée sur Scalingo (lue depuis `engines` au prochain déploiement).
 
 ### Mise à jour de PostgreSQL
 

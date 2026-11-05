@@ -121,7 +121,7 @@ const DvBarrierGradient: React.FC<DvBarrierGradientProps> = ({
       .attr("height", rowH)
       .attr("fill", (d) => generateGradientColor(d.percentage))
       .style("cursor", "pointer")
-      .on("mousemove", function (event: PointerEvent, d: RowItem) {
+      .on("mousemove", function (event: MouseEvent, d: RowItem) {
         tooltipSel
           .style("left", `${event.pageX + 10}px`)
           .style("top", `${event.pageY - 10}px`)

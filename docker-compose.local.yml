@@ -1,0 +1,5 @@
+services:
+  database:
+    image: postgres:17
+    ports: !override
+      - "5434:5432"

@@ -19,7 +19,7 @@ services:
       retries: 20
 
   app-near-web:
-    image: node:24.22-alpine
+    image: node:24.22.2-alpine
     # # uncomment when you need to localy start a backup
     # command: >
     #   sh -c "
