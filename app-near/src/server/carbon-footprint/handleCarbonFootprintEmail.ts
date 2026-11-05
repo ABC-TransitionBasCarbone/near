@@ -43,9 +43,9 @@ export const handleCarbonFootprintEmail = async (
     return NextResponse.json({ message: "Email processed" }, { status: 200 });
   } catch (error) {
     if (error instanceof z.ZodError) {
-      console.error("ZOD ERROR:", error.errors);
+      console.error("ZOD ERROR:", error.issues);
       return NextResponse.json(
-        { error: "Invalid request body", details: error.errors },
+        { error: "Invalid request body", details: error.issues },
         { status: 400 },
       );
     }

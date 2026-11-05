@@ -9,7 +9,7 @@ export const metabaseRouter = createTRPCRouter({
       z.object({
         iframeNumber: z.number(),
         iframeType: z.nativeEnum(MetabaseIframeType),
-        params: z.record(z.any()).optional(),
+        params: z.record(z.string(), z.any()).optional(),
         bordered: z.boolean().optional(),
         title: z.boolean().optional(),
       }),
