@@ -141,3 +141,6 @@ __pycache__/
 
 # Backup
 *.pgsql
+
+# Local Docker Compose overrides
+/docker-compose.local.yml
