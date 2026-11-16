@@ -1,0 +1,14 @@
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /app-near
+    schedule:
+      interval: weekly
+    cooldown:
+      default-days: 4
+  - package-ecosystem: pip
+    directory: /api-su
+    schedule:
+      interval: weekly
+    cooldown:
+      default-days: 4
